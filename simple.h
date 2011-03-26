@@ -59,8 +59,8 @@ using namespace std;
 
 	#define		lin  lin_sstream
 
-	#define		NL      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-	#define		nl      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+	#define		NL      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1;
+	#define		nl      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1; 
 
 
 	#define		IS_SPACE                (cin.peek()==' '  || cin.peek()=='\t')
@@ -68,6 +68,19 @@ using namespace std;
 	#define		IS_COMMA                (cin.peek()==',')
 	#define		SKIP_SPACE              while ( IS_SPACE             )    cin.ignore(1);
 	#define		SKIP_SPACE_N_COMMA      while ( IS_SPACE || IS_COMMA )    cin.ignore(1);
+
+	size_t static 	 __attribute__((unused))	_line_field	= 1;
+
+istream& 	F(size_t n) {
+	string ignore_word; 
+	if (_line_field > n) NL;
+	for (; _line_field<n; _line_field++)  {
+		SKIP_SPACE;
+		cin >> ignore_word;
+	};
+	return cin;
+}
+
 
 	/*  OBSOLETE:  use bitset
 	 

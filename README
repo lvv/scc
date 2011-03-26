@@ -1,0 +1,3 @@
+command df  |awk                       '{total+=$2;};  END{print total}'
+command df  |scc 'int n, total=0;  NL;  while(F(2)>>n) total +=n; total' 
+
