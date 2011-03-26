@@ -14,14 +14,11 @@ echo '
 ' 		>  $src
 
 
-#cat -	>> $src	
-#echo "cout << (" "$@" ")<< endl;"    >> $src	
-#echo "$@" | sed 's/;$//;  s/\(.*;\)\?\(.*\)/\1; cout << ( \2 ) << endl;/' >> $src
-echo "$@" | sed 's/\(.*;\)*\([^;]\+$\)/\1 cout << ( \2 ) << endl;/' >> $src
+echo "$@" | sed 's/\(.*;\)*\([^;]\+$\)/\1 cout << ( \2 );/' >> $src
 
 
 echo '
-	;
+	; cout << endl;
 } ' 		>>  $src
 #cat $src
 

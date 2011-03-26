@@ -44,6 +44,7 @@ using namespace std;
 
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
+//	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
 
 	static std::istringstream		lin_sstream;
 	static char __attribute__((unused))	lin_line[1000];	
@@ -58,8 +59,8 @@ using namespace std;
 
 	#define		lin  lin_sstream
 
-	#define		NL      		cin.ignore(1000,'\n');
-	#define		nl      		cin.ignore(1000,'\n');
+	#define		NL      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+	#define		nl      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
 
 	#define		IS_SPACE                (cin.peek()==' '  || cin.peek()=='\t')
@@ -86,7 +87,7 @@ using namespace std;
 	template<typename T> struct list_t;
 	*/
 
-// OSI -- output stream iterator 
+// OSI -- Output Stream Iterator 
 // 	shorthand for:	ostream_iterator<T>(cout, " ")
 // 	used as:	copy(V.begin(), V.end(), osi<T>());
 // 	also DTOR adds '\n'
@@ -172,7 +173,8 @@ operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::
 	
 
 // PAIR -- print any std::pair<printable1, printable2>
-template<typename T, typename U> inline std::ostream&  
+
+		template<typename T, typename U> inline std::ostream&  
 operator<<      (ostream& os, const typename std::pair<T,U>& p) {               
 	os << "⟨" << p.first << "," << p.second <<"⟩";
 	return os;
@@ -183,55 +185,31 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
 // TUPLE -- print any std::tuple<printable ...>
+// 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
 
-			template< int I, typename... TT>
+			template< int RI, typename... TT>
 	struct	print_tuple_elem  {
 		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {               
 			const size_t  tsize = tuple_size<tuple<TT...>>::value;
-			os <<  get<tsize-I>(tup) << " ";
-			print_tuple_elem<I-1, TT...>(os, tup);
+			const size_t  i = tsize - RI;
+			os <<  get<i>(tup);
+			if  (i != tsize-1)   cout << ", ";
+			print_tuple_elem<RI-1, TT...>(os, tup);
 		};
 	};
 
 			template<typename... TT>
 	struct	print_tuple_elem <0, TT...> {
-		print_tuple_elem(ostream& os, const tuple<TT...>& tup)  {};
+		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {};
 	};
 
 		template<typename... TT> inline
 		std::ostream&  
 operator<<      (ostream& os, const tuple<TT...>& tup) {               
 	const size_t  tsize = tuple_size<tuple<TT...>>::value;
-	os << "<";     print_tuple_elem<tsize, TT...>(os, tup);    os << ">";
+	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };
-
-/*  THIS WORKED BEFORE.  WHAT CHANGED? 
-//		template<typename T0, typename REST> inline
-//		std::ostream&  
-//operator<<      (ostream& os, const std::tuple<T0, REST>&& tup) {               
-
-		template<class Ch,class Tr, typename T0, typename REST>
-		basic_ostream<Ch,Tr>&
-operator<<	(basic_ostream<Ch,Tr>& os, tuple<T0, REST>&& tup)  {
-	tuple<REST> sub_tup;
-	T0 t0;
-	os <<  get<0> << " ";
-	tie(ignore, sub_tup) = tup;
-	//os << sub_tup; 
-	return os;
-};
-
-//			template<typename T0> inline
-//			std::ostream&  
-//	operator<<      (ostream& os, tuple<T0>&& tup) {               
-			template<class Ch,class Tr, typename T0>
-			basic_ostream<Ch,Tr>&
-	operator<<	(basic_ostream<Ch,Tr>& os, tuple<T0>&& tup)  {
-		os <<  get<0>(tup) << "⟩";
-		return os;
-	};
-*/
 
 
 #endif
