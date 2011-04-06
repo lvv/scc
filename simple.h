@@ -25,7 +25,9 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+
 #include <bitset>
+#include <ratio>
 
 // local
 #include <lvv/lvv.h>
@@ -143,13 +145,13 @@ operator<<      (ostream& os, const L<E, std::allocator<E> >& LL) {
 
         if (LL.empty()) return os;
 
-        //for (size_t i=0; i<LL.size()-1; i++)
-        //        os<<LL[i]<<", ";
+	cout << "{";
 	auto it=LL.begin();
 	os  <<  *it++;
         for (; it !=LL.end();   it++)
                 os <<  ", " << *it;
-        os << "   size:" << LL.size() <<"  ";
+        //os << "   size:" << LL.size() <<"  ";
+	cout << "}";
         return os;
 };
 
@@ -175,12 +177,14 @@ operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::
 
         if (C.empty()) return os;
 
+	cout << "{";
 	auto it = C.begin();
 	os  <<  *it++;
         for (; it !=C.end();   it++)
                 os <<  ", " << *it;
 
-        os << "   size:" << C.size() <<"  ";
+        //os << "   size:" << C.size() <<"  ";
+	cout << "}";
         return os;
 };
 	
