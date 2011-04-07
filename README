@@ -29,8 +29,9 @@ You can just cun-n-paste it in you bash prompt:
 Sum-up df's used-disk-space column:
 
 ------------------
-command df |scc 'int n, total=0;  NL;  while(F(2)>>n) total +=n; total'	# input macros: new-line - NL,  field - F()
-command df |awk '{total+=$2;};  END{print total}'			# equivalent AWK
+command df |scc 'NL;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
+command df |awk '{n+=$2;};  END{print n}'		# equivalent AWK
+
 -------------------
 
 Word frequancies:
@@ -39,6 +40,22 @@ Word frequancies:
 echo aaa bbb aaa | scc 'string w;  map<string,int> M;  while(cin >> w) M[w]++;  M'
 echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:space:]]'
 -----------------------------------
+
+Make  fIlled vector:
+
+scc 'vector<int> V(10, 1);  partial_sum(V.begin(), V.end(), V.begin());  V'
+
+
+grep 
+
+Input only from standard input and of cause real program should check its args and for validity regex.
+
+--------------------------------
+scc 'string ln;  while(getline(cin, ln)) if (regex_search(ln,regex(argv[1])))  cout << ln << endl;'
+mv /tmp/lvv-scc pcre_grep
+ls | ./pcre_grep '^(l|p)'
+--------------------------------
+
 
 == What is not working:
 

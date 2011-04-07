@@ -10,7 +10,10 @@ src=$prg.cc
 
 echo '
 	#include <simple.h>
-	int main() {
+	int main(int argc, const char** argv) {
+		string __attribute__((unused))	s, line;
+		int	 __attribute__((unused))	i=0,j=0, n=0;
+		char __attribute__((unused))	c;
 ' 		>  $src
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
@@ -23,7 +26,6 @@ echo '
 } ' 		>>  $src
 #cat $src
 
-#LIBS=-lm 
-#set -x
-g++  -Wall -std=gnu++0x  -ggdb3 -O0 -I/home/lvv/p/scc/ -I/usr/local/include/  $prg.cc -o $prg $LIBS && $prg
+LIBS+='-lboost_regex'
+g++  -Wall -std=gnu++0x  -ggdb3 -O0 -I/home/lvv/p/scc/ -I/usr/local/include/  $prg.cc -o $prg $LIBS $LIBS && $prg
 # vim:set ts=4 sw=4 syntax=sh:   

@@ -27,9 +27,27 @@
 #include <vector>
 
 #include <bitset>
+///////////////////////////////////////////////////////////////////// C++0X STL
 #include <ratio>
 
-// local
+//#include <regex>
+
+
+///////////////////////////////////////////////////////////////////// shortcuts
+#define 	S	string
+#define 	R	regex
+#define 	RM	regex_match
+#define 	RS	regex_search
+#define 	M	match
+#define 	CM	cmatch
+#define 	GL(x)	getline(cin,x)
+
+///////////////////////////////////////////////////////////////////// BOOST
+#include <boost/regex.hpp>
+	//using boost::regex;
+	//using boost::regex_match;
+
+///////////////////////////////////////////////////////////////////// LOCAL
 #include <lvv/lvv.h>
 #include <lvv/meta.h>
 #include <lvv/array.h>
@@ -37,6 +55,7 @@
 //	using std::to_binary;
 
 using namespace std;
+using namespace boost;
 
 // FOREACH
 //#include <boost/foreach.hpp>
@@ -82,6 +101,9 @@ istream& 	F(size_t n) {
 	};
 	return cin;
 }
+
+	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
+	
 
 
 	/*  OBSOLETE:  use bitset
@@ -137,7 +159,6 @@ operator<<      (ostream& os, int A[N]) {
         return os;
 };
 */
-
 
 // print any std::sequance-containter<printable>
 template<typename E, template<typename E, typename L> class L > std::ostream&                                              
