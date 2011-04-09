@@ -18,7 +18,7 @@ echo '
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
-echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
+echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
 
 echo '
@@ -27,5 +27,6 @@ echo '
 #cat $src
 
 LIBS+='-lboost_regex'
-g++  -Wall -std=gnu++0x  -ggdb3 -O0 -I/home/lvv/p/scc/ -I/usr/local/include/  $prg.cc -o $prg $LIBS $LIBS && $prg
+shift
+g++  -Wall -std=gnu++0x  -ggdb3 -O0 -I/home/lvv/p/scc/ -I/usr/local/include/  $prg.cc -o $prg $LIBS $LIBS && $prg "$@"
 # vim:set ts=4 sw=4 syntax=sh:   
