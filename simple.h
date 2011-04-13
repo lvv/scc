@@ -41,8 +41,8 @@
 ///////////////////////////////////////////////////////////////////// BOOST
 #ifdef USE_BOOST
 
-	#include <boost/algorithm/string.hpp>
-		using boost::split;
+	//#include <boost/algorithm/string.hpp>
+	//	using boost::split;
 
 	#include <boost/regex.hpp>
 		using boost::regex;
@@ -87,9 +87,12 @@
 	using	std::basic_ostream;
 	using	std::istream;
 	using	std::ostream;
+	using	std::vector;
+	using	std::deque;
 	using	std::set;
 	using	std::map;
 	using	std::map;
+	using	std::stringstream;
 	using	std::istringstream;
 	using	std::ostringstream;
 	using	std::numeric_limits;
@@ -299,14 +302,19 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 // STR
 struct str: string {
 
-	str(const char* s): string(s) {};
-	str(): string() {};
+	str(const char*   s)	: string(s) {};
+	str(const string& s)	: string(s) {};
+	str()			: string() {};
 
 	str& operator = (int I) {	// interger assign
 		 ostringstream OS;
 		 OS << I;
 		 this->string::assign(OS.str());
 		 return *this;
+	}
+
+	operator string(void) {	// converter to std::string
+		 return *(string*)this;
 	}
 
 	operator int(void) {	// converter to int
@@ -316,17 +324,23 @@ struct str: string {
 		 IS >> I;
 		 return I;
 	}
+
+	int operator++() {                   return *this = *this + 1; }
+	int operator--() {                   return *this = *this - 1; }
+	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
+	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
 };
 
-str& 	F(size_t n) {
-	string ignore_word; 
-	str	S;
-	if (_line_field > n) NL;
-	for (; _line_field<n; _line_field++)  {
-		SKIP_SPACE;
-		cin >> ignore_word;
-	};
-	return S;
+void	split(string &line, char delim, vector<str> &elems) {
+	stringstream	ss(line);
+	string		item;
+	elems.clear();
+	while(std::getline(ss, item, delim)) {
+		elems.push_back(item);
+	}
 }
 
+
+
 #endif
+

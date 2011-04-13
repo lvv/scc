@@ -22,10 +22,20 @@ src=$prg.cc
 echo '
 	#include <simple.h>
 	using namespace std;
+
+	vector<str> _F;	
+
+	str& 	F(size_t I) {
+		while (_F.size() < I)	_F.push_back(str());
+		return _F[I];
+	};
+
+
 	int main(int argc, const char** argv) {
 		//string __attribute__((unused))	s, line;
 		//int	 __attribute__((unused))	i=0,j=0, n=0;
 		//char __attribute__((unused))	c;
+		string OFS(" ");
 ' 		>  $src
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
@@ -35,27 +45,37 @@ case $1 in
 
 	-n) shift
 		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
-		echo '
+		echo "
 			string line;
-			vector<string> _F;	
 			while ( getline(cin,line)) {
-				split(_F, line, boost::is_any_of("\t "));
-				'$snippet'
+				split(line, ' ', _F);
+				"$snippet"
 			;}
-		' >> $src ;;
+			; cout << flush << endl;
+		" >> $src ;;
+
+	-p) shift
+		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
+		echo "
+			string line;
+			while ( getline(cin,line)) {
+				split(line, ' ', _F);
+				"$snippet"
+
+				for(size_t i=0;  i<_F.size()-1;  i++)
+					cout  << _F[i] << OFS;
+				if (_F.size() > 0)  cout << _F.back();
+				cout << endl;
+			;}
+		" >> $src ;;
 
 	*)  
 		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
 		echo                                              $snippet      >> $src ;;
 
 esac
-		
-
-
-
 
 echo '
-	; cout << flush << endl;
 } ' 		>>  $src
 #cat $src
 
