@@ -1,9 +1,9 @@
 SCC - Simple C++ 
-==========
+=================
 
-This is simple bash scrip which wraps C++ snippet in C++ boilerplate and makes C++ one-lines possible:
+This is simple bash script which wraps C++ snippet in C++ boilerplate and makes C++ one-lines possible:
 
--------------------
+----------------------------------------------------------------------------
 scc 1   		# C++ expression - '1',  evaluated and printed
 1
 scc '2<<1'
@@ -16,7 +16,7 @@ scc 'float x=0.5;  cout << sin(x) << endl;'		# Same. Note trailing ';'
 0.479426
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x with gcc460)
 {1, 4, 9}						# STL containers are printable!
--------------------------
+-------------------------------------------------------------------------------
 
 In SCC shall script:
 
@@ -32,6 +32,7 @@ In simple.h:
 * Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
 * Macros for simplified std::cin input
 * Shortcut macros making C++ verbosity more suitable for one-liner context
+
 --------------------------------------
 #define         S       string
 #define         R       regex
