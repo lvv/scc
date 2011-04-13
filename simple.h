@@ -295,7 +295,7 @@ struct str: string {
 	str& operator = (int I) {	// interger assign
 		 ostringstream OS;
 		 OS << I;
-		 this->string::assign(OS.str());
+		 this->string::operator=(OS.str());
 		 return *this;
 	}
 	str& operator += (int I) {	// interger assign

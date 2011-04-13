@@ -35,7 +35,7 @@ void	split(string &line, char delim, vector<str> &elems) {
 }
 
 	str& 	F(size_t I) {
-		while (_F.size() < I)	_F.push_back(str());
+		while (_F.size() <= I)	_F.push_back(str());
 		return _F[I];
 	};
 
