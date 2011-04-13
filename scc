@@ -19,7 +19,7 @@ prg=/tmp/$USER-scc
 src=$prg.cc
 : ${1? Usage: css [options] 'c++ snippet' [arg...] }
 
-echo '
+cat <<  END	 > $src
 	#include <simple.h>
 	using namespace std;
 
@@ -35,32 +35,34 @@ echo '
 		//string __attribute__((unused))	s, line;
 		//int	 __attribute__((unused))	i=0,j=0, n=0;
 		//char __attribute__((unused))	c;
-		string OFS(" ");
-' 		>  $src
+		char 	 __attribute__((unused))	IFS=' ';
+		string	 __attribute__((unused))	OFS(" ");
+END
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
 case $1 in
 
-	-n) shift
-		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
+	-n)
+		shift
+		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
 		echo "
 			string line;
 			while ( getline(cin,line)) {
-				split(line, ' ', _F);
-				"$snippet"
+				split(line, IFS, _F);
+				$snippet
 			;}
-			; cout << flush << endl;
 		" >> $src ;;
 
-	-p) shift
-		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
+	-p)
+		shift
+		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 		echo "
 			string line;
 			while ( getline(cin,line)) {
-				split(line, ' ', _F);
-				"$snippet"
+				split(line, IFS, _F);
+				$snippet
 
 				for(size_t i=0;  i<_F.size()-1;  i++)
 					cout  << _F[i] << OFS;
@@ -70,8 +72,9 @@ case $1 in
 		" >> $src ;;
 
 	*)  
-		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
-		echo                                              $snippet      >> $src ;;
+		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
+		echo   "$snippet; cout << endl;"  >> $src ;;
+			
 
 esac
 

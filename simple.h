@@ -312,9 +312,19 @@ struct str: string {
 		 this->string::assign(OS.str());
 		 return *this;
 	}
+	str& operator += (int I) {	// interger assign
+		 ostringstream OS;
+		 OS << *this + I;
+		 this->string::assign(OS.str());
+		 return *this;
+	}
 
 	operator string(void) {	// converter to std::string
 		 return *(string*)this;
+	}
+
+	operator bool(void) {	// converter to int
+		 return    this->size() != 0;
 	}
 
 	operator int(void) {	// converter to int
