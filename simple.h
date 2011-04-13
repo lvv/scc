@@ -91,7 +91,6 @@
 	using	std::deque;
 	using	std::set;
 	using	std::map;
-	using	std::map;
 	using	std::stringstream;
 	using	std::istringstream;
 	using	std::ostringstream;
@@ -288,9 +287,10 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 // STR
 struct str: string {
 
+	// CTOR
 	str(const char*   s)	: string(s) {};
 	str(const string& s)	: string(s) {};
-	str()			: string() {};
+	str()			: string()  {};
 
 	// op= assign
 	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }

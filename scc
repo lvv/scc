@@ -30,26 +30,49 @@ cat <<  END	 > $src
 		};
 	};
 
+	std::ostream&   operator<<      (ostream& os, const vector<str, std::allocator<str> >& C) {              
+		cout << "{";
+		auto it=C.begin();
+		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
+		if (!C.empty())  					os  << *it;
+		cout << "}";
+		return os;
+	};
+
 	F_t F;
 
+	string	 __attribute__((unused))	line;
+	char 	 __attribute__((unused))	IFS=' ';
+	string	 __attribute__((unused))	OFS(" ");
 
-	void	split(string &line, char delim, vector<str> &elems) {
+
+	void	split() {
 		stringstream	ss(line);
-		string		item;
-		elems.clear();
-		while(std::getline(ss, item, delim)) {
-			elems.push_back(item);
+		string		f;
+
+		F.clear();
+		//while(std::getline(ss, f, IFS)) {
+		//	F.push_back(f);
+		//}
+		while(ss >> f) {
+			F.push_back(f);
+			SKIP_SPACE;
+		}
+	};
+
+	bool  read_line() {
+		F.clear();
+		if (getline(cin,line)) {
+			split();
+			return true;
+		} else {
+			return false;
 		}
 	};
 
 
 
 	int main(int argc, const char** argv) {
-		//string __attribute__((unused))	s, line;
-		//int	 __attribute__((unused))	i=0,j=0, n=0;
-		//char __attribute__((unused))	c;
-		char 	 __attribute__((unused))	IFS=' ';
-		string	 __attribute__((unused))	OFS(" ");
 END
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
@@ -61,9 +84,8 @@ case $1 in
 		shift
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
 		echo "
-			string line;
 			while ( getline(cin,line)) {
-				split(line, IFS, F);
+				split();
 				$snippet
 			;}
 		" >> $src ;;
@@ -72,9 +94,8 @@ case $1 in
 		shift
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 		echo "
-			string line;
 			while ( getline(cin,line)) {
-				split(line, IFS, F);
+				split();
 				$snippet
 
 				for(int i=0;   i < int(F.size())-1;  i++)

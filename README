@@ -22,15 +22,17 @@ In SCC shall script:
 
 * C++ snippet is decorated with usual C++ boilerplate
 * simple.h is included
+* if /usr/include/boost is present then boost/regex.hpp is included
 * If last (or only) statement (should be an expression) is not terminated by ';' it is sent to std::cout.
+* Generated source compiled and executed.
 
 In simple.h:
 
-* Almost all STL is included with `using namespace std`. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
+* Most of STL is included with `using namespace std`. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
 * Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
 * Macros for simplified std::cin input
 * Shortcut macros making C++ verbosity more suitable for one-liner context
-------------------------------
+--------------------------------------
 #define         S       string
 #define         R       regex
 #define         RM      regex_match
@@ -38,58 +40,95 @@ In simple.h:
 #define         M       match
 #define         CM      cmatch
 #define         GL(x)   getline(cin,x)
+#define		WRL	while(read_line())
+--------------------------------------
 
-#		NL	skip to new line on std::cin 
-#		F(N)	read field N;  if N is smaller then prev field access - skip to new line
-------------------------------
-* -n and -p options  equivalent to corrsponding perl's options 
+Predefined variables:
+* line	-  string set when -n / -p are active
+* F	-  line fields; accessible like F(i); counted from 0
+
+F(i) type is of str type, which is derived from std::string and can be directly
+converted to or from int:
+
+--------------------------------
+str s("1");
+int i=2;
+i = s;		// 
+i = s+1;	// 
+s = 1;		// "1"
+s++		// "2"
+s+str("5")	// "25"
+s+5		// "7"
+---------------------------------
+
 
 == More Examples
 
 Sum-up df's used-disk-space column:
 
-------------------
-df |scc 'NL;  int n=0;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
-df |awk '{n+=$2;};  END{print n}'			# equivalent AWK
--------------------
+-----------------------------------------------------------------------------------------
+command df | scc 'int n=0; while(read_line()) n+=F(2);  n'
+command df | awk '{n+=$2;};  END{print n}'			# equivalent AWK
+-----------------------------------------------------------------------------------------
 
 Word frequencies:
 
------------------------------------
+-----------------------------------------------------------------------------------------
 echo aaa bbb aaa | scc 'string w;  map<string,int> M;  while(cin >> w) M[w]++;  M'
 echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:space:]]'
------------------------------------
+------------------------------------------------------------------------------------------
 
 
 
-grep 
+PCRE grep. Input only from standard input and of cause real program should check for validity its args and regex.
 
-Input only from standard input and of cause real program should check its args and for validity regex.
-
---------------------------------
-scc 'string ln;  while(getline(cin, ln)) if (regex_search(ln,regex(argv[1])))  cout << ln << endl;'
+-------------------------------------------------------------------------
+echo "" | scc 'while(getline(cin, line) && regex_search(line,regex(argv[1])))  cout << line << endl;'
 mv /tmp/lvv-scc pcre_grep
 ls | ./pcre_grep '^(l|p)'
---------------------------------
+----------------------------------------------------------------
+
+
+Line oriented stream processing with perl's equivalent -n/-p
+
+Replace 2nd colun with '9':
+
+---------------------------------------------------------------------------
+echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'					
+echo -e '1 2\n11 22\n111 222'    | awk  '{$2=9; print $0}'		# awk equivalent
+-----------------------------------------------------------------------------
+
+Replace dashes and "none" with "n/a" in 2nt col:
+
+----------------------------------------------------------------------
+echo -e '1 -\n11 22\n111 none'   | scc -p 'if(RM(F(1),R("-?|none"))) F(1)="n/a" ;'
+echo -e '1 -\n11 22\n111 none'   | awk  '{if ($2~/-|none/) $2="n/a"; print $0}'
+------------------------------------------------------------------------
+
+== Install
+
+Put scc directory into PATH or symlink scc to directory in path
 
 
 == TOOD
 
-* Regex for with looks for last statment just look for ';', so it won't work correctly for:
+* Regex which looks for last statement just looks for ';', so it won't work correctly for:
 
 	- {}A
 	- B({A})
 	- string literals with '(){}'
-	- Space after last semicollon
+	- Space after closing semicolon
 
-  Just use simicollon before last statment and do not put trailing spaces.
+  Just use semicolon before last statement and do not put trailing spaces.
 
+* RS, FS
 * All (now only part) of STL should included;
-* All (now only part) of STL containers should be printabble;
-* Should I make str class friently to double (instead of int)?
+* All (now only part) of STL containers should be printable;
+* Should I make str class friendly to double (instead of int)?
 
 
 
+gcc-bash-wrapper + simple.h  = C++ one-liners now are possible
 
 == Similar projects
 
