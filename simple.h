@@ -298,6 +298,7 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 // STR
 struct str: string {
+
 	str(const char* s): string(s) {};
 	str(): string() {};
 

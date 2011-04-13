@@ -6,7 +6,8 @@
 [ -f /etc/scc ]  && . /etc/scc
 
 CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 "
-SCC_HOME+="$(dirname $(find $0  -printf '%l\n'))"
+FILE=$(find $0  -printf '%l\n')
+SCC_HOME+="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
 
 if [ -d /usr/include/boost ];  then 
@@ -36,11 +37,10 @@ case $1 in
 		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
 		echo '
 			string line;
-			vector<str> _F;	
+			vector<string> _F;	
 			while ( getline(cin,line)) {
-
-
-		' $snippet '
+				split(_F, line, boost::is_any_of("\t "));
+				'$snippet'
 			;}
 		' >> $src ;;
 
