@@ -5,11 +5,17 @@ This is simple bash scrip which wraps C++ snippet in C++ boilerplate and makes C
 
 -------------------
 scc 1   		# C++ expression - '1',  evaluated and printed
+1
 scc '2<<1'
-scc 'sin(0.5)'				
-scc 'float x=0.5;  sin(x)'				
+4
+scc 'sin(0.5)'						
+0.479426
+scc 'float x=0.5;  sin(x)'				# many statements
+0.479426
 scc 'float x=0.5;  cout << sin(x) << endl;'		# Same. Note trailing ';'
+0.479426
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x with gcc460)
+{1, 4, 9}						# STL containers are printable!
 -------------------------
 
 In SCC shall script:
@@ -36,18 +42,15 @@ In simple.h:
 #		NL	skip to new line on std::cin 
 #		F(N)	read field N;  if N is smaller then prev field access - skip to new line
 ------------------------------
-* -n equivalent to perl's -n
+* -n and -p options  equivalent to corrsponding perl's options 
 
 == More Examples
-
-You can just cun-n-paste it in you bash prompt:
 
 Sum-up df's used-disk-space column:
 
 ------------------
-command df |scc 'NL;  int n=0;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
-command df |awk '{n+=$2;};  END{print n}'			# equivalent AWK
-
+df |scc 'NL;  int n=0;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
+df |awk '{n+=$2;};  END{print n}'			# equivalent AWK
 -------------------
 
 Word frequencies:
@@ -83,6 +86,7 @@ ls | ./pcre_grep '^(l|p)'
 
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printabble;
+* Should I make str class friently to double (instead of int)?
 
 
 

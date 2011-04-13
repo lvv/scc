@@ -23,7 +23,15 @@ cat <<  END	 > $src
 	#include <simple.h>
 	using namespace std;
 
-	vector<str> _F;	
+	struct   F_t : vector<str> {
+		str& 	operator()(size_t I) {
+			while (this->size() <= I)	this->push_back(str());
+			return (*this)[I];
+		};
+	};
+
+	F_t F;
+
 
 	void	split(string &line, char delim, vector<str> &elems) {
 		stringstream	ss(line);
@@ -32,12 +40,8 @@ cat <<  END	 > $src
 		while(std::getline(ss, item, delim)) {
 			elems.push_back(item);
 		}
-	}
-
-	str& 	F(size_t I) {
-		while (_F.size() <= I)	_F.push_back(str());
-		return _F[I];
 	};
+
 
 
 	int main(int argc, const char** argv) {
@@ -59,7 +63,7 @@ case $1 in
 		echo "
 			string line;
 			while ( getline(cin,line)) {
-				split(line, IFS, _F);
+				split(line, IFS, F);
 				$snippet
 			;}
 		" >> $src ;;
@@ -70,12 +74,12 @@ case $1 in
 		echo "
 			string line;
 			while ( getline(cin,line)) {
-				split(line, IFS, _F);
+				split(line, IFS, F);
 				$snippet
 
-				for(int i=0;   i < int(_F.size())-1;  i++)
-					cout  << _F[i] << OFS;
-				if (_F.size() > 0)  cout << _F.back();
+				for(int i=0;   i < int(F.size())-1;  i++)
+					cout  << F[i] << OFS;
+				if (F.size() > 0)  cout << F.back();
 				cout << endl;
 			;}
 		" >> $src ;;
