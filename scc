@@ -7,7 +7,7 @@
 
 CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 -Wno-sign-compare"
 FILE=$(find $0  -printf '%l\n')
-SCC_HOME+="$(dirname ${FILE:-$0})"
+SCC_HOME="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
 
 if [ -d /usr/include/boost ];  then 
@@ -25,14 +25,14 @@ cat <<  END	 > $src
 
 	vector<str> _F;	
 
-void	split(string &line, char delim, vector<str> &elems) {
-	stringstream	ss(line);
-	string		item;
-	elems.clear();
-	while(std::getline(ss, item, delim)) {
-		elems.push_back(item);
+	void	split(string &line, char delim, vector<str> &elems) {
+		stringstream	ss(line);
+		string		item;
+		elems.clear();
+		while(std::getline(ss, item, delim)) {
+			elems.push_back(item);
+		}
 	}
-}
 
 	str& 	F(size_t I) {
 		while (_F.size() <= I)	_F.push_back(str());
@@ -93,4 +93,4 @@ echo '
 
 shift
 ${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
-# vim:set ts=4 sw=4 syntax=sh:   
+# vim:set ts=8 sw=8 syntax=sh:   

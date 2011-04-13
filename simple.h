@@ -292,26 +292,16 @@ struct str: string {
 	str(const string& s)	: string(s) {};
 	str()			: string() {};
 
-	str& operator = (int I) {	// interger assign
-		 ostringstream OS;
-		 OS << I;
-		 this->string::operator=(OS.str());
-		 return *this;
-	}
-	str& operator += (int I) {	// interger assign
-		 ostringstream OS;
-		 OS << *this + I;
-		 this->string::assign(OS.str());
-		 return *this;
-	}
+	// op= assign
+	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
+	str& operator += (int I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
+	str& operator -= (int I) { ostringstream OS;   OS << *this - I;   this->string::assign(OS.str());  return *this; }
+	str& operator *= (int I) { ostringstream OS;   OS << *this * I;   this->string::assign(OS.str());  return *this; }
+	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 
-	operator string(void) {	// converter to std::string
-		 return *(string*)this;
-	}
-
-	operator bool(void) {	// converter to bool
-		 return    this->size() != 0;
-	}
+	operator string	(void) { return  *(string*)this; }	// converter to std::string
+	operator bool	(void) { return   this->size() != 0; }	// converter to bool
 
 	operator int(void) {	// converter to int
 		 istringstream IS;
@@ -321,6 +311,7 @@ struct str: string {
 		 return I;
 	}
 
+	// prefix/postfix inc/dec
 	int operator++() {                   return *this = *this + 1; }
 	int operator--() {                   return *this = *this - 1; }
 	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
