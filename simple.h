@@ -202,16 +202,11 @@ operator<<      (ostream& os, int A[N]) {
 
 // print any std::sequance-containter<printable>
 template<typename E, template<typename E, typename L> class L > std::ostream&                                              
-operator<<      (ostream& os, const L<E, std::allocator<E> >& LL) {              
-
-        if (LL.empty()) return os;
-
+operator<<      (ostream& os, const L<E, std::allocator<E> >& C) {              
 	cout << "{";
-	auto it=LL.begin();
-	os  <<  *it++;
-        for (; it !=LL.end();   it++)
-                os <<  ", " << *it;
-        //os << "   size:" << LL.size() <<"  ";
+	auto it=C.begin();
+        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
+	if (!C.empty())  					os  << *it;
 	cout << "}";
         return os;
 };
@@ -219,14 +214,11 @@ operator<<      (ostream& os, const L<E, std::allocator<E> >& LL) {
 // SET -- print any std::set<printable>  with std comparator and allocator
 template<typename K> inline std::ostream&                                              
 operator<<      (ostream& os, const set<K, std::less<K>, std::allocator<K> >& C) {              
-
-        if (C.empty()) return os;
-
+	cout << "{";
 	auto it=C.begin();
-	os  <<  *it++;
-        for (; it !=C.end();   it++)
-                os <<  ", " << *it;
-        os << "   size:" << C.size() << "  ";
+        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
+	if (!C.empty())  						os  << *it;
+	cout << "}";
         return os;
 };
 
@@ -243,8 +235,6 @@ operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::
 	os  <<  *it++;
         for (; it !=C.end();   it++)
                 os <<  ", " << *it;
-
-        //os << "   size:" << C.size() <<"  ";
 	cout << "}";
         return os;
 };
@@ -341,13 +331,5 @@ struct str: string {
 	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
 };
 
-void	split(string &line, char delim, vector<str> &elems) {
-	stringstream	ss(line);
-	string		item;
-	elems.clear();
-	while(std::getline(ss, item, delim)) {
-		elems.push_back(item);
-	}
-}
 
 #endif
