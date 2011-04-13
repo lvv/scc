@@ -227,14 +227,10 @@ operator<<      (ostream& os, const set<K, std::less<K>, std::allocator<K> >& C)
 // MAP -- print any std::map<printable, printable>  with std comparator and allocator
 template<typename K, typename V> inline std::ostream&                                              
 operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::pair<const K,V> > > & C) {              
-
-        if (C.empty()) return os;
-
 	cout << "{";
 	auto it = C.begin();
-	os  <<  *it++;
-        for (; it !=C.end();   it++)
-                os <<  ", " << *it;
+        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
+	if (!C.empty())  						os  << *it;
 	cout << "}";
         return os;
 };
