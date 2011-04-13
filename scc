@@ -5,7 +5,7 @@
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
 
-CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 "
+CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 -Wno-sign-compare"
 FILE=$(find $0  -printf '%l\n')
 SCC_HOME+="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
@@ -64,7 +64,7 @@ case $1 in
 				split(line, IFS, _F);
 				$snippet
 
-				for(size_t i=0;  i<_F.size()-1;  i++)
+				for(int i=0;   i < int(_F.size())-1;  i++)
 					cout  << _F[i] << OFS;
 				if (_F.size() > 0)  cout << _F.back();
 				cout << endl;

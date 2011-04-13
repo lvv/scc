@@ -323,7 +323,7 @@ struct str: string {
 		 return *(string*)this;
 	}
 
-	operator bool(void) {	// converter to int
+	operator bool(void) {	// converter to bool
 		 return    this->size() != 0;
 	}
 
@@ -350,7 +350,4 @@ void	split(string &line, char delim, vector<str> &elems) {
 	}
 }
 
-
-
 #endif
-
