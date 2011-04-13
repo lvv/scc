@@ -34,7 +34,15 @@ case $1 in
 
 	-n) shift
 		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
-		echo 'string line; while ( getline(cin,line)) { ' $snippet ';} ' >> $src ;;
+		echo '
+			string line;
+			vector<str> _F;	
+			while ( getline(cin,line)) {
+
+
+		' $snippet '
+			;}
+		' >> $src ;;
 
 	*)  
 		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`

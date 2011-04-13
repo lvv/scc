@@ -40,10 +40,15 @@
 
 ///////////////////////////////////////////////////////////////////// BOOST
 #ifdef USE_BOOST
+
+	#include <boost/algorithm/string.hpp>
+		using boost::split;
+
 	#include <boost/regex.hpp>
 		using boost::regex;
 		using boost::cmatch;
 		using boost::regex_match;
+
 	//using namespace boost;
 #endif
 
@@ -116,7 +121,7 @@
 
 	size_t static 	 __attribute__((unused))	_line_field	= 1;
 
-std::istream& 	F(size_t n) {
+std::istream& 	xF(size_t n) {
 	string ignore_word; 
 	if (_line_field > n) NL;
 	for (; _line_field<n; _line_field++)  {
@@ -294,6 +299,7 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 // STR
 struct str: string {
 	str(const char* s): string(s) {};
+	str(): string() {};
 
 	str& operator = (int I) {	// interger assign
 		 ostringstream OS;
@@ -310,4 +316,16 @@ struct str: string {
 		 return I;
 	}
 };
+
+str& 	F(size_t n) {
+	string ignore_word; 
+	str	S;
+	if (_line_field > n) NL;
+	for (; _line_field<n; _line_field++)  {
+		SKIP_SPACE;
+		cin >> ignore_word;
+	};
+	return S;
+}
+
 #endif
