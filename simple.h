@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
 #include <cstddef>
-#include <cstdint>
+//#include <cstdint>
 #include <cstring>
 #include <cctype>
 #include <cmath>
@@ -25,6 +25,9 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <stack>
+#include <queue>
+#include <limits>
 
 #include <bitset>
 ///////////////////////////////////////////////////////////////////// C++0X STL
@@ -32,11 +35,17 @@
 
 // 4.6.0  fail with: scc 'RS("abc", R("abc"))'
 //#include <regex>
+//
+
 
 ///////////////////////////////////////////////////////////////////// BOOST
-#include <boost/regex.hpp>
-	//using boost::regex;
-	//using boost::regex_match;
+#ifdef USE_BOOST
+	#include <boost/regex.hpp>
+		using boost::regex;
+		using boost::cmatch;
+		using boost::regex_match;
+	//using namespace boost;
+#endif
 
 ///////////////////////////////////////////////////////////////////// shortcuts
 #define 	S	string
@@ -49,14 +58,12 @@
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL
-#include <lvv/lvv.h>
-#include <lvv/meta.h>
-#include <lvv/array.h>
-	using lvv::array;
-//	using std::to_binary;
+//#include <lvv/lvv.h>
+//#include <lvv/meta.h>
+//#include <lvv/array.h>
+//	using lvv::array;
 
-using namespace std;
-using namespace boost;
+//using namespace std;
 
 // FOREACH
 //#include <boost/foreach.hpp>
@@ -67,8 +74,24 @@ using namespace boost;
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
+	using	std::cin;
+	using	std::cout;
+	using	std::endl;
+	using	std::string;
+	using	std::basic_string;
+	using	std::basic_ostream;
+	using	std::istream;
+	using	std::ostream;
+	using	std::set;
+	using	std::map;
+	using	std::map;
+	using	std::istringstream;
+	using	std::ostringstream;
+	using	std::numeric_limits;
+	using	std::ostream_iterator;
+	using	std::istream_iterator;
 
-	static std::istringstream		lin_sstream;
+	static istringstream		lin_sstream;
 	static char __attribute__((unused))	lin_line[1000];	
 
 	
@@ -81,8 +104,8 @@ using namespace boost;
 
 	#define		lin  lin_sstream
 
-	#define		NL      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1;
-	#define		nl      		cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1; 
+	#define		NL      		cin.ignore(numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1;
+	#define		nl      		cin.ignore(numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1; 
 
 
 	#define		IS_SPACE                (cin.peek()==' '  || cin.peek()=='\t')
@@ -93,7 +116,7 @@ using namespace boost;
 
 	size_t static 	 __attribute__((unused))	_line_field	= 1;
 
-istream& 	F(size_t n) {
+std::istream& 	F(size_t n) {
 	string ignore_word; 
 	if (_line_field > n) NL;
 	for (; _line_field<n; _line_field++)  {
@@ -135,6 +158,14 @@ struct	osi : ostream_iterator<T> {
 	osi(): ostream_iterator<T>(cout, " ") { self_addr = (void*) this; }; 
 	void* self_addr;	// to check if we are original instance of osi
 	~osi() { if (self_addr == (void*) this)   cout << endl; };	
+};
+
+// ISI -- Output Stream Iterator shorthand 
+// 	used as:	vector<int> V (isi<int>(cin), isi<int>());
+	template<typename T>
+struct	isi : istream_iterator<T> {
+	isi(istream& is):	istream_iterator<T>(is)	{}; 
+	isi(): 			istream_iterator<T>()	{}; 
 };
 
 	
@@ -223,8 +254,15 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 	// Using C++0x Variadic Templates to Pretty-Print Types 
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
+#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
+
 // TUPLE -- print any std::tuple<printable ...>
 // 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
+	using	std::tuple;
+	using	std::tuple_size;
+	using	std::get;
+
+
 
 			template< int RI, typename... TT>
 	struct	print_tuple_elem  {
@@ -242,6 +280,7 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {};
 	};
 
+
 		template<typename... TT> inline
 		std::ostream&  
 operator<<      (ostream& os, const tuple<TT...>& tup) {               
@@ -249,6 +288,26 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };
+#endif
 
 
+// STR
+struct str: string {
+	str(const char* s): string(s) {};
+
+	str& operator = (int I) {	// interger assign
+		 ostringstream OS;
+		 OS << I;
+		 this->string::assign(OS.str());
+		 return *this;
+	}
+
+	operator int(void) {	// converter to int
+		 istringstream IS;
+		 int I;
+		 IS.str(*this);
+		 IS >> I;
+		 return I;
+	}
+};
 #endif

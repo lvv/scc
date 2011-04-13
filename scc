@@ -5,28 +5,52 @@
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
 
+CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 "
+SCC_HOME+="$(dirname $(find $0  -printf '%l\n'))"
+CXXFLAGS+=" -I $SCC_HOME "
+
+if [ -d /usr/include/boost ];  then 
+	LIBS+='-lboost_regex'
+	CXXFLAGS+=" -DUSE_BOOST "
+fi 
+
 prg=/tmp/$USER-scc
 src=$prg.cc
+: ${1? Usage: css [options] 'c++ snippet' [arg...] }
 
 echo '
 	#include <simple.h>
+	using namespace std;
 	int main(int argc, const char** argv) {
-		string __attribute__((unused))	s, line;
-		int	 __attribute__((unused))	i=0,j=0, n=0;
-		char __attribute__((unused))	c;
+		//string __attribute__((unused))	s, line;
+		//int	 __attribute__((unused))	i=0,j=0, n=0;
+		//char __attribute__((unused))	c;
 ' 		>  $src
 
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
-echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
+
+case $1 in
+
+	-n) shift
+		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
+		echo 'string line; while ( getline(cin,line)) { ' $snippet ';} ' >> $src ;;
+
+	*)  
+		snippet=`echo "$1" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`
+		echo                                              $snippet      >> $src ;;
+
+esac
+		
+
+
 
 
 echo '
-	; cout << endl;
+	; cout << flush << endl;
 } ' 		>>  $src
 #cat $src
 
-LIBS+='-lboost_regex'
 shift
-g++  -Wall -std=gnu++0x  -ggdb3 -O0 -I/home/lvv/p/scc/ -I/usr/local/include/  $prg.cc -o $prg $LIBS $LIBS && $prg "$@"
+${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
 # vim:set ts=4 sw=4 syntax=sh:   

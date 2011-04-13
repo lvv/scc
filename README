@@ -1,26 +1,42 @@
 SCC - Simple C++ 
 ==========
 
-This is simple bash scrip which allows C++ one-lines:
+This is simple bash scrip which wraps C++ snippet in C++ boilerplate and makes C++ one-lines possible:
 
 -------------------
-scc 1   	# C++ expression - '1' evaluated and printed
+scc 1   		# C++ expression - '1',  evaluated and printed
 scc '2<<1'
-scc 'sin(0.5)'
-scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'  # square an array (C++0x with gcc460)
+scc 'sin(0.5)'				
+scc 'float x=0.5;  sin(x)'				
+scc 'float x=0.5;  cout << sin(x) << endl;'		# Same. Note trailing ';'
+scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x with gcc460)
 -------------------------
 
 In SCC shall script:
 
-* C++ snippet is decoreated with usual C++ boilerplate
+* C++ snippet is decorated with usual C++ boilerplate
 * simple.h is included
-* If last (or only) statement (should be an expression) is not terminated by ';' it is sent to cout.
+* If last (or only) statement (should be an expression) is not terminated by ';' it is sent to std::cout.
 
 In simple.h:
 
 * Almost all STL is included with `using namespace std`. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
-* Code which allows most STL container to be printed to COUT directrly like `vector<int> V{1,2,3};   cout << V;`
-* Macros for simplified CIN input
+* Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
+* Macros for simplified std::cin input
+* Shortcut macros making C++ verbosity more suitable for one-liner context
+------------------------------
+#define         S       string
+#define         R       regex
+#define         RM      regex_match
+#define         RS      regex_search
+#define         M       match
+#define         CM      cmatch
+#define         GL(x)   getline(cin,x)
+
+#		NL	skip to new line on std::cin 
+#		F(N)	read field N;  if N is smaller then prev field access - skip to new line
+------------------------------
+* -n equivalent to perl's -n
 
 == More Examples
 
@@ -29,21 +45,18 @@ You can just cun-n-paste it in you bash prompt:
 Sum-up df's used-disk-space column:
 
 ------------------
-command df |scc 'NL;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
-command df |awk '{n+=$2;};  END{print n}'		# equivalent AWK
+command df |scc 'NL;  int n=0;  while(F(2)>>i) n+=i; n'		# input macros: new-line - NL,  field - F()
+command df |awk '{n+=$2;};  END{print n}'			# equivalent AWK
 
 -------------------
 
-Word frequancies:
+Word frequencies:
 
 -----------------------------------
 echo aaa bbb aaa | scc 'string w;  map<string,int> M;  while(cin >> w) M[w]++;  M'
 echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:space:]]'
 -----------------------------------
 
-Make  fIlled vector:
-
-scc 'vector<int> V(10, 1);  partial_sum(V.begin(), V.end(), V.begin());  V'
 
 
 grep 
@@ -57,11 +70,25 @@ ls | ./pcre_grep '^(l|p)'
 --------------------------------
 
 
-== What is not working:
+== TOOD
 
-* scc '1;  '	# Space after last col:
-* {}A
-* B({A})
-* string literals with '(){}'
+* Regex for with looks for last statment just look for ';', so it won't work correctly for:
+
+	- {}A
+	- B({A})
+	- string literals with '(){}'
+	- Space after last semicollon
+
+  Just use simicollon before last statment and do not put trailing spaces.
+
+* All (now only part) of STL should included;
+* All (now only part) of STL containers should be printabble;
 
 
+
+
+== Similar projects
+
+* http://home.mweb.co.za/sd/sdonovan/underc.html[]
+* http://home.mweb.co.za/sd/sdonovan/ccbx.htm[]
+* http://root.cern.ch/drupal/category/package-context/cling[]
