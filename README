@@ -10,7 +10,7 @@ scc '2<<1'
 4
 scc 'sin(0.5)'						
 0.479426
-scc 'float x=0.5;  sin(x)'				# many statements
+scc 'float x=0.5;  sin(x)'				# multi-statements
 0.479426
 scc 'float x=0.5;  cout << sin(x) << endl;'		# Same. Note trailing ';'
 0.479426
@@ -42,14 +42,19 @@ In simple.h:
 #define         CM      cmatch
 #define         GL(x)   getline(cin,x)
 #define		WRL	while(read_line())
+#define		vint	vector<int>
+#define		vuint	vector<unsigned int>
+#define		vfloat	vector<float>
+#define		vdouble	vector<double>
 --------------------------------------
 
 Predefined variables:
-* line	-  string set when -n / -p are active
-* F	-  line fields; accessible like F(i); counted from 0
+* line	-  std::string,  set when -n / -p are active
+* F	-  std::vector<str> line's fields; accessible like F(i); counted from 0
+* NF	-  int number of fields (set after read_line())
+* NR 	-  int number of records (set arter read_line())
 
-F(i) type is of str type, which is derived from std::string and can be directly
-converted to or from int:
+The str type is derived from std::string and can be directly converted to or from int:
 
 --------------------------------
 str s("1");
@@ -64,6 +69,15 @@ s+5		// "7"
 
 
 == More Examples
+
+Count number of words:
+
+-------------------------------------------------------
+echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'
+3
+echo "AAA BBB CCC"   | awk  '{t+=NF} END{print t}'
+3
+-------------------------------------------------------
 
 Sum-up df's used-disk-space column:
 
@@ -84,9 +98,15 @@ echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:sp
 PCRE grep. Input only from standard input and of cause real program should check for validity its args and regex.
 
 -------------------------------------------------------------------------
-echo "" | scc 'while(getline(cin, line) && regex_search(line,regex(argv[1])))  cout << line << endl;'
-mv /tmp/lvv-scc pcre_grep
-ls | ./pcre_grep '^(l|p)'
+echo -e "AA\nBB\nCC"  | scc 'while(read_line())   if (regex_search(line, regex(argv[1])))  cout << line << endl;' 'A|B'
+AA
+BB
+
+echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B' 	# same with shortcuts
+AA
+BB
+
+mv /tmp/your_user_name-scc pcre_grep
 ----------------------------------------------------------------
 
 
@@ -96,19 +116,37 @@ Replace 2nd colun with '9':
 
 ---------------------------------------------------------------------------
 echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'					
+1 9
+11 9
+111 9
 echo -e '1 2\n11 22\n111 222'    | awk  '{$2=9; print $0}'		# awk equivalent
+1 9
+11 9
+111 9
 -----------------------------------------------------------------------------
 
 Replace dashes and "none" with "n/a" in 2nt col:
 
 ----------------------------------------------------------------------
-echo -e '1 -\n11 22\n111 none'   | scc -p 'if(RM(F(1),R("-?|none"))) F(1)="n/a" ;'
+echo -e '1 -\n11 22\n111 none'   | scc -p 'if (RM(F(1),R("-?|none"))) F(1)="n/a";'
+1 n/a
+11 22
+111 n/a
+
 echo -e '1 -\n11 22\n111 none'   | awk  '{if ($2~/-|none/) $2="n/a"; print $0}'
+1 n/a
+11 22
+111 n/a
+
 ------------------------------------------------------------------------
 
 == Install
 
-Put scc directory into PATH or symlink scc to directory in path
+-----------------------------------------
+git clone git://github.com/lvv/scc.git
+---------------------------------------
+
+Put scc directory into PATH or symlink scc to directory in PATH
 
 
 == TOOD
@@ -133,6 +171,5 @@ gcc-bash-wrapper + simple.h  = C++ one-liners now are possible
 
 == Similar projects
 
-* http://home.mweb.co.za/sd/sdonovan/underc.html[]
-* http://home.mweb.co.za/sd/sdonovan/ccbx.htm[]
-* http://root.cern.ch/drupal/category/package-context/cling[]
+* home.mweb.co.za/sd/sdonovan/underc.html[]
+* root.cern.ch/drupal/category/package-context/cling[]

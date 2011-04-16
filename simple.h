@@ -53,13 +53,20 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////// shortcuts
-#define 	S	string
+
 #define 	R	regex
 #define 	RM	regex_match
 #define 	RS	regex_search
 #define 	M	match
 #define 	CM	cmatch
+
 #define 	GL(x)	getline(cin,x)
+
+#define		vint	vector<int>
+#define		vuint	vector<unsigned int>
+#define		vfloat	vector<float>
+#define		vdouble	vector<double>
+#define		vstr	vector<str>
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL
@@ -318,5 +325,14 @@ struct str: string {
 	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
 };
 
+struct in_t: istream {
+	in_t() /*: istream()*/ {};
+
+	//operator int() { int t; cin >> t; return t; }
+	template<typename T>
+	operator T() { T t; cin >> t; return t; }
+};
+
+in_t in;
 
 #endif

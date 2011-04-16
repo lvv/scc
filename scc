@@ -40,6 +40,8 @@ cat <<  END	 > $src
 	};
 
 	F_t F;
+	int NF = 0;
+	int NR = 0;
 
 	string	 __attribute__((unused))	line;
 	char 	 __attribute__((unused))	IFS=' ';
@@ -58,18 +60,21 @@ cat <<  END	 > $src
 			F.push_back(f);
 			SKIP_SPACE;
 		}
+		NF = F.size();
 	};
 
 	bool  read_line() {
 		F.clear();
 		if (getline(cin,line)) {
 			split();
+			NR ++;
 			return true;
 		} else {
 			return false;
 		}
 	};
 
+	#define WRL  while(read_line())
 
 
 	int main(int argc, const char** argv) {
@@ -106,8 +111,8 @@ case $1 in
 		" >> $src ;;
 
 	*)  
-		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
-		echo   "$snippet; cout << endl;"  >> $src ;;
+		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
+		echo   "$snippet;"  >> $src ;;
 			
 
 esac
