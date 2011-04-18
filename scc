@@ -23,7 +23,7 @@ cat <<  END	 > $src
 	#include <simple.h>
 	using namespace std;
 
-	struct   F_t : vector<str> {
+	struct   F_t : deque<str> {
 		str& 	operator()(size_t I) {
 			//while (this->size() <= I)	this->push_back(str());
 			this->resize(I+1);
@@ -54,9 +54,6 @@ cat <<  END	 > $src
 		string		f;
 
 		F.clear();
-		//while(std::getline(ss, f, IFS)) {
-		//	F.push_back(f);
-		//}
 		while(ss >> f) {
 			F.push_back(f);
 			SKIP_SPACE;
@@ -90,8 +87,7 @@ case $1 in
 		shift
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
 		echo "
-			while ( getline(cin,line)) {
-				split();
+			while ( read_line())) {
 				$snippet
 			;}
 		" >> $src ;;
@@ -100,8 +96,7 @@ case $1 in
 		shift
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 		echo "
-			while ( getline(cin,line)) {
-				split();
+			while (read_line()) {
 				$snippet
 
 				for(int i=0;   i < int(F.size())-1;  i++)
