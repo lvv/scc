@@ -25,7 +25,8 @@ cat <<  END	 > $src
 
 	struct   F_t : vector<str> {
 		str& 	operator()(size_t I) {
-			while (this->size() <= I)	this->push_back(str());
+			//while (this->size() <= I)	this->push_back(str());
+			this->resize(I+1);
 			return (*this)[I];
 		};
 	};

@@ -54,6 +54,7 @@
 
 ///////////////////////////////////////////////////////////////////// shortcuts
 
+
 #define 	R	regex
 #define 	RM	regex_match
 #define 	RS	regex_search
@@ -62,6 +63,7 @@
 
 #define 	GL(x)	getline(cin,x)
 
+#define		st	string
 #define		vint	vector<int>
 #define		vuint	vector<unsigned int>
 #define		vfloat	vector<float>
@@ -104,6 +106,7 @@
 	using	std::numeric_limits;
 	using	std::ostream_iterator;
 	using	std::istream_iterator;
+	using	std::swap;
 
 	static istringstream		lin_sstream;
 	static char __attribute__((unused))	lin_line[1000];	
@@ -217,6 +220,7 @@ operator<<      (ostream& os, const L<E, std::allocator<E> >& C) {
         return os;
 };
 
+
 // SET -- print any std::set<printable>  with std comparator and allocator
 template<typename K> inline std::ostream&                                              
 operator<<      (ostream& os, const set<K, std::less<K>, std::allocator<K> >& C) {              
@@ -254,7 +258,57 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 	// Using C++0x Variadic Templates to Pretty-Print Types 
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
+// STR
+struct str: string {
+
+	// CTOR
+	str(const char*   s)	: string(s) {};
+	str(const string& s)	: string(s) {};
+	str()			: string()  {};
+
+	// op= assign
+	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
+	str& operator += (int I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
+	str& operator -= (int I) { ostringstream OS;   OS << *this - I;   this->string::assign(OS.str());  return *this; }
+	str& operator *= (int I) { ostringstream OS;   OS << *this * I;   this->string::assign(OS.str());  return *this; }
+	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+
+	operator string	(void) { return  *(string*)this; }	// converter to std::string
+	operator bool	(void) { return   this->size() != 0; }	// converter to bool
+
+	operator int(void) {	// converter to int
+		 istringstream IS;
+		 int I;
+		 IS.str(*this);
+		 IS >> I;
+		 return I;
+	}
+
+	// prefix/postfix inc/dec
+	int operator++() {                   return *this = *this + 1; }
+	int operator--() {                   return *this = *this - 1; }
+	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
+	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
+};
+
+struct in_t: istream {
+	in_t () {};
+
+	// convert (input) any POD type
+	template<typename T> operator T() { T t; cin >> t; return t; }
+};
+
+in_t in;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////   gcc-4.6.0
+
 #if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
+
+// input any std::sequance-containter<printable>  (container must have size()) 
+template<typename E, template<typename E, typename L> class L > std::istream&                                              
+operator>>      (istream& is, L<E, std::allocator<E> >& C)    { for(auto &c:C) if(!(is>>c)) break; return is; }; 
+
 
 // TUPLE -- print any std::tuple<printable ...>
 // 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
@@ -291,48 +345,5 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 #endif
 
 
-// STR
-struct str: string {
-
-	// CTOR
-	str(const char*   s)	: string(s) {};
-	str(const string& s)	: string(s) {};
-	str()			: string()  {};
-
-	// op= assign
-	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (int I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (int I) { ostringstream OS;   OS << *this - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (int I) { ostringstream OS;   OS << *this * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
-
-	operator string	(void) { return  *(string*)this; }	// converter to std::string
-	operator bool	(void) { return   this->size() != 0; }	// converter to bool
-
-	operator int(void) {	// converter to int
-		 istringstream IS;
-		 int I;
-		 IS.str(*this);
-		 IS >> I;
-		 return I;
-	}
-
-	// prefix/postfix inc/dec
-	int operator++() {                   return *this = *this + 1; }
-	int operator--() {                   return *this = *this - 1; }
-	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
-	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
-};
-
-struct in_t: istream {
-	in_t() /*: istream()*/ {};
-
-	//operator int() { int t; cin >> t; return t; }
-	template<typename T>
-	operator T() { T t; cin >> t; return t; }
-};
-
-in_t in;
 
 #endif
