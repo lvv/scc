@@ -264,6 +264,7 @@ struct str: string {
 	// CTOR
 	str(const char*   s)	: string(s) {};
 	str(const string& s)	: string(s) {};
+	str(int           i)	: string()  {*this = i;};
 	str()			: string()  {};
 
 	// op= assign

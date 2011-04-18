@@ -25,7 +25,6 @@ cat <<  END	 > $src
 
 	struct   F_t : deque<str> {
 		str& 	operator()(size_t I) {
-			//while (this->size() <= I)	this->push_back(str());
 			this->resize(I+1);
 			return (*this)[I];
 		};
@@ -65,7 +64,7 @@ cat <<  END	 > $src
 		F.clear();
 		if (getline(cin,line)) {
 			split();
-			NR ++;
+			++ NR;
 			return true;
 		} else {
 			return false;
@@ -87,7 +86,7 @@ case $1 in
 		shift
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
 		echo "
-			while ( read_line())) {
+			while ( read_line()) {
 				$snippet
 			;}
 		" >> $src ;;
