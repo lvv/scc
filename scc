@@ -41,7 +41,7 @@ cat <<  END	 > $src
 
 	F_t F;
 	int NF = 0;
-	int NR = 0;
+	int NR = -1;
 
 	string	 __attribute__((unused))	line;
 	char 	 __attribute__((unused))	IFS=' ';

@@ -63,12 +63,13 @@
 
 #define 	GL(x)	getline(cin,x)
 
-#define		st	string
-#define		vint	vector<int>
-#define		vuint	vector<unsigned int>
-#define		vfloat	vector<float>
-#define		vdouble	vector<double>
-#define		vstr	vector<str>
+#define		S	string
+#define		Vint	vector<int>
+#define		Vuint	vector<unsigned int>
+#define		Vfloat	vector<float>
+#define		Vdouble	vector<double>
+#define		Vstr	vector<str>
+#define		VS	vector<string>
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL

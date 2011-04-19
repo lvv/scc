@@ -1,10 +1,10 @@
 SCC - Simple C++ 
 =================
 
-This is simple bash script which wraps C++ snippet in C++ boilerplate and makes C++ one-lines possible:
+Bash script which wraps C++ snippet in usual boilerplate code and makes C++ one-lines possible:
 
 ----------------------------------------------------------------------------
-scc 1   		# C++ expression - '1',  evaluated and printed
+scc 1   						# C++ expression - '1',  evaluated and printed
 1
 scc '2<<1'
 4
@@ -12,10 +12,10 @@ scc 'sin(0.5)'
 0.479426
 scc 'float x=0.5;  sin(x)'				# multi-statements
 0.479426
-scc 'float x=0.5;  cout << sin(x) << endl;'		# Same. Note trailing ';'
+scc 'float x=0.5;  cout << sin(x) << endl;'		# Same, but explicit printing. Note trailing ';'
 0.479426
-scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x with gcc460)
-{1, 4, 9}						# STL containers are printable!
+scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x is default)
+{1, 4, 9}						# STL containers are printable with simple.h
 -------------------------------------------------------------------------------
 
 In SCC shall script:
@@ -24,75 +24,81 @@ In SCC shall script:
 * simple.h is included
 * if /usr/include/boost is present then boost/regex.hpp is included
 * If last (or only) statement (should be an expression) is not terminated by ';' it is sent to std::cout.
+* if stream options are used (-n, -p), then a line is read per input cycle; split into fields;  and after snippet is executed (for -p) line is reassembled from fields  and sent to std::cout
 * Generated source compiled and executed.
 
 In simple.h:
 
-* Most of STL is included with `using namespace std`. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
+* Most of STL's includes are included and `using std::...` added for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
 * Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
 * Macros for simplified std::cin input
 * Shortcut macros making C++ verbosity more suitable for one-liner context
 
---------------------------------------
-#define         S       string
-#define         R       regex
-#define         RM      regex_match
-#define         RS      regex_search
-#define         M       match
-#define         CM      cmatch
-#define         GL(x)   getline(cin,x)
-#define		WRL	while(read_line())
-#define		vint	vector<int>
-#define		vuint	vector<unsigned int>
-#define		vfloat	vector<float>
-#define		vdouble	vector<double>
---------------------------------------
 
 Predefined variables:
-* line	-  std::string,  set when -n / -p are active
-* F	-  std::vector<str> line's fields; accessible like F(i); counted from 0
-* NF	-  int number of fields (set after read_line())
-* NR 	-  int number of records (set arter read_line())
+* line	-  `std::string`,  set with `-n` / `-p` or after `read_line()`
+* F	-  `std::vector<str>` line's fields; accessible like `F(i)`; counted from 0
+* NF	-  `int`,  number of fields (set after read_line())
+* NR 	-  `int`,  number of records (set arter read_line())
+* ONF 	-  `std::string`, output field separator 
+* INF 	-  `std::string`, input field separator 
 
-The str type is derived from std::string and can be directly converted to or from int:
+The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
 
 --------------------------------
 str s("1");
 int i=2;
-i = s;		// 
-i = s+1;	// 
+i = s;		// string cast to int
+i = s+1;	// 2
 s = 1;		// "1"
 s++		// "2"
 s+str("5")	// "25"
 s+5		// "7"
 ---------------------------------
 
+Shortcuts:
+--------------------------------------
+#define		WRL	while(read_line())
+#define         S      string
+
+#define         R       regex
+#define         RM      regex_match
+#define         RS      regex_search
+#define         M       match
+#define         CM      cmatch
+
+#define		Vint	vector<int>
+#define		Vuint	vector<unsigned int>
+#define		Vfloat	vector<float>
+#define		Vdouble	vector<double>
+--------------------------------------
 
 == More Examples
 
 Count number of words:
 
 -------------------------------------------------------
-echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'
+echo "AAA BBB CCC"   | scc  'int t=0; S s; while(cin>>s) t++; t'  
 3
-echo "AAA BBB CCC"   | awk  '{t+=NF} END{print t}'
+echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'			# same
+3
+echo "AAA BBB CCC"   | awk  '{t+=NF} END{print t}'			# awk
 3
 -------------------------------------------------------
 
 Sum-up df's used-disk-space column:
 
 -----------------------------------------------------------------------------------------
-command df | scc 'int n=0; while(read_line()) n+=F(2);  n'
-command df | awk '{n+=$2;};  END{print n}'			# equivalent AWK
+command df | scc 'int n=0; WRL n+=F(2);  n'
+command df | awk '{n+=$3;};  END{print n}'	
 -----------------------------------------------------------------------------------------
 
 Word frequencies:
 
 -----------------------------------------------------------------------------------------
-echo aaa bbb aaa | scc 'string w;  map<string,int> M;  while(cin >> w) M[w]++;  M'
+echo aaa bbb aaa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M'
 echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:space:]]'
 ------------------------------------------------------------------------------------------
-
 
 
 PCRE grep. Input only from standard input and of cause real program should check for validity its args and regex.
@@ -112,7 +118,7 @@ mv /tmp/your_user_name-scc pcre_grep
 
 Line oriented stream processing with perl's equivalent -n/-p
 
-Replace 2nd colun with '9':
+Replace 2nd column with '9':
 
 ---------------------------------------------------------------------------
 echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'					
@@ -140,6 +146,14 @@ echo -e '1 -\n11 22\n111 none'   | awk  '{if ($2~/-|none/) $2="n/a"; print $0}'
 
 ------------------------------------------------------------------------
 
+Prepend line mumber to every line:
+
+--------------------------------------------------------
+echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'
+echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'NR+1'			# same, note absence of trailing ';'
+echo -e 'aaa bbb\nccc ddd'   |  awk     '{print NR, $0}'	# same in awk
+-----------------------------------------------------------
+
 == Install
 
 -----------------------------------------
@@ -154,20 +168,17 @@ Put scc directory into PATH or symlink scc to directory in PATH
 * Regex which looks for last statement just looks for ';', so it won't work correctly for:
 
 	- {}A
-	- B({A})
+	- +++B({A})+++
 	- string literals with '(){}'
 	- Space after closing semicolon
 
-  Just use semicolon before last statement and do not put trailing spaces.
+  Simple workaround: use semicolon before last statement and do not put trailing spaces.
 
-* RS, FS
+* RS
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;
-* Should I make str class friendly to double (instead of int)?
 
 
-
-gcc-bash-wrapper + simple.h  = C++ one-liners now are possible
 
 == Similar projects
 
