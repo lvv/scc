@@ -48,6 +48,7 @@
 		using boost::regex;
 		using boost::cmatch;
 		using boost::regex_match;
+		using boost::sregex_token_iterator;
 
 	//using namespace boost;
 #endif
@@ -55,11 +56,12 @@
 ///////////////////////////////////////////////////////////////////// shortcuts
 
 
-#define 	R	regex
-#define 	RM	regex_match
-#define 	RS	regex_search
-#define 	M	match
-#define 	CM	cmatch
+#define 	R	boost::regex
+#define 	RM	boost::regex_match
+#define 	RS	boost::regex_search
+#define 	M	boost::match
+#define 	CM	boost::cmatch
+#define 	SRTI	boost::sregex_token_iterator
 
 #define 	GL(x)	getline(cin,x)
 
@@ -293,6 +295,8 @@ struct str: string {
 	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
 	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
 };
+
+std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
 
 struct in_t: istream {
 	in_t () {};

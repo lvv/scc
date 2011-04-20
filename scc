@@ -23,19 +23,19 @@ cat <<  END	 > $src
 	#include <simple.h>
 	using namespace std;
 
-	struct   F_t : deque<str> {
+	struct   F_t : std::deque<str> {
 		str& 	operator()(size_t I) {
 			this->resize(I+1);
 			return (*this)[I];
 		};
 	};
 
-	std::ostream&   operator<<      (ostream& os, const vector<str, std::allocator<str> >& C) {              
-		cout << "{";
+	std::ostream&   operator<<      (ostream& os, const deque<str, std::allocator<str> >& C) {              
+		os << "{";
 		auto it=C.begin();
 		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
 		if (!C.empty())  					os  << *it;
-		cout << "}";
+		os << "}";
 		return os;
 	};
 

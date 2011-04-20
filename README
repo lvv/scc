@@ -180,7 +180,8 @@ Put scc directory into PATH or symlink scc to directory in PATH
 
 
 
-== Similar projects
+== Ref  
 
-* home.mweb.co.za/sd/sdonovan/underc.html[]
-* root.cern.ch/drupal/category/package-context/cling[]
+* home.mweb.co.za/sd/sdonovan/underc.html[underc]
+* root.cern.ch/drupal/category/package-context/cling[cling]
+* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
