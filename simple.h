@@ -55,7 +55,7 @@
 	//using namespace boost;
 #endif
 
-///////////////////////////////////////////////////////////////////// shortcuts
+///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 // types
 #define		Vint		std::vector<int>
@@ -84,13 +84,18 @@
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
 #define 	RR		boost::regex_replace
-								// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+		// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+	
 #define 	M		boost::match
 #define 	CM		boost::cmatch
 #define 	SM		boost::cmatch
-#define 	RTI		boost::regex_token_iterator
-#define 	SRTI		boost::sregex_token_iterator
-#define 	CRTI		boost::cregex_token_iterator
+//typedef 	boost::regex_iterator		RI;
+typedef 	boost::sregex_iterator          SRI;
+typedef 	boost::cregex_iterator          CRI;		
+		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
+//typedef 	boost::regex_token_iterator     RTI;		
+typedef 	boost::sregex_token_iterator    SRTI;		
+typedef 	boost::cregex_token_iterator    CRTI;		
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL

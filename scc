@@ -39,7 +39,7 @@ shift $((OPTIND-1))
 
 snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 end_prt="`echo \"$1\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
-[[ $n_opt ]] && snippet+="cout << endl;"
+[[ $n_opt || ! $p_opt ]] && snippet+="cout << endl;"
 
 shift
 
