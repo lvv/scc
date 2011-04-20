@@ -48,30 +48,49 @@
 		using boost::regex;
 		using boost::cmatch;
 		using boost::regex_match;
+		using boost::regex_token_iterator;
 		using boost::sregex_token_iterator;
+		using boost::cregex_token_iterator;
 
 	//using namespace boost;
 #endif
 
 ///////////////////////////////////////////////////////////////////// shortcuts
 
+// types
+#define		Vint		std::vector<int>
+#define		Vuint		std::vector<unsigned int>
+#define		Vfloat		std::vector<float>
+#define		Vdouble		std::vector<double>
+#define		Dint		std::deque<int>
+#define		Duint		std::deque<unsigned int>
+#define		Dfloat		std::deque<float>
+#define		Ddouble		std::deque<double>
+#define         S      		std::string
+#define         VS     		std::vector<std::string>
+#define         Vstr   		std::vector<str>
+#define         DS     		std::deque<std::string>
+#define         Dstr   		std::deque<str>
 
-#define 	R	boost::regex
-#define 	RM	boost::regex_match
-#define 	RS	boost::regex_search
-#define 	M	boost::match
-#define 	CM	boost::cmatch
-#define 	SRTI	boost::sregex_token_iterator
+// utils 
+#define 	GL(x)		std::getline(cin,x)
+#define		MT		std::make_tuple
+#define		NL     		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
+#define 	ISI 		std::istream_iterator
+#define 	OSI 		std::ostream_iterator
 
-#define 	GL(x)	getline(cin,x)
-
-#define		S	string
-#define		Vint	vector<int>
-#define		Vuint	vector<unsigned int>
-#define		Vfloat	vector<float>
-#define		Vdouble	vector<double>
-#define		Vstr	vector<str>
-#define		VS	vector<string>
+// boost
+#define 	R		boost::regex
+#define 	RM		boost::regex_match
+#define 	RS		boost::regex_search
+#define 	RR		boost::regex_replace
+								// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+#define 	M		boost::match
+#define 	CM		boost::cmatch
+#define 	SM		boost::cmatch
+#define 	RTI		boost::regex_token_iterator
+#define 	SRTI		boost::sregex_token_iterator
+#define 	CRTI		boost::cregex_token_iterator
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL
@@ -102,7 +121,9 @@
 	using	std::vector;
 	using	std::deque;
 	using	std::set;
+	using	std::multiset;
 	using	std::map;
+	using	std::multimap;
 	using	std::stringstream;
 	using	std::istringstream;
 	using	std::ostringstream;
@@ -111,67 +132,17 @@
 	using	std::istream_iterator;
 	using	std::swap;
 
-	static istringstream		lin_sstream;
-	static char __attribute__((unused))	lin_line[1000];	
 
-	
-	#define		nlin   		( \
-						cin.getline(lin_line,sizeof(lin_line)-1),  \
-						lin_sstream.clear(),  \
-						lin_sstream.str(lin_line),  \
-						lin_sstream \
-	)
-
-	#define		lin  lin_sstream
-
-	#define		NL      		cin.ignore(numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1;
-	#define		nl      		cin.ignore(numeric_limits<std::streamsize>::max(),'\n'); _line_field = 1; 
-
-
-	#define		IS_SPACE                (cin.peek()==' '  || cin.peek()=='\t')
-	#define		IS_EOL                  (cin.peek()=='\n' || cin.peek()=='\r')
-	#define		IS_COMMA                (cin.peek()==',')
-	#define		SKIP_SPACE              while ( IS_SPACE             )    cin.ignore(1);
-	#define		SKIP_SPACE_N_COMMA      while ( IS_SPACE || IS_COMMA )    cin.ignore(1);
-
-	size_t static 	 __attribute__((unused))	_line_field	= 1;
-
-std::istream& 	xF(size_t n) {
-	string ignore_word; 
-	if (_line_field > n) NL;
-	for (; _line_field<n; _line_field++)  {
-		SKIP_SPACE;
-		cin >> ignore_word;
-	};
-	return cin;
-}
 
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
 
-	/*  OBSOLETE:  use bitset
-	 
-	//////// integral to binary string 
-
-			template<typename T> inline
-	const string binstr (T v) {
-		string binstr(sizeof(T)*8,'#') ;
-		for (int i=0; i<sizeof(T)*8; i++) {
-			binstr[sizeof(T)*8-1-i] = (v>>i) & 1 ? '1' : '0' ;
-			//v = v / 2 ;
-		}
-		//return std::move(binstr) ;
-		return binstr ;
-	}
-
-	template<typename T> struct list_t;
-	*/
 
 // OSI -- Output Stream Iterator 
 // 	shorthand for:	ostream_iterator<T>(cout, " ")
 // 	used as:	copy(V.begin(), V.end(), osi<T>());
-// 	also DTOR adds '\n'
+// 	also DTOR adds std::endl 
 
 	template<typename T=int>
 struct	osi : ostream_iterator<T> {
@@ -180,6 +151,7 @@ struct	osi : ostream_iterator<T> {
 	~osi() { if (self_addr == (void*) this)   cout << endl; };	
 };
 
+/*
 // ISI -- Output Stream Iterator shorthand 
 // 	used as:	vector<int> V (isi<int>(cin), isi<int>());
 	template<typename T>
@@ -187,6 +159,7 @@ struct	isi : istream_iterator<T> {
 	isi(istream& is):	istream_iterator<T>(is)	{}; 
 	isi(): 			istream_iterator<T>()	{}; 
 };
+*/
 
 	
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
@@ -278,8 +251,9 @@ struct str: string {
 	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 
-	operator string	(void) { return  *(string*)this; }	// converter to std::string
-	operator bool	(void) { return   this->size() != 0; }	// converter to bool
+	operator       string&(void) const 	{ return  *(string*)this; }	// converter to std::string&
+	operator const string&(void) 		{ return  *(string*)this; }	// converter to std::string&
+	operator bool	      (void) const 	{ return   this->size() != 0; }	// converter to bool
 
 	operator int(void) {	// converter to int
 		 istringstream IS;

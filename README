@@ -4,15 +4,13 @@ SCC - Simple C++
 Bash script which wraps C++ snippet in usual boilerplate code and makes C++ one-lines possible:
 
 ----------------------------------------------------------------------------
-scc 1   						# C++ expression - '1',  evaluated and printed
-1
-scc '2<<1'
+scc '2<<1'						# C++ expression,  evaluated and printed
 4
 scc 'sin(0.5)'						
 0.479426
 scc 'float x=0.5;  sin(x)'				# multi-statements
 0.479426
-scc 'float x=0.5;  cout << sin(x) << endl;'		# Same, but explicit printing. Note trailing ';'
+scc 'float x=0.5;  cout << sin(x) << endl;'		# Same, but with explicit printing. Note trailing ';'
 0.479426
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x is default)
 {1, 4, 9}						# STL containers are printable with simple.h
@@ -36,7 +34,7 @@ In simple.h:
 
 
 Predefined variables:
-* line	-  `std::string`,  set with `-n` / `-p` or after `read_line()`
+* line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
 * F	-  `std::vector<str>` line's fields; accessible like `F(i)`; counted from 0
 * NF	-  `int`,  number of fields (set after read_line())
 * NR 	-  `int`,  number of records (set arter read_line())
@@ -46,8 +44,8 @@ Predefined variables:
 The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
 
 --------------------------------
-str s("1");
-int i=2;
+str  s("1");
+int  i;
 i = s;		// string cast to int
 i = s+1;	// 2
 s = 1;		// "1"
@@ -59,7 +57,6 @@ s+5		// "7"
 Shortcuts:
 --------------------------------------
 #define		WRL	while(read_line())
-#define         S      string
 
 #define         R       regex
 #define         RM      regex_match
@@ -71,6 +68,16 @@ Shortcuts:
 #define		Vuint	vector<unsigned int>
 #define		Vfloat	vector<float>
 #define		Vdouble	vector<double>
+#define		Dint	deque<int>
+#define		Duint	deque<unsigned int>
+#define		Dfloat	deque<float>
+#define		Ddouble	deque<double>
+#define         S      string
+#define         VS     vector<string>
+#define         Vstr   vector<str>
+#define         DS     deque<string>
+#define         Dstr   deque<str>
+
 --------------------------------------
 
 == More Examples
@@ -82,7 +89,7 @@ echo "AAA BBB CCC"   | scc  'int t=0; S s; while(cin>>s) t++; t'
 3
 echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'			# same
 3
-echo "AAA BBB CCC"   | awk  '{t+=NF} END{print t}'			# awk
+echo "AAA BBB CCC"   | awk  '{t+=NF} END {print t}'			# awk
 3
 -------------------------------------------------------
 
@@ -131,18 +138,19 @@ echo -e '1 2\n11 22\n111 222'    | awk  '{$2=9; print $0}'		# awk equivalent
 111 9
 -----------------------------------------------------------------------------
 
-Replace dashes and "none" with "n/a" in 2nt col:
+Replace dashes, "none" and empty fields with "n/a" in 2nd column:
 
 ----------------------------------------------------------------------
-echo -e '1 -\n11 22\n111 none'   | scc -p 'if (RM(F(1),R("-?|none"))) F(1)="n/a";'
+echo -e '1 -\n2\n3 none\n4 abc'   | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
-11 22
-111 n/a
-
-echo -e '1 -\n11 22\n111 none'   | awk  '{if ($2~/-|none/) $2="n/a"; print $0}'
+2 n/a
+3 n/a
+4 abc
+echo -e '1 -\n2\n3 none\n4 abc'   | awk '{if ($2~/^(-|none)?$/) $2="n/a"; print $0}'
 1 n/a
-11 22
-111 n/a
+2 n/a
+3 n/a
+4 abc
 
 ------------------------------------------------------------------------
 
@@ -174,9 +182,10 @@ Put scc directory into PATH or symlink scc to directory in PATH
 
   Simple workaround: use semicolon before last statement and do not put trailing spaces.
 
-* RS
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;
+* Type ::str can work with int only.  We probably should replace int with double.
+* Is it possible to make +++C++0x+++ literal for regex?  Ideally something like /regex/ for boost::regex("regex"). 
 
 
 

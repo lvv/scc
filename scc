@@ -10,18 +10,13 @@ FILE=$(find $0  -printf '%l\n')
 SCC_HOME="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
 
-if [ -d /usr/include/boost ];  then 
-	LIBS+='-lboost_regex'
-	CXXFLAGS+=" -DUSE_BOOST "
-fi 
-
 prg=/tmp/$USER-scc
 src=$prg.cc
 : ${1? Usage: css [options] 'c++ snippet' [arg...] }
 
 cat <<  END	 > $src
 	#include <simple.h>
-	using namespace std;
+	//using namespace std;
 
 	struct   F_t : std::deque<str> {
 		str& 	operator()(size_t I) {
@@ -55,7 +50,6 @@ cat <<  END	 > $src
 		F.clear();
 		while(ss >> f) {
 			F.push_back(f);
-			SKIP_SPACE;
 		}
 		NF = F.size();
 	};
@@ -72,7 +66,6 @@ cat <<  END	 > $src
 	};
 
 	#define WRL  while(read_line())
-
 
 	int main(int argc, const char** argv) {
 END
@@ -105,6 +98,8 @@ case $1 in
 			;}
 		" >> $src ;;
 
+	--nb)  
+		DO_NOT_USE_BOOST=1;;
 	*)  
 		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
 		echo   "$snippet;"  >> $src ;;
@@ -115,6 +110,11 @@ esac
 echo '
 } ' 		>>  $src
 #cat $src
+
+if [[ -d /usr/include/boost  &&  ! $DO_NOT_USE_BOOST ]];  then 
+	LIBS+='-lboost_regex'
+	CXXFLAGS+=" -DUSE_BOOST "
+fi 
 
 shift
 ${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
