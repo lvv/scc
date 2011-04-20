@@ -103,8 +103,8 @@ command df | awk '{n+=$3;};  END{print n}'
 Word frequencies:
 
 -----------------------------------------------------------------------------------------
-echo aaa bbb aaa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M'
-echo aaa bbb aaa | awk '{M[$1]++};  END {for (i in M) print i, M[i]}'  RS='[[:space:]]'
+echo aaa bbb aaa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'
+echo aaa bbb aaa | awk '{m[$1]++};  END {for (i in m) print i, m[i]}'  RS='[[:space:]]'
 ------------------------------------------------------------------------------------------
 
 

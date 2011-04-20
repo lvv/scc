@@ -14,108 +14,82 @@ prg=/tmp/$USER-scc
 src=$prg.cc
 : ${1? Usage: css [options] 'c++ snippet' [arg...] }
 
-cat <<  END	 > $src
-	#include <simple.h>
-	//using namespace std;
-
-	struct   F_t : std::deque<str> {
-		str& 	operator()(size_t I) {
-			this->resize(I+1);
-			return (*this)[I];
-		};
-	};
-
-	std::ostream&   operator<<      (ostream& os, const deque<str, std::allocator<str> >& C) {              
-		os << "{";
-		auto it=C.begin();
-		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
-		if (!C.empty())  					os  << *it;
-		os << "}";
-		return os;
-	};
-
-	F_t F;
-	int NF = 0;
-	int NR = -1;
-
-	string	 __attribute__((unused))	line;
-	char 	 __attribute__((unused))	IFS=' ';
-	string	 __attribute__((unused))	OFS(" ");
 
 
-	void	split() {
-		stringstream	ss(line);
-		string		f;
 
-		F.clear();
-		while(ss >> f) {
-			F.push_back(f);
-		}
-		NF = F.size();
-	};
 
-	bool  read_line() {
-		F.clear();
-		if (getline(cin,line)) {
-			split();
-			++ NR;
-			return true;
-		} else {
-			return false;
-		}
-	};
+####################################################################################### OPTIONS 
 
-	#define WRL  while(read_line())
+while getopts npB opt;  do
+	case $opt in
+		n)	n_opt=1;  is_stream=1;;
+		p)	p_opt=1;  is_stream=1;;
+		B)	no_boost=1;;
+		?) 	echo "usage:  scc [-options] snippet  arg...";;
+	esac
+done
 
-	int main(int argc, const char** argv) {
-END
+shift $((OPTIND-1))
 
+
+
+#####################################################################################  PARSE SNIPPET
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
-case $1 in
+snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
+end_prt="`echo \"$1\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
+[[ ! $p_opt ]] && snippet+="cout << endl;"
 
-	-n)
-		shift
-		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
+shift
+
+#####################################################################################  GENERATE SRC
+
+cat <<  END	 > $src
+	#include <simple.h>
+	#include <scc.h>
+
+	int main(int argc, char** argv) {
+END
+
+if [[  $is_stream ]];  then 
+
+	echo " while ( read_line()) { $snippet " >> $src
+
+	if [[  $p_opt ]];  then 
+
+		[[ $end_prt ]]   &&  echo 'cout << OFS;' >> $src
+
 		echo "
-			while ( read_line()) {
-				$snippet
-			;}
-		" >> $src ;;
+			for(int i=0;   i < int(F.size())-1;  i++)
+				cout  << F[i] << OFS;
+			if (F.size() > 0)  cout << F.back();
+			cout << endl;
+		" >> $src
+	fi
 
-	-p)
-		shift
-		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
-		echo "
-			while (read_line()) {
-				$snippet
+	echo "}" >> $src
 
-				for(int i=0;   i < int(F.size())-1;  i++)
-					cout  << F[i] << OFS;
-				if (F.size() > 0)  cout << F.back();
-				cout << endl;
-			;}
-		" >> $src ;;
+else
+	echo "$snippet" >> $src  
+fi
 
-	--nb)  
-		DO_NOT_USE_BOOST=1;;
-	*)  
-		snippet="`echo \"$1\" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ) << endl;/'`"
-		echo   "$snippet;"  >> $src ;;
-			
 
-esac
+echo '}' >>  $src
 
-echo '
-} ' 		>>  $src
-#cat $src
 
-if [[ -d /usr/include/boost  &&  ! $DO_NOT_USE_BOOST ]];  then 
+if [[ -d /usr/include/boost  &&  ! $no_boost ]];  then 
 	LIBS+='-lboost_regex'
 	CXXFLAGS+=" -DUSE_BOOST "
 fi 
 
-shift
+			#echo "-------------------------------------------------"
+			#echo is_stream: $is_stream
+			#echo p_opt: $p_opt
+			#echo no_boost: $no_boost
+			#echo snippet: $snippet
+			echo end_prt: $end_prt
+
 ${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
+
 # vim:set ts=8 sw=8 syntax=sh:   

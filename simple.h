@@ -251,9 +251,9 @@ struct str: string {
 	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 
-	operator       string&(void) const 	{ return  *(string*)this; }	// converter to std::string&
-	operator const string&(void) 		{ return  *(string*)this; }	// converter to std::string&
-	operator bool	      (void) const 	{ return   this->size() != 0; }	// converter to bool
+	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
+	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
+	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
 
 	operator int(void) {	// converter to int
 		 istringstream IS;
@@ -264,6 +264,10 @@ struct str: string {
 	}
 
 	// prefix/postfix inc/dec
+	//str operator % (string s) 	{ return  (*(string*)this + (string)s); }	// converter to std::string&
+	//str operator % (const char* s) { return  (*(string*)this + string(s)); }	// converter to std::string&
+	str operator + (const char* s) { return  (*(string*)this + string(s)); }	// converter to std::string&
+	str& operator += (int I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
 	int operator++() {                   return *this = *this + 1; }
 	int operator--() {                   return *this = *this - 1; }
 	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
