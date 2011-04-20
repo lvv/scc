@@ -169,34 +169,27 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
-// print any C-array —  T[]
-/*  does not work.  Impossible?
 template<std::size_t N>
 std::ostream&                                              
-operator<<      (ostream& os, int A[N]) {              
+operator<<      (ostream& os, const int (&A)[N]) {              
 
-        if (!A) return os;
+	cout << "{";
+		int i=0;
+		for (; i<N-1;  i++)	os  << A[i] <<  ", ";
+		os << A[i];
+	cout << "}";
 
-	//os << *A;
-	//for (size_t i=1;  i < sizeof(A)/sizeof(*A);  i++)  
-        //        os <<  ", " << *(A+i);
-        //os << "   size:" << sizeof(A)/sizeof(*A) <<"  ";
-	os << *A;
-	for (size_t i=1;  i < N;  i++)  
-                os <<  ", " << *(A+i);
-
-        os << "   size:" << N <<"  ";
         return os;
 };
-*/
+
 
 // print any std::sequance-containter<printable>
 template<typename E, template<typename E, typename L> class L > std::ostream&                                              
 operator<<      (ostream& os, const L<E, std::allocator<E> >& C) {              
 	cout << "{";
-	auto it=C.begin();
-        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
-	if (!C.empty())  					os  << *it;
+		auto it=C.begin();
+		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
+		if (!C.empty())  					os  << *it;
 	cout << "}";
         return os;
 };
