@@ -39,7 +39,7 @@ shift $((OPTIND-1))
 
 snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 end_prt="`echo \"$1\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
-[[ ! $p_opt ]] && snippet+="cout << endl;"
+[[ $n_opt ]] && snippet+="cout << endl;"
 
 shift
 
@@ -88,7 +88,7 @@ fi
 			#echo p_opt: $p_opt
 			#echo no_boost: $no_boost
 			#echo snippet: $snippet
-			echo end_prt: $end_prt
+			#echo end_prt: $end_prt
 
 ${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
 

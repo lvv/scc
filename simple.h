@@ -263,11 +263,11 @@ struct str: string {
 		 return I;
 	}
 
+	////
 	str  operator +  (const char* s) { return  *(string*)this +  string(s); }	// converter to std::string&
 	//str& operator += (const char* s) { return  *this += string(s); }	// converter to std::string&
 
 	// prefix/postfix inc/dec
-
 	int operator++() {                   return *this = *this + 1; }
 	int operator--() {                   return *this = *this - 1; }
 	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
