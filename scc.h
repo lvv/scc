@@ -23,19 +23,22 @@
 	int NF = 0;
 	int NR = -1;
 
-	string	 __attribute__((unused))	line;
-	char 	 __attribute__((unused))	IFS=' ';
-	string	 __attribute__((unused))	OFS(" ");
-
+	string       __attribute__((unused))	line;
+	string	     __attribute__((unused))	OFS(" ");
+	string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");
+	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
 
 	void	split() {
-		stringstream	ss(line);
-		string		f;
+		#ifdef USE_BOOST
+			SRTI ite, it(line.begin(),line.end(),R(IFS),1);
+			while(it!=ite)   F.push_back(str(*it++));
+		#else
+			stringstream	ss(line);
+			string		f;
+			F.clear();
+			while(ss >> f)   F.push_back(f);
+		#endif
 
-		F.clear();
-		while(ss >> f) {
-			F.push_back(f);
-		}
 		NF = F.size();
 	};
 

@@ -78,9 +78,13 @@
 #define		NL     		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
 #define 	ISI 		std::istream_iterator
 #define 	OSI 		std::ostream_iterator
+#define 	b		begin() 	
+#define 	e		end() 	
 
 // boost
 #define 	R		boost::regex
+//R 	operator "" r(const char * s, size_t n) {return R(s);};
+
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
 #define 	RR		boost::regex_replace
@@ -96,6 +100,7 @@ typedef 	boost::cregex_iterator          CRI;
 //typedef 	boost::regex_token_iterator     RTI;		
 typedef 	boost::sregex_token_iterator    SRTI;		
 typedef 	boost::cregex_token_iterator    CRTI;		
+#define 	MRTI		boost::make_regex_token_iterator 
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL
@@ -169,18 +174,28 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
-template<std::size_t N>
-std::ostream&                                              
-operator<<      (ostream& os, const int (&A)[N]) {              
+// print C-array for numeric types  (impossible for any type? conflict with  cout << "abc")
 
-	cout << "{";
-		int i=0;
-		for (; i<N-1;  i++)	os  << A[i] <<  ", ";
-		os << A[i];
-	cout << "}";
+#define C_ARRAY_PRINT(T) 						\
+	template<std::size_t N> 					\
+	std::ostream&           					\
+	operator<<      (ostream& os, const T (&A)[N]) {             	\
+		cout << "{";						\
+			int i=0;					\
+			for (; i<N-1;  i++)	os  << A[i] <<  ", ";	\
+			os << A[i];					\
+		cout << "}";						\
+		return os;						\
+	};
 
-        return os;
-};
+C_ARRAY_PRINT(short)
+C_ARRAY_PRINT(int)
+C_ARRAY_PRINT(long)
+C_ARRAY_PRINT(unsigned short)
+C_ARRAY_PRINT(unsigned int)
+C_ARRAY_PRINT(unsigned long)
+C_ARRAY_PRINT(double)
+C_ARRAY_PRINT(float)
 
 
 // print any std::sequance-containter<printable>
