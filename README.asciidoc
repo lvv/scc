@@ -162,6 +162,16 @@ echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'NR+1'			# same, note absence of trailin
 echo -e 'aaa bbb\nccc ddd'   |  awk     '{print NR, $0}'	# same in awk
 -----------------------------------------------------------
 
+Read CSV:
+
+--------------------------------------------------------------------
+echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'
+aa
+bb\"-, bb
+cc
+---------------------------------------------------------------------
+
+
 == Install
 
 -----------------------------------------
