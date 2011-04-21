@@ -1,206 +1,51 @@
 SCC - Simple C++ 
 =================
 
-Bash script which wraps C++ snippet in usual boilerplate code and makes C++ one-lines possible:
+Boilerplate/verbosity remover. 
 
+One-liner examples:
 ----------------------------------------------------------------------------
-scc '2<<1'						# C++ expression,  evaluated and printed
+# C++ expression,  evaluated and printed
+scc '2<<1'								
 4
+
 scc 'sin(0.5)'						
 0.479426
-scc 'float x=0.5;  sin(x)'				# multi-statements
+
+# Same, but with explicit printing. Note trailing ';'
+scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
-scc 'float x=0.5;  cout << sin(x) << endl;'		# Same, but with explicit printing. Note trailing ';'
-0.479426
-scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x is default)
-{1, 4, 9}						# STL containers are printable with simple.h
--------------------------------------------------------------------------------
 
-In SCC shall script:
+# Square an array.  C++0x is on by default.  STL containers are printable. 
+scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'			
+{1, 4, 9}								
 
-* C++ snippet is decorated with usual C++ boilerplate
-* simple.h is included
-* if /usr/include/boost is present then boost/regex.hpp is included
-* If last (or only) statement (should be an expression) is not terminated by ';' it is sent to std::cout.
-* if stream options are used (-n, -p), then a line is read per input cycle; split into fields;  and after snippet is executed (for -p) line is reassembled from fields  and sent to std::cout
-* Generated source compiled and executed.
+# Prepend line number to every line:
+echo -e 'aaa\nbbb'   |  scc  -p NR
+0 aaa
+1 bbb
 
-In simple.h:
+# Sum-up df's used-disk-space column (macro WRL is "while(read_line())"):
+df | scc 'int n=0; WRL n+=F(2);  n' 					
+9999
 
-* Most of STL's includes are included and `using std::...` added for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
-* Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
-* Macros for simplified std::cin input
-* Shortcut macros making C++ verbosity more suitable for one-liner context
+# Word frequencies (S is shortcut for std::string):
+echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
+{⟨aa,2⟩, ⟨bb,1⟩}
 
-
-Predefined variables:
-* line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
-* F	-  `std::vector<str>` line's fields; accessible like `F(i)`; counted from 0
-* NF	-  `int`,  number of fields (set after read_line())
-* NR 	-  `int`,  number of records (set arter read_line())
-* ONF 	-  `std::string`, output field separator 
-* INF 	-  `std::string`, input field separator 
-
-The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
-
---------------------------------
-str  s("1");
-int  i;
-i = s;		// string cast to int
-i = s+1;	// 2
-s = 1;		// "1"
-s++		// "2"
-s+str("5")	// "25"
-s+5		// "7"
----------------------------------
-
-Shortcuts:
---------------------------------------
-#define		WRL	while(read_line())
-
-#define         R       regex
-#define         RM      regex_match
-#define         RS      regex_search
-#define         M       match
-#define         CM      cmatch
-
-#define		Vint	vector<int>
-#define		Vuint	vector<unsigned int>
-#define		Vfloat	vector<float>
-#define		Vdouble	vector<double>
-#define		Dint	deque<int>
-#define		Duint	deque<unsigned int>
-#define		Dfloat	deque<float>
-#define		Ddouble	deque<double>
-#define         S      string
-#define         VS     vector<string>
-#define         Vstr   vector<str>
-#define         DS     deque<string>
-#define         Dstr   deque<str>
-
---------------------------------------
-
-== More Examples
-
-Count number of words:
-
--------------------------------------------------------
-echo "AAA BBB CCC"   | scc  'int t=0; S s; while(cin>>s) t++; t'  
-3
-echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'			# same
-3
-echo "AAA BBB CCC"   | awk  '{t+=NF} END {print t}'			# awk
-3
--------------------------------------------------------
-
-Sum-up df's used-disk-space column:
-
------------------------------------------------------------------------------------------
-command df | scc 'int n=0; WRL n+=F(2);  n'
-command df | awk '{n+=$3;};  END{print n}'	
------------------------------------------------------------------------------------------
-
-Word frequencies:
-
------------------------------------------------------------------------------------------
-echo aaa bbb aaa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'
-echo aaa bbb aaa | awk '{m[$1]++};  END {for (i in m) print i, m[i]}'  RS='[[:space:]]'
-------------------------------------------------------------------------------------------
-
-
-PCRE grep. Input only from standard input and of cause real program should check for validity its args and regex.
-
--------------------------------------------------------------------------
-echo -e "AA\nBB\nCC"  | scc 'while(read_line())   if (regex_search(line, regex(argv[1])))  cout << line << endl;' 'A|B'
-AA
-BB
-
-echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B' 	# same with shortcuts
-AA
-BB
-
-mv /tmp/your_user_name-scc pcre_grep
-----------------------------------------------------------------
-
-
-Line oriented stream processing with perl's equivalent -n/-p
-
-Replace 2nd column with '9':
-
----------------------------------------------------------------------------
-echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'					
-1 9
-11 9
-111 9
-echo -e '1 2\n11 22\n111 222'    | awk  '{$2=9; print $0}'		# awk equivalent
-1 9
-11 9
-111 9
------------------------------------------------------------------------------
-
-Replace dashes, "none" and empty fields with "n/a" in 2nd column:
-
-----------------------------------------------------------------------
-echo -e '1 -\n2\n3 none\n4 abc'   | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
-1 n/a
-2 n/a
-3 n/a
-4 abc
-echo -e '1 -\n2\n3 none\n4 abc'   | awk '{if ($2~/^(-|none)?$/) $2="n/a"; print $0}'
+# Replace dashes, "none" and empty fields with "n/a" in 2nd column with boost::regex: 
+echo -e '1 -\n2\n3 none\n4 abc'  | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a
 4 abc
 
-------------------------------------------------------------------------
-
-Prepend line mumber to every line:
-
---------------------------------------------------------
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'NR+1'			# same, note absence of trailing ';'
-echo -e 'aaa bbb\nccc ddd'   |  awk     '{print NR, $0}'	# same in awk
------------------------------------------------------------
-
-Read CSV:
-
---------------------------------------------------------------------
-echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'
+# Read CSV:
+echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV; WRL for(S f:F) cout << f << endl;'
 aa
 bb\"-, bb
 cc
----------------------------------------------------------------------
 
+-------------------------------------------------------------------------------
 
-== Install
-
------------------------------------------
-git clone git://github.com/lvv/scc.git
----------------------------------------
-
-Put scc directory into PATH or symlink scc to directory in PATH
-
-
-== TOOD
-
-* Regex which looks for last statement just looks for ';', so it won't work correctly for:
-
-	- {}A
-	- +++B({A})+++
-	- string literals with '(){}'
-	- Space after closing semicolon
-
-  Simple workaround: use semicolon before last statement and do not put trailing spaces.
-
-* All (now only part) of STL should included;
-* All (now only part) of STL containers should be printable;
-* Type ::str can work with int only.  We probably should replace int with double.
-* Is it possible to make +++C++0x+++ literal for regex?  Ideally something like /regex/ for boost::regex("regex"). 
-
-
-
-== Ref  
-
-* home.mweb.co.za/sd/sdonovan/underc.html[underc]
-* root.cern.ch/drupal/category/package-context/cling[cling]
-* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
+Full docs at http://volnitsky.com/project/scc[]
