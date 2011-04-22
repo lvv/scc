@@ -41,7 +41,7 @@ Predefined variables (similar to AWK's):
 * NF	-  `int`,  number of fields (set after read_line())
 * NR 	-  `int`,  number of records (set after read_line())
 * OFS 	-  `std::string`, output field separator 
-* IFS 	-  `std::string`, for input field separator.  I
+* IFS 	-  `std::string`, for input field separator.  
 * CSV 	-  `const char[]`,  regex for IFS
 
 The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
