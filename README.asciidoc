@@ -1,7 +1,7 @@
-SCC - Simple C++ 
-=================
+SCC - Simple CC  (aka Snippet C++ Compiler)
+============================================
 
-Boilerplate/verbosity remover. 
+This is bash wrapper for GCC + simple.h
 
 One-liner examples:
 ----------------------------------------------------------------------------
@@ -12,35 +12,41 @@ scc '2<<1'
 scc 'sin(0.5)'						
 0.479426
 
-# Same, but with explicit printing. Note trailing ';'
+# Same, but multi-statment and with explicit printing.
+# Note trailing ';' - meaning do not print last stament (expression).
 scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
 
-# Square an array.  C++0x is on by default.  STL containers are printable. 
+# Square an array.  C++0x is on by default (needs current GCC).  STL containers are printable. 
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'			
 {1, 4, 9}								
 
-# Prepend line number to every line:
-echo -e 'aaa\nbbb'   |  scc  -p NR
+# Prepend line number to every line (-p is similar to perl's;  NR - number of record):
+echo -e 'aaa\nbbb'   |  scc -p NR
 0 aaa
 1 bbb
 
-# Sum-up df's used-disk-space column (macro WRL is "while(read_line())"):
+# Sum-up df's used-disk-space column.
+# Macro WRL is "while(read_line())");   vector<str> F -  input line split into fields;
+# type str can directly converted to/from int/float
 df | scc 'int n=0; WRL n+=F(2);  n' 					
-9999
+31399199
 
 # Word frequencies (S is shortcut for std::string):
 echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 
-# Replace dashes, "none" and empty fields with "n/a" in 2nd column with boost::regex: 
+# Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
+# Boost use in SCC is optional, it will be used if /usr/include/boost exist.
+# RR is shortcut for boost::regex_replace;  R - boost::regex
 echo -e '1 -\n2\n3 none\n4 abc'  | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a
 4 abc
 
-# Read CSV:
+# Read CSV with quoted strings (spaces, commas and escaped quotes in field is ok):
+# IFS - input field separator; CSV - predefined regex.
 echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV; WRL for(S f:F) cout << f << endl;'
 aa
 bb\"-, bb

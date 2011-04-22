@@ -42,7 +42,7 @@ Predefined variables (similar to AWK's):
 * NR 	-  `int`,  number of records (set after read_line())
 * OFS 	-  `std::string`, output field separator 
 * IFS 	-  `std::string`, for input field separator.  
-* CSV 	-  `const char[]`,  regex for IFS
+* CSV 	-  `const char[]`,  predefined regex for IFS
 
 The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
 
@@ -53,8 +53,8 @@ i = s;		// string cast to int
 i = s+1;	// 2
 s = 1;		// "1"
 s++		// "2"
-s+str("5")	// "25"
-s+5		// "7"
+s + " m/s"	// "2 m/s"
+s + 5		// "7"
 ---------------------------------
 
 Shortcuts are typedefs or macros making +++C++'s+++ code more appropriate  for one-liner context:
