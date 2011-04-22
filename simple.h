@@ -73,6 +73,7 @@
 		using boost::regex_token_iterator;
 		using boost::sregex_token_iterator;
 		using boost::cregex_token_iterator;
+	#include <boost/format.hpp>
 		using boost::format;
 
 	//using namespace boost;
