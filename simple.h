@@ -73,6 +73,7 @@
 		using boost::regex_token_iterator;
 		using boost::sregex_token_iterator;
 		using boost::cregex_token_iterator;
+		using boost::format;
 
 	//using namespace boost;
 #endif
@@ -106,6 +107,7 @@
 ///// boost
 #define 	R		boost::regex
 //R 	operator "" r(const char * s, size_t n) {return R(s);};
+#define		FMT 		boost::format
 
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
