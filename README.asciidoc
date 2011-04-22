@@ -1,4 +1,4 @@
-SCC - Simple CC  (aka Snippet C++ Compiler)
+SCC — Simple CC  (aka Snippet C++ Compiler)
 ============================================
 
 This is bash wrapper for GCC + simple.h
@@ -13,7 +13,7 @@ scc 'sin(0.5)'
 0.479426
 
 # Same, but multi-statment and with explicit printing.
-# Note trailing ';' - meaning do not print last stament (expression).
+# Note trailing ';' - meaning do not print last stament-expression.
 scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
 
@@ -27,8 +27,9 @@ echo -e 'aaa\nbbb'   |  scc -p NR
 1 bbb
 
 # Sum-up df's used-disk-space column.
-# Macro WRL is "while(read_line())");   vector<str> F -  input line split into fields;
-# type str can directly converted to/from int/float
+# Macro WRL is "while(read_line())");  
+# vector<str> F -  input line split into fields;
+# Type str can directly converted to/from int/float
 df | scc 'int n=0; WRL n+=F(2);  n' 					
 31399199
 
@@ -54,4 +55,4 @@ cc
 
 -------------------------------------------------------------------------------
 
-Full docs at http://volnitsky.com/project/scc[]
+See full docs at http://volnitsky.com/project/scc[]

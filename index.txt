@@ -1,7 +1,7 @@
-SCC - Simple C++ 
-=================
+SCC — Simple CC  (aka Snippet C++ Compiler)
+============================================
 
-Boilerplate/verbosity remover.
+This is bash wrapper for GCC + simple.h
 
 ----------------------------------------------------------------------------
 scc '2<<1'						# C++ expression,  evaluated and printed
@@ -114,7 +114,7 @@ bbb 1
 ------------------------------------------------------------------------------------------
 
 
-PCRE grep. Just rename compiled binary  from /tmp
+PCRE grep.
 
 -------------------------------------------------------------------------
 echo -e "AA\nBB\nCC"  | scc 'while(read_line())   if (regex_search(line, regex(argv[1])))  cout << line << endl;' 'A|B'
