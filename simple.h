@@ -1,6 +1,10 @@
 #ifndef  LVV_SIMPLE_H
 #define  LVV_SIMPLE_H
 
+#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
+	#define  MODERN_GCC	1
+#endif
+
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
 #include <cstddef>
@@ -21,27 +25,46 @@
 #include <map>
 #include <set>
 #include <string>
-#include <tuple>
 #include <utility>
 #include <vector>
 #include <stack>
 #include <queue>
 #include <limits>
-
 #include <bitset>
 ///////////////////////////////////////////////////////////////////// C++0X STL
-#include <ratio>
+#ifdef  MODERN_GCC
+#include <tuple>
+#endif
 
-// 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-//#include <regex>
-//
+///////////////////////////////////////////////////////////////////// 
+
+	using	std::cin;
+	using	std::cout;
+	using	std::endl;
+	using	std::string;
+	using	std::basic_string;
+	using	std::basic_ostream;
+	using	std::istream;
+	using	std::ostream;
+	using	std::vector;
+	using	std::deque;
+	using	std::set;
+	using	std::multiset;
+	using	std::map;
+	using	std::multimap;
+	using	std::stringstream;
+	using	std::istringstream;
+	using	std::ostringstream;
+	using	std::numeric_limits;
+	using	std::ostream_iterator;
+	using	std::istream_iterator;
+	using	std::swap;
 
 
 ///////////////////////////////////////////////////////////////////// BOOST
 #ifdef USE_BOOST
 
-	//#include <boost/algorithm/string.hpp>
-	//	using boost::split;
+	//#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
 
 	#include <boost/regex.hpp>
 		using boost::regex;
@@ -84,7 +107,6 @@
 #define 	R		boost::regex
 //R 	operator "" r(const char * s, size_t n) {return R(s);};
 
-		#ifdef  USE_BOOST
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
 #define 	RR		boost::regex_replace
@@ -94,6 +116,7 @@
 #define 	CM		boost::cmatch
 #define 	SM		boost::cmatch
 
+#ifdef  USE_BOOST
 //typedef 	boost::regex_iterator		RI;
 typedef 	boost::sregex_iterator          SRI;
 typedef 	boost::cregex_iterator          CRI;		
@@ -102,51 +125,19 @@ typedef 	boost::cregex_iterator          CRI;
 typedef 	boost::sregex_token_iterator    SRTI;		
 typedef 	boost::cregex_token_iterator    CRTI;		
 #define 	MRTI		boost::make_regex_token_iterator 
-		#endif
-
-
-///////////////////////////////////////////////////////////////////// LOCAL
-//#include <lvv/lvv.h>
-//#include <lvv/meta.h>
-//#include <lvv/array.h>
-//	using lvv::array;
-
-//using namespace std;
-
+#endif
 
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
-	using	std::cin;
-	using	std::cout;
-	using	std::endl;
-	using	std::string;
-	using	std::basic_string;
-	using	std::basic_ostream;
-	using	std::istream;
-	using	std::ostream;
-	using	std::vector;
-	using	std::deque;
-	using	std::set;
-	using	std::multiset;
-	using	std::map;
-	using	std::multimap;
-	using	std::stringstream;
-	using	std::istringstream;
-	using	std::ostringstream;
-	using	std::numeric_limits;
-	using	std::ostream_iterator;
-	using	std::istream_iterator;
-	using	std::swap;
-
-
+//
 
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////   gcc-4.6.0
 
-#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
+#ifdef MODERN_GCC
 
 
 // OSI -- Output Stream Iterator 
