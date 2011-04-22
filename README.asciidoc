@@ -1,12 +1,13 @@
 SCC — Simple CC  (aka Snippet C++ Compiler)
 ============================================
 
-This is bash wrapper for GCC + simple.h
+This is bash wrapper for GCC.
 
-One-liner examples:
+You need >=gcc-4.4.4 for and boost for all features to work.  One-liner examples:
+
 ----------------------------------------------------------------------------
 # C++ expression,  evaluated and printed
-scc '2<<1'								
+scc '2+2'								
 4
 
 scc 'sin(0.5)'						
