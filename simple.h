@@ -144,6 +144,9 @@ typedef 	boost::cregex_token_iterator    CRTI;
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////   gcc-4.6.0
+
+#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
 
 
 // OSI -- Output Stream Iterator 
@@ -312,9 +315,6 @@ struct in_t: istream {	 // used as:   int i(in);
 
 in_t in;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////   gcc-4.6.0
-
-#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 4 ) ) ) 
 
 // input any std::sequance-containter<printable>  (container must have size()) 
 template<typename E, template<typename E, typename L> class L > std::istream&                                              
