@@ -1,11 +1,10 @@
 #!/bin/sh
 
-
 [ -f     .scc ]  && .     .scc
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
 
-CXXFLAGS+=" -Wall -std=gnu++0x  -ggdb3 -O0 -Wno-sign-compare"
+CXXFLAGS+=" -Wall -std=gnu++0x  -pipe -O0 -Wno-sign-compare"
 FILE=$(find $0  -printf '%l\n')
 SCC_HOME="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
@@ -13,9 +12,6 @@ CXXFLAGS+=" -I $SCC_HOME "
 prg=/tmp/$USER-scc
 src=$prg.cc
 : ${1? Usage: css [options] 'c++ snippet' [arg...] }
-
-
-
 
 
 ####################################################################################### OPTIONS 
@@ -31,7 +27,6 @@ done
 
 
 shift $((OPTIND-1))
-
 
 
 #####################################################################################  PARSE SNIPPET

@@ -253,7 +253,9 @@ struct str: string {
 	// CTOR
 	str(const char*   s)	: string(s) {};
 	str(const string& s)	: string(s) {};
-	str(int           i)	: string()  {*this = i;};
+	str(int           i)	: string()  {*this = (long)i;};
+	str(long          i)	: string()  {*this = (long)i;};
+	str(double        i)	: string()  {*this = (double)i;};
 	str()			: string()  {};
 
 	// op= assign
@@ -264,27 +266,41 @@ struct str: string {
 	str& operator /= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 	str& operator %= (int I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 
+	str& operator  = (long I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
+	str& operator += (long I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
+	str& operator -= (long I) { ostringstream OS;   OS << *this - I;   this->string::assign(OS.str());  return *this; }
+	str& operator *= (long I) { ostringstream OS;   OS << *this * I;   this->string::assign(OS.str());  return *this; }
+	str& operator /= (long I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+	str& operator %= (long I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+
+	str& operator  = (double I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
+	str& operator += (double I) { ostringstream OS;   OS << *this + I;   this->string::assign(OS.str());  return *this; }
+	str& operator -= (double I) { ostringstream OS;   OS << *this - I;   this->string::assign(OS.str());  return *this; }
+	str& operator *= (double I) { ostringstream OS;   OS << *this * I;   this->string::assign(OS.str());  return *this; }
+	str& operator /= (double I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+	str& operator %= (double I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
+
 	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
 	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
 	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
 
-	operator int(void) {	// converter to int
-		 istringstream IS;
-		 int I;
-		 IS.str(*this);
-		 IS >> I;
-		 return I;
-	}
+	// converter to numerics
+	explicit	operator int		(void) { istringstream IS;  int    I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator long		(void) { istringstream IS;  long   I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long    I;  IS.str(*this);  IS >> I;  return I; }
+			operator double		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator float		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
 
 	////
-	str  operator +  (const char* s) { return  *(string*)this +  string(s); }	// converter to std::string&
-	//str& operator += (const char* s) { return  *this += string(s); }	// converter to std::string&
+	str  operator +  (const char* s) { return  *(string*)this +  string(s); }	
 
 	// prefix/postfix inc/dec
 	int operator++() {                   return *this = *this + 1; }
 	int operator--() {                   return *this = *this - 1; }
-	int operator++(int) { int old = int(*this); *this = *this + 1; return old; }
-	int operator--(int) { int old = int(*this); *this = *this - 1; return old; }
+	int operator++(int) { long old = long(*this); *this = *this + 1; return old; }
+	int operator--(int) { long old = long(*this); *this = *this - 1; return old; }
+	// TODO for double
 };
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
