@@ -21,17 +21,22 @@ scc 'float x=0.5;  cout << sin(x) << endl;'
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'			
 {1, 4, 9}								
 
-# Prepend line number to every line (-p is similar to perl's;  NR - number of record):
-echo -e 'aaa\nbbb'   |  scc -p NR
-0 aaa
-1 bbb
-
 # Sum-up df's used-disk-space column.
 # Macro WRL is "while(read_line())");  
-# vector<str> F -  input line split into fields;
+# deque<str> F -  input line split into fields;
 # Type str can directly converted to/from int/float
 df | scc 'int n=0; WRL n+=F(2);  n' 					
 31399199
+
+# Prepend line number to every line (-p is similar to perl's;  NR - number of record):
+echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
+0 aaa
+1 bbb
+
+# Same. Note no traling ";"
+echo -e 'aaa\nbbb'   |  scc -p NR
+0 aaa
+1 bbb
 
 # Word frequencies (S is shortcut for std::string):
 echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
