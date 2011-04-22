@@ -4,7 +4,6 @@
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
 #include <cstddef>
-//#include <cstdint>
 #include <cstring>
 #include <cctype>
 #include <cmath>
@@ -57,7 +56,7 @@
 
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
-// types
+///// types
 #define		Vint		std::vector<int>
 #define		Vuint		std::vector<unsigned int>
 #define		Vfloat		std::vector<float>
@@ -72,7 +71,7 @@
 #define         DS     		std::deque<std::string>
 #define         Dstr   		std::deque<str>
 
-// utils 
+///// utils 
 #define 	GL(x)		std::getline(cin,x)
 #define		MT		std::make_tuple
 #define		NL     		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
@@ -81,18 +80,20 @@
 #define 	b		begin() 	
 #define 	e		end() 	
 
-// boost
+///// boost
 #define 	R		boost::regex
 //R 	operator "" r(const char * s, size_t n) {return R(s);};
 
+		#ifdef  USE_BOOST
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
 #define 	RR		boost::regex_replace
 		// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 	
-#define 	M		boost::match
+//#define 	M		boost::match
 #define 	CM		boost::cmatch
 #define 	SM		boost::cmatch
+
 //typedef 	boost::regex_iterator		RI;
 typedef 	boost::sregex_iterator          SRI;
 typedef 	boost::cregex_iterator          CRI;		
@@ -101,6 +102,7 @@ typedef 	boost::cregex_iterator          CRI;
 typedef 	boost::sregex_token_iterator    SRTI;		
 typedef 	boost::cregex_token_iterator    CRTI;		
 #define 	MRTI		boost::make_regex_token_iterator 
+		#endif
 
 
 ///////////////////////////////////////////////////////////////////// LOCAL
@@ -110,11 +112,6 @@ typedef 	boost::cregex_token_iterator    CRTI;
 //	using lvv::array;
 
 //using namespace std;
-
-// FOREACH
-//#include <boost/foreach.hpp>
-//#define         foreach         BOOST_FOREACH  
-//#define reverse_foreach		BOOST_REVERSE_FOREACH
 
 
 
@@ -162,7 +159,7 @@ struct	osi : ostream_iterator<T> {
 };
 
 /*
-// ISI -- Output Stream Iterator shorthand 
+// ISI -- Output Stream Iterator shortcut
 // 	used as:	vector<int> V (isi<int>(cin), isi<int>());
 	template<typename T>
 struct	isi : istream_iterator<T> {
@@ -174,7 +171,8 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
-// print C-array for numeric types  (impossible for any type? conflict with  cout << "abc")
+// Print C-array for numeric types.
+// Impossible for any printable type? (conflict with  cout << "abc")
 
 #define C_ARRAY_PRINT(T) 						\
 	template<std::size_t N> 					\
@@ -305,7 +303,7 @@ struct str: string {
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
 
-struct in_t: istream {
+struct in_t: istream {	 // used as:   int i(in);
 	in_t () {};
 
 	// convert (input) any POD type
