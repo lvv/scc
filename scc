@@ -44,8 +44,10 @@ shift
 #####################################################################################  GENERATE SRC
 
 cat <<  END	 > $src
-	#include <simple.h>
-	#include <scc.h>
+#include <simple.h>
+#ifdef MODERN_GCC 
+#include <scc.h>
+#endif
 
 	int main(int argc, char** argv) {
 END
