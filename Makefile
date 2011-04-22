@@ -12,5 +12,8 @@ endif
 
 include $(INCLUDE)
 
+index.txt: 
+	head -n-1 README.asciidoc > /tmp/t.ad
+
 #CLEAN_LIST += $(wildcard *.png)
 #COPY_LIST += $(wildcard *.png)

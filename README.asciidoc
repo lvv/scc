@@ -3,57 +3,59 @@ SCC — Simple CC  (aka Snippet C++ Compiler)
 
 This is bash wrapper for GCC.
 
-You need >=gcc-4.4.4 for and boost for all features to work.  One-liner examples:
+You need >=gcc-4.4.4 and boost for all features to work. 
+One-liner examples:
 
 ----------------------------------------------------------------------------
-# C++ expression,  evaluated and printed
+#  C++ expression,  evaluated and printed
 scc '2+2'								
 4
 
 scc 'sin(0.5)'						
 0.479426
 
-# Same, but multi-statment and with explicit printing.
-# Note trailing ';' - meaning do not print last stament-expression.
+#  Same, but multi-statment and with explicit printing.
+#  Note trailing ';' - meaning do not print last stament-expression.
 scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
 
-# Square an array.  C++0x is on by default (needs current GCC).  STL containers are printable. 
+#  Square an array.  C++0x is on by default (needs current GCC). 
+#  STL containers are printable. 
 scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'			
 {1, 4, 9}								
 
-# Sum-up df's used-disk-space column.
-# Macro WRL is "while(read_line())");  
-# deque<str> F -  input line split into fields;
-# Type str can directly converted to/from int/float
+#  Word frequencies (S is shortcut for std::string):
+echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
+{⟨aa,2⟩, ⟨bb,1⟩}
+
+#  Sum-up df's used-disk-space column.
+#  Shortcut WRL is "while(read_line())");  
+#  deque<str> F — input line split into fields;
+#  Type str can be directly converted to/from int/float
 df | scc 'int n=0; WRL n+=F(2);  n' 					
 31399199
 
-# Prepend line number to every line (-p is similar to perl's;  NR - number of record):
+#  Prepend line number to every line (-p is similar to perl's;  NR - number of record):
 echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 0 aaa
 1 bbb
 
-# Same. Note no traling ";"
+#  Same. Note no traling ";"
 echo -e 'aaa\nbbb'   |  scc -p NR
 0 aaa
 1 bbb
 
-# Word frequencies (S is shortcut for std::string):
-echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
-{⟨aa,2⟩, ⟨bb,1⟩}
-
-# Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
-# Boost use in SCC is optional, it will be used if /usr/include/boost exist.
-# RR is shortcut for boost::regex_replace;  R - boost::regex
+#  Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
+#  Boost use in SCC is optional, it will be used if /usr/include/boost exist.
+#  RR is shortcut for boost::regex_replace;  R - boost::regex
 echo -e '1 -\n2\n3 none\n4 abc'  | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a
 4 abc
 
-# Read CSV with quoted strings (spaces, commas and escaped quotes in field is ok):
-# IFS - input field separator; CSV - predefined regex.
+#  Read CSV with quoted fields (spaces, commas and escaped quotes in field are ok):
+#  IFS - input field separator; CSV - predefined regex.
 echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV; WRL for(S f:F) cout << f << endl;'
 aa
 bb\"-, bb

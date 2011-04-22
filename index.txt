@@ -1,27 +1,11 @@
-SCC — Simple CC  (aka Snippet C++ Compiler)
-============================================
 
-This is bash wrapper for GCC.
-You need >=GCC-4.4.4 for and Boost for all features to work.  One-liner examples:
-
-----------------------------------------------------------------------------
-scc '2+2'						# C++ expression,  evaluated and printed
-4
-scc 'sin(0.5)'						
-0.479426
-scc 'float x=0.5;  sin(x)'				# multi-statements
-0.479426
-scc 'float x=0.5;  cout << sin(x) << endl;'		# Same, but with explicit printing. Note trailing ';'
-0.479426
-scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'	# square an array (C++0x is default)
-{1, 4, 9}						# STL containers are printable
--------------------------------------------------------------------------------
+include::/tmp/t.ad[]
 
 In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
-* `simple.h` is included
-* if `/usr/include/boost` is present then `boost/regex.hpp` is included
+* `simple.h`  and `scc.h` are included
+* if `/usr/include/boost` is exsist then `boost/regex.hpp` is included
 * If last (or only) statement (should be an expression) is not terminated by  `;` it is sent to `std::cout`.
 * if stream options are used (-n or -p), then one line is read from `std::cin` per input cycle.
 	Line split into fields and snippet is executed.
@@ -30,22 +14,26 @@ In `scc` shall script:
 
 In simple.h:
 
-* Most of STL's includes are included and `using std::...` added for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
-* Code which allows most STL container to be printed to std::cout directly like `vector<int> V{1,2,3};   cout << V;`
+* Most of STL's includes are included with `using std::...` for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
+* Code which allows most STL container to be printed to `std::cout` directly like `vector<int> V{1,2,3};   cout << V;`
 * Code for simplified `std::cin` input
 * Shortcut (macros and typedefs) making C++ verbosity more suitable for one-liner context
 
+In scc.h defined:
+* deque<str>	F
+* read_line()
 
 Predefined variables (similar to AWK's):
 * line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
-* F	-  `std::vector<str>` line's fields; accessible like `F(i)`; counted from 0
+* F	-  `std::deque<str>` line's fields; accessible like `F(i)`; counted from 0
 * NF	-  `int`,  number of fields (set after read_line())
 * NR 	-  `int`,  number of records (set after read_line())
 * OFS 	-  `std::string`, output field separator 
-* IFS 	-  `std::string`, for input field separator.  
+* IFS 	-  `std::string`, input field separator.  
 * CSV 	-  `const char[]`,  predefined regex for IFS
 
-The `::str` type is derived from `std::string` and can be directly converted to or from `int`:
+The `::str` type is derived from `std::string` and can be directly converted
+to/from numeric types:
 
 --------------------------------
 str  s("1");
@@ -58,15 +46,15 @@ s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
 
-Shortcuts are typedefs or macros making +++C++'s+++ code more appropriate  for one-liner context:
+Shortcuts
 --------------------------------------
 #define		WRL	while(read_line())
 
 #define         R       regex
 #define         RM      regex_match
 #define         RS      regex_search
-#define         M       match
 #define         CM      cmatch
+#define         SM      smatch
 
 #define		Vint	vector<int>
 #define		Vuint	vector<unsigned int>
@@ -81,129 +69,36 @@ Shortcuts are typedefs or macros making +++C++'s+++ code more appropriate  for o
 #define         Vstr   vector<str>
 #define         DS     deque<string>
 #define         Dstr   deque<str>
-
 --------------------------------------
-
-== More Examples
-
-Count number of words:
-
--------------------------------------------------------
-echo "AAA BBB CCC"   | scc  'int t=0; S s; while(cin>>s) t++; t'  
-3
-echo "AAA BBB CCC"   | scc  'int t=0; WRL t+=NF; t'			# same
-3
-echo "AAA BBB CCC"   | awk  '{t+=NF} END {print t}'			# awk
-3
--------------------------------------------------------
-
-Sum-up df's used-disk-space column:
-
------------------------------------------------------------------------------------------
-command df | scc 'int n=0; WRL n+=F(2);  n'
-command df | awk '{n+=$3;};  END{print n}'	
------------------------------------------------------------------------------------------
-
-Word frequencies:
-
------------------------------------------------------------------------------------------
-echo aaa bbb aaa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'
-{⟨aaa,2⟩, ⟨bbb,1⟩}
-echo aaa bbb aaa | awk '{m[$1]++};  END {for (i in m) print i, m[i]}'  RS='[[:space:]]'
-aaa 2
-bbb 1
-------------------------------------------------------------------------------------------
-
-
-PCRE grep.
-
--------------------------------------------------------------------------
-echo -e "AA\nBB\nCC"  | scc 'while(read_line())   if (regex_search(line, regex(argv[1])))  cout << line << endl;' 'A|B'
-AA
-BB
-echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B' 	# same with shortcuts
-AA
-BB
-----------------------------------------------------------------
-
-
-Line oriented stream processing with perl's equivalent -n/-p
-
-Replace 2nd column with '9':
-
----------------------------------------------------------------------------
-echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'					
-1 9
-11 9
-111 9
-echo -e '1 2\n11 22\n111 222'    | awk  '{$2=9; print $0}'		# awk equivalent
-1 9
-11 9
-111 9
------------------------------------------------------------------------------
-
-Replace dashes, "none" and empty fields with "n/a" in 2nd column:
-
-----------------------------------------------------------------------
-echo -e '1 -\n2\n3 none\n4 abc'   | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
-1 n/a
-2 n/a
-3 n/a
-4 abc
-echo -e '1 -\n2\n3 none\n4 abc'   | awk '{if ($2~/^(-|none)?$/) $2="n/a"; print $0}'
-1 n/a
-2 n/a
-3 n/a
-4 abc
-
-------------------------------------------------------------------------
-
-Prepend line number to every line:
-
---------------------------------------------------------
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'NR+1'			# same, note absence of trailing ';'
-echo -e 'aaa bbb\nccc ddd'   |  awk     '{print NR, $0}'	# same in awk
------------------------------------------------------------
-
-Read CSV:
-
---------------------------------------------------------------------
-echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'
-aa
-bb\"-, bb
-cc
----------------------------------------------------------------------
 
 
 == Install
 
 -----------------------------------------
-git clone git://github.com/lvv/scc.git
+git clone http://github.com/lvv/scc
+PATH+=":$PWD/scc" 
+echo PATH+=":$PWD/scc" >> ~/.profile
 ---------------------------------------
-
-Put scc directory into PATH or symlink scc to directory in PATH
 
 
 == TODO
 
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
-	- '{}A'
-	- '+++ B({A})+++'
+	- '{ code-block; } expr'
 	- string literals with '(){}'
-	- snippets with space after last statment semicolon
+	- snippets with space after last semicolon
 
   Simple workaround: use semicolon before last statement and do not put
   trailing spaces at the end of snippet
 
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;
-* Type ::str can work with int only.  We probably should replace int with double.
-* Is it possible to make +++C++0x+++ literal for regex?  Ideally something like /regex/ for boost::regex("regex"). 
+* Is it possible to make +++C++0x+++ literal for regex?  Ideally something
+	like `/abc/` or `"abc"re` for `boost::regex("abc")`. 
 
 
 
-== Ref  
+== Refs 
 
 * http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
