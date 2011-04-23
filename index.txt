@@ -102,3 +102,6 @@ echo PATH+=":$PWD/scc" >> ~/.profile
 == Refs 
 
 * http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
+* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
+* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
+* http://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Fromat]

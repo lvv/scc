@@ -54,13 +54,17 @@ echo -e '1 -\n2\n3 none\n4 abc'  | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");
 3 n/a
 4 abc
 
-#  Read CSV with quoted fields (spaces, commas and escaped quotes in field are ok):
+#  Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
 #  IFS - input field separator; CSV - predefined regex.
 echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV; WRL for(S f:F) cout << f << endl;'
 aa
 bb\"-, bb
 cc
-
 -------------------------------------------------------------------------------
+
+/////////////////////////////////
+ echo -e '11 222222222222\n1111111111 22' |scc -n 'FMT("%s %|20t| %s") %F[0] %F[1]'
+///////////////////////////////////
+
 
 See full docs at http://volnitsky.com/project/scc[]
