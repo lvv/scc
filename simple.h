@@ -35,6 +35,7 @@
 #ifdef  MODERN_GCC
 #include <tuple>
 #endif
+//#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////// 
 
@@ -60,7 +61,6 @@
 	using	std::istream_iterator;
 	using	std::swap;
 
-#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////// BOOST
 #ifdef USE_BOOST
@@ -77,7 +77,8 @@
 	#include <boost/format.hpp>
 		using boost::format;
 	#include <boost/utility.hpp>
-		// enable_if
+		// for enable_if
+		// for common_type
 
 	//using namespace boost;
 #endif
@@ -169,6 +170,22 @@ struct	isi : istream_iterator<T> {
 */
 
 	
+///////////////////////////////////////////////////////////////////// UTILS
+
+
+	template <class T, class U>
+	typename std::common_type<T, U>::type
+min(T t, U u) {
+   return t < u ? t : u;
+}
+
+	template <class T, class U>
+	typename std::common_type<T, U>::type
+max(T t, U u) {
+   return t >= u ? t : u;
+}
+
+
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
 // Print any C-array

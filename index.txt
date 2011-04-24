@@ -81,7 +81,15 @@ git clone http://github.com/lvv/scc
 PATH+=":$PWD/scc" 
 echo PATH+=":$PWD/scc" >> ~/.profile
 ---------------------------------------
-
+///////////////////////////////////////////////
+== status
+capability		|  C++200?	|	>=GCC-4.4.4	|  >=GCC-4.4.4 && Boost
+expression evaluation	|	Y	|	Y		| 	Y
+stl container print	|	N 	|	Y		|	Y
+c-array print		| 	N 	|	N		| 	Y
+stream filter		| 	N 	|	Y		| 	Y
+regex			| 	N 	|	N		| 	Y
+///////////////////////////////////////////////
 
 == TODO
 
