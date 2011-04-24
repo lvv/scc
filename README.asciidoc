@@ -1,3 +1,4 @@
+// vim:set ft=asciidoc:
 SCC — Simple CC  (aka Snippet C++ Compiler)
 ============================================
 

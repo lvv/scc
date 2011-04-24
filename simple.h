@@ -60,6 +60,7 @@
 	using	std::istream_iterator;
 	using	std::swap;
 
+#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////// BOOST
 #ifdef USE_BOOST
@@ -75,6 +76,8 @@
 		using boost::cregex_token_iterator;
 	#include <boost/format.hpp>
 		using boost::format;
+	#include <boost/utility.hpp>
+		// enable_if
 
 	//using namespace boost;
 #endif
@@ -82,19 +85,19 @@
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
-#define		Vint		std::vector<int>
-#define		Vuint		std::vector<unsigned int>
-#define		Vfloat		std::vector<float>
-#define		Vdouble		std::vector<double>
-#define		Dint		std::deque<int>
-#define		Duint		std::deque<unsigned int>
-#define		Dfloat		std::deque<float>
-#define		Ddouble		std::deque<double>
+#define		vint		std::vector<int>
+#define		vuint		std::vector<unsigned int>
+#define		vfloat		std::vector<float>
+#define		vdouble		std::vector<double>
+#define		dint		std::deque<int>
+#define		duint		std::deque<unsigned int>
+#define		dfloat		std::deque<float>
+#define		ddouble		std::deque<double>
 #define         S      		std::string
-#define         VS     		std::vector<std::string>
-#define         Vstr   		std::vector<str>
-#define         DS     		std::deque<std::string>
-#define         Dstr   		std::deque<str>
+#define         vS     		std::vector<std::string>
+#define         vstr   		std::vector<str>
+#define         dS     		std::deque<std::string>
+#define         dstr   		std::deque<str>
 
 ///// utils 
 #define 	GL(x)		std::getline(cin,x)
@@ -168,9 +171,21 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
-// Print C-array for numeric types.
-// Impossible for any printable type? (conflict with  cout << "abc")
+// Print any C-array
 
+		template<class T, std::size_t N> 		
+		typename boost::disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
+	operator<<      (ostream& os, const T (&A)[N]) {
+		cout << "{";
+			int i=0;
+			for (; i<N-1;  i++)	os  << A[i] <<  ", ";
+			os << A[i];
+		cout << "}";
+		return os;
+	};
+
+
+/*
 #define C_ARRAY_PRINT(T) 						\
 	template<std::size_t N> 					\
 	std::ostream&           					\
@@ -191,6 +206,7 @@ C_ARRAY_PRINT(unsigned int)
 C_ARRAY_PRINT(unsigned long)
 C_ARRAY_PRINT(double)
 C_ARRAY_PRINT(float)
+*/
 
 
 // print any std::sequance-containter<printable>
@@ -242,6 +258,9 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 	// Using C++0x Variadic Templates to Pretty-Print Types 
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
+///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
+
+
 // STR
 struct str: string {
 
@@ -275,6 +294,9 @@ struct str: string {
 	str& operator /= (double I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 	str& operator %= (double I) { ostringstream OS;   OS << *this / I;   this->string::assign(OS.str());  return *this; }
 
+		template<class T>
+	str& operator << (T t) { ostringstream OS;   OS << *this << t;  *this =  OS.str(); return *this; }
+
 	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
 	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
 	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
@@ -300,14 +322,23 @@ struct str: string {
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
 
-struct in_t: istream {	 // used as:   int i(in);
+struct in_t {	 // used as:   int i(in);
 	in_t () {};
 
-	// convert (input) any POD type
+	// input a POD type
 	template<typename T> operator T() { T t; cin >> t; return t; }
 };
 
 in_t in;
+
+
+/*
+	template<class T> 
+std::string& operator<<(std::string s, const T t) { 
+	std::ostringstream ss; 
+	ss << t;
+	return s += ss.str(); 
+}*/ 
 
 
 // input any std::sequance-containter<printable>  (container must have size()) 

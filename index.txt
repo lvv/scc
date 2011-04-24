@@ -20,10 +20,12 @@ In simple.h:
 * Shortcut (macros and typedefs) making C++ verbosity more suitable for one-liner context
 
 In scc.h defined:
+
 * deque<str>	F
 * read_line()
 
 Predefined variables (similar to AWK's):
+
 * line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
 * F	-  `std::deque<str>` line's fields; accessible like `F(i)`; counted from 0
 * NF	-  `int`,  number of fields (set after read_line())
