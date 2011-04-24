@@ -172,6 +172,8 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// UTILS
 
+#ifdef USE_BOOST
+
 
 	template <class T, class U>
 	typename std::common_type<T, U>::type
@@ -184,6 +186,16 @@ min(T t, U u) {
 max(T t, U u) {
    return t >= u ? t : u;
 }
+
+#endif
+
+	
+
+template <int N>
+string&
+operator+ (const char* s, int i)
+{ return string(s) + str(i); }
+
 
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
@@ -201,29 +213,6 @@ max(T t, U u) {
 		return os;
 	};
 
-
-/*
-#define C_ARRAY_PRINT(T) 						\
-	template<std::size_t N> 					\
-	std::ostream&           					\
-	operator<<      (ostream& os, const T (&A)[N]) {             	\
-		cout << "{";						\
-			int i=0;					\
-			for (; i<N-1;  i++)	os  << A[i] <<  ", ";	\
-			os << A[i];					\
-		cout << "}";						\
-		return os;						\
-	};
-
-C_ARRAY_PRINT(short)
-C_ARRAY_PRINT(int)
-C_ARRAY_PRINT(long)
-C_ARRAY_PRINT(unsigned short)
-C_ARRAY_PRINT(unsigned int)
-C_ARRAY_PRINT(unsigned long)
-C_ARRAY_PRINT(double)
-C_ARRAY_PRINT(float)
-*/
 
 
 // print any std::sequance-containter<printable>
