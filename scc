@@ -11,16 +11,22 @@ CXXFLAGS+=" -I $SCC_HOME "
 
 prg=/tmp/$USER-scc
 src=$prg.cc
-: ${1? Usage: css [options] 'c++ snippet' [arg...] }
+: ${1? Usage: css [options] 'c++ snippet' [arg...] 
+	-n 	- for each line: read; split into fields; execute snippet 
+	-p 	- for each line: read; split into fields; execute snippet;  output fields
+	-B	- do not use Boost
+	-v 	- vebose
+}
 
 
 ####################################################################################### OPTIONS 
 
-while getopts npB opt;  do
+while getopts npvB opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
 		B)	no_boost=1;;
+		v)	verbose=1;;
 		?) 	echo "usage:  scc [-options] snippet  arg...";;
 	esac
 done
@@ -29,12 +35,23 @@ done
 shift $((OPTIND-1))
 
 
+[[ ! -d /usr/include/boost  ]]  &&  no_boost=1
+
 #####################################################################################  PARSE SNIPPET
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
-snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
+
 end_prt="`echo \"$1\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
+
+if [[ $verbose ]] ; then 
+	echo -n "$1                                 "
+	echo -n `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`
+	echo "   no_boost: $no_boost;   n_opt: $n_opt;   p_opt: $p_opt;   is_stream: $is_stream;   end_prt: $end_prt"
+	#echo "CXXFLAGS:  $CXXFLAGS"
+fi 
+
+snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 
 [[ $n_opt       && $end_prt ]]	&& snippet+="cout << endl;"
 [[ ! $is_stream && $end_prt ]]	&& snippet+="cout << endl;"
@@ -78,7 +95,7 @@ fi
 echo '}' >>  $src
 
 
-if [[ -d /usr/include/boost  &&  ! $no_boost ]];  then 
+if [[ ! $no_boost ]];  then 
 	LIBS+='-lboost_regex'
 	CXXFLAGS+=" -DUSE_BOOST "
 fi 

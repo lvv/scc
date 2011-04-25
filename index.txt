@@ -84,10 +84,11 @@ echo PATH+=":$PWD/scc" >> ~/.profile
 ///////////////////////////////////////////////
 == status
 capability		|  C++200?	|	>=GCC-4.4.4	|  >=GCC-4.4.4 && Boost
+
 expression evaluation	|	Y	|	Y		| 	Y
 stl container print	|	N 	|	Y		|	Y
 c-array print		| 	N 	|	N		| 	Y
-stream filter		| 	N 	|	Y		| 	Y
+stream filter		| 	Y 	|	Y		| 	Y
 regex			| 	N 	|	N		| 	Y
 ///////////////////////////////////////////////
 
@@ -96,7 +97,7 @@ regex			| 	N 	|	N		| 	Y
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
 	- '{ code-block; } expr'
-	- string literals with '(){}'
+	- string literals with '"(){}'
 	- snippets with space after last semicolon
 
   Simple workaround: use semicolon before last statement and do not put

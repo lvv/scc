@@ -1,42 +1,43 @@
-
-echo -e '1 2\n11 22\n111 222'    | scc -p 'F(1)=9;'
-echo 
-echo -e '1 9\n11 9\n111 9' 
+time (
 echo ---------------------------------------------------------
-echo -e '1 -\n2\n3 none\n4 abc'   | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
-echo 
-echo -e '1 n/a\n2 n/a\n3 n/a\n4 abc'
+echo ""   | scc -v 1  &&
+echo -e "\n1"
 echo ---------------------------------------------------------
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'
-echo 
-echo -e '1 aaa bbb\n2 ccc ddd'  
+echo ""   | scc -v 'vector<int> V{1,2}; V'  &&
+echo -e "\n{1, 2}"
 echo ---------------------------------------------------------
-echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'str(NR+1)+" "'
-echo 
-echo -e '1  aaa bbb\n2  ccc ddd'  
+echo ""   | scc -v 'int A[2] = {1,2}; A'  &&
+echo -e "\n{1, 2}"
 echo ---------------------------------------------------------
-echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'
-echo 
-echo -e "AA\nBB" 
+echo -e '1 2\n11 22\n111 222'    | scc -v -p 'F(1)=9;'   &&
+echo -e '\n1 9\n11 9\n111 9' 
 echo ---------------------------------------------------------
-echo aaa bbb aaa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'
-echo 
-echo {⟨aaa,2⟩, ⟨bbb,1⟩}
+echo -e '1 -\n2\n3 none\n4 abc'   | scc -v -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'  &&
+echo -e '\n1 n/a\n2 n/a\n3 n/a\n4 abc'
 echo ---------------------------------------------------------
-command df | scc 'int n=0; WRL n+=F(2);  n'
-echo 
+echo -e 'aaa bbb\nccc ddd'   |  scc -v  -p 'F.push_front(NR+1);'  &&
+echo -e '\n1 aaa bbb\n2 ccc ddd'  
+echo ---------------------------------------------------------
+echo -e 'aaa bbb\nccc ddd'   |  scc -v  -p 'str(NR+1)+" "'  &&
+echo -e '\n1  aaa bbb\n2  ccc ddd'  
+echo ---------------------------------------------------------
+echo -e "AA\nBB\nCC"  | scc -v 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
+echo -e "\nAA\nBB" 
+echo ---------------------------------------------------------
+echo aaa bbb aaa | scc -v 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'  &&
+echo -e "\n{⟨aaa,2⟩, ⟨bbb,1⟩}"
+echo ---------------------------------------------------------
+command df | scc -v 'int n=0; WRL n+=F(2);  n'  && 
+echo ""  &&
 command df | awk '{n+=$3;};  END{print n}'
 echo ---------------------------------------------------------
-echo "AAA BBB CCC"   | scc  'int t=0; S s; while(cin>>s) t++; t'
-echo 
-echo 3
+echo "AAA BBB CCC"   | scc -v  'int t=0; S s; while(cin>>s) t++; t'  &&
+echo -e "\n3"
 echo ---------------------------------------------------------
-scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
-echo 
-echo *aa* *bb*
+scc -v 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'   &&
+echo -e "\n*aa* *bb*"
 echo ---------------------------------------------------------
-echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'
-echo 
-echo aa
-echo bb\"-, bb
-echo cc
+echo '"aa",  "bb\"-, bb",  "cc"' | scc -v 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'  &&
+echo -e "\naa\nbb\"-, bb\ncc"
+
+)

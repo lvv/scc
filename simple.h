@@ -39,6 +39,7 @@
 
 ///////////////////////////////////////////////////////////////////// 
 
+	// io
 	using	std::cin;
 	using	std::cout;
 	using	std::endl;
@@ -47,6 +48,8 @@
 	using	std::basic_ostream;
 	using	std::istream;
 	using	std::ostream;
+
+	// containers
 	using	std::vector;
 	using	std::deque;
 	using	std::set;
@@ -59,7 +62,100 @@
 	using	std::numeric_limits;
 	using	std::ostream_iterator;
 	using	std::istream_iterator;
+
+	// algo
 	using	std::swap;
+	using	std::generate;
+	using	std::generate_n;
+
+	// Non-modifying
+	using	std::for_each;
+	using 	std::count;
+	using	std::count_if;
+	using	std::mismatch;
+	using	std::equal;
+	using	std::find;
+	using	std::find_if;
+	using	std::find_end;
+	using	std::find_first_of;
+	using	std::adjacent_find;
+	using	std::search;
+	using	std::search_n;
+
+	// modifying 
+	using	std::copy;
+	using	std::copy_backward;
+	using	std::fill;
+	using	std::fill_n;
+	using	std::transform;
+	using	std::generate;
+	using	std::generate_n;
+	using	std::remove;
+	using	std::remove_if;
+	using	std::remove_copy;
+	using	std::remove_copy_if;
+	using	std::replace;
+	using	std::replace_if;
+	using	std::replace_copy;
+	using	std::replace_copy_if;
+	using	std::swap;
+	using	std::swap_ranges;
+	using	std::iter_swap;
+	using	std::partition;
+	using	std::stable_partition;
+	using	std::reverse;
+	using	std::reverse_copy;
+	using	std::rotate;
+	using	std::rotate_copy;
+	using	std::random_shuffle;
+	using	std::unique;
+	using	std::unique_copy;
+
+	// sort
+	using	std::sort;
+	using	std::partial_sort;
+	using	std::partial_sort_copy;
+	using	std::stable_sort;
+	using	std::nth_element;
+
+	// binary search
+	using	std::lower_bound;
+	using	std::upper_bound;
+	using	std::binary_search;
+	using	std::equal_range;
+
+
+	// set
+	using	std::merge;
+	using	std::inplace_merge;
+	using	std::includes;
+	using	std::set_difference;
+	using	std::set_intersection;
+	using	std::set_symmetric_difference;
+	using	std::set_union;
+
+
+	// heap
+	using	std::is_heap;
+	using	std::make_heap;
+	using	std::push_heap;
+	using	std::pop_heap;
+	using	std::sort_heap;
+
+	// min/max
+	using	std::max;
+	using	std::max_element;
+	using	std::min;
+	using	std::min_element;
+	using	std::lexicographical_compare;
+	using	std::next_permutation;
+	using	std::prev_permutation;
+
+	// numeric
+	using	std::accumulate;
+	using	std::inner_product;
+	using	std::adjacent_difference;
+	using	std::partial_sum;
 
 
 ///////////////////////////////////////////////////////////////////// BOOST
@@ -124,6 +220,7 @@
 #define 	SM		boost::cmatch
 
 #ifdef  USE_BOOST
+
 //typedef 	boost::regex_iterator		RI;
 typedef 	boost::sregex_iterator          SRI;
 typedef 	boost::cregex_iterator          CRI;		
@@ -132,6 +229,7 @@ typedef 	boost::cregex_iterator          CRI;
 typedef 	boost::sregex_token_iterator    SRTI;		
 typedef 	boost::cregex_token_iterator    CRTI;		
 #define 	MRTI		boost::make_regex_token_iterator 
+
 #endif
 
 
@@ -190,11 +288,12 @@ max(T t, U u) {
 #endif
 
 	
-
+/*
 template <int N>
 string&
 operator+ (const char* s, int i)
 { return string(s) + str(i); }
+*/
 
 
 
@@ -202,8 +301,9 @@ operator+ (const char* s, int i)
 
 // Print any C-array
 
-		template<class T, std::size_t N> 		
-		typename boost::disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
+#ifdef USE_BOOST
+		template<class T, std::size_t N> 		// std::disable_if - does not exist yet	
+		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
 		cout << "{";
 			int i=0;
@@ -212,6 +312,7 @@ operator+ (const char* s, int i)
 		cout << "}";
 		return os;
 	};
+#endif
 
 
 
@@ -384,8 +485,9 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };
-#endif
+
+#endif	// MODERN_GCC
 
 
 
-#endif
+#endif	// LVV_SIMPLE_H
