@@ -288,12 +288,6 @@ max(T t, U u) {
 #endif
 
 	
-/*
-template <int N>
-string&
-operator+ (const char* s, int i)
-{ return string(s) + str(i); }
-*/
 
 
 
@@ -426,6 +420,8 @@ struct str: string {
 	int operator--(int) { long old = long(*this); *this = *this - 1; return old; }
 	// TODO for double
 };
+
+
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
 
