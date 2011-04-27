@@ -53,6 +53,33 @@
 		}
 	};
 
+	#ifdef xxxUSE_BOOST
+		// simplified regex_replace (now accept const char* for regex)
+			template <class traits, class charT>
+			basic_string<charT>
+		RR (
+			const basic_string<charT>& s,
+	               	const basic_regex<charT, traits>& e,
+			const basic_string<charT>& fmt,
+			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
+		)  {
+			return boost::regex_replace<traits, charT>  (s, e, fmt, flags);
+		}
+
+			template <class traits, class charT>
+			basic_string<charT>
+		RR (
+			const basic_string<charT>& s,
+	               	//const basic_regex<charT, traits>& e,
+	               	const char* r,
+			const basic_string<charT>& fmt,
+			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
+		)  {
+			return boost::regex_replace<traits, charT>  (s, boost::regex(r), fmt, flags);
+		}
+
+	#endif
+
 	#define WRL  while(read_line())
 
 #endif // SCC
