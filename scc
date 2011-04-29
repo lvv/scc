@@ -11,13 +11,18 @@ CXXFLAGS+=" -I $SCC_HOME "
 
 prg=/tmp/$USER-scc
 src=$prg.cc
-: ${1? Usage: css [options] 'c++ snippet' [arg...] 
-	-n 	- for each line: read; split into fields; execute snippet 
-	-p 	- for each line: read; split into fields; execute snippet;  output fields
-	-B	- do not use Boost
-	-v 	- vebose
-}
 
+usage_exit() {
+	echo "
+	USAGE:  scc [options]  snippets [args] 
+		
+		-n 	- for each line: read; split into fields; execute snippet 
+		-p 	- for each line: read; split into fields; execute snippet;  output fields
+		-B	- do not use Boost
+		-v 	- vebose
+	"
+	exit 0
+}
 
 ####################################################################################### OPTIONS 
 
@@ -27,12 +32,15 @@ while getopts npvB opt;  do
 		p)	p_opt=1;  is_stream=1;;
 		B)	no_boost=1;;
 		v)	verbose=1;;
-		?) 	echo "usage:  scc [-options] snippet  arg...";;
+		?) 	usage_exit;;
+
 	esac
 done
 
 
 shift $((OPTIND-1))
+
+[[  $1 ]] || usage_exit
 
 
 [[ ! -d /usr/include/boost  ]]  &&  no_boost=1
