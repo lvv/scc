@@ -6,7 +6,7 @@ This is bash wrapper for GCC.
 
 You need >=gcc-4.6.0 and boost for all features to work. 
 For GCC older than 4.4.4, remove  `-std=gnu++0x` from `CXXFLAGS` variable  (top of scc file).
-One-liner examples:
+Examples:
 
 ----------------------------------------------------------------------------
 #  C++ expression,  evaluated and printed

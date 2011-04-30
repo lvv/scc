@@ -439,14 +439,6 @@ struct in_t {	 // used as:   int i(in);
 in_t in;
 
 
-/*
-	template<class T> 
-std::string& operator<<(std::string s, const T t) { 
-	std::ostringstream ss; 
-	ss << t;
-	return s += ss.str(); 
-}*/ 
-
 
 // input any std::sequance-containter<printable>  (container must have size()) 
 #if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) ) 

@@ -58,19 +58,19 @@ Shortcuts
 #define         CM      cmatch
 #define         SM      smatch
 
-#define		Vint	vector<int>
-#define		Vuint	vector<unsigned int>
-#define		Vfloat	vector<float>
-#define		Vdouble	vector<double>
-#define		Dint	deque<int>
-#define		Duint	deque<unsigned int>
-#define		Dfloat	deque<float>
-#define		Ddouble	deque<double>
+#define		vint	vector<int>
+#define		vuint	vector<unsigned int>
+#define		vfloat	vector<float>
+#define		vdouble	vector<double>
+#define		dint	deque<int>
+#define		duint	deque<unsigned int>
+#define		dfloat	deque<float>
+#define		ddouble	deque<double>
 #define         S      string
-#define         VS     vector<string>
-#define         Vstr   vector<str>
-#define         DS     deque<string>
-#define         Dstr   deque<str>
+#define         vS     vector<string>
+#define         vstr   vector<str>
+#define         dS     deque<string>
+#define         dstr   deque<str>
 --------------------------------------
 
 
