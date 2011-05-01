@@ -52,25 +52,25 @@ Shortcuts
 --------------------------------------
 #define		WRL	while(read_line())
 
-#define         R       regex
-#define         RM      regex_match
-#define         RS      regex_search
-#define         CM      cmatch
-#define         SM      smatch
+#define         R       boost::regex
+#define         RM      boost::regex_match
+#define         RS      boost::regex_search
+#define         CM      boost::cmatch
+#define         SM      boost::smatch
 
-#define		vint	vector<int>
-#define		vuint	vector<unsigned int>
-#define		vfloat	vector<float>
-#define		vdouble	vector<double>
-#define		dint	deque<int>
-#define		duint	deque<unsigned int>
-#define		dfloat	deque<float>
-#define		ddouble	deque<double>
-#define         S      string
-#define         vS     vector<string>
-#define         vstr   vector<str>
-#define         dS     deque<string>
-#define         dstr   deque<str>
+#define		vint	std::vector<int>
+#define		vuint	std::vector<unsigned int>
+#define		vfloat	std::vector<float>
+#define		vdouble	std::vector<double>
+#define		dint	std::deque<int>
+#define		duint	std::deque<unsigned int>
+#define		dfloat	std::deque<float>
+#define		ddouble	std::deque<double>
+#define         S	std::string
+#define         vS	std::vector<string>
+#define         vstr	std::vector<str>
+#define         dS	std::deque<string>
+#define         dstr	std::deque<str>
 --------------------------------------
 
 

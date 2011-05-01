@@ -17,7 +17,7 @@ scc 'sin(0.5)'
 0.479426
 
 #  Same, but multi-statment and with explicit printing.
-#  Note trailing ';' - meaning do not print last stament-expression.
+#  Note trailing ';' - meaning do not print last statement-expression.
 scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
 

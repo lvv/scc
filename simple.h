@@ -63,6 +63,7 @@
 	using	std::numeric_limits;
 	using	std::ostream_iterator;
 	using	std::istream_iterator;
+	using	std::bitset;
 
 	// algo
 	using	std::swap;
