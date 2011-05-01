@@ -204,8 +204,8 @@
 #define		NL     		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
 #define 	ISI 		std::istream_iterator
 #define 	OSI 		std::ostream_iterator
-#define 	b		begin() 	
-#define 	e		end() 	
+//#define 	b		begin() 	
+//#define 	e		end() 	
 
 ///// boost
 #define 	R		boost::regex
