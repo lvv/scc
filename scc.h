@@ -5,7 +5,7 @@
 
 	struct   F_t : std::deque<str> {
 		str& 	operator()(size_t I) {
-			this->resize(I+1);
+			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
 	};
