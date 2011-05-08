@@ -98,10 +98,8 @@ regex			| 	N 	|	N		| 	Y
 
 	- '{ code-block; } expr'
 	- string literals with '"(){}'
-	- snippets with space after last semicolon
 
-  Simple workaround: use semicolon before last statement and do not put
-  trailing spaces at the end of snippet
+  Simple workaround: use semicolon before last statement.
 
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;

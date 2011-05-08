@@ -59,7 +59,7 @@ if [[ $verbose ]] ; then
 	#echo "CXXFLAGS:  $CXXFLAGS"
 fi 
 
-snippet="`echo \"$1\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
+snippet="`echo \"${1%% }\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
 
 [[ $n_opt       && $end_prt ]]	&& snippet+="cout << endl;"
 [[ ! $is_stream && $end_prt ]]	&& snippet+="cout << endl;"
