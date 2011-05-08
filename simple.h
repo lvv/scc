@@ -312,13 +312,48 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 };
 
 
+// TUPLE -- print any std::tuple<printable ...>
+// 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
+
+#ifdef 	MODERN_GCC
+	using	std::tuple;
+	using	std::tuple_size;
+	using	std::get;
+
+
+
+			template< int RI, typename... TT>
+	struct	print_tuple_elem  {
+		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {               
+			const size_t  tsize = tuple_size<tuple<TT...>>::value;
+			const size_t  i = tsize - RI;
+			os <<  get<i>(tup);
+			if  (i != tsize-1)   cout << ", ";
+			print_tuple_elem<RI-1, TT...>(os, tup);
+		};
+	};
+
+			template<typename... TT>
+	struct	print_tuple_elem <0, TT...> {
+		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {};
+	};
+
+
+		template<typename... TT> inline
+		std::ostream&  
+operator<<      (ostream& os, const tuple<TT...>& tup) {               
+	const size_t  tsize = tuple_size<tuple<TT...>>::value;
+	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
+	return os;
+};
+#endif
 	// Using C++0x Variadic Templates to Pretty-Print Types 
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
+	
 
-///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
 
 
-// STR
+///////////////////////////////////////////////////////////////////////////////  STR
 struct str: string {
 
 	// CTOR
@@ -384,7 +419,22 @@ struct str: string {
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
 
-struct in_t {	 // used as:   int i(in);
+
+
+///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
+
+#ifdef 	MODERN_GCC
+	template<typename T, template<typename T, typename C> class C > 
+	C <T,std::allocator<T>> &                                              
+operator<<      (C<T, std::allocator<T> >& V, T v)    { V.push_back(v); return V; }; 
+#endif
+
+///////////////////////////////////////////////////////////////////////////////  INPUT
+
+// IN   -- read cin when `in` value is accessed.
+//   used as:    	int i(in);
+//
+struct in_t {	 
 	in_t () {};
 
 	// input a POD type
@@ -395,45 +445,16 @@ in_t in;
 
 
 
-// input any std::sequance-containter<printable>  (container must have size()) 
-#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) ) 
+// Input any std::sequance-containter<printable> 
+// Container must have non-zero size()
+// Used as:   vector<int> V(3);   cin >> V;
+
+#ifdef 	MODERN_GCC
 template<typename E, template<typename E, typename L> class L > std::istream&                                              
 operator>>      (istream& is, L<E, std::allocator<E> >& C)    { for(auto &c:C) if(!(is>>c)) break; return is; }; 
 #endif
 
 
-// TUPLE -- print any std::tuple<printable ...>
-// 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
-	using	std::tuple;
-	using	std::tuple_size;
-	using	std::get;
-
-
-
-			template< int RI, typename... TT>
-	struct	print_tuple_elem  {
-		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {               
-			const size_t  tsize = tuple_size<tuple<TT...>>::value;
-			const size_t  i = tsize - RI;
-			os <<  get<i>(tup);
-			if  (i != tsize-1)   cout << ", ";
-			print_tuple_elem<RI-1, TT...>(os, tup);
-		};
-	};
-
-			template<typename... TT>
-	struct	print_tuple_elem <0, TT...> {
-		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {};
-	};
-
-
-		template<typename... TT> inline
-		std::ostream&  
-operator<<      (ostream& os, const tuple<TT...>& tup) {               
-	const size_t  tsize = tuple_size<tuple<TT...>>::value;
-	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
-	return os;
-};
 
 #endif	// MODERN_GCC
 
