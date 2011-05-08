@@ -423,10 +423,25 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; r
 
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
 
+// push_back/push_front replaement
+//
+// usage: 
+//    scc 'vint V;  V << 1 << 2'
+//    {1, 2}
+//
+//    scc 'dint V;  11 >> V'
+//    {11}
+//
+
 #ifdef 	MODERN_GCC
 	template<typename T, template<typename T, typename C> class C > 
 	C <T,std::allocator<T>> &                                              
 operator<<      (C<T, std::allocator<T> >& V, T v)    { V.push_back(v); return V; }; 
+
+	template<typename T, template<typename T, typename C> class C > 
+	C <T,std::allocator<T>> &                                              
+operator>>      (T v, C<T, std::allocator<T> >& V)    { V.push_front(v); return V; }; 
+
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT
