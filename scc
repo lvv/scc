@@ -69,10 +69,14 @@ shift
 #####################################################################################  GENERATE SRC
 
 cat <<  END	 > $src
+
 #include <simple.h>
+#include <codejam.h>
+
 #ifdef MODERN_GCC 
 #include <scc.h>
 #endif
+
 
 	int main(int argc, char** argv) {
 END

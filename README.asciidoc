@@ -23,7 +23,7 @@ scc 'float x=0.5;  cout << sin(x) << endl;'
 
 #  Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC. 
 #  STL containers are printable. 
-scc 'vector<int> V{1,2,3};  for(int &x: V) x*=x;   V'			
+scc 'vector<int> V{1,2,3};  for(int &v: V) v*=v;   V'			
 {1, 4, 9}								
 
 #  Word frequencies (S is shortcut for std::string):

@@ -30,7 +30,7 @@
 
 	void	split() {
 		#ifdef USE_BOOST
-			SRTI ite, it(line.begin(),line.end(),R(IFS),1);
+			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
 			while(it!=ite)   F.push_back(str(*it++));
 		#else
 			stringstream	ss(line);
