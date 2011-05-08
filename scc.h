@@ -24,9 +24,21 @@
 	int NR = -1;
 
 	string       __attribute__((unused))	line;
+
+	#ifdef  arg_OFS
+	string	     __attribute__((unused))	OFS(arg_OFS);
+	#else
 	string	     __attribute__((unused))	OFS(" ");
-	string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");
+	#endif
+
 	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
+
+	#ifdef  arg_IFS
+	string       __attribute__((unused))	IFS(arg_IFS);
+	#else
+	string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// IFS is second group (\2)
+	#endif
+
 
 	void	split() {
 		#ifdef USE_BOOST

@@ -16,8 +16,10 @@ usage_exit() {
 	echo "
 	USAGE:  scc [options]  snippets [args] 
 		
-		-n 	- for each line: read; split into fields; execute snippet 
-		-p 	- for each line: read; split into fields; execute snippet;  output fields
+		-n 	- for each line: read line; split into fields; execute snippet 
+		-p 	- for each line: read line; split into fields; execute snippet;  output fields
+		-i 	- sets IFS (input field separator). Needs boost.  
+		-o 	- sets OFS (output field separator) 
 		-B	- do not use Boost
 		-v 	- vebose
 	"
@@ -26,21 +28,23 @@ usage_exit() {
 
 ####################################################################################### OPTIONS 
 
-while getopts npvB opt;  do
+[[  $1 ]]  ||  usage_exit
+
+while getopts npvBi:o: opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
 		B)	no_boost=1;;
 		v)	verbose=1;;
+		i)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
+		o)	CXXFLAGS+=" -Darg_OFS=$OPTARG ";; 
 		?) 	usage_exit;;
-
 	esac
 done
 
 
 shift $((OPTIND-1))
 
-[[  $1 ]] || usage_exit
 
 
 [[ ! -d /usr/include/boost  ]]  &&  no_boost=1

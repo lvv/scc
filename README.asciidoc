@@ -16,7 +16,7 @@ scc 2+2
 scc 'sin(0.5)'						
 0.479426
 
-#  Same, but multi-statment and with explicit printing.
+#  Same, but multi-statement and with explicit printing.
 #  Note trailing ';' - meaning do not print last statement-expression.
 scc 'float x=0.5;  cout << sin(x) << endl;'			
 0.479426
@@ -42,26 +42,33 @@ echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 0 aaa
 1 bbb
 
-#  Same. Note no traling ";"
-echo -e 'aaa\nbbb'   |  scc -p NR
+#  Same. Note no trailing ";"
+echo -e 'aaa\nbbb'   |   scc -p NR
 0 aaa
 1 bbb
+
+#  Make comma separated fields out of space separated:
+#  -o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
+echo 1 2 3 |  scc -po '","'
+1,2,3
+
+#  Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
+#  IFS - input field separator; CSV - predefined regex.
+#  Regex for IFS are not trivial (look in scc.h for definition). 
+echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
+aa
+bb\"-, bb
+cc
 
 #  Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
 #  Boost use in SCC is optional, it will be used if /usr/include/boost exist.
 #  RR is shortcut for boost::regex_replace;  R - boost::regex
-echo -e '1 -\n2\n3 none\n4 abc'  | scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
+echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a
 4 abc
 
-#  Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
-#  IFS - input field separator; CSV - predefined regex.
-echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV; WRL for(S f:F) cout << f << endl;'
-aa
-bb\"-, bb
-cc
 -------------------------------------------------------------------------------
 
 /////////////////////////////////
