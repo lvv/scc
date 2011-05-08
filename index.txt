@@ -17,7 +17,6 @@ In simple.h:
 * Most of STL's includes are included with `using std::...` for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
 * Code which allows most STL container to be printed to `std::cout` directly like `vector<int> V{1,2,3};   cout << V;`
 * Code for simplified `std::cin` input
-* Shortcut (macros and typedefs) making C++ verbosity more suitable for one-liner context
 
 In scc.h defined:
 
@@ -48,7 +47,18 @@ s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
 
-Shortcuts
+
+== Shortcuts
+
+This is very similar to to what is found in Codejam's finalist code -
+shortcut (macros and typedefs), which and are defined in `codejam.h`. These are to squeeze C++
+verbosity for one-liner context.  
+
+Use of shortcuts (macros) is considered bad style (side effect, namespace
+pollution) and discouraged for other
+context. They are isolated in `codejam.h` file so that it can be easily
+commented out from `scc` script if you don't like them.  
+
 --------------------------------------
 #define		WRL	while(read_line())
 
@@ -72,6 +82,8 @@ Shortcuts
 #define         dS	std::deque<string>
 #define         dstr	std::deque<str>
 --------------------------------------
+
+See for `codejam.h` for full list.
 
 
 == Install
