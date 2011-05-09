@@ -9,65 +9,75 @@ For GCC older than 4.4.4, remove  `-std=gnu++0x` from `CXXFLAGS` variable  (top 
 Examples:
 
 ----------------------------------------------------------------------------
-#  C++ expression,  evaluated and printed
-scc 2+2								
-4
+C++ expression,  evaluated and printed
 
-scc 'sin(0.5)'						
-0.479426
+	scc 2+2								
+	4
 
-#  Same, but multi-statement and with explicit printing.
-#  Note trailing ';' - meaning do not print last statement-expression.
-scc 'float x=0.5;  cout << sin(x) << endl;'			
-0.479426
+	scc 'sin(0.5)'						
+	0.479426
 
-#  Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC. 
-#  STL containers are printable. 
-scc 'vector<int> V{1,2,3};  for(int &v: V) v*=v;   V'			
-{1, 4, 9}								
+Same, but multi-statement and with explicit printing.
+Note trailing semicolon - meaning do not print last statement-expression.
 
-#  Word frequencies (S is shortcut for std::string):
-echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
-{⟨aa,2⟩, ⟨bb,1⟩}
+	scc 'float x=0.5;  cout << sin(x) << endl;'			
+	0.479426
 
-#  Sum-up df's used-disk-space column.
-#  Shortcut WRL is "while(read_line())");  
-#  deque<str> F — input line split into fields;
-#  Type str can be directly converted to/from int/float
-df | scc 'int n=0; WRL n+=F(2);  n' 					
-31399199
+Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC. 
+STL containers are printable. 
 
-#  Prepend line number to every line (-p is similar to perl's;  NR - number of record):
-echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
-0 aaa
-1 bbb
+	scc 'vector<int> V{1,2,3};  for(int &v: V) v*=v;   V'			
+	{1, 4, 9}								
 
-#  Same. Note no trailing ";"
-echo -e 'aaa\nbbb'   |   scc -p NR
-0 aaa
-1 bbb
+Word frequencies (S is shortcut for std::string):
 
-#  Make comma separated fields out of space separated:
-#  -o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
-echo 1 2 3 |  scc -po '","'
-1,2,3
+	echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
+	{⟨aa,2⟩, ⟨bb,1⟩}
 
-#  Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
-#  IFS - input field separator; CSV - predefined regex.
-#  Regex for IFS are not trivial (look in scc.h for definition). 
-echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
-aa
-bb\"-, bb
-cc
+Sum-up df's used-disk-space column.
+Shortcut WRL is "while(read_line())");  
+deque<str> F — input line split into fields;
+Type str can be directly converted to/from int/float
 
-#  Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
-#  Boost use in SCC is optional, it will be used if /usr/include/boost exist.
-#  RR is shortcut for boost::regex_replace;  R - boost::regex
-echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
-1 n/a
-2 n/a
-3 n/a
-4 abc
+	df | scc 'int n=0; WRL n+=F(2);  n' 					
+	31399199
+
+Prepend line number to every line (-p is similar to perl's;  NR - number of record):
+
+	echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
+	0 aaa
+	1 bbb
+
+Same. Note no trailing ";"
+
+	echo -e 'aaa\nbbb'   |   scc -p NR
+	0 aaa
+	1 bbb
+
+Make comma separated fields out of space separated:
+-o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
+
+	echo 1 2 3 |  scc -po '","'
+	1,2,3
+
+Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
+-i sets IFS (input field separator); CSV - predefined regex constant.
+How to make your own regexes  for IFS  - look in scc.h for examples.
+
+	echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
+	aa
+	bb\"-, bb
+	cc
+
+Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
+Boost use in SCC is optional, it will be used if /usr/include/boost exist.
+RR is shortcut for boost::regex_replace;  R - boost::regex
+
+	echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
+	1 n/a
+	2 n/a
+	3 n/a
+	4 abc
 
 -------------------------------------------------------------------------------
 

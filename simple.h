@@ -226,7 +226,6 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// UTILS
 
-#ifdef USE_BOOST
 
 
 	template <class T, class U>
@@ -241,7 +240,8 @@ max(T t, U u) {
    return t >= u ? t : u;
 }
 
-#endif
+//#ifdef USE_BOOST
+//#endif
 
 	
 
@@ -353,72 +353,6 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 
 
-///////////////////////////////////////////////////////////////////////////////  STR
-struct str: string {
-
-	// CTOR
-	str(const char*   s)	: string(s) {};
-	str(const string& s)	: string(s) {};
-	str(int           i)	: string()  {*this = (long)i;};
-	str(long          i)	: string()  {*this = (long)i;};
-	str(double        i)	: string()  {*this = (double)i;};
-	str()			: string()  {};
-
-	// op= assign
-	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (int I) { ostringstream OS;   OS << int(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (int I) { ostringstream OS;   OS << int(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (int I) { ostringstream OS;   OS << int(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-	str& operator  = (long I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (long I) { ostringstream OS;   OS << long(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (long I) { ostringstream OS;   OS << long(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (long I) { ostringstream OS;   OS << long(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-	str& operator  = (double I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (double I) { ostringstream OS;   OS << double(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (double I) { ostringstream OS;   OS << double(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (double I) { ostringstream OS;   OS << double(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-		template<class T>
-	str& operator << (T t) { ostringstream OS;   OS << *this << t;  *this =  OS.str(); return *this; }
-
-	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
-	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
-	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
-
-	// converter to numerics
-		
-			operator double		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
-	#if 	 (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) ) 
-	explicit	operator int		(void) { istringstream IS;  int    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator long		(void) { istringstream IS;  long   I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator float		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
-	#endif
-
-	////
-	str  operator +  (const char* s) { return  *(string*)this +  string(s); }	
-
-	// prefix/postfix inc/dec
-	long operator++() {                   return *this = long(*this) + 1; }
-	long operator--() {                   return *this = long(*this) - 1; }
-	long operator++(int) { long old = long(*this); *this = long(*this) + 1; return old; }
-	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
-	// TODO for double
-};
-
-
-
-std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; return os; };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
@@ -429,7 +363,7 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (string)s; r
 //    scc 'vint V;  V << 1 << 2'
 //    {1, 2}
 //
-//    scc 'dint V;  11 >> V'
+//    scc 'dint V;  11 >> (22 >> V)'
 //    {11}
 //
 
