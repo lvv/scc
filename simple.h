@@ -448,7 +448,23 @@ operator>>      (T v, C<T, std::allocator<T> >& V)    { V.push_front(v); return 
 
 // IN   -- read cin when `in` value is accessed.
 //   used as:    	int i(in);
-//
+
+
+
+struct  out_t { 
+	template<typename T> out_t&	operator<<  (T x) { cout << x; 		return *this; };
+	template<typename T> out_t&	operator,   (T x) { cout << ", " << x;	return *this; };
+	template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
+	template<typename T> out_t&	operator^   (T x) { cout << "\t" << x;	return *this; };
+};
+
+struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
+
+out_t out;
+
+#define		_    out << 
+#define		__   outln_t() << 
+
 struct in_t {	 
 	in_t () {};
 
