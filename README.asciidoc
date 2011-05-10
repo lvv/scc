@@ -9,69 +9,75 @@ For GCC older than 4.4.4, remove  `-std=gnu++0x` from `CXXFLAGS` variable  (top 
 Examples:
 
 ----------------------------------------------------------------------------
-C++ expression,  evaluated and printed
+C++ expression  evaluated and printed:
 
 	scc 2+2								
 	4
 
-If snippet have parenthesis, semicolon, bash redirects (<, >, <<, >>) or quotes
-(that is - almost always for C++ code) -  we need to put it in quotes
+If snippet have bash special characters
+(quotes, (), <, >, <<, >>, &)  -  we need to put it in quotes:
+
+	scc '"hello world"'
+	"hello world"
 
 	scc 'sin(0.5)'						
 	0.479426
 
 Now multi-statement and with explicit printing.
-Note trailing semicolon - meaning do not print last statement-expression.
+Note trailing semicolon - meaning do not print last statement-expression:
 
 	scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'			
 	0.5	0.479426
 
-Same with SCC's cout replacement (^ - tab;  | - space;  , - comma):
+Same with SCC's std::cout replacement: 
 
 	scc 'float x=0.5;  __ x ^ sin(x);'			
 	0.5	0.479426
 
 Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC for this. 
-STL containers are printable. 
+STL containers are printable: 
 
-	scc 'vector<int> V{1,2,3};  for(int &v: V) v*=v;   V'			
+	scc 'vector<int> V{1,2,3};  for(int &v:V) v*=v;   V'			
 	{1, 4, 9}								
 
 Word frequencies (S is shortcut for std::string):
 
-	echo aa bb aa | scc 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m' 
+	echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
 	{⟨aa,2⟩, ⟨bb,1⟩}
 
 Sum-up df's used-disk-space column.
-Shortcut WRL is "while(read_line())");  
-F is class similar to deque<str>.  Input lines are split into F.
+Shortcut WRL is  while(read_line()).  
+F is class derived from deque<str>.  Every input line is split into F.
 Type str can be directly converted to/from numeric types.
-Its operator()  - safe operator[].
+The operator()  is safe operator[].
 
 	df | scc 'int n=0; WRL n+=F(2);  n' 					
 	31399199
 
-Prepend line number to every line (-p is similar to perl's;  NR - number of record):
+Prepend line number to every line
+Options -p is similar to PERL's;  NR - number of record; >> - push_front()
 
-	echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
+	echo -e 'aaa\nbbb'   |  scc -p 'NR>>F;'
 	0 aaa
 	1 bbb
 
-Same. Note no trailing semicolon:
+We could've wrote   F.push_back(NF)  as   F<<NR
+
+Another way for doing the same. Note no trailing semicolon:
 
 	echo -e 'aaa\nbbb'   |   scc -p NR
 	0 aaa
 	1 bbb
 
-Make comma separated fields out of space separated:
-Option -o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
+Make comma separated fields out of space separated.
+Option -o sets OFS (output field separator)
 
-	echo 1 2 3 |  scc -po '","'
+	echo 1 2 3 |  scc -o '","' -p
 	1,2,3
 
 Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
 Option -i sets IFS (input field separator); CSV - predefined regex constant.
-How to make your own regexes  for IFS  - look in scc.h for examples.
+How to make your own regexes  for IFS  - look in scc.h
 
 	echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
 	aa

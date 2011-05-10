@@ -87,12 +87,14 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string
 
 ///////////////////////////////////////////////////////////////////////////////  F
 
-	struct   F_t : std::deque<str> {
-		str& 	operator()(size_t I) {
+	template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+	struct   F_t : std::deque<_Tp> {
+		_Tp& 	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
 	};
+
 
 	std::ostream&   operator<<      (ostream& os, const deque<str, std::allocator<str> >& C) {              
 		os << "{";
@@ -103,9 +105,10 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string
 		return os;
 	};
 
+
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t F;
+	F_t<str> F;
 	int NF = 0;
 	int NR = -1;
 

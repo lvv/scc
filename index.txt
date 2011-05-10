@@ -4,7 +4,7 @@ include::/tmp/t.ad[]
 In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
-* `simple.h`  and `scc.h` are included
+* `simple.h`, `scc.h` and `codejam.h` are included
 * if `/usr/include/boost` is exsist then `boost/regex.hpp` is included
 * If last (or only) statement (should be an expression) is not terminated by  `;` it is sent to `std::cout`.
 * if stream options are used (-n or -p), then one line is read from `std::cin` per input cycle.
@@ -12,17 +12,19 @@ In `scc` shall script:
 	If `-p` then  line is reassembled back from fields  and sent to `std::cout`
 * Generated source compiled and executed.
 
-== scc.h
+== SCC.H
 
 Defines:
 
-* deque<str>	F
+* F — derived from  deque<str>
 * read_line()
+* type str
+* SCC specific shortcuts
 
 Predefined variables (similar to AWK's):
 
 * line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
-* F	-  `std::deque<str>` line's fields; accessible like `F(i)`; counted from 0
+* F	-  derived from  `std::deque<str>` — line's fields; accessible like `F(i)`; counted from 0
 * NF	-  `int`,  number of fields (set after read_line())
 * NR 	-  `int`,  number of records (set after read_line())
 * OFS 	-  `std::string`, output field separator 
@@ -35,7 +37,7 @@ to/from numeric types:
 --------------------------------
 str  s("1");
 int  i;
-i = s;		// string cast to int
+i = s;		// 1
 i = s+1;	// 2
 s = 1;		// "1"
 s++		// "2"
@@ -43,16 +45,16 @@ s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
 
-== simple.h
+== SIMPLE.H
 
 This include intended for use with small, one-file C++ programs.  For something
-like Google CodeJam. It can be used independently from scc.  
+like Google CodeJam. It can be used independently from SCC.  
 
 === Everything is included
 
 Most of STL's includes are included with `using
-std::...` for most common objects. On my 4yr old laptop (no ssd), run time
-with cold cache - 2sec, with warm cache  <1sec.  So, usually `simple.h` is the only
+std::...` for most common objects. On my 4yr old laptop (no SSD), run time
+with cold cache - 2sec, with warm cache  <1sec.  Usually `simple.h` is the only
 include you need to include.
 
 === Simplified printing. 
@@ -62,19 +64,19 @@ printable objects.  C-arrays  or stl containers (including
 sets, maps, pairs, tuples) are not printable.
 Simple.h makes all these printable too.  
 
-Examples.  Right side is equivalent code without simple.h
+Examples.  Comments -  equivalent code:
 
 --------------------------------------------------------------------
-_ x;				cout << x;
-__ x;				cout << x << endl;
-__ a,b;				cout << a << ", " << b << endl;
-__ a^b;				cout << a << "\t"  << b << endl;
-__ a|b;				cout << a << " "  << b << endl;
-__ "list: " << a,b;		cout << "list: " << a << ", " << b << endl;
+_ x;				//  cout << x;
+__ x;				//  cout << x << endl;
+__ a,b;				//  cout << a << ", " << b << endl;
+__ a^b;				//  cout << a << "\t"  << b << endl;
+__ a|b;				//  cout << a << " "  << b << endl;
+__ "list: " << a,b;		//  cout << "list: " << a << ", " << b << endl;
 
 vector<int> V{1,2,3};
-_ V;				for (auto it=V.begin(); ....
-// prints: {1, 2, 3}
+_ V;				//  for (auto it=V.begin(); ....
+				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
 
 
@@ -85,23 +87,23 @@ is read from `in`, it reads from `cin`.  Also input for aggregate types (with
 non zero size): 
 
 --------------------------------------------------------------------
-int i(in);			int i;  cin >> i;	// can be any type
+int i(in);			//  int i;  cin >> i;	
 
 vector<int> V(10);
-cin >> V;			for(int i=0; i<10; i++)  cin >> V[i];
+cin >> V;			//  for(int i=0; i<10; i++)  cin >> V[i];
 --------------------------------------------------------------------
 
 == Utility finctions
 
 Functions min/max which will work with mixed types. Expression
-std::max(10,V.size()) - won't compile, you need to use 10lu.
+std::max(10, V.size()) - won't compile (you need to use (size_t)10).
 
 push_back()/push_front() replacement:
 
 ------------------------------------
 deque<int> D;
-1 >> D;
-D << 2 << 3;
+1 >> D;				//  D.push_front(1);
+D << 2 << 3;			//  D.push_back(2);   D.push_back(3)
 -----------------------------------
 
 

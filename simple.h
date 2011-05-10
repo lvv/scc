@@ -339,7 +339,8 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
 
-// push_back/push_front replaement
+#ifdef 	MODERN_GCC
+////// push_back/push_front replaement
 //
 // usage: 
 //    scc 'vint V;  V << 1 << 2'
@@ -349,7 +350,6 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 //    {11}
 //
 
-#ifdef 	MODERN_GCC
 	template<typename T, template<typename T, typename C> class C > 
 	C <T,std::allocator<T>> &                                              
 operator<<      (C<T, std::allocator<T> >& V, T v)    { V.push_back(v); return V; }; 
@@ -368,10 +368,17 @@ operator>>      (T v, C<T, std::allocator<T> >& V)    { V.push_front(v); return 
 
 
 struct  out_t { 
+
+	//template<typename T, template<typename T, typename C>  class C > 	out_t operator<<  (const C<T,std::allocator<T>>& V) { std::cout <<  V;   return *this; };
+	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator,   (C V) { cout << ", " << V;	return *this; };
+	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator|   (C V) { cout << " "  << V;	return *this; };
+	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator^   (C<T,C> V) { cout << "\t" << V;	return *this; };
+	
 	template<typename T> out_t&	operator<<  (T x) { cout << x; 		return *this; };
 	template<typename T> out_t&	operator,   (T x) { cout << ", " << x;	return *this; };
 	template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
 	template<typename T> out_t&	operator^   (T x) { cout << "\t" << x;	return *this; };
+
 };
 
 struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
