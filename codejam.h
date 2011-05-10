@@ -35,34 +35,6 @@
 #define 	ree		rend() 	
 #define 	sz		size()
 
-///// boost
-
-#ifdef  USE_BOOST
-
-#define 	R		boost::regex
-//R 	operator "" r(const char * s, size_t n) {return R(s);};
-#define		FMT 		boost::format
-
-#define 	RM		boost::regex_match
-#define 	RS		boost::regex_search
-#define 	RR		boost::regex_replace
-		// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
-	
-//#define 	M		boost::match
-#define 	CM		boost::cmatch
-#define 	SM		boost::cmatch
-
-//typedef 	boost::regex_iterator		RI;
-typedef 	boost::sregex_iterator          SRI;
-typedef 	boost::cregex_iterator          CRI;		
-		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-//typedef 	boost::regex_token_iterator     RTI;		
-typedef 	boost::sregex_token_iterator    SRTI;		
-typedef 	boost::cregex_token_iterator    CRTI;		
-#define 	MRTI		boost::make_regex_token_iterator 
-
-#endif
-
 
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 

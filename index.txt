@@ -12,13 +12,9 @@ In `scc` shall script:
 	If `-p` then  line is reassembled back from fields  and sent to `std::cout`
 * Generated source compiled and executed.
 
-In simple.h:
+== scc.h
 
-* Most of STL's includes are included with `using std::...` for most common objects. On my 4yr old laptop (no ssd), run time with cold cache - 2sec, with warm cache  <1sec.
-* Code which allows most STL container to be printed to `std::cout` directly like `vector<int> V{1,2,3};   cout << V;`
-* Code for simplified `std::cin` input
-
-In scc.h defined:
+Defines:
 
 * deque<str>	F
 * read_line()
@@ -46,6 +42,40 @@ s++		// "2"
 s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
+
+== simple.h
+
+This include intended for use with small, one-file C++ programs.  For somthing
+like Google CodeJam. It can be used independantly from scc.  
+
+First thing that it does - most of STL's includes are included with `using
+std::...` for most common objects. On my 4yr old laptop (no ssd), run time
+with cold cache - 2sec, with warm cache  <1sec.  So, usually `simple.h` is the only
+include you need to include.
+
+Second is simplified printing.  In C++ something like numbers or strings are
+printable objects.  C-arrays  or stl contaianainers (including
+maps, sets, pairs, tuples) are not printable.
+Simple.h makes all these printable too.  
+
+Exampels.  Right side is equivalent code without simple.h
+
+--------------------------------------------------------------------
+_  v;			cout << v;
+__ v;			cout << v << endl;
+__ a,b;			cout << a << ", " << b << endl;
+__ a^b;			cout << a << "\t"  << b << endl;
+__ a|b;			cout << a << " "  << b << endl;
+__ a|b;			cout << a << " "  << b << endl;
+
+vector<int> V{1,2,3};
+_ V;			for ( ....
+-------------------------------------------------------------------
+
+
+Third is simplified input.
+
+* Code for simplified `std::cin` input
 
 
 == Shortcuts

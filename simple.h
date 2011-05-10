@@ -38,6 +38,15 @@
 #endif
 //#include <type_traits>
 
+///////////////////////////////////////////////////////////////////// BOOST
+//#ifndef NO_BOOST
+#include <boost/utility.hpp>
+	// enable_if
+//#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_same.hpp> 
+	// is_same
+//#endif
+
 ///////////////////////////////////////////////////////////////////// 
 
 	// io
@@ -145,9 +154,9 @@
 	using	std::sort_heap;
 
 	// min/max
-	using	std::max;
+	//using	std::max;
+	//using	std::min;
 	using	std::max_element;
-	using	std::min;
 	using	std::min_element;
 	using	std::lexicographical_compare;
 	using	std::next_permutation;
@@ -165,29 +174,6 @@
 	using	std::make_tuple;
 	using	std::tie;
 	
-
-///////////////////////////////////////////////////////////////////// BOOST
-#ifdef USE_BOOST
-
-	//#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-
-	#include <boost/regex.hpp>
-		using boost::regex;
-		using boost::cmatch;
-		using boost::regex_match;
-		using boost::regex_token_iterator;
-		using boost::sregex_token_iterator;
-		using boost::cregex_token_iterator;
-	#include <boost/format.hpp>
-		using boost::format;
-	#include <boost/utility.hpp>
-		// for enable_if
-		// for common_type
-
-	//using namespace boost;
-#endif
-
-
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
@@ -226,7 +212,7 @@ struct	isi : istream_iterator<T> {
 	
 ///////////////////////////////////////////////////////////////////// UTILS
 
-
+// std::max(1, 2.2)  - compiler error
 
 	template <class T, class U>
 	typename std::common_type<T, U>::type
@@ -240,18 +226,13 @@ max(T t, U u) {
    return t >= u ? t : u;
 }
 
-//#ifdef USE_BOOST
-//#endif
-
-	
-
 
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
 // Print any C-array
 
-#ifdef USE_BOOST
+//#ifdef BOOST_VERSION
 		template<class T, std::size_t N> 		// std::disable_if - does not exist yet	
 		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
@@ -262,7 +243,7 @@ max(T t, U u) {
 		cout << "}";
 		return os;
 	};
-#endif
+//#endif
 
 
 

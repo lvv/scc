@@ -75,11 +75,11 @@ shift
 cat <<  END	 > $src
 
 #include <simple.h>
-#include <codejam.h>
 
 #ifdef MODERN_GCC 
 #include <scc.h>
 #endif
+#include <codejam.h>
 
 
 	int main(int argc, char** argv) {
@@ -111,7 +111,9 @@ fi
 echo '}' >>  $src
 
 
-if [[ ! $no_boost ]];  then 
+if [[ $no_boost ]];  then 
+	CXXFLAGS+=" -DNO_BOOST "
+else
 	LIBS+='-lboost_regex'
 	CXXFLAGS+=" -DUSE_BOOST "
 fi 

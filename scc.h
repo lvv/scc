@@ -1,6 +1,23 @@
 #ifndef  LVV_SCC_H
 #define  LVV_SCC_H
 
+///////////////////////////////////////////////////////////////////// BOOST
+#ifndef NO_BOOST
+
+	//#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+
+	#include <boost/regex.hpp>
+		using boost::regex;
+		using boost::cmatch;
+		using boost::regex_match;
+		using boost::regex_token_iterator;
+		using boost::sregex_token_iterator;
+		using boost::cregex_token_iterator;
+	#include <boost/format.hpp>
+		using boost::format;
+	//using namespace boost;
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////  STR
 struct str: string {
 
@@ -163,6 +180,34 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string
 	#endif
 
 	#define WRL  while(read_line())
+
+///// boost
+
+#ifdef  USE_BOOST
+
+#define 	R		boost::regex
+//R 	operator "" r(const char * s, size_t n) {return R(s);};
+#define		FMT 		boost::format
+
+#define 	RM		boost::regex_match
+#define 	RS		boost::regex_search
+#define 	RR		boost::regex_replace
+		// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+	
+//#define 	M		boost::match
+#define 	CM		boost::cmatch
+#define 	SM		boost::cmatch
+
+//typedef 	boost::regex_iterator		RI;
+typedef 	boost::sregex_iterator          SRI;
+typedef 	boost::cregex_iterator          CRI;		
+		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
+//typedef 	boost::regex_token_iterator     RTI;		
+typedef 	boost::sregex_token_iterator    SRTI;		
+typedef 	boost::cregex_token_iterator    CRTI;		
+#define 	MRTI		boost::make_regex_token_iterator 
+
+#endif
 
 
 #endif // SCC
