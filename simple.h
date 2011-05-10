@@ -368,17 +368,10 @@ operator>>      (T v, C<T, std::allocator<T> >& V)    { V.push_front(v); return 
 
 
 struct  out_t { 
-
-	//template<typename T, template<typename T, typename C>  class C > 	out_t operator<<  (const C<T,std::allocator<T>>& V) { std::cout <<  V;   return *this; };
-	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator,   (C V) { cout << ", " << V;	return *this; };
-	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator|   (C V) { cout << " "  << V;	return *this; };
-	//template<typename T, template<typename T, typename C> class C > 	out_t&	operator^   (C<T,C> V) { cout << "\t" << V;	return *this; };
-	
-	template<typename T> out_t&	operator<<  (T x) { cout << x; 		return *this; };
-	template<typename T> out_t&	operator,   (T x) { cout << ", " << x;	return *this; };
+	template<typename T> out_t&	operator<<  (T x) { cout <<         x;	return *this; };
 	template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
+	template<typename T> out_t&	operator,   (T x) { cout << ", " << x;	return *this; };
 	template<typename T> out_t&	operator^   (T x) { cout << "\t" << x;	return *this; };
-
 };
 
 struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
@@ -397,6 +390,9 @@ struct in_t {
 
 in_t in;
 
+
+		// I allway forget to put semicolon  in:   scc '_ 1;'
+std::ostream&    operator<<      (ostream& os, out_t out) { /*NOP*/; return os; };
 
 
 // Input any std::sequance-containter<printable> 
