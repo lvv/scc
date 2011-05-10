@@ -2,97 +2,118 @@
 SCC — Simple CC  (aka Snippet C++ Compiler)
 ============================================
 
-This is bash wrapper for GCC.
-
-You need >=gcc-4.6.0 and boost for all features to work. 
-For GCC older than 4.4.4, remove  `-std=gnu++0x` from `CXXFLAGS` variable  (top of scc file).
+A bash wrapper for GCC.  You need >=GCC-4.6.0 and BOOST for all features to work. 
+For GCC older than 4.4.4, remove  `-std=gnu++0x` from `CXXFLAGS` variable  (top of `scc` file).
 Examples:
 
-----------------------------------------------------------------------------
 C++ expression  evaluated and printed:
 
-	scc 2+2								
-	4
+----------------------------------------------------------------------------
+scc 2+2								
+4
+----------------------------------------------------------------------------
 
 If snippet have bash special characters
-(quotes, (), <, >, <<, >>, &)  -  we need to put it in quotes:
+(quotes, (), <, >, <<, >>, &)  —  put it in quotes:
 
-	scc '"hello world"'
-	"hello world"
+----------------------------------------------------------------------------
+scc '"hello world"'
+"hello world"
 
-	scc 'sin(0.5)'						
-	0.479426
+scc 'sin(0.5)'						
+0.479426
+----------------------------------------------------------------------------
 
 Now multi-statement and with explicit printing.
 Note trailing semicolon - meaning do not print last statement-expression:
 
-	scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'			
-	0.5	0.479426
+----------------------------------------------------------------------------
+scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'			
+0.5	0.479426
+----------------------------------------------------------------------------
 
-Same with SCC's std::cout replacement: 
+Same with SCC's unline-print (replaces `std::cout`).
 
-	scc 'float x=0.5;  __ x ^ sin(x);'			
-	0.5	0.479426
+----------------------------------------------------------------------------
+scc 'float x=0.5;  __ x ^ sin(x);'			
+0.5	0.479426
+----------------------------------------------------------------------------
 
-Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC for this. 
+
+Square an array.  +++C++0x+++ is on by default.  Needs current (>=4.6.0) GCC for this. 
 STL containers are printable: 
 
-	scc 'vector<int> V{1,2,3};  for(int &v:V) v*=v;   V'			
-	{1, 4, 9}								
+----------------------------------------------------------------------------
+scc 'vector<int> V{1,2,3};  for(int &v:V) v*=v;   V'			
+{1, 4, 9}								
+----------------------------------------------------------------------------
 
-Word frequencies (S is shortcut for std::string):
+Word frequencies (`S` is shortcut for `std::string`):
 
-	echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
-	{⟨aa,2⟩, ⟨bb,1⟩}
+----------------------------------------------------------------------------
+echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
+{⟨aa,2⟩, ⟨bb,1⟩}
+----------------------------------------------------------------------------
 
 Sum-up df's used-disk-space column.
-Shortcut WRL is  while(read_line()).  
-F is class derived from deque<str>.  Every input line is split into F.
-Type str can be directly converted to/from numeric types.
-The operator()  is safe operator[].
+Shortcut `WRL` is  `while(read_line())`.  
+`F` is class derived from `deque<str>`.  Every input line is split into F.
+Type `str` can be directly converted to/from numeric types.
+The `operator()`  is safe vertion of `operator[]`.
 
-	df | scc 'int n=0; WRL n+=F(2);  n' 					
-	31399199
+----------------------------------------------------------------------------
+df | scc 'int n=0; WRL n+=F(2);  n' 					
+31399199
+----------------------------------------------------------------------------
 
-Prepend line number to every line
-Options -p is similar to PERL's;  NR - number of record; 
+Prepend line number to every line.
+Option -p is similar to PERL's;  `NR` - number of record; 
 
-	echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
-	0 aaa
-	1 bbb
+----------------------------------------------------------------------------
+echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
+0 aaa
+1 bbb
+----------------------------------------------------------------------------
 
 Another way for doing the same. Note no trailing semicolon:
 
-	echo -e 'aaa\nbbb'   |   scc -p NR
-	0 aaa
-	1 bbb
+----------------------------------------------------------------------------
+echo -e 'aaa\nbbb'   |   scc -p NR
+0 aaa
+1 bbb
+----------------------------------------------------------------------------
 
 Make comma separated fields out of space separated.
-Option -o sets OFS (output field separator)
+Option -o sets `OFS` (output field separator)
 
-	echo 1 2 3 |  scc -o '","' -p
-	1,2,3
+----------------------------------------------------------------------------
+echo 1 2 3 |  scc -o '","' -p
+1,2,3
+----------------------------------------------------------------------------
 
-Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
-Option -i sets IFS (input field separator); CSV - predefined regex constant.
-How to make your own regexes  for IFS  - look in scc.h
+Read `CSV` file with quoted fields (spaces, commas and escaped quotes in field are ok):
+Option -i sets IFS (input field separator); `CSV` - predefined regex constant.
+How to make your own regexes  for `IFS`  - look in `scc.h`
 
-	echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
-	aa
-	bb\"-, bb
-	cc
+----------------------------------------------------------------------------
+echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
+aa
+bb\"-, bb
+cc
+----------------------------------------------------------------------------
 
-Replace "-", "none" and empty fields with "n/a" in 2nd column with boost::regex. 
-Boost use in SCC is optional, it will be used if /usr/include/boost exist.
-RR is shortcut for boost::regex_replace;  R - boost::regex
+Replace `"-"`, `"none"` and empty fields with `"n/a"` in 2nd column with `boost::regex`. 
+Boost use in SCC is optional, it will be used if `/usr/include/boost` exist.
+`RR` is shortcut for `boost::regex_replace`;  `R` - `boost::regex`
 
-	echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
-	1 n/a
-	2 n/a
-	3 n/a
-	4 abc
+----------------------------------------------------------------------------
+echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
+1 n/a
+2 n/a
+3 n/a
+4 abc
+----------------------------------------------------------------------------
 
--------------------------------------------------------------------------------
 
 /////////////////////////////////
  echo -e '11 222222222222\n1111111111 22' |scc -n 'FMT("%s %|20t| %s") %F[0] %F[1]'
