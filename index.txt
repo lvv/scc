@@ -45,75 +45,81 @@ s + 5		// "7"
 
 == simple.h
 
-This include intended for use with small, one-file C++ programs.  For somthing
-like Google CodeJam. It can be used independantly from scc.  
+This include intended for use with small, one-file C++ programs.  For something
+like Google CodeJam. It can be used independently from scc.  
 
-First thing that it does - most of STL's includes are included with `using
+=== Everything is included
+
+Most of STL's includes are included with `using
 std::...` for most common objects. On my 4yr old laptop (no ssd), run time
 with cold cache - 2sec, with warm cache  <1sec.  So, usually `simple.h` is the only
 include you need to include.
 
-Second is simplified printing.  In C++ something like numbers or strings are
-printable objects.  C-arrays  or stl contaianainers (including
-maps, sets, pairs, tuples) are not printable.
+=== Simplified printing. 
+
+In C++ something like numbers or strings are
+printable objects.  C-arrays  or stl containers (including
+sets, maps, pairs, tuples) are not printable.
 Simple.h makes all these printable too.  
 
-Exampels.  Right side is equivalent code without simple.h
+Examples.  Right side is equivalent code without simple.h
 
 --------------------------------------------------------------------
-_  v;			cout << v;
-__ v;			cout << v << endl;
-__ a,b;			cout << a << ", " << b << endl;
-__ a^b;			cout << a << "\t"  << b << endl;
-__ a|b;			cout << a << " "  << b << endl;
-__ a|b;			cout << a << " "  << b << endl;
+_ x;				cout << x;
+__ x;				cout << x << endl;
+__ a,b;				cout << a << ", " << b << endl;
+__ a^b;				cout << a << "\t"  << b << endl;
+__ a|b;				cout << a << " "  << b << endl;
+__ "list: " << a,b;		cout << "list: " << a << ", " << b << endl;
 
 vector<int> V{1,2,3};
-_ V;			for ( ....
+_ V;				for (auto it=V.begin(); ....
+// prints: {1, 2, 3}
 -------------------------------------------------------------------
 
 
-Third is simplified input.
+=== Simplified input
 
-* Code for simplified `std::cin` input
+Object `in` can be used in initialiser expression. When a value
+is read from `in`, it reads from `cin`.  Also input for aggregate types (with
+non zero size): 
+
+--------------------------------------------------------------------
+int i(in);			int i;  cin >> i;	// can be any type
+
+vector<int> V(10);
+cin >> V;			for(int i=0; i<10; i++)  cin >> V[i];
+--------------------------------------------------------------------
+
+== Utility finctions
+
+Functions min/max which will work with mixed types. Expression
+std::max(10,V.size()) - won't compile, you need to use 10lu.
+
+push_back()/push_front() replacement:
+
+------------------------------------
+deque<int> D;
+1 >> D;
+D << 2 << 3;
+-----------------------------------
 
 
 == Shortcuts
 
-This is very similar to to what is found in Codejam's finalist code -
-shortcut (macros and typedefs), which and are defined in `codejam.h`. These are to squeeze C++
-verbosity for one-liner context.  
+
+This is very similar to to what is found in Codejam's finalist code - shortcut
+(macros and typedefs).  These are to squeeze C++ verbosity for one-liner
+context.  Usually such shortcuts highly depends on
+personal tastes, so it put in separate file - you can comment it out from
+`scc`. 
+
+See source http://github.com/lvv/scc/blob/master/codejam.h[`codejam.h`]. for full list.
 
 Use of shortcuts (macros) is considered bad style (side effect, namespace
-pollution) and discouraged for other
-context. They are isolated in `codejam.h` file so that it can be easily
-commented out from `scc` script if you don't like them.  
+pollution) and discouraged for other context. If used without `scc`, it must
+be included last (otherwise name collisions are guaranteed).
 
---------------------------------------
-#define		WRL	while(read_line())
-
-#define         R       boost::regex
-#define         RM      boost::regex_match
-#define         RS      boost::regex_search
-#define         CM      boost::cmatch
-#define         SM      boost::smatch
-
-#define		vint	std::vector<int>
-#define		vuint	std::vector<unsigned int>
-#define		vfloat	std::vector<float>
-#define		vdouble	std::vector<double>
-#define		dint	std::deque<int>
-#define		duint	std::deque<unsigned int>
-#define		dfloat	std::deque<float>
-#define		ddouble	std::deque<double>
-#define         S	std::string
-#define         vS	std::vector<string>
-#define         vstr	std::vector<str>
-#define         dS	std::deque<string>
-#define         dstr	std::deque<str>
---------------------------------------
-
-See for `codejam.h` for full list.
 
 
 == Install

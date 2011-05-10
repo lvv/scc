@@ -35,17 +35,17 @@
 ///////////////////////////////////////////////////////////////////// C++0X STL
 #ifdef  MODERN_GCC
 #include <tuple>
+//#include <slist>
 #endif
 //#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////// BOOST
-//#ifndef NO_BOOST
+#ifndef NO_BOOST
 #include <boost/utility.hpp>
 	// enable_if
-//#include <boost/type_traits.hpp>
 #include <boost/type_traits/is_same.hpp> 
 	// is_same
-//#endif
+#endif
 
 ///////////////////////////////////////////////////////////////////// 
 
@@ -63,6 +63,7 @@
 	using	std::vector;
 	using	std::deque;
 	using	std::set;
+	using	std::list;
 	using	std::multiset;
 	using	std::map;
 	using	std::multimap;

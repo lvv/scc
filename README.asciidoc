@@ -14,16 +14,24 @@ C++ expression,  evaluated and printed
 	scc 2+2								
 	4
 
+If snippet have parenthesis, semicolon, bash redirects (<, >, <<, >>) or quotes
+(that is - almost always for C++ code) -  we need to put it in quotes
+
 	scc 'sin(0.5)'						
 	0.479426
 
-Same, but multi-statement and with explicit printing.
+Now multi-statement and with explicit printing.
 Note trailing semicolon - meaning do not print last statement-expression.
 
-	scc 'float x=0.5;  cout << sin(x) << endl;'			
-	0.479426
+	scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'			
+	0.5	0.479426
 
-Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC. 
+Same with SCC's cout replacement (^ - tab;  | - space;  , - comma):
+
+	scc 'float x=0.5;  __ x ^ sin(x);'			
+	0.5	0.479426
+
+Square an array.  C++0x is on by default.  Needs current (>=4.6.0) GCC for this. 
 STL containers are printable. 
 
 	scc 'vector<int> V{1,2,3};  for(int &v: V) v*=v;   V'			
@@ -36,8 +44,9 @@ Word frequencies (S is shortcut for std::string):
 
 Sum-up df's used-disk-space column.
 Shortcut WRL is "while(read_line())");  
-deque<str> F — input line split into fields;
-Type str can be directly converted to/from int/float
+F is class similar to deque<str>.  Input lines are split into F.
+Type str can be directly converted to/from numeric types.
+Its operator()  - safe operator[].
 
 	df | scc 'int n=0; WRL n+=F(2);  n' 					
 	31399199
@@ -48,20 +57,20 @@ Prepend line number to every line (-p is similar to perl's;  NR - number of reco
 	0 aaa
 	1 bbb
 
-Same. Note no trailing ";"
+Same. Note no trailing semicolon:
 
 	echo -e 'aaa\nbbb'   |   scc -p NR
 	0 aaa
 	1 bbb
 
 Make comma separated fields out of space separated:
--o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
+Option -o sets OFS (output field separator).  Bash removes quotes, so we need do add extra.
 
 	echo 1 2 3 |  scc -po '","'
 	1,2,3
 
 Read CSV file with quoted fields (spaces, commas and escaped quotes in field are ok):
--i sets IFS (input field separator); CSV - predefined regex constant.
+Option -i sets IFS (input field separator); CSV - predefined regex constant.
 How to make your own regexes  for IFS  - look in scc.h for examples.
 
 	echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -i CSV  -o '"\n"' -p
