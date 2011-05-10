@@ -87,22 +87,12 @@ std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string
 
 ///////////////////////////////////////////////////////////////////////////////  F
 
-	template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
 	struct   F_t : std::deque<_Tp> {
 		_Tp& 	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
-	};
-
-
-	std::ostream&   operator<<      (ostream& os, const deque<str, std::allocator<str> >& C) {              
-		os << "{";
-		auto it=C.begin();
-		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
-		if (!C.empty())  					os  << *it;
-		os << "}";
-		return os;
 	};
 
 
