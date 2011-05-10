@@ -55,13 +55,11 @@ The operator()  is safe operator[].
 	31399199
 
 Prepend line number to every line
-Options -p is similar to PERL's;  NR - number of record; >> - push_front()
+Options -p is similar to PERL's;  NR - number of record; 
 
-	echo -e 'aaa\nbbb'   |  scc -p 'NR>>F;'
+	echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 	0 aaa
 	1 bbb
-
-We could've wrote   F.push_back(NF)  as   F<<NR
 
 Another way for doing the same. Note no trailing semicolon:
 

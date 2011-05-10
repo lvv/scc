@@ -352,11 +352,11 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 	template<typename T, template<typename T, typename C> class C > 
 	C <T,std::allocator<T>> &                                              
-operator<<      (C<T, std::allocator<T> >& V, T v)    { V.push_back(v); return V; }; 
+operator<<      (C<T, std::allocator<T> >& V, T x)    { V.push_back(x); return V; }; 
 
 	template<typename T, template<typename T, typename C> class C > 
 	C <T,std::allocator<T>> &                                              
-operator>>      (T v, C<T, std::allocator<T> >& V)    { V.push_front(v); return V; }; 
+operator>>      (T x, C<T, std::allocator<T> >& V)    { V.push_front(x); return V; }; 
 
 #endif
 
