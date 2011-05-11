@@ -61,22 +61,31 @@ with cold cache - 2s, with warm cache  <1s.
 In C++ something like numbers or strings are
 printable objects.  C-arrays  or stl containers (including
 sets, maps, pairs, tuples) are not printable.
-Simple.h makes all these printable too.  
+Simple.h makes all these printable too.  Container in containers are also
+printable. 
 
-Examples.  Comments -  equivalent code:
+Also `cout << ...` syntax was replaced with underline print.
+In comments -  equivalent code:
 
 --------------------------------------------------------------------
 _ x;				//  cout << x;
 __ x;				//  cout << x << endl;
 __ a,b;				//  cout << a << ", " << b << endl;
-__ a^b;				//  cout << a << "\t"  << b << endl;
+__ a^b;				//  cout << a << "\t" << b << endl;
 __ a|b;				//  cout << a << " "  << b << endl;
-__ "list: " << a,b;		//  cout << "list: " << a << ", " << b << endl;
+__ "list: " << a,b;		//  cout << "list: "  << a << ", " << b << endl;
 
 vector<int> V{1,2,3};
 _ V;				//  for (auto it=V.begin(); ....
 				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
+
+TIP:  All these _ operators: `","`, `^`, `|` and `<<`  unfortunately have different
+precedence.  So `scc '_ 1,2|3;'`  is actually `scc '_ 1,(2|3);'` and it will
+print only two numbers. Precedence
+from highest to lowest: `<<`, `^`,  `|`, `","`.     This
+problem was present in plain `cout` statements too. 
+Workarounds are:  use parenthesis or use separate `_` statements.  
 
 
 === Simplified input
@@ -95,9 +104,9 @@ cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 == Utility functions
 
 Functions min/max which will work with mixed types. Expression
-std::max(10, V.size()) - won't compile (you need to use (size_t)10).
+`std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
 
-push_back()/push_front() replacement:
+`push_back()`/`push_front()` replacement:
 
 ------------------------------------
 deque<int> D;
@@ -113,12 +122,11 @@ This is very similar to to what is found in typical CodeJam  source - shortcut
 (macros and typedefs).  These are to squeeze C++ verbosity for one-liner
 context. 
 
-See source http://github.com/lvv/scc/blob/master/codejam.h[`codejam.h`]. for full list.
+See http://github.com/lvv/scc/blob/master/codejam.h[codejam.h source] for full list.
 
 
-WARNING:
-Not recommended for anything more serous than CodeJam.
-SCC does not use it, you can comment it out. 
+WARNING: Codejam.h is not  recommended for anything more serous than CodeJam.
+SCC does not use it internally,  you can comment it out. 
 These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
 
