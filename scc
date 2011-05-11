@@ -79,7 +79,7 @@ cat <<  END	 > $src
 #ifdef MODERN_GCC 
 #include <scc.h>
 #endif
-#include <codejam.h>
+#include <cj.h>
 
 
 	int main(int argc, char** argv) {

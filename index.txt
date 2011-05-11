@@ -72,17 +72,17 @@ _ x;				//  cout << x;
 __ x;				//  cout << x << endl;
 __ a,b;				//  cout << a << b << endl;
 __ a^b;				//  cout << a << " " << b << endl;
-__ "list:" ^ a ^ b;		//  cout << "list: "  << a << ", " << b << endl;
+__ "list:" ^ a ^ b;		//  cout << "list: "  << a << " " << b << endl;
 
 vector<int> V{1,2,3};
 _ V;				//  for (auto it=V.begin(); ....
 				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
 
-TIP:  All these _ operators: `","`, `^`, `|` and `<<`  unfortunately have different
-precedence.  So `scc '_ 1,2|3;'`  is actually `scc '_ 1,(2|3);'` and it will
+TIP:  All these _ operators: `","`, `^`  and `<<`  unfortunately have different
+precedence.  So `scc '_ 1,2^3;'`  is actually `scc '_ 1,(2^3);'` and it will
 print only two numbers. Precedence
-from highest to lowest: `<<`, `^`,  `|`, `","`.     This
+from highest to lowest: `<<`, `^`,  `","`.     This
 problem was present in plain `cout` statements too. 
 Workarounds are:  use parenthesis or use separate `_` statements.  
 

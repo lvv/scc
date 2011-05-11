@@ -3,7 +3,7 @@
 #define  LVV_CODEJAM_H
 
 #ifndef LVV_SIMPLE_H
-#include <lvv/simple.h>
+#include <scc/simple.h>
 #endif
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
@@ -42,14 +42,14 @@
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 
 
-#define		FOR(i,a,b)	for (int i = (a); i < (b); i++)
-#define		FORD(i,a,b)	for (int i = int(b)-1; i >= (a); i--)
-#define		REP(N)    	for (size_t ri=0;  ri<(size_t)N;  ri++) 
+#define		FOR(i,a,b)	for (__typeof__(b) i = (a); i < (b); i++)
+#define		FORD(i,a,b)	for (__typeof__(b) i = (b)-1; i >= (a); i--)
+#define		REP(N)    	for (__typeof__(N) i_ue923u=0;  i_ue923u<N;  i_ue923u++) 
 
 #define		FORi(N)		FOR(i,0,N)
 #define		FORj(N)		FOR(j,0,N)
 #define		FORk(N)		FOR(k,0,N)
-#define		FORt(N)		for (size_t t=0;  t<N; t++)
+#define		FORt(N)		FOR(t,0,N)
 
 #define		FORic(I,C)    	for (size_t I=0;  I<C.size();   I++) 
 #define		FORc(IT,C)   	for (auto IT=C.begin();  IT != C.end();   IT++) 
