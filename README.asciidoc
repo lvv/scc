@@ -32,7 +32,7 @@ scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'
 0.5	0.479426
 ----------------------------------------------------------------------------
 
-Same with SCC's unline-print (replaces `std::cout`).
+Same with SCC's underline-print (replaces `std::cout`).  See Simple.h section about full details. 
 
 ----------------------------------------------------------------------------
 scc 'float x=0.5;  __ x ^ sin(x);'			

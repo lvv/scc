@@ -125,8 +125,8 @@ context.
 See http://github.com/lvv/scc/blob/master/codejam.h[codejam.h source] for full list.
 
 
-WARNING: Codejam.h is not  recommended for anything more serous than CodeJam.
-SCC does not use it internally,  you can comment it out. 
+WARNING: Codejam.h is not  recommended for anything more serous than simple,
+one-file programs.  SCC does not use it internally,  you can comment it out. 
 These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
 
