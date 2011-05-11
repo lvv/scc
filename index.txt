@@ -70,10 +70,9 @@ In comments -  equivalent code:
 --------------------------------------------------------------------
 _ x;				//  cout << x;
 __ x;				//  cout << x << endl;
-__ a,b;				//  cout << a << ", " << b << endl;
-__ a^b;				//  cout << a << "\t" << b << endl;
-__ a|b;				//  cout << a << " "  << b << endl;
-__ "list: " << a,b;		//  cout << "list: "  << a << ", " << b << endl;
+__ a,b;				//  cout << a << b << endl;
+__ a^b;				//  cout << a << " " << b << endl;
+__ "list:" ^ a ^ b;		//  cout << "list: "  << a << ", " << b << endl;
 
 vector<int> V{1,2,3};
 _ V;				//  for (auto it=V.begin(); ....

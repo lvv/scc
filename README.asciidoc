@@ -14,7 +14,7 @@ scc 2+2
 ----------------------------------------------------------------------------
 
 If snippet have bash special characters
-(quotes, (), <, >, <<, >>, &)  —  put it in quotes:
+(quotes, ;,  (), <, >, <<, >>, &, |)  —  put it in quotes:
 
 ----------------------------------------------------------------------------
 scc '"hello world"'
@@ -28,23 +28,23 @@ Now multi-statement and with explicit printing.
 Note trailing semicolon - meaning do not print last statement-expression:
 
 ----------------------------------------------------------------------------
-scc 'float x=0.5;  cout << x << "\t" << sin(x) << endl;'			
-0.5	0.479426
+scc 'float x=0.5;  cout << x << " " << sin(x) << endl;'			
+0.5 0.479426
 ----------------------------------------------------------------------------
 
 Same with SCC's underline-print (replaces `std::cout`).  See Simple.h section about full details. 
 
 ----------------------------------------------------------------------------
 scc 'float x=0.5;  __ x ^ sin(x);'			
-0.5	0.479426
+0.5 0.479426
 ----------------------------------------------------------------------------
 
 
-Square an array.  +++C++0x+++ is on by default.  Needs current (>=4.6.0) GCC for this. 
+Square an array.  +++C++0x+++ is on by default.  Needs current (>=4.6.0) GCC. 
 STL containers are printable: 
 
 ----------------------------------------------------------------------------
-scc 'vector<int> V{1,2,3};  for(int &v:V) v*=v;   V'			
+scc 'vector<int> V{1,2,3};  for(int& v:V) v*=v;   V'			
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M'
 
 Sum-up df's used-disk-space column.
 Shortcut `WRL` is  `while(read_line())`.  
-`F` is class derived from `deque<str>`.  Every input line is split into F.
+`F` is class derived from `deque<str>`.  Every input line is split into `F`.
 Type `str` can be directly converted to/from numeric types.
 The `operator()`  is safe vertion of `operator[]`.
 
@@ -91,7 +91,7 @@ echo 1 2 3 |  scc -o '","' -p
 1,2,3
 ----------------------------------------------------------------------------
 
-Read `CSV` file with quoted fields (spaces, commas and escaped quotes in field are ok):
+Read CSV file with quoted fields (spaces, commas and escaped quotes in field are allowed):
 Option -i sets IFS (input field separator); `CSV` - predefined regex constant.
 How to make your own regexes  for `IFS`  - look in `scc.h`
 

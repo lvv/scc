@@ -377,9 +377,9 @@ operator=      (C<T, std::allocator<T> >& V, T x)    { fill(V.begin(), V.end(), 
 
 struct  out_t { 
 	template<typename T> out_t&	operator<<  (T x) { cout <<         x;	return *this; };
-	template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
-	template<typename T> out_t&	operator,   (T x) { cout << ", " << x;	return *this; };
-	template<typename T> out_t&	operator^   (T x) { cout << "\t" << x;	return *this; };
+	template<typename T> out_t&	operator,   (T x) { cout <<         x;	return *this; };
+	//template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
+	template<typename T> out_t&	operator^   (T x) { cout << " " << x;	return *this; };
 };
 
 struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
