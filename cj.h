@@ -8,23 +8,24 @@
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
-#define		vint		std::vector<int>
-#define		vuint		std::vector<unsigned int>
-#define		vlong		std::vector<long>
-#define		vulong		std::vector<unsigned long>
-#define		vchar		std::vector<char>
-#define		vfloat		std::vector<float>
-#define		vdouble		std::vector<double>
-#define		dint		std::deque<int>
-#define		duint		std::deque<unsigned int>
-#define		dfloat		std::deque<float>
-#define		ddouble		std::deque<double>
-#define		dchar		std::deque<char>
-#define         S      		std::string
-#define         vS     		std::vector<std::string>
-#define         vstr   		std::vector<str>
-#define         dS     		std::deque<std::string>
-#define         dstr   		std::deque<str>
+typedef		std::vector<int>          	vint;
+typedef		std::vector<unsigned int> 	vuint;
+typedef		std::vector<long>         	vlong;
+typedef		std::vector<unsigned long>	vulong;
+typedef		std::vector<char>         	vchar;
+typedef		std::vector<float>        	vfloat;
+typedef		std::vector<double>       	vdouble;
+typedef		std::deque<int>           	dint;
+typedef		std::deque<unsigned int>  	duint;
+typedef		std::deque<float>         	dfloat;
+typedef		std::deque<double>        	ddouble;
+typedef		std::deque<char>          	dchar;
+
+typedef		std::string			S;
+typedef		std::vector<std::string>	vS;
+typedef		std::deque<std::string>		dS;
+typedef		std::vector<str>		vstr;
+typedef		std::deque<str>			dstr;
 
 ///// utils 
 #define 	GL(x)		std::getline(cin,x)
@@ -44,16 +45,16 @@
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 
 
-#define		FOR(i,a,b)	for (long i = (a), end_d8s7d8s9=(b);   i < end_d8s7d8s9;   i++)
-#define		FORD(i,a,b)	for (long i = (b)-1; i >= (a); i--)
-#define		REP(N)    	for (long i_ue923u=0, N_2uf23f=(N);   i_ue923u< N_2uf23f;   i_ue923u++) 
+#define		FOR(i,i0,N)	for (long i = (i0), N_FOR_d8s7d8s9=(N);   i < N_FOR_d8s7d8s9;   i++)
+#define		FORD(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
+#define		REP(N)    	for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++) 
 
 #define		FORi(N)		FOR(i,0,N)
 #define		FORj(N)		FOR(j,0,N)
 #define		FORk(N)		FOR(k,0,N)
 #define		FORt(N)		FOR(t,0,N)
 
-#define		FORic(I,C)    	for (size_t I=0;  I<C.size();   I++) 
+#define		FORic(I,C)    	for (long I=0;  I<(long)C.size();   I++) 
 #define		FORc(IT,C)   	for (auto IT=C.begin();  IT != C.end();   IT++) 
 #define		FORr(IT,B,E)   	for (auto IT=B;  IT != E;   IT++) 
 
