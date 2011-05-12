@@ -12,12 +12,14 @@
 #define		vuint		std::vector<unsigned int>
 #define		vlong		std::vector<long>
 #define		vulong		std::vector<unsigned long>
+#define		vchar		std::vector<char>
 #define		vfloat		std::vector<float>
 #define		vdouble		std::vector<double>
 #define		dint		std::deque<int>
 #define		duint		std::deque<unsigned int>
 #define		dfloat		std::deque<float>
 #define		ddouble		std::deque<double>
+#define		dchar		std::deque<char>
 #define         S      		std::string
 #define         vS     		std::vector<std::string>
 #define         vstr   		std::vector<str>
