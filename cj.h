@@ -42,9 +42,9 @@
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 
 
-#define		FOR(i,a,b)	for (__typeof__(b) i = (a); i < (b); i++)
-#define		FORD(i,a,b)	for (__typeof__(b) i = (b)-1; i >= (a); i--)
-#define		REP(N)    	for (__typeof__(N) i_ue923u=0;  i_ue923u<N;  i_ue923u++) 
+#define		FOR(i,a,b)	for (long i = (a), end_d8s7d8s9=(b);   i < end_d8s7d8s9;   i++)
+#define		FORD(i,a,b)	for (long i = (b)-1; i >= (a); i--)
+#define		REP(N)    	for (long i_ue923u=0, N_2uf23f=(N);   i_ue923u< N_2uf23f;   i_ue923u++) 
 
 #define		FORi(N)		FOR(i,0,N)
 #define		FORj(N)		FOR(j,0,N)

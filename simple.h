@@ -390,10 +390,24 @@ out_t out;
 #define		__   outln_t() << 
 
 struct in_t {	 
-	in_t () {};
+	in_t (): n(0) {};
 
 	// input a POD type
+	// usage:   echo 1   | scc 'int N(in);  N'
 	template<typename T> operator T() { T t; cin >> t; return t; }
+
+
+	// input  any std::sequance-containter<inputable>
+	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
+	size_t n;
+	in_t& operator() (long N) { n=N;  return *this; }
+
+		template<typename T, template<typename T, typename C> class C >
+	operator C<T,std::allocator<T> >()        {
+		C<T,std::allocator<T> > c(n);  
+		cin >> c;  
+		return c;
+	}
 };
 
 in_t in;
