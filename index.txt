@@ -45,7 +45,7 @@ s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
 
-== SIMPLE.H — everything
+== SIMPLE.H
 
 This file intended for use with small, one-file C++ programs.  For something
 like Google CodeJam. It can be used independently from SCC.  
@@ -59,12 +59,12 @@ with cold cache - 2s, with warm cache  <1s.
 === Simplified printing. 
 
 In C++ something like numbers or strings are
-printable objects.  C-arrays  or stl containers (including
+printable objects.  C-arrays  or STL containers (including
 sets, maps, pairs, tuples) are not printable.
 Simple.h makes all these printable too.  Container in containers are also
 printable. 
 
-Also `cout << ...` syntax was replaced with underline print.
+Syntax `cout << ...` was replaced with underline print.
 In comments -  equivalent code:
 
 --------------------------------------------------------------------
@@ -120,11 +120,14 @@ int N(in);			// int N;  cin >> N;
 vector<int> V = in(N);		// for(int i=0; i<N; i++)  cin >> V[i];
 --------------------------------------------------------------------
 
-Or even shorter with shortcut:
+Or even shorter, and plus using `vint` shortcut:
 
 --------------------------------------------------------------------
 vint V = in(in);
 --------------------------------------------------------------------
+
+ALERT: Object `in` does not check for EOF. Use only context where you do not expect
+EOF. In production code, good rule of thumb is to always check for EOF. 
 
 
 
