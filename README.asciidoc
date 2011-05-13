@@ -64,7 +64,7 @@ Type `str` can be directly converted to/from numeric types.
 The `operator()`  is safe version of `operator[]`.
 
 ----------------------------------------------------------------------------
-df | scc 'int n=0; WRL n+=F(2);  n' 					
+df | scc 'int n=0; WRL n+=F(2);  n'
 31399199
 ----------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ include::/tmp/t.ad[]
 In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
-* `simple.h`, `scc.h` and `codejam.h` are included
+* `simple.h`, `scc.h` and `ch.h` are included
 * if `/usr/include/boost` is exist then `boost/regex.hpp` is included
 * If last (or only) statement (should be an expression) is not terminated by  `;` it is sent to `std::cout`.
 * if stream options are used (-n or -p), then one line is read from `std::cin` per input cycle.
@@ -96,8 +96,8 @@ is read from `in`, it reads from `cin`.
 int i(in);			//  int i;  cin >> i;	
 --------------------------------------------------------------
 
-For aggregate types, we need somehow to tell how maney elements to read. 
-One way is to have an aggretate with non zero length
+For aggregate types, we need somehow to tell how many elements to read. 
+One way is to have an aggregate with non zero length
 
 --------------------------------------------------------------------
 vector<int> V(10);
@@ -145,17 +145,17 @@ D << 2 << 3;			//  D.push_back(2);   D.push_back(3)
 -----------------------------------
 
 
-== CODEJAM.H  — shortcuts
+== CJ.H  — shortcuts
 
 
 This is very similar to to what is found in typical CodeJam  source - shortcut
 (macros and typedefs).  These are to squeeze C++ verbosity for one-liner
 context. 
 
-See http://github.com/lvv/scc/blob/master/codejam.h[codejam.h source] for full list.
+See http://github.com/lvv/scc/blob/master/cj.h[cj.h source] for full list.
 
 
-WARNING: Codejam.h is not  recommended for anything more serious than simple,
+WARNING: cj.h is not  recommended for anything more serious than simple,
 one-file programs.  SCC does not use it internally,  you can comment it out. 
 These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
