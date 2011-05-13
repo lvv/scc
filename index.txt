@@ -90,15 +90,43 @@ Workarounds are:  use parenthesis or use separate `_` statements.
 === Simplified input
 
 Object `in` can be used in initialiser expression. When a value
-is read from `in`, it reads from `cin`.  Also input for aggregate types (with
-non zero size): 
+is read from `in`, it reads from `cin`. 
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
+--------------------------------------------------------------
 
+For aggregate types, we need somehow to tell how maney elements to read. 
+One way is to have an aggretate with non zero length
+
+--------------------------------------------------------------------
 vector<int> V(10);
 cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 --------------------------------------------------------------------
+
+Another to do the same:
+
+--------------------------------------------------------------------
+vector<int> V = in(10);
+--------------------------------------------------------------------
+
+Google CodeJam often have input format
+to input an array
+where first goes a number (N)
+followed by N elements of an array.  We can use:
+
+--------------------------------------------------------------------
+int N(in);			// int N;  cin >> N;
+vector<int> V = in(N);		// for(int i=0; i<N; i++)  cin >> V[i];
+--------------------------------------------------------------------
+
+Or even shorter with shortcut:
+
+--------------------------------------------------------------------
+vint V = in(in);
+--------------------------------------------------------------------
+
+
 
 == Utility functions
 
@@ -124,7 +152,7 @@ context.
 See http://github.com/lvv/scc/blob/master/codejam.h[codejam.h source] for full list.
 
 
-WARNING: Codejam.h is not  recommended for anything more serous than simple,
+WARNING: Codejam.h is not  recommended for anything more serious than simple,
 one-file programs.  SCC does not use it internally,  you can comment it out. 
 These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).

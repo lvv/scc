@@ -421,10 +421,14 @@ std::ostream&    operator<<      (ostream& os, out_t out) { /*NOP*/; return os; 
 // Container must have non-zero size()
 // Used as:   vector<int> V(3);   cin >> V;
 
-#ifdef 	MODERN_GCC
-template<typename E, template<typename E, typename L> class L > std::istream&                                              
-operator>>      (istream& is, L<E, std::allocator<E> >& C)    { for(auto &c:C) if(!(is>>c)) break; return is; }; 
-#endif
+	#ifdef 	MODERN_GCC
+	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
+	std::istream&                                              
+operator>>      (istream& is, Ct<T>& C)    {
+	for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
+		if(!(is>>*it)) break; return is;
+}; 
+	#endif
 
 
 
