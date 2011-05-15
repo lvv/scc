@@ -340,6 +340,9 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
 
 #ifdef 	MODERN_GCC
+
+
+
 ////// push_back/push_front replaement
 //
 // usage: 
@@ -359,12 +362,7 @@ operator<<      (C<T, std::allocator<T> >& V, T x)    { V.push_back(x); return V
 	C <T,std::allocator<T>> &                                              
 operator>>      (T x, C<T, std::allocator<T> >& V)    { V.push_front(x); return V; }; 
 
-////// vector = scallar
-/* gcc:  operator=(C<T, std::allocator<_T1> >&, T)’ must be a nonstatic member function
-	template<typename T, template<typename T, typename C> class C > 
-	C <T,std::allocator<T>> &                                              
-operator=      (C<T, std::allocator<T> >& V, T x)    { fill(V.begin(), V.end(), x); return V; }; 
-*/
+
 
 #endif
 
