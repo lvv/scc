@@ -375,19 +375,28 @@ operator=      (C<T, std::allocator<T> >& V, T x)    { fill(V.begin(), V.end(), 
 
 
 
+
 struct  out_t { 
-	template<typename T>	out_t&	operator<<  (T x)		{ cout <<         x;	return *this; };
-	//			out_t&	operator<<  (typeof(endl) x)	{ cout <<         endl;	return *this; };
-	template<typename T>	out_t&	operator,   (T x)		{ cout <<         x;	return *this; };
-	//template<typename T>	out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
-	template<typename T>	out_t&	operator^   (T x) { cout << " " << x;	return *this; };
+	template<typename T>	out_t&	operator<<  (T x)			{ cout <<         x;	return *this; };
+	template<typename T>	out_t&	operator,   (T x)			{ cout <<         x;	return *this; };
+	//template<typename T>	out_t&	operator|   (T x)			{ cout << " "  << x;	return *this; };
+	template<typename T>	out_t&	operator^   (T x)			{ cout << " " << x;	return *this; };
+
+	// endl, hex, ..
+				out_t&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out_t&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out_t&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+				out_t&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out_t&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out_t&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
 };
 
 struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
 
-out_t out;
+std::ostream&    operator<<      (ostream& os, out_t out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
 
-#define		_    out << 
+
+#define		_    out_t()   << 
 #define		__   outln_t() << 
 
 struct in_t {	 
@@ -411,7 +420,7 @@ struct in_t {
 		return c;
 	}
 
-	/*
+	/*  STD::SET  - does not work
 		template<typename T>
 	operator std::set<T,std::allocator<T> >()        {
 		std::set<T,std::allocator<T> > S;  
@@ -424,9 +433,6 @@ struct in_t {
 
 in_t in;
 
-
-		// I allway forget to put semicolon  in:   scc '_ 1;'
-std::ostream&    operator<<      (ostream& os, out_t out) { /*NOP*/; return os; };
 
 
 // Input any std::sequance-containter<printable> 
