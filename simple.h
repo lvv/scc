@@ -376,10 +376,11 @@ operator=      (C<T, std::allocator<T> >& V, T x)    { fill(V.begin(), V.end(), 
 
 
 struct  out_t { 
-	template<typename T> out_t&	operator<<  (T x) { cout <<         x;	return *this; };
-	template<typename T> out_t&	operator,   (T x) { cout <<         x;	return *this; };
-	//template<typename T> out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
-	template<typename T> out_t&	operator^   (T x) { cout << " " << x;	return *this; };
+	template<typename T>	out_t&	operator<<  (T x)		{ cout <<         x;	return *this; };
+	//			out_t&	operator<<  (typeof(endl) x)	{ cout <<         endl;	return *this; };
+	template<typename T>	out_t&	operator,   (T x)		{ cout <<         x;	return *this; };
+	//template<typename T>	out_t&	operator|   (T x) { cout << " "  << x;	return *this; };
+	template<typename T>	out_t&	operator^   (T x) { cout << " " << x;	return *this; };
 };
 
 struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
@@ -405,9 +406,20 @@ struct in_t {
 		template<typename T, template<typename T, typename C> class C >
 	operator C<T,std::allocator<T> >()        {
 		C<T,std::allocator<T> > c(n);  
+		c.resize(0);
 		cin >> c;  
 		return c;
 	}
+
+	/*
+		template<typename T>
+	operator std::set<T,std::allocator<T> >()        {
+		std::set<T,std::allocator<T> > S;  
+		T elem;
+		while(n-- && cin) { cin >> elem;  S.insert(elem); } ;  
+		return S;
+	}
+	*/
 };
 
 in_t in;
@@ -426,7 +438,8 @@ std::ostream&    operator<<      (ostream& os, out_t out) { /*NOP*/; return os; 
 	std::istream&                                              
 operator>>      (istream& is, Ct<T>& C)    {
 	for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
-		if(!(is>>*it)) break; return is;
+		if(!(is>>*it)) break;
+	return is;
 }; 
 	#endif
 

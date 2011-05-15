@@ -67,6 +67,7 @@ struct str: string {
 	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long    I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator float		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
+	//explicit	operator void*		(void) { return  this->empty())  ? 0 : 1 ;   }
 	#endif
 
 	////
