@@ -353,16 +353,18 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 //    {11}
 //
 
+	template<typename T, template<typename T, typename Ct> class Ct > 
+	Ct <T,std::allocator<T>> &                                              
+operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(x); return C; }; 
 
-	template<typename T, template<typename T, typename C> class C > 
-	C <T,std::allocator<T>> &                                              
-operator<<      (C<T, std::allocator<T> >& V, T x)    { V.push_back(x); return V; }; 
+	template<typename T, template<typename T, typename Ct> class Ct > 
+	Ct <T,std::allocator<T>> &                                              
+operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return C; }; 
 
-	template<typename T, template<typename T, typename C> class C > 
-	C <T,std::allocator<T>> &                                              
-operator>>      (T x, C<T, std::allocator<T> >& V)    { V.push_front(x); return V; }; 
-
-
+// operator-=  -- remove member from container
+	template<typename T, template<typename T, typename Ct> class Ct > 
+	Ct <T,std::allocator<T>> &                                              
+operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; }; 
 
 #endif
 
