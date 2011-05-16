@@ -47,8 +47,9 @@ s + 5		// "7"
 
 == SIMPLE.H
 
-This file intended for use with small, one-file C++ programs.  For something
-like Google CodeJam. It can be used independently from SCC.  
+This include was initially created for use in small, one-file C++ programs.
+For something like Google CodeJam. Now it is (optinal) part of SCC project,
+but it still can be used independently.  
 
 === Everything is included
 
@@ -58,23 +59,22 @@ with cold cache - 2s, with warm cache  <1s.
 
 === Simplified printing. 
 
-In C++ something like numbers or strings are
-printable objects.  C-arrays  or STL containers (including
-sets, maps, pairs, tuples) are not printable.
-Simple.h makes all these printable too.  Container in containers are also
-printable. 
+In C++ something like numbers or strings are printable objects.  C-arrays  or
+STL containers (including sets, maps, pairs, tuples) are not printable.
+Simple.h makes all these printable too (C-array must have const-size).
+Container of containers are also printable. 
 
-Syntax `cout << ...` was replaced with underline print.
+Syntax `cout << ...` was replaced with bar (underline) print.
 In comments -  equivalent code:
 
 --------------------------------------------------------------------
 _ x;				//  cout << x;
 __ x;				//  cout << x << endl;
-__ a,b;				//  cout << a << b << endl;
-__ a^b;				//  cout << a << " " << b << endl;
-__ "list:" ^ a ^ b;		//  cout << "list: "  << a << " " << b << endl;
+__ x,y;				//  cout << x << y << endl;
+__ x^y;				//  cout << x << " " << y << endl;
+__ "list:" ^ x ^ y;		//  cout << "list: "  << x << " " << y << endl;
 
-vector<int> V{1,2,3};
+vint V{1,2,3}; 			//  vector<int> V{1,2,3};
 _ V;				//  for (auto it=V.begin(); ....
 				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
@@ -83,7 +83,7 @@ TIP:  All these _ operators: `","`, `^`  and `<<`  unfortunately have different
 precedence.  So `scc '_ 1,2^3;'`  is actually `scc '_ 1,(2^3);'` and it will
 print only two numbers. Precedence
 from highest to lowest: `<<`, `^`,  `","`.     This
-problem was present in plain `cout` statements too. 
+problem was present in plain `std::cout` statements too. 
 Workarounds are:  use parenthesis or use separate `_` statements.  
 
 
@@ -97,51 +97,54 @@ int i(in);			//  int i;  cin >> i;
 --------------------------------------------------------------
 
 For aggregate types, we need somehow to tell how many elements to read. 
-One way is to have an aggregate with non zero length
+One way is to have an aggregate with non zero length:
 
 --------------------------------------------------------------------
-vector<int> V(10);
+vint V(10);			//  vector<int> V(10);
 cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 --------------------------------------------------------------------
 
-Another to do the same:
+Another way to do the same:
 
 --------------------------------------------------------------------
-vector<int> V = in(10);
+vint V = in(10);
 --------------------------------------------------------------------
 
-Google CodeJam often have input format
-to input an array
-where first goes a number (N)
-followed by N elements of an array.  We can use:
+Google CodeJam often have input format to input an array where first goes a
+number (N) followed by N elements of an array.  To read it, we can use:
 
 --------------------------------------------------------------------
-int N(in);			// int N;  cin >> N;
-vector<int> V = in(N);		// for(int i=0; i<N; i++)  cin >> V[i];
+int  N(in);			//  int N;  cin >> N;
+vint V = in(N);			//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
 --------------------------------------------------------------------
 
-Or even shorter, and plus using `vint` shortcut:
+Or even shorter:
 
 --------------------------------------------------------------------
 vint V = in(in);
 --------------------------------------------------------------------
 
-ALERT: Object `in` does not check for EOF. Use only context where you do not expect
-EOF. In production code, good rule of thumb is to always check for EOF. 
+ALERT: Object `in` does not check for EOF. Use only in context where you do not expect
+EOF (like in Google CodeJam). In production code you need to always check for EOF. 
 
 
 
 == Utility functions
 
-Functions min/max which will work with mixed types. Expression
+=== min/max finction
+Functions `min`/`max` which will work with mixed types. Expression
 `std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
 
-`push_back()`/`push_front()` replacement:
+
+=== push_back()/push_front() replacement
 
 ------------------------------------
-deque<int> D;
+dint D; 			//  deque<int> D;
 1 >> D;				//  D.push_front(1);
-D << 2 << 3;			//  D.push_back(2);   D.push_back(3)
+D << 2 << 3 << 4;		//  D.push_back(2);  D.push_back(3)
+_ D; 				//  cout << D;
+				//  prints:  {1,2,3}
+
 -----------------------------------
 
 
@@ -183,15 +186,15 @@ regex			| 	N 	|	N		| 	Y
 
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
-	- '{ code-block; } expr'
-	- string literals with '"(){}'
-
-  Simple workaround: use semicolon before last statement.
+- '{ code-block; } expr'
+- string literals with '"(){}' charactes. +
+Simple workaround: use semicolon before last statement.
 
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;
-* Is it possible to make +++C++0x+++ literal for regex?  Ideally something
+* Is it possible to make `C++0x` literal for regex?  Ideally something
 	like `/abc/` or `"abc"re` for `boost::regex("abc")`. 
+* No speed optimzation was done yet.  
 
 
 

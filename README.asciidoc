@@ -14,8 +14,7 @@ scc 2+2
 4
 ----------------------------------------------------------------------------
 
-If snippet have bash special characters
-(quotes, ;,  (), <, >, <<, >>, &, |), snippet must be in single or double quotes:
+If snippet have bash special characters,  it must be in single or double quotes:
 
 ----------------------------------------------------------------------------
 scc 'sin(0.5)'						
@@ -33,8 +32,11 @@ scc 'float x=0.5;  cout << x << " " << sin(x) << endl;'
 0.5 0.479426
 ----------------------------------------------------------------------------
 
-Same with SCC's underline-print (replaces `std::cout`). 
-See http://volnitsky.com/project/scc/#_simplified_printing[underline-print description] for details. 
+SCC includes `simple.h` which has a lot of shortcuts (à la CodeJam).  You don't
+have to use these, plain C++ will work too. 
+
+Same as previous example, but with SCC's bar-print (replaces `std::cout`). 
+See http://volnitsky.com/project/scc/#_simplified_printing[bar-print description] for details. 
 
 ----------------------------------------------------------------------------
 scc 'float x=0.5;  __ x ^ sin(x);'			
@@ -43,14 +45,14 @@ scc 'float x=0.5;  __ x ^ sin(x);'
 
 
 Square an array.  +++C++0x+++ is on by default.  Needs current (>=4.6.0) GCC. 
-STL containers are printable: 
+STL containers are printable. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
-scc 'vector<int> V{1,2,3};  for(int& v:V) v*=v;   V'			
+scc 'vint V{1,2,3};  for(int& v:V) v*=v;   V'			
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Word frequencies (`S` is shortcut for `std::string`):
+Word frequencies (`S` is typedef for `std::string`):
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
@@ -59,12 +61,12 @@ echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M'
 
 Sum-up df's used-disk-space column.
 Shortcut `WRL` is  `while(read_line())`.  
-`F` is class derived from `deque<str>`.  Every input line is split into `F`.
+Cass `F` derived from `deque<str>`.  Every input line is split into `F`.
 Type `str` can be directly converted to/from numeric types.
-The `operator()`  is safe version of `operator[]`.
+The `F` member function  `operator()`  is safe version of `operator[]`.
 
 ----------------------------------------------------------------------------
-df | scc 'int n=0; WRL n+=F(2);  n'
+df  |  scc 'int n=0;  WRL n+=F(2);  n'
 31399199
 ----------------------------------------------------------------------------
 
@@ -85,8 +87,8 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 1 bbb
 ----------------------------------------------------------------------------
 
-Make comma separated fields out of space separated.
-Option -o sets `OFS` (output field separator)
+Make comma separated fields out of space separated.  Option `-o` sets `OFS`
+(output field separator).  Snippet is absent in this example.
 
 ----------------------------------------------------------------------------
 echo 1 2 3 |  scc -o '","' -p
@@ -94,7 +96,7 @@ echo 1 2 3 |  scc -o '","' -p
 ----------------------------------------------------------------------------
 
 Read CSV file with quoted fields (spaces, commas and escaped quotes in field are allowed):
-Option -i sets IFS (input field separator); `CSV` - predefined regex constant.
+Option `-i` sets `IFS` (input field separator); `CSV` - predefined regex constant.
 How to make your own regexes  for `IFS`  - look in `scc.h`
 
 ----------------------------------------------------------------------------
