@@ -2,12 +2,12 @@
 SCC — Simple CC  (aka Snippet C++ Compiler)
 ============================================
 
-A bash wrapper for GCC which serve as C++ snippet evaluator or as something
-similar to AWK with C++ syntax.  You need >=GCC-4.6.0 and BOOST for all
-features to work.  For GCC older than 4.4.4, remove  `-std=gnu++0x` from
-`CXXFLAGS` variable  (top of `scc` file).  Examples:
+A bash wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
+similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
+features to work.  For _GCC_ older than 4.4.4, remove +
+`-std=gnu++0x` from `CXXFLAGS` variable  (top of `scc` file).  Examples:
 
-C++ expression  evaluated and printed:
+_+++C++ +++_ expression  evaluated and printed:
 
 ----------------------------------------------------------------------------
 scc 2+2								
@@ -17,11 +17,11 @@ scc 2+2
 If snippet have bash special characters,  it must be in single or double quotes:
 
 ----------------------------------------------------------------------------
-scc 'sin(0.5)'						
-0.479426
-
 scc '"hello world"'
 hello world
+
+scc 'sin(0.5)'						
+0.479426
 ----------------------------------------------------------------------------
 
 Now example of multi-statement and with explicit printing.
@@ -32,10 +32,10 @@ scc 'float x=0.5;  cout << x << " " << sin(x) << endl;'
 0.5 0.479426
 ----------------------------------------------------------------------------
 
-SCC includes `simple.h` which has a lot of shortcuts (à la CodeJam).  You don't
-have to use these, plain C++ will work too. 
+_SCC_ includes `simple.h` which has a lot of shortcuts (à la _Google CodeJam_).  You don't
+have to use these, plain _+++C++ +++_ will work too. 
 
-Same as previous example, but with SCC's bar-print (replaces `std::cout`). 
+Same as previous example, but with _SCC's_ bar-print (replaces `std::cout`). 
 See http://volnitsky.com/project/scc/#_simplified_printing[bar-print description] for details. 
 
 ----------------------------------------------------------------------------
@@ -43,8 +43,7 @@ scc 'float x=0.5;  __ x ^ sin(x);'
 0.5 0.479426
 ----------------------------------------------------------------------------
 
-
-Square an array.  +++C++0x+++ is on by default.  Needs current (>=4.6.0) GCC. 
+Square an array.  +++C++0x+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
 STL containers are printable. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
@@ -52,14 +51,14 @@ scc 'vint V{1,2,3};  for(int& v:V) v*=v;   V'
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Word frequencies (`S` is typedef for `std::string`):
+Word frequencies (typedef `S` is `std::string`):
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
 
-Sum-up df's used-disk-space column.
+Sum-up _DF(1)_ used-disk-space column.
 Shortcut `WRL` is  `while(read_line())`.  
 Cass `F` derived from `deque<str>`.  Every input line is split into `F`.
 Type `str` can be directly converted to/from numeric types.
@@ -107,11 +106,15 @@ cc
 ----------------------------------------------------------------------------
 
 Replace `"-"`, `"none"` and empty fields with `"n/a"` in 2nd column with `boost::regex`. 
-Boost use in SCC is optional, it will be used if `/usr/include/boost` exist.
+Boost use in _SCC_ is optional, it will be used if `/usr/include/boost` exist.
 `RR` is shortcut for `boost::regex_replace`;  `R` - `boost::regex`
 
 ----------------------------------------------------------------------------
-echo -e '1 -\n2\n3 none\n4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
+echo \
+'1 -
+2
+3 none
+4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a

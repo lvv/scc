@@ -1,6 +1,8 @@
 
 include::/tmp/t.ad[]
 
+
+== SCC
 In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
@@ -16,20 +18,20 @@ In `scc` shall script:
 
 Defines:
 
-* F — derived from  deque<str>
-* read_line()
-* type str
+* `F` — derived from  deque<str>
+* `read_line()`
+* type `str`
 * SCC specific shortcuts
 
 Predefined variables (similar to AWK's):
 
-* line	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
-* F	-  derived from  `std::deque<str>` — line's fields; accessible like `F(i)`; counted from 0
-* NF	-  `int`,  number of fields (set after read_line())
-* NR 	-  `int`,  number of records (set after read_line())
-* OFS 	-  `std::string`, output field separator 
-* IFS 	-  `std::string`, input field separator.  
-* CSV 	-  `const char[]`,  predefined regex for IFS
+* `line`	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
+* `F`	-  derived from  `std::deque<str>` — line's fields; accessible like `F(i)`; counted from 0
+* `NF`	-  `int`,  number of fields (set after read_line())
+* `NR` 	-  `int`,  number of records (set after read_line())
+* `OFS` 	-  `std::string`, output field separator 
+* `IFS` 	-  `std::string`, input field separator.  
+* `CSV` 	-  `const char[]`,  predefined regex for IFS
 
 The `::str` type is derived from `std::string` and can be directly converted
 to/from numeric types:
@@ -47,8 +49,8 @@ s + 5		// "7"
 
 == SIMPLE.H
 
-This include was initially created for use in small, one-file C++ programs.
-For something like Google CodeJam. Now it is (optinal) part of SCC project,
+This include was initially created for use in small, one-file _+++C++ +++_ programs.
+For something like Google CodeJam. Now it is (optinal) part of _SCC_ project,
 but it still can be used independently.  
 
 === Everything is included
@@ -59,7 +61,7 @@ with cold cache - 2s, with warm cache  <1s.
 
 === Simplified printing. 
 
-In C++ something like numbers or strings are printable objects.  C-arrays  or
+In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
 STL containers (including sets, maps, pairs, tuples) are not printable.
 Simple.h makes all these printable too (C-array must have const-size).
 Container of containers are also printable. 
@@ -79,8 +81,9 @@ _ V;				//  for (auto it=V.begin(); ....
 				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
 
-TIP:  All these _ operators: `","`, `^`  and `<<`  unfortunately have different
-precedence.  So `scc '_ 1,2^3;'`  is actually `scc '_ 1,(2^3);'` and it will
+TIP:  Bar's operators: `","`, `^`  and `<<`  unfortunately have different
+precedence.  So +++` scc '_ 1,2^3;' `+++  is actually
++++` scc '_ 1,(2^3);' `+++ and it will
 print only two numbers. Precedence
 from highest to lowest: `<<`, `^`,  `","`.     This
 problem was present in plain `std::cout` statements too. 
@@ -124,7 +127,7 @@ Or even shorter:
 vint V = in(in);
 --------------------------------------------------------------------
 
-ALERT: Object `in` does not check for EOF. Use only in context where you do not expect
+WARNING: Object `in` does not check for EOF. Use only in context where you do not expect
 EOF (like in Google CodeJam). In production code you need to always check for EOF. 
 
 
@@ -140,10 +143,10 @@ Functions `min`/`max` which will work with mixed types. Expression
 
 ------------------------------------
 dint D; 			//  deque<int> D;
-1 >> D;				//  D.push_front(1);
+1 >> D;				//  D.push_front(1);  
 D << 2 << 3 << 4;		//  D.push_back(2);  D.push_back(3)
 _ D; 				//  cout << D;
-				//  prints:  {1,2,3}
+				//  prints:  {1,2,3,4}
 
 -----------------------------------
 
@@ -152,14 +155,14 @@ _ D; 				//  cout << D;
 
 
 This is very similar to to what is found in typical CodeJam  source - shortcut
-(macros and typedefs).  These are to squeeze C++ verbosity for one-liner
+(macros and typedefs).  These are to squeeze _+++C++ +++_ verbosity for one-liner
 context. 
 
 See http://github.com/lvv/scc/blob/master/cj.h[cj.h source] for full list.
 
 
 WARNING: cj.h is not  recommended for anything more serious than simple,
-one-file programs.  SCC does not use it internally,  you can comment it out. 
+one-file programs.  _SCC_ does not use it internally,  you can comment it out. 
 These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
 
@@ -186,17 +189,14 @@ regex			| 	N 	|	N		| 	Y
 
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
-- '{ code-block; } expr'
+- { code-block; } expr
 - string literals with '"(){}' charactes. +
 Simple workaround: use semicolon before last statement.
 
 * All (now only part) of STL should included;
 * All (now only part) of STL containers should be printable;
-* Is it possible to make `C++0x` literal for regex?  Ideally something
+* Is it possible to make _+++C++0x +++_ literal for regex?  Ideally something
 	like `/abc/` or `"abc"re` for `boost::regex("abc")`. 
-* No speed optimzation was done yet.  
-
-
 
 == Refs 
 
