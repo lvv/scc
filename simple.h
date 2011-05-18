@@ -229,28 +229,77 @@ max(T t, U u) {
 
 
 
+////////////////////////////////////////////////////////////////////  OUT, OUTLN
+
+struct  out { 
+	const char*	sep;
+	const char*	paren;
+	bool		first_use;
+
+	out (const char* sep=0, const char* paren=0) : sep(sep), paren(paren), first_use(true) {};
+
+	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
+
+	template<typename T>	out&	operator<<  (T x)			{ send_sep();  cout <<         x;	return *this; };
+	template<typename T>	out&	operator,   (T x)			{ send_sep();  cout <<         x;	return *this; };
+	//template<typename T>	out&	operator|   (T x)			{ send_sep();  cout << " "  << x;	return *this; };
+	template<typename T>	out&	operator^   (T x)			{ send_sep();  cout << " " << x;	return *this; };
+
+	// endl, hex, ..
+				out&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+				out&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+
+		template<typename E, template<typename E, typename Ct> class Ct > 
+		out& 
+	operator<<      (const Ct<E, std::allocator<E> >& C) {              
+		cout << (paren ? paren[0] : '{');
+			auto it=C.begin();
+			for (int i=0;   i < int(C.size())-1;   i++, it++)	(*this)  << *it; 
+			if (!C.empty())  					(*this)  << *it;
+		cout << (paren ? paren[1] : '}');
+		return *this; 
+};
+
+};
+
+struct  outln : out  {
+	outln()			:out()		{};
+	outln(const char* sep)	:out(sep)	{};
+	~outln()				{ cout << endl; }
+};
+
+
+std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
+
+
+
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
 // Print any C-array
 
-//#ifdef BOOST_VERSION
-		template<class T, std::size_t N> 		// std::disable_if - does not exist yet	
-		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
-	operator<<      (ostream& os, const T (&A)[N]) {
-		cout << "{";
-			int i=0;
-			for (; i<N-1;  i++)	os  << A[i] <<  ", ";
-			os << A[i];
-		cout << "}";
-		return os;
-	};
-//#endif
+	//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	 std::
+			template<class T, std::size_t N> 		
+									// disable C-array print for  char[]
+			typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+		operator<<      (ostream& os, const T (&A)[N]) {
+			cout << "{";
+				int i=0;
+				for (; i<N-1;  i++)	os  << A[i] <<  ", ";
+				os << A[i];
+			cout << "}";
+			return os;
+		};
+	//#endif
 
 
 
 // print any std::sequance-containter<printable>
-template<typename E, template<typename E, typename L> class L > std::ostream&                                              
-operator<<      (ostream& os, const L<E, std::allocator<E> >& C) {              
+	template<typename E, template<typename E, typename Ct> class Ct > std::ostream&                                              
+operator<<      (ostream& os, const Ct<E, std::allocator<E> >& C) {              
 	cout << "{";
 		auto it=C.begin();
 		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
@@ -258,6 +307,7 @@ operator<<      (ostream& os, const L<E, std::allocator<E> >& C) {
 	cout << "}";
         return os;
 };
+
 
 
 // SET -- print any std::set<printable>  with std comparator and allocator
@@ -374,41 +424,6 @@ operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin
 //   used as:    	int i(in);
 
 
-#define LVV_STR(x) __LVV_STR__(x)
-#define __LVV_STR__(x) #x
-
-
-
-struct  out { 
-	const char*	sep;
-	bool		first_use;
-
-	out () : sep(0), first_use(true) {};
-	out (const char* sep) : sep(sep), first_use(true) {};
-
-	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
-
-	template<typename T>	out&	operator<<  (T x)			{ send_sep();  cout <<         x;	return *this; };
-	template<typename T>	out&	operator,   (T x)			{ send_sep();  cout <<         x;	return *this; };
-	//template<typename T>	out&	operator|   (T x)			{ send_sep();  cout << " "  << x;	return *this; };
-	template<typename T>	out&	operator^   (T x)			{ send_sep();  cout << " " << x;	return *this; };
-
-	// endl, hex, ..
-				out&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
-				out&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
-};
-
-struct  outln : out  {
-	outln()			:out()		{};
-	outln(const char* sep)	:out(sep)	{};
-	~outln()				{ cout << endl; }
-};
-
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
 
 
 #define		_    out()   << 
