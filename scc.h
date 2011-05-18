@@ -85,6 +85,9 @@ struct str: string {
 
 std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string)s; return os; };
 
+typedef		std::vector<str>		vstr;
+typedef		std::deque<str>			dstr;
+
 
 ///////////////////////////////////////////////////////////////////////////////  F
 

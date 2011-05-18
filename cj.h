@@ -24,9 +24,6 @@ typedef		std::deque<char>          	dchar;
 typedef		std::string			S;
 typedef		std::vector<std::string>	vS;
 typedef		std::deque<std::string>		dS;
-typedef		std::vector<str>		vstr;
-typedef		std::deque<str>			dstr;
-
 ///// utils 
 #define 	GL(x)		std::getline(cin,x)
 #define		MT		std::make_tuple

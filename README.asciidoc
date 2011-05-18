@@ -1,10 +1,12 @@
 // vim:set ft=asciidoc:
-SCC — Simple CC  (aka Snippet C++ Compiler)
-============================================
+SCC — Simple CC  
+===============
+
+// (aka Snippet C++ Compiler)
 
 A bash wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
 similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
-features to work.  For _GCC_ older than 4.4.4, remove +
+features to work.  For _GCC_ older than 4.4.4, remove
 `-std=gnu++0x` from `CXXFLAGS` variable  (top of `scc` file).  Examples:
 
 _+++C++ +++_ expression  evaluated and printed:

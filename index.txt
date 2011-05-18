@@ -97,6 +97,7 @@ is read from `in`, it reads from `cin`.
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
+float x = 1.1 + float(in)	//  float x,y;  cin >> y;   x = 1.1 + y;
 --------------------------------------------------------------
 
 For aggregate types, we need somehow to tell how many elements to read. 
@@ -127,14 +128,15 @@ Or even shorter:
 vint V = in(in);
 --------------------------------------------------------------------
 
-WARNING: Object `in` does not check for EOF. Use only in context where you do not expect
-EOF (like in Google CodeJam). In production code you need to always check for EOF. 
+WARNING: Object `in` does not check for EOF. Use only in context where you can
+ignore or do not expect EOF (like in Google CodeJam). Otherwise you
+always need to check for EOF. 
 
 
 
 == Utility functions
 
-=== min/max finction
+=== min/max function
 Functions `min`/`max` which will work with mixed types. Expression
 `std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
 
