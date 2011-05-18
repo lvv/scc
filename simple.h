@@ -374,30 +374,45 @@ operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin
 //   used as:    	int i(in);
 
 
+#define LVV_STR(x) __LVV_STR__(x)
+#define __LVV_STR__(x) #x
 
 
-struct  out_t { 
-	template<typename T>	out_t&	operator<<  (T x)			{ cout <<         x;	return *this; };
-	template<typename T>	out_t&	operator,   (T x)			{ cout <<         x;	return *this; };
-	//template<typename T>	out_t&	operator|   (T x)			{ cout << " "  << x;	return *this; };
-	template<typename T>	out_t&	operator^   (T x)			{ cout << " " << x;	return *this; };
+
+struct  out { 
+	const char*	sep;
+	bool		first_use;
+
+	out () : sep(0), first_use(true) {};
+	out (const char* sep) : sep(sep), first_use(true) {};
+
+	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
+
+	template<typename T>	out&	operator<<  (T x)			{ send_sep();  cout <<         x;	return *this; };
+	template<typename T>	out&	operator,   (T x)			{ send_sep();  cout <<         x;	return *this; };
+	//template<typename T>	out&	operator|   (T x)			{ send_sep();  cout << " "  << x;	return *this; };
+	template<typename T>	out&	operator^   (T x)			{ send_sep();  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
-				out_t&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out_t&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out_t&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
-				out_t&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out_t&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out_t&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+				out&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+				out&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
+				out&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
+				out&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
 };
 
-struct  outln_t : out_t  { ~outln_t() { cout << endl; } };
+struct  outln : out  {
+	outln()			:out()		{};
+	outln(const char* sep)	:out(sep)	{};
+	~outln()				{ cout << endl; }
+};
 
-std::ostream&    operator<<      (ostream& os, out_t out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
+std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
 
 
-#define		_    out_t()   << 
-#define		__   outln_t() << 
+#define		_    out()   << 
+#define		__   outln() << 
 
 struct in_t {	 
 	in_t (): n(0) {};
