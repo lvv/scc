@@ -449,6 +449,7 @@ struct in_t {
 		return c;
 	}
 
+
 	/*  STD::SET  - does not work
 		template<typename T>
 	operator std::set<T,std::allocator<T> >()        {

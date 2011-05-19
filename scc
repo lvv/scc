@@ -80,6 +80,7 @@ cat <<  END	 > $src
 #include <scc.h>
 #endif
 #include <cj.h>
+#include <matrix.h>
 
 
 	int main(int argc, char** argv) {

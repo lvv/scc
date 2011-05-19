@@ -37,7 +37,7 @@ scc 'float x=0.5;  cout << x << " " << sin(x) << endl;'
 _SCC_ includes `simple.h` which has a lot of shortcuts (à la _Google CodeJam_).  You don't
 have to use these, plain _+++C++ +++_ will work too. 
 
-Same as previous example, but with _SCC's_ bar-print (replaces `std::cout`). 
+Same as previous example, but with _SCC's_ bar-print (succinct version of `std::cout`). operator^ - separate with space.
 See http://volnitsky.com/project/scc/#_simplified_printing[bar-print description] for details. 
 
 ----------------------------------------------------------------------------
