@@ -238,7 +238,7 @@ struct  out {
 
 	out (const char* sep=0, const char* paren=0) : sep(sep), paren(paren), first_use(true) {};
 
-	void send_sep() { if (!first_use) cout << (sep ? sep : ", ");  first_use = false; };
+	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
 	template<typename T>	out&	operator<<  (T x)			{ send_sep();  cout <<         x;	return *this; };
 	template<typename T>	out&	operator,   (T x)			{ send_sep();  cout <<         x;	return *this; };
@@ -259,8 +259,8 @@ struct  out {
 	operator<<      (const Ct<E, std::allocator<E> >& C) {              
 		cout << (paren ? paren[0] : '{');
 			auto it=C.begin();
-			for (int i=0;   i < int(C.size())-1;   i++, it++)	(*this)  << *it; 
-			if (!C.empty())  					(*this)  << *it;
+			for (int i=0;   i < int(C.size())-1;   i++, it++)	cout  << *it << (sep ? sep : ", "); 
+			if (!C.empty())  					cout  << *it;
 		cout << (paren ? paren[1] : '}');
 		return *this; 
 	};
