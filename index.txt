@@ -82,7 +82,7 @@ _ V;				//  for (auto it=V.begin(); ....
 -------------------------------------------------------------------
 
 
-Bar-print is actually:
+Bar-print is actually just macros:
 
 -------------------------------------------
 #define         _    out()   << 
@@ -96,11 +96,11 @@ CTOR agrument:
 outln(", ") << x, y, x;		//  cout << x << ", " << y ", " << z << endl;
 
 vint V{1,2,3};			//  vector<int> V{1,2,3}
-outln(", ", "[]") << V;		//  cout << "["; 
+out(",", "[]") << V;		//  cout << "["; 
 				//  for(size_t i=0; i<V.size(); i++) 
-				// 	cout <<  V[i] << (i<V.size()-1 ? ", " : "");
+				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
 				//  cout << "]";
-				//  prints: [1, 2, 3]
+				//  prints: [1,2,3]
 -----------------------------------------------
 
 
@@ -216,7 +216,7 @@ regex			| 	N 	|	N		| 	Y
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
 - { code-block; } expr
-- string literals with '"(){}' charactes. +
+- string literals with '"(){}' characters. +
 Simple workaround: use semicolon before last statement.
 
 * All (now only part) of STL should included;
@@ -229,4 +229,6 @@ Simple workaround: use semicolon before last statement.
 * http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
 * http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
 * http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
-* http://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Fromat]
+* http://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
+* http://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
+

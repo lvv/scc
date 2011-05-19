@@ -253,6 +253,7 @@ struct  out {
 				out&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
 				out&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
 
+	// sequance container
 		template<typename E, template<typename E, typename Ct> class Ct > 
 		out& 
 	operator<<      (const Ct<E, std::allocator<E> >& C) {              
@@ -262,15 +263,17 @@ struct  out {
 			if (!C.empty())  					(*this)  << *it;
 		cout << (paren ? paren[1] : '}');
 		return *this; 
-};
+	};
 
 };
 
 struct  outln : out  {
-	outln()			:out()		{};
-	outln(const char* sep)	:out(sep)	{};
+	outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
 	~outln()				{ cout << endl; }
 };
+
+#define		_    out()   << 
+#define		__   outln() << 
 
 
 std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
@@ -425,9 +428,6 @@ operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin
 
 
 
-
-#define		_    out()   << 
-#define		__   outln() << 
 
 struct in_t {	 
 	in_t (): n(0) {};
