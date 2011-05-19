@@ -2,14 +2,15 @@
 #ifndef  LVV_MATRIX_H
 #define  LVV_MATRIX_H
 
-//#include<cstdint>
+#include<iostream>
+	using std::cout;
+	using std::endl;
 #include<vector>
 	using std::vector;
 //#include<algorithm>
 
 //using namespace std;
 
-	template<typename T=int>
 struct	pt {
 	int x, y;
 	pt (){};
@@ -22,42 +23,54 @@ struct	pt {
 	static pt	right		()		{ return pt(1,0);};
 	static pt	down		()		{ return pt(0,1);};
 	static pt	left		()		{ return pt(-1,0);};
-	
 };
 
 	
 	template<typename T>
-std::ostream&   operator<<      (ostream& os, const pt<T>& P) { os << "(" << P.x << "," << P.y << ")"; return os; };
+std::ostream&   operator<<      (std::ostream& os, const pt& P) { os << "(" << P.x << "," << P.y << ")"; return os; };
 
 
-	template<typename T=int>
-struct	matrix {
-	vector<vector<T> >  M;
-	explicit matrix (size_t x_size, size_t y_size,  T val0=0)
-		:  M(y_size,  vector<T>(x_size, val0)) {};
-	T&	operator()	(pt<T> p)   		{ return M[p.y][p.x]; };
-	T&	operator()	(size_t x,  size_t y)   { return M[y][x]; };
-	size_t	y_size		()	 		{ return M.size(); };
-	size_t	x_size		()	 		{ return M[0].size(); };
-	size_t	h		()	 		{ return M.size(); };
-	size_t	w		()	 		{ return M[0].size(); };
-	bool	on_cell		(pt<T> p) 		{ return 0<=p.y  &&  p.y <  (T)y_size()  &&   0<=p.x && p.x < (T)x_size() ; };
-	bool	on_grid		(pt<T> p) 		{ return 0<=p.y  &&  p.y <= (T)y_size()  &&   0<=p.x && p.x < (T)x_size() ; };
-	bool	on_border	(pt<T> p) 		{ return 0==p.y || (T)h()==p.y ||  p.x==0 || (T)p.x==w() ; };
+	template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct=std::vector>
+struct	matrix : vector<T> {
+			//typedef		typename vector<T>::iterator		iterator ;
+			//typedef		typename vector<T>::const_iterator	const_iterator ;
+		size_t w_,h_;
+	explicit matrix (size_t w, size_t h,  T val0=0) :  vector<T>(h*w,  val0), w_(w), h_(h) {};
+	T&	operator()	(pt p)   		{ return (*this)[w_ * p.y + p.x]; };
+	T&	operator()	(size_t x,  size_t y)   { return (*this)[w_ * y + x]; };
+	const T&operator()	(size_t x,  size_t y)  const  { return (*this)[w_ * y + x]; };
+	size_t	h		() const	 		{ return h_; };
+	size_t	w		() const	 		{ return w_; };
+	bool	on_cell		(pt p) 		{ return 0<=p.y  &&  p.y <  (T)h()  &&   0<=p.x && p.x < (T)w() ; };
+	bool	on_grid		(pt p) 		{ return 0<=p.y  &&  p.y <= (T)h()  &&   0<=p.x && p.x < (T)w() ; };
+	bool	on_border	(pt p) 		{ return 0==p.y || (T)h()==p.y ||  p.x==0 || (T)p.x==w() ; };
+	bool	next		(pt& p)		{ pt pn;  pn.x = (p.x+1)%w();   pn.y = p.y+(pn.x<p.x);  p=pn; 
+		cout << p.x << "\t" << p.y << endl;   return p.y<(int)h(); }
 };
 
 	#ifdef 	MODERN_GCC
 	//template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
-	template<typename T, template<typename T> class Mt >
+	//template<typename T, template<typename T> class Mt >
+	template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct >
 	std::istream&                                              
 operator>>      (istream& is, matrix<T>& M)    {
-	for(typename Mt<T>::iterator it=M.begin();  it!=M.end();  it++)
+	//for(typename matrix<T>::iterator it=M.begin();  it!=M.end();  it++)
+	for(auto it=M.begin();  it!=M.end();  it++)
 		if(!(is>>*it)) break;
 	return is;
 }; 
 	#endif
 
 	template<typename T>
-std::ostream&   operator<<      (ostream& os, const matrix<T>& M) { for (size_t i=0;  i<M.M.size();  i++) os << M.M[i] << std::endl; return os; };
+	//template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct >
+std::ostream&   operator<<      (std::ostream& os, const matrix<T>& M) {
+	for(size_t j=0; j<M.h(); j++)  {
+		for (size_t i=0;  i<M.w();  i++)  {
+			os << M(i,j) << " ";
+		}
+		os << "\n";
+	}
+	return os;
+};
 
 #endif // LVV_MATRIX_H
