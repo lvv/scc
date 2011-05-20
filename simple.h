@@ -236,10 +236,10 @@ struct  out {
 	const char*	sep;
 	const char*	paren;
 
-	out ()					   : first_use(true), sep(0),   paren(0)     {init();};
+	out ()					      : first_use(true), sep(0),   paren(0)     {init();};
 	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
 	void init() {
-		if (paren && !strlen(paren))	paren = 0;
+		//if (paren && !strlen(paren))	paren = 0;
 		if (sep   && !strlen(sep))	sep   = 0;
 	}
 
@@ -263,13 +263,20 @@ struct  out {
 		template<typename T, template<typename T, typename Al> class Ct > 
 		out& 
 	operator<<      (const Ct<T, std::allocator<T> >& C) {              
-		cout << (paren ? paren[0] : '{');
-		auto it=C.begin();
-		for (int i=0;   i < int(C.size())-1;   i++, it++)	cout  << *it << (sep ? sep : ", "); 
-		if (!C.empty())  					cout  << *it;
-		cout << (paren ? paren[1] : '}');
+		if (paren)  	{if(strlen(paren)) cout << paren[0];}
+		else 		cout << '{';
+		//cout << (paren ? paren[0] : '{');
+
+		for (int i=0;   i < int(C.size());   i++)	{if(i && C.size()) cout  << (sep ? sep : ", ");  cout << C[i];}
+
+		if (paren)  	{if(strlen(paren)) cout << paren[1];}
+		else 		cout << '}';
+		//cout << (paren ? paren[1] : '}');
 		return *this; 
 	};
+		template<typename T, template<typename T, typename Al> class Ct > 
+		out& 
+	operator,       (const Ct<T, std::allocator<T> >& C) {  return operator<<(C); }
  };
 
 struct  outln : out  {
