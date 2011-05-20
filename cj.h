@@ -5,6 +5,10 @@
 #ifndef LVV_SIMPLE_H
 #include <scc/simple.h>
 #endif
+
+#ifndef LVV_MATRIX
+#include <scc/matrix.h>
+#endif
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
@@ -50,6 +54,7 @@ typedef		std::deque<std::string>		dS;
 #define		FORj(N)		FOR(j,0,N)
 #define		FORk(N)		FOR(k,0,N)
 #define		FORt(N)		FOR(t,0,N)
+#define		FORm(N)		FOR(m,0,N)
 
 #define		FORic(I,C)    	for (long I=0;  I<(long)C.size();   I++) 
 #define		FORc(IT,C)   	for (auto IT=C.begin();  IT != C.end();   IT++) 

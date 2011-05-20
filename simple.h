@@ -232,39 +232,44 @@ max(T t, U u) {
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
 
 struct  out { 
+	bool  first_use;
 	const char*	sep;
 	const char*	paren;
-	bool		first_use;
 
-	out (const char* sep=0, const char* paren=0) : sep(sep), paren(paren), first_use(true) {};
+	out ()					   : first_use(true), sep(0),   paren(0)     {init();};
+	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
+	void init() {
+		if (paren && !strlen(paren))	paren = 0;
+		if (sep   && !strlen(sep))	sep   = 0;
+	}
 
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
-	template<typename T>	out&	operator<<  (T x)			{ send_sep();  cout <<         x;	return *this; };
-	template<typename T>	out&	operator,   (T x)			{ send_sep();  cout <<         x;	return *this; };
-	//template<typename T>	out&	operator|   (T x)			{ send_sep();  cout << " "  << x;	return *this; };
-	template<typename T>	out&	operator^   (T x)			{ send_sep();  cout << " " << x;	return *this; };
+	template<typename T>	out&  operator<<  (T x)	{ send_sep();  cout <<         x;	return *this; };
+	template<typename T>	out&  operator,   (T x)	{ send_sep();  cout <<         x;	return *this; };
+	//template<typename T>	out&  operator|   (T x)	{ send_sep();  cout << " "  << x;	return *this; };
+	template<typename T>	out&  operator^   (T x)	{ send_sep();  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
-				out&  operator<<  (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out&  operator<<  (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out&  operator<<  (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
-				out&  operator,   (ostream& (*pf)(ostream&))	{ cout <<        pf;	return *this; };
-				out&  operator,   (std::ios& (*pf)(std::ios&)){ cout <<        pf;	return *this; };
-				out&  operator,   (std::ios_base& (*pf)(std::ios_base&)){ cout <<        pf;	return *this; };
+				out&  operator<< (ostream&       (*pf) (ostream&      ) ) { cout << pf;  return *this; };
+				out&  operator<< (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
+				out&  operator<< (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
+				out&  operator,  (ostream&       (*pf) (ostream&      ) ) { cout << pf;  return *this; };
+				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
+				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
 	// sequance container
-		template<typename E, template<typename E, typename Ct> class Ct > 
+	
+		template<typename T, template<typename T, typename Al> class Ct > 
 		out& 
-	operator<<      (const Ct<E, std::allocator<E> >& C) {              
+	operator<<      (const Ct<T, std::allocator<T> >& C) {              
 		cout << (paren ? paren[0] : '{');
-			auto it=C.begin();
-			for (int i=0;   i < int(C.size())-1;   i++, it++)	cout  << *it << (sep ? sep : ", "); 
-			if (!C.empty())  					cout  << *it;
+		auto it=C.begin();
+		for (int i=0;   i < int(C.size())-1;   i++, it++)	cout  << *it << (sep ? sep : ", "); 
+		if (!C.empty())  					cout  << *it;
 		cout << (paren ? paren[1] : '}');
 		return *this; 
 	};
-
  };
 
 struct  outln : out  {

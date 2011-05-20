@@ -4,7 +4,7 @@
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
 
-CXXFLAGS+=" -Wall -std=gnu++0x  -pipe -O0 -Wno-sign-compare"
+CXXFLAGS+=" -Wall -std=gnu++0x  -pipe -O0 -Wno-sign-compare -I /home/lvv/p/"
 FILE=$(find $0  -printf '%l\n')
 SCC_HOME="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
@@ -60,7 +60,7 @@ if [[ $verbose ]] ; then
 	echo -n "$1                                 "
 	echo -n `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`
 	echo "   no_boost: $no_boost;   n_opt: $n_opt;   p_opt: $p_opt;   is_stream: $is_stream;   end_prt: $end_prt"
-	#echo "CXXFLAGS:  $CXXFLAGS"
+	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
 snippet="`echo \"${1%% }\" | sed    's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"

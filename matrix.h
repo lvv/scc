@@ -36,34 +36,30 @@ struct	matrix : vector<T> {
 			//typedef		typename vector<T>::const_iterator	const_iterator ;
 		size_t w_,h_;
 	explicit matrix (size_t w, size_t h,  T val0=0) :  vector<T>(h*w,  val0), w_(w), h_(h) {};
-	T&	operator()	(pt p)   		{ return (*this)[w_ * p.y + p.x]; };
-	T&	operator()	(size_t x,  size_t y)   { return (*this)[w_ * y + x]; };
-	const T&operator()	(size_t x,  size_t y)  const  { return (*this)[w_ * y + x]; };
+	T&	operator()	(pt p)   			{ return (*this)[w_ * p.y + p.x]; };
+	T&	operator()	(size_t x,  size_t y)   	{ return (*this)[w_ * y + x]; };
+	const T&operator()	(size_t x,  size_t y)  const  	{ return (*this)[w_ * y + x]; };
 	size_t	h		() const	 		{ return h_; };
 	size_t	w		() const	 		{ return w_; };
-	bool	on_cell		(pt p) 		{ return 0<=p.y  &&  p.y <  (T)h()  &&   0<=p.x && p.x < (T)w() ; };
-	bool	on_grid		(pt p) 		{ return 0<=p.y  &&  p.y <= (T)h()  &&   0<=p.x && p.x < (T)w() ; };
-	bool	on_border	(pt p) 		{ return 0==p.y || (T)h()==p.y ||  p.x==0 || (T)p.x==w() ; };
-	bool	next		(pt& p)		{ pt pn;  pn.x = (p.x+1)%w();   pn.y = p.y+(pn.x<p.x);  p=pn; 
-		cout << p.x << "\t" << p.y << endl;   return p.y<(int)h(); }
+	bool	in		(pt p) const		{ return 0<=p.y  &&  p.y <  (T)h()  &&   0<=p.x && p.x < (T)w() ; };
+	bool	on_cell		(pt p) const		{ return 0<=p.y  &&  p.y <  (T)h()  &&   0<=p.x && p.x < (T)w() ; };
+	bool	on_grid		(pt p) const		{ return 0<=p.y  &&  p.y <= (T)h()  &&   0<=p.x && p.x < (T)w() ; };
+	bool	on_border	(pt p) const		{ return 0==p.y || (T)h()==p.y ||  p.x==0 || (T)p.x==w() ; };
+	bool	next		(pt& p)		{ pt pn;  pn.x = (p.x+1)%w();   pn.y = p.y+(pn.x<p.x);  p=pn; return p.y<(int)h(); };
 };
 
-	#ifdef 	MODERN_GCC
-	//template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
-	//template<typename T, template<typename T> class Mt >
-	template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct >
+	template<typename T>
 	std::istream&                                              
-operator>>      (istream& is, matrix<T>& M)    {
-	//for(typename matrix<T>::iterator it=M.begin();  it!=M.end();  it++)
-	for(auto it=M.begin();  it!=M.end();  it++)
-		if(!(is>>*it)) break;
+operator>>      (std::istream& is, matrix<T>& M)    {
+	for(size_t j=0; j<M.h(); j++) 
+		for (size_t i=0;  i<M.w();  i++)
+			if (!(is>> M(i,j))) break;
 	return is;
 }; 
-	#endif
 
 	template<typename T>
-	//template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct >
-std::ostream&   operator<<      (std::ostream& os, const matrix<T>& M) {
+	std::ostream&  
+operator<<      (std::ostream& os, const matrix<T>& M) {
 	for(size_t j=0; j<M.h(); j++)  {
 		for (size_t i=0;  i<M.w();  i++)  {
 			os << M(i,j) << " ";
