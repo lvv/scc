@@ -57,7 +57,7 @@ typedef		std::deque<std::string>		dS;
 #define		FORm(N)		FOR(m,0,N)
 
 #define		FORic(I,C)    	for (long I=0;  I<(long)C.size();   I++) 
-#define		FORc(IT,C)   	for (auto IT=C.begin();  IT != C.end();   IT++) 
+#define		FORitc(IT,C)   	for (auto IT=C.begin();  IT != C.end();   IT++) 
 #define		FORr(IT,B,E)   	for (auto IT=B;  IT != E;   IT++) 
 
 #endif  // LVV_CODEJAM_H

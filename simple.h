@@ -227,6 +227,10 @@ max(T t, U u) {
    return t >= u ? t : u;
 }
 
+// even / odd
+
+template <typename  T>  bool  is_even(T x) { return  !(x % 2); }
+template <typename  T>	bool  is_odd (T x) { return    x % 2;  }
 
 
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
@@ -238,10 +242,8 @@ struct  out {
 
 	out ()					      : first_use(true), sep(0),   paren(0)     {init();};
 	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
-	void init() {
-		//if (paren && !strlen(paren))	paren = 0;
-		if (sep   && !strlen(sep))	sep   = 0;
-	}
+	void init() { if (sep   && !strlen(sep))	sep   = 0; }
+
 
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
@@ -277,6 +279,8 @@ struct  out {
 		template<typename T, template<typename T, typename Al> class Ct > 
 		out& 
 	operator,       (const Ct<T, std::allocator<T> >& C) {  return operator<<(C); }
+
+	operator bool   () {  return true; }
  };
 
 struct  outln : out  {
@@ -491,6 +495,10 @@ operator>>      (istream& is, Ct<T>& C)    {
 }; 
 	#endif
 
+int gcd(long a,long b) {
+	if(b==0)	return a;
+	else		return gcd(b,a%b);
+}
 
 
 #endif	// MODERN_GCC
