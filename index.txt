@@ -55,8 +55,8 @@ but it still can be used independently.
 
 === Everything is included
 
-Most of STL's includes are included with `using
-std::...` for most common objects. On my 4yr old laptop (no SSD), run time
+Most of STL's includes are included with `using std::...`
+for most common objects. On my 4yr old laptop (no SSD), run time
 with cold cache - 2s, with warm cache  <1s.
 
 === Simplified printing. 
@@ -168,8 +168,8 @@ Functions `min`/`max` which will work with mixed types. Expression
 ------------------------------------
 dint D; 			//  deque<int> D;
 1 >> D;				//  D.push_front(1);  
-D << 2 << 3 << 4;		//  D.push_back(2);  D.push_back(3)
-_ D; 				//  cout << D;
+D << 2 << 3 << 4;		//  D.push_back(2);  D.push_back(3);  D.push_back(4);
+_ D; 				//  cout << "{";  for(auto it=D.begin(); it!=D.end()-1; it++) cout << *it << ", ";  if(!D.empty()) cout << D.back();  cout << "}";
 				//  prints:  {1,2,3,4}
 
 -----------------------------------

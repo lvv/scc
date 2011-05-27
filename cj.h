@@ -20,6 +20,7 @@ typedef		std::vector<char>         	vchar;
 typedef		std::vector<float>        	vfloat;
 typedef		std::vector<double>       	vdouble;
 typedef		std::deque<int>           	dint;
+typedef		std::deque<int>           	dlong;
 typedef		std::deque<unsigned int>  	duint;
 typedef		std::deque<float>         	dfloat;
 typedef		std::deque<double>        	ddouble;
