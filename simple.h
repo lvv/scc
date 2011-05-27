@@ -484,8 +484,12 @@ in_t in;
 	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
 	std::istream&                                              
 operator>>      (istream& is, Ct<T>& C)    {
-	for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
-		if(!(is>>*it)) break;
+	if (C.size() > 0)  {
+		for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
+			if(!(is>>*it)) break;
+	}  else  {
+		T c;   while(is>>c)  C.push_back(c);
+	}
 	return is;
 }; 
 	#endif

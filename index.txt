@@ -124,8 +124,8 @@ int i(in);			//  int i;  cin >> i;
 float x = 1.1 + float(in)	//  float y;  cin >> y;   float x = 1.1 + y;
 --------------------------------------------------------------
 
-For aggregate types, we need somehow to tell how many elements to read. 
-One way is to have an aggregate with non zero length:
+For aggregate types, we can specify how many elements to read. 
+One way to do this is to have an aggregate with non zero length:
 
 --------------------------------------------------------------------
 vint V(10);			//  vector<int> V(10);
@@ -152,8 +152,16 @@ Or even shorter:
 vint V = in(in);		// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
 --------------------------------------------------------------------
 
-WARNING: Object `in` does not check for EOF. Use only in context where you can
-ignore or do not expect EOF (like in Google CodeJam).
+If aggregate have zero length (is empty), container is filled up until EOF. 
+
+--------------------------------------------------------------------
+echo 1 2 3 | scc 'vint V = in;  V' 	// Note:  we can not use:  vint V(in);
+{1,2,3} 
+--------------------------------------------------------------------
+
+
+WARNING: Object `in` does not check for EOF. With scalar objects use only in
+context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 
 == Utility functions
