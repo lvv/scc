@@ -65,9 +65,16 @@ In _+++C++ +++_ something like numbers or strings are printable objects.  C-arra
 STL containers (including sets, maps, pairs, tuples) are not printable.
 Simple.h makes all these printable too (C-array must have const-size).
 Container of containers are also printable. 
+In comments is equivalent code:
 
-Syntax `cout << ...` was replaced with bar (underline) print.
-In comments -  equivalent code:
+
+--------------------------------------------------------------------
+vint V{1,2,3}; 			//  vector<int> V{1,2,3};
+_ V; 				//  cout << "{";  for(auto it=V.begin(); it!=V.end()-1; it++) cout << *it << ", ";  if(!V.empty()) cout << V.back();  cout << "}";
+				//  prints: {1, 2, 3}
+-------------------------------------------------------------------
+
+Syntax `cout << ...` was replaced with bar (underline) print.  The `operator,` is equivalent to `operator<<`.
 
 --------------------------------------------------------------------
 _ x;				//  cout << x;
@@ -75,12 +82,7 @@ __ x;				//  cout << x << endl;
 __ x,y;				//  cout << x << y << endl;
 __ x^y;				//  cout << x << " " << y << endl;
 __ "list:" ^ x ^ y;		//  cout << "list: "  << x << " " << y << endl;
-
-vint V{1,2,3}; 			//  vector<int> V{1,2,3};
-_ V; 				//  cout << "{";  for(auto it=V.begin(); it!=V.end()-1; it++) cout << *it << ", ";  if(!V.empty()) cout << V.back();  cout << "}";
-				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
-
 
 Bar-print is actually just macros:
 
