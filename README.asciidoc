@@ -71,8 +71,13 @@ df  |  scc 'int n=0;  WRL n+=F(2);  n'
 31399199
 ----------------------------------------------------------------------------
 
+In above example,  `int n=0;` was actually optional.  Variables `i`,`j`,`k`,`n` are
+pre-declared as `int`; variables `x`,`y`,`z` are pre-declared as `double`; 
+and `s` - pre-declared as `std::string`.  Numeric types initilized to 0.
+You can re-declare/re-define these if needed.
+
 Prepend line number to every line.
-Option -p is similar to PERL's;  `NR` - number of record; 
+Option `-p` is similar to _PERL's_;  `NR` - number of record; 
 
 ----------------------------------------------------------------------------
 echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'

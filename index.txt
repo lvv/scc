@@ -93,14 +93,16 @@ If you will use class `out` or `outln` directly, you can specify seperator in
 CTOR agrument:
 
 ------------------------------------------------
-outln(", ") << x, y, x;		//  cout << x << ", " << y ", " << z << endl;
+x = y = z = 1;
+outln(", ") << x, y, z;		//  cout << x << ", " << y ", " << z << endl;
+1, 1, 1
+
 
 vint V{1,2,3};			//  vector<int> V{1,2,3}
 out(",", "[]") << V;		//  cout << "["; 
-				//  for(size_t i=0; i<V.size(); i++) 
+[1,2,3]				//  for(size_t i=0; i<V.size(); i++) 
 				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
 				//  cout << "]";
-				//  prints: [1,2,3]
 -----------------------------------------------
 
 

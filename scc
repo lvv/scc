@@ -84,6 +84,16 @@ cat <<  END	 > $src
 
 
 	int main(int argc, char** argv) {
+	int i __attribute__((unused)) = 0;
+	int j __attribute__((unused)) = 0;
+	int k __attribute__((unused)) = 0;
+	int n __attribute__((unused)) = 0;
+
+	double x __attribute__((unused)) = 0.0;
+	double y __attribute__((unused)) = 0.0;
+
+	string s __attribute__((unused));
+	{
 END
 
 if [[  $is_stream ]];  then 
@@ -109,7 +119,7 @@ else
 fi
 
 
-echo '}' >>  $src
+echo '}}' >>  $src
 
 
 if [[ $no_boost ]];  then 
