@@ -214,23 +214,18 @@ struct	isi : istream_iterator<T> {
 ///////////////////////////////////////////////////////////////////// UTILS
 
 // std::max(1, 2.2)  - compiler error
-
-	template <class T, class U>
-	typename std::common_type<T, U>::type
-min(T t, U u) {
-   return t < u ? t : u;
-}
-
-	template <class T, class U>
-	typename std::common_type<T, U>::type
-max(T t, U u) {
-   return t >= u ? t : u;
-}
+template <class T, class U>	typename std::common_type<T, U>::type	min(T t, U u) { return t <  u ? t : u; }
+template <class T, class U>	typename std::common_type<T, U>::type	max(T t, U u) { return t >= u ? t : u; }
 
 // even / odd
-
 template <typename  T>  bool  is_even(T x) { return  !(x % 2); }
 template <typename  T>	bool  is_odd (T x) { return    x % 2;  }
+
+
+int gcd(long a,long b) {
+	if(b==0)	return a;
+	else		return gcd(b,a%b);
+}
 
 
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
@@ -253,10 +248,10 @@ struct  out {
 	template<typename T>	out&  operator^   (T x)	{ send_sep();  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
-				out&  operator<< (ostream&       (*pf) (ostream&      ) ) { cout << pf;  return *this; };
+				out&  operator<< (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
 				out&  operator<< (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
 				out&  operator<< (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
-				out&  operator,  (ostream&       (*pf) (ostream&      ) ) { cout << pf;  return *this; };
+				out&  operator,  (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
 				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
 				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
@@ -494,11 +489,6 @@ operator>>      (istream& is, Ct<T>& C)    {
 	return is;
 }; 
 	#endif
-
-int gcd(long a,long b) {
-	if(b==0)	return a;
-	else		return gcd(b,a%b);
-}
 
 
 #endif	// MODERN_GCC

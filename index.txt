@@ -77,7 +77,7 @@ __ x^y;				//  cout << x << " " << y << endl;
 __ "list:" ^ x ^ y;		//  cout << "list: "  << x << " " << y << endl;
 
 vint V{1,2,3}; 			//  vector<int> V{1,2,3};
-_ V;				//  for (auto it=V.begin(); ....
+_ V; 				//  cout << "{";  for(auto it=V.begin(); it!=V.end()-1; it++) cout << *it << ", ";  if(!V.empty()) cout << V.back();  cout << "}";
 				//  prints: {1, 2, 3}
 -------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ is read from `in`, it reads from `cin`.
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
-float x = 1.1 + float(in)	//  float x,y;  cin >> y;   x = 1.1 + y;
+float x = 1.1 + float(in)	//  float y;  cin >> y;   float x = 1.1 + y;
 --------------------------------------------------------------
 
 For aggregate types, we need somehow to tell how many elements to read. 
@@ -149,7 +149,7 @@ vint V = in(N);			//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
 Or even shorter:
 
 --------------------------------------------------------------------
-vint V = in(in);
+vint V = in(in);		// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
 --------------------------------------------------------------------
 
 WARNING: Object `in` does not check for EOF. Use only in context where you can
