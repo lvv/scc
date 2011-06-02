@@ -66,7 +66,7 @@ struct field: string {
 	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long   I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator float		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator float		(void) { istringstream IS;  double          I;  IS.str(*this);  IS >> I;  return I; }
 	//explicit	operator void*		(void) { return  this->empty())  ? 0 : 1 ;   }
 	#endif
 
@@ -74,8 +74,8 @@ struct field: string {
 	field  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }	
 
 	// prefix/postfix inc/dec
-	long operator++() {                   return *this = long(*this) + 1; }
-	long operator--() {                   return *this = long(*this) - 1; }
+	long operator++() {                    return  *this = long(*this) + 1; }
+	long operator--() {                    return  *this = long(*this) - 1; }
 	long operator++(int) { long old = long(*this); *this = long(*this) + 1; return old; }
 	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
 	// TODO for double
