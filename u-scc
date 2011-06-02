@@ -29,21 +29,21 @@ echo ---------------------------------------------------------
 echo -e "AA\nBB\nCC"  | scc -v 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
 echo -e "\nAA\nBB" 
 echo ---------------------------------------------------------
-echo aaa bbb aaa | scc -v 'S w;  map<S,int> m;  while(cin>>w) m[w]++;  m'  &&
+echo aaa bbb aaa | scc -v 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  &&
 echo -e "\n{⟨aaa,2⟩, ⟨bbb,1⟩}"
 echo ---------------------------------------------------------
 command df | scc -v 'int n=0; WRL n+=F(2);  n'  && 
 echo ""  &&
 command df | awk '{n+=$3;};  END{print n}'
 echo ---------------------------------------------------------
-echo "AAA BBB CCC"   | scc -v  'int t=0; S s; while(cin>>s) t++; t'  &&
+echo "AAA BBB CCC"   | scc -v  'int t=0; str s; while(cin>>s) t++; t'  &&
 echo -e "\n3"
 echo ---------------------------------------------------------
-scc -v 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'   &&
+scc -v 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'   &&
 echo -e "\n*aa* *bb*"
 echo ---------------------------------------------------------
-echo '"aa",  "bb\"-, bb",  "cc"' | scc -v 'IFS=CSV ; WRL for (S f:F) cout << f << endl;'  &&
+echo '"aa",  "bb\"-, bb",  "cc"' | scc -v 'IFS=CSV ; WRL for (str f:F) cout << f << endl;'  &&
 echo -e "\naa\nbb\"-, bb\ncc"
 
-echo 1 2 3 |  scc  -i '"(\\S+)(\\s+|$)"' -o '","'  -p
+echo 1 2 3 |  scc  -i '"(\\str+)(\\s+|$)"' -o '","'  -p
 )

@@ -464,10 +464,10 @@ struct in_t {
 	/*  STD::SET  - does not work
 		template<typename T>
 	operator std::set<T,std::allocator<T> >()        {
-		std::set<T,std::allocator<T> > S;  
+		std::set<T,std::allocator<T> > str;  
 		T elem;
-		while(n-- && cin) { cin >> elem;  S.insert(elem); } ;  
-		return S;
+		while(n-- && cin) { cin >> elem;  str.insert(elem); } ;  
+		return str;
 	}
 	*/
 };

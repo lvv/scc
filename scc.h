@@ -85,8 +85,8 @@ struct field: string {
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
 
-typedef		std::vector<field>		vstr;
-typedef		std::deque<field>			dstr;
+typedef		std::vector<std::string>	vstr;
+typedef		std::deque<std::string>		dstr;
 
 
 ///////////////////////////////////////////////////////////////////////////////  F
@@ -189,7 +189,7 @@ typedef		std::deque<field>			dstr;
 #define 	RM		boost::regex_match
 #define 	RS		boost::regex_search
 #define 	RR		boost::regex_replace
-		// usage: scc 'S s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 	
 //#define 	M		boost::match
 #define 	CM		boost::cmatch

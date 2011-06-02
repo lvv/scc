@@ -53,10 +53,10 @@ scc 'vint V{1,2,3};  for(int& v:V) v*=v;   V'
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Word frequencies (typedef `S` is `std::string`):
+Word frequencies (typedef `str` is `std::string`):
 
 ----------------------------------------------------------------------------
-echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M' 
+echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
 
