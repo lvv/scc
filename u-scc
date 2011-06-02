@@ -23,7 +23,7 @@ echo ---------------------------------------------------------
 echo -e 'aaa bbb\nccc ddd'   |  scc -v  -p 'F.push_front(NR+1);'  &&
 echo -e '\n1 aaa bbb\n2 ccc ddd'  
 echo ---------------------------------------------------------
-echo -e 'aaa bbb\nccc ddd'   |  scc -v  -p 'str(NR+1)+" "'  &&
+echo -e 'aaa bbb\nccc ddd'   |  scc -v  -p 'field(NR+1)+" "'  &&
 echo -e '\n1  aaa bbb\n2  ccc ddd'  
 echo ---------------------------------------------------------
 echo -e "AA\nBB\nCC"  | scc -v 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&

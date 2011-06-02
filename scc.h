@@ -19,40 +19,40 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////  STR
-struct str: string {
+struct field: string {
 
 	// CTOR
-	str(const char*   s)	: string(s) {};
-	str(const string& s)	: string(s) {};
-	str(int           i)	: string()  {*this = (long)i;};
-	str(long          i)	: string()  {*this = (long)i;};
-	str(double        i)	: string()  {*this = (double)i;};
-	str()			: string()  {};
+	field(const char*   s)	: string(s) {};
+	field(const string& s)	: string(s) {};
+	field(int           i)	: string()  {*this = (long)i;};
+	field(long          i)	: string()  {*this = (long)i;};
+	field(double        i)	: string()  {*this = (double)i;};
+	field()			: string()  {};
 
 	// op= assign
-	str& operator  = (int I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (int I) { ostringstream OS;   OS << int(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (int I) { ostringstream OS;   OS << int(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (int I) { ostringstream OS;   OS << int(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator  = (int I) { ostringstream OS;   OS <<              I;   this->string::assign(OS.str());  return *this; }
+	field& operator += (int I) { ostringstream OS;   OS << int(*this) + I;   this->string::assign(OS.str());  return *this; }
+	field& operator -= (int I) { ostringstream OS;   OS << int(*this) - I;   this->string::assign(OS.str());  return *this; }
+	field& operator *= (int I) { ostringstream OS;   OS << int(*this) * I;   this->string::assign(OS.str());  return *this; }
+	field& operator /= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator %= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
 
-	str& operator  = (long I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (long I) { ostringstream OS;   OS << long(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (long I) { ostringstream OS;   OS << long(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (long I) { ostringstream OS;   OS << long(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator  = (long I) { ostringstream OS;   OS <<               I;   this->string::assign(OS.str());  return *this; }
+	field& operator += (long I) { ostringstream OS;   OS << long(*this) + I;   this->string::assign(OS.str());  return *this; }
+	field& operator -= (long I) { ostringstream OS;   OS << long(*this) - I;   this->string::assign(OS.str());  return *this; }
+	field& operator *= (long I) { ostringstream OS;   OS << long(*this) * I;   this->string::assign(OS.str());  return *this; }
+	field& operator /= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator %= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
 
-	str& operator  = (double I) { ostringstream OS;   OS <<         I;   this->string::assign(OS.str());  return *this; }
-	str& operator += (double I) { ostringstream OS;   OS << double(*this) + I;   this->string::assign(OS.str());  return *this; }
-	str& operator -= (double I) { ostringstream OS;   OS << double(*this) - I;   this->string::assign(OS.str());  return *this; }
-	str& operator *= (double I) { ostringstream OS;   OS << double(*this) * I;   this->string::assign(OS.str());  return *this; }
-	str& operator /= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
-	str& operator %= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator  = (double I) { ostringstream OS;   OS <<                 I;   this->string::assign(OS.str());  return *this; }
+	field& operator += (double I) { ostringstream OS;   OS << double(*this) + I;   this->string::assign(OS.str());  return *this; }
+	field& operator -= (double I) { ostringstream OS;   OS << double(*this) - I;   this->string::assign(OS.str());  return *this; }
+	field& operator *= (double I) { ostringstream OS;   OS << double(*this) * I;   this->string::assign(OS.str());  return *this; }
+	field& operator /= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
+	field& operator %= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
 
 		template<class T>
-	str& operator << (T t) { ostringstream OS;   OS << *this << t;  *this =  OS.str(); return *this; }
+	field& operator << (T t) { ostringstream OS;   OS << *this << t;  *this =  OS.str(); return *this; }
 
 	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
 	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
@@ -62,16 +62,16 @@ struct str: string {
 		
 			operator double		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
 	#if 	 (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) ) 
-	explicit	operator int		(void) { istringstream IS;  int    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator long		(void) { istringstream IS;  long   I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator int		(void) { istringstream IS;  int             I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long    I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long   I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator float		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
 	//explicit	operator void*		(void) { return  this->empty())  ? 0 : 1 ;   }
 	#endif
 
 	////
-	str  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }	
+	field  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }	
 
 	// prefix/postfix inc/dec
 	long operator++() {                   return *this = long(*this) + 1; }
@@ -83,10 +83,10 @@ struct str: string {
 
 
 
-std::ostream&   operator<<      (ostream& os, const str& s) { os << (std::string)s; return os; };
+std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
 
-typedef		std::vector<str>		vstr;
-typedef		std::deque<str>			dstr;
+typedef		std::vector<field>		vstr;
+typedef		std::deque<field>			dstr;
 
 
 ///////////////////////////////////////////////////////////////////////////////  F
@@ -102,7 +102,7 @@ typedef		std::deque<str>			dstr;
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t<str> F;
+	F_t<field> F;
 	int NF = 0;
 	int NR = -1;
 
@@ -127,7 +127,7 @@ typedef		std::deque<str>			dstr;
 	void	split() {
 		#ifdef USE_BOOST
 			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
-			while(it!=ite)   F.push_back(str(*it++));
+			while(it!=ite)   F.push_back(field(*it++));
 		#else
 			stringstream	ss(line);
 			string		f;

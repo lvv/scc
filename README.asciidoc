@@ -62,8 +62,8 @@ echo aa bb aa | scc 'S w;  map<S,int> M;  while(cin>>w) M[w]++;  M'
 
 Sum-up _DF(1)_ used-disk-space column.
 Shortcut `WRL` is  `while(read_line())`.  
-Cass `F` derived from `deque<str>`.  Every input line is split into `F`.
-Type `str` can be directly converted to/from numeric types.
+Cass `F` derived from `deque<field>`.  Every input line is split into `F`.
+Type `field` can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.
 
 ----------------------------------------------------------------------------

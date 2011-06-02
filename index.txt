@@ -18,26 +18,26 @@ In `scc` shall script:
 
 Defines:
 
-* `F` — derived from  deque<str>
+* `F` — derived from  deque<field>
 * `read_line()`
-* type `str`
+* type `field`
 * SCC specific shortcuts
 
 Predefined variables (similar to AWK's):
 
 * `line`	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
-* `F`	-  derived from  `std::deque<str>` — line's fields; accessible like `F(i)`; counted from 0
+* `F`	-  derived from  `std::deque<field>` — line's fields; accessible like `F(i)`; counted from 0
 * `NF`	-  `int`,  number of fields (set after read_line())
 * `NR` 	-  `int`,  number of records (set after read_line())
 * `OFS` 	-  `std::string`, output field separator 
 * `IFS` 	-  `std::string`, input field separator.  
 * `CSV` 	-  `const char[]`,  predefined regex for IFS
 
-The `::str` type is derived from `std::string` and can be directly converted
+The `::field` type is derived from `std::string` and can be directly converted
 to/from numeric types:
 
 --------------------------------
-str  s("1");
+field  s("1");
 int  i;
 i = s;		// 1
 i = s+1;	// 2
