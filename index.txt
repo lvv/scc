@@ -2,7 +2,9 @@
 include::/tmp/t.ad[]
 
 
-== SCC
+== SCC parts
+
+=== SCC
 In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
@@ -14,7 +16,7 @@ In `scc` shall script:
 	If `-p` then  line is reassembled back from fields  and sent to `std::cout`
 * Generated source compiled and executed.
 
-== SCC.H
+=== SCC.H
 
 Defines:
 
@@ -47,19 +49,19 @@ s + " m/s"	// "2 m/s"
 s + 5		// "7"
 ---------------------------------
 
-== SIMPLE.H
+=== SIMPLE.H
 
 This include was initially created for use in small, one-file _+++C++ +++_ programs.
 For something like Google CodeJam. Now it is (optinal) part of _SCC_ project,
 but it still can be used independently.  
 
-=== Everything is included
+==== Everything is included
 
 Most of STL's includes are included with `using std::...`
 for most common objects. On my 4yr old laptop (no SSD), run time
 with cold cache - 2s, with warm cache  <1s.
 
-=== Simplified printing. 
+==== Simplified printing. 
 
 In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
 STL containers (including sets, maps, pairs, tuples) are not printable.
@@ -118,7 +120,7 @@ problem was present in plain `std::cout` statements too.
 Workarounds are:  use parenthesis or use separate `_` statements.  
 
 
-=== Simplified input
+==== Simplified input
 
 Object `in` can be used in initialiser expression. When a value
 is read from `in`, it reads from `cin`. 
@@ -168,14 +170,14 @@ WARNING: Object `in` does not check for EOF. With scalar objects use only in
 context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 
-== Utility functions
+=== Utility functions
 
-=== min/max function
+==== min/max function
 Functions `min`/`max` which will work with mixed types. Expression
 `std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
 
 
-=== push_back()/push_front() replacement
+==== push_back()/push_front() replacement
 
 ------------------------------------
 dint D; 			//  deque<int> D;
@@ -187,7 +189,7 @@ _ D; 				//  cout << "{";  for(auto it=D.begin(); it!=D.end()-1; it++) cout << *
 -----------------------------------
 
 
-== CJ.H  — shortcuts
+=== CJ.H  — shortcuts
 
 
 This is very similar to to what is found in typical CodeJam  source - shortcut
@@ -242,3 +244,44 @@ Simple workaround: use semicolon before last statement.
 * http://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
 * http://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
 
+////////////////
+
+TOKENIZER 
+	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
+JSON
+	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
+	http://www.kirit.com/Thread:/1723074
+	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
+XML
+	http://www.grinninglizard.com/tinyxml/
+	http://stackoverflow.com/questions/170686/best-open-xml-parser-for-c
+	http://rapidxml.sourceforge.net/
+	-----------
+	There is a boost::xml in the sandbox and it's very good. We use
+	TinyXML++ (which is decent) here but boost::xml was preferred; it was
+	just too likely to change
+ENCODING
+	Boost.Unicode: Aims at providing the foundation tools to
+	accurately represent and deal with natural text in C++ in a
+	portable and robust manner, so as to allow internationalized
+	applications, by implementing parts of the Unicode Standard.
+	(see (svn.boost.org/trac/boost/wiki/…;)
+		
+	This is already included as part of C++03. It's
+	provided by the std::codecvt facet of the locale
+	library
+		
+	Take a look on Boost.Locale it is a part of it
+DB
+	http://soci.sourceforge.net/
+	https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.RDB
+	http://webtoolkit.eu/wt#/blog/2009/11/26/wt__dbo__an_orm__c___style
+	http://code.google.com/p/hiberlite/
+	------------------
+	Regarding boost::sql proposal, there is some work in progress:
+	    * On BoostCon'09 Jeff Garland led workshop: Library in Week 2009 to discuss the std::rdb propsals, here are materials std::rdb (.tgz package)
+	    * std_rdb - Boost sister mailing list to discuss standard rdb proposal(s)
+	    * SOCI has been discussed in frame of the std::rdb mailing list and the workshop
+
+
+////////////////////

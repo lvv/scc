@@ -175,6 +175,12 @@
 	using	std::make_tuple;
 	using	std::tie;
 	
+	// memory
+	using	std::shared_ptr;
+	using	std::unique_ptr;
+	using	std::auto_ptr;
+	using	std::weak_ptr;
+	
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2

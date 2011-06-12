@@ -35,6 +35,7 @@
 ///////////////////////////////////////////////////////////////////// C++0X STL
 #ifdef  MODERN_GCC
 #include <tuple>
+#include <array>
 //#include <slist>
 #endif
 //#include <type_traits>

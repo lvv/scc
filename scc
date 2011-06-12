@@ -92,7 +92,7 @@ cat <<  END	 > $src
 	double x __attribute__((unused)) = 0.0;
 	double y __attribute__((unused)) = 0.0;
 
-	string s __attribute__((unused));
+	std::string s __attribute__((unused));
 	{
 END
 
