@@ -6,8 +6,7 @@ SCC — Simple CC
 
 A bash wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
 similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
-features to work.  For _GCC_ older than 4.4.4, remove
-`-std=gnu++0x` from `CXXFLAGS` variable  (top of `scc` file).  Examples:
+features to work. Examples:
 
 _+++C++ +++_ expression  evaluated and printed:
 
@@ -62,7 +61,7 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 
 Sum-up _DF(1)_ used-disk-space column.
 Shortcut `WRL` is  `while(read_line())`.  
-Cass `F` derived from `deque<field>`.  Every input line is split into `F`.
+Class `F` derived from `deque<field>`.  Every input line is split into `F`.
 Type `field` can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.
 
