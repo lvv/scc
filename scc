@@ -32,7 +32,8 @@ usage_exit() {
 		
 		-n 	- for each line: read line; split into fields; execute snippet 
 		-p 	- for each line: read line; split into fields; execute snippet;  output fields
-		-i 	- sets IFS (input field separator). Needs boost.  
+		-i 	- sets simple (not regex)  IFS (input field separator). Needs boost.  
+		-I 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
 		-o 	- sets OFS (output field separator) 
 		-B	- do not use Boost
 		-v 	- vebose
@@ -44,14 +45,17 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npvBi:o: opt;  do
+while getopts npvBI:i:o: opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
 		B)	no_boost=1;;
 		v)	verbose=1;;
-		i)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
-		o)	CXXFLAGS+=" -Darg_OFS=$OPTARG ";; 
+		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
+		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_ifs=$OPTARG "
+			else   				CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
+		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
+			else   				CXXFLAGS+=" -Darg_OFS=\"$OPTARG\" ";  fi;; 
 		?) 	usage_exit;;
 	esac
 done

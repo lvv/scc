@@ -45,5 +45,6 @@ echo ---------------------------------------------------------
 echo '"aa",  "bb\"-, bb",  "cc"' | scc -v 'IFS=CSV ; WRL for (str f:F) cout << f << endl;'  &&
 echo -e "\naa\nbb\"-, bb\ncc"
 
-echo 1 2 3 |  scc  -i '"(\\str+)(\\s+|$)"' -o '","'  -p
+echo 1:2:3 |  scc  -i:  -o '","'  -p
+echo 1 2 3 |  scc  -I '"(\\S+)(\\s+|$)"' -o '","'  -p
 )

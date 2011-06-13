@@ -127,7 +127,11 @@ typedef		std::deque<std::string>		dstr;
 	#ifdef  arg_IFS
 	string       __attribute__((unused))	IFS(arg_IFS);
 	#else
-	string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// IFS is second group (\2)
+		#ifdef  arg_ifs
+		string       __attribute__((unused))	IFS("([^" arg_ifs "]+)(" arg_ifs "|$)");	// field (data) is 1st group; IFS is second group
+		#else
+		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
+		#endif
 	#endif
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
@@ -135,6 +139,7 @@ typedef		std::deque<std::string>		dstr;
 	void	split() {
 		#ifdef USE_BOOST
 			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
+			//boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(":"),1);
 			while(it!=ite)   F.push_back(field(*it++));
 		#else
 			stringstream	ss(line);
