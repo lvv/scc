@@ -4,7 +4,19 @@
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
 
-CXXFLAGS+=" -Wall -std=gnu++0x  -pipe -O0 -Wno-sign-compare -I /home/lvv/p/"
+#### get GCC version
+: ${GCC_PATH? must be defined}
+gcc_ver=$${GCC_PATH##*/}
+
+if [[ $ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
+	gcc_ver_num=${BASH_REMATCH[1]}${BASH_REMATCH[2]}
+fi
+
+#####################################################################################
+CXXFLAGS+=" -Wall  -pipe -O0"
+[[ $gcc_ver_num > 43 ]] && CXXFLAGS+=" -std=gnu++0x"
+[[ $gcc_ver_num < 44 ]] && no_boost=1
+
 FILE=$(find $0  -printf '%l\n')
 SCC_HOME="$(dirname ${FILE:-$0})"
 CXXFLAGS+=" -I $SCC_HOME "
@@ -42,6 +54,7 @@ while getopts npvBi:o: opt;  do
 	esac
 done
 
+[[ $is_stream && $gcc_ver_num < 44   ]]   &&   { echo "scc error: stream ops not supported for older gcc"; exit 1; }
 
 shift $((OPTIND-1))
 
@@ -77,13 +90,17 @@ cat <<  END	 > $src
 #include <simple.h>
 
 #ifdef MODERN_GCC 
-#include <scc.h>
+   #include <scc.h>
+#else
+   bool read_line() { cerr << "stream operation no supported for old GCC\n";  exit(1);  return false; };SS
+   #define WRL read_line();
 #endif
+
 #include <cj.h>
 #include <matrix.h>
 
 
-	int main(int argc, char** argv) {
+int main(int argc, char** argv) {
 	int i __attribute__((unused)) = 0;
 	int j __attribute__((unused)) = 0;
 	int k __attribute__((unused)) = 0;
@@ -93,12 +110,13 @@ cat <<  END	 > $src
 	double y __attribute__((unused)) = 0.0;
 
 	std::string s __attribute__((unused));
+
 	{
 END
 
 if [[  $is_stream ]];  then 
 
-	echo " while ( read_line()) { $snippet " >> $src
+	echo "	while ( read_line()) { $snippet " >> $src
 
 	if [[  $p_opt ]];  then 
 
@@ -112,14 +130,15 @@ if [[  $is_stream ]];  then
 		" >> $src
 	fi
 
-	echo "}" >> $src
+	echo "	}" >> $src
 
 else
 	echo "$snippet" >> $src  
 fi
 
 
-echo '}}' >>  $src
+echo '	}
+}' >>  $src
 
 
 if [[ $no_boost ]];  then 

@@ -53,6 +53,7 @@
 	// io
 	using	std::cin;
 	using	std::cout;
+	using	std::cerr;
 	using	std::endl;
 	using	std::string;
 	using	std::basic_string;
@@ -149,7 +150,9 @@
 
 
 	// heap
+	#ifdef MODERN_GCC
 	using	std::is_heap;
+	#endif
 	using	std::make_heap;
 	using	std::push_heap;
 	using	std::pop_heap;
@@ -178,9 +181,11 @@
 	// ????
 	using	std::pair;
 	using	std::make_pair;
-	using	std::make_tuple;
+	#ifdef MODERN_GCC
 	using	std::tie;
+	using	std::make_tuple;
 	using	std::iota;
+	#endif
 	
 	#ifdef MODERN_GCC
 	// memory
@@ -310,7 +315,7 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 
 // Print any C-array
 
-	//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	 std::
+	//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	in std::
 			template<class T, std::size_t N> 		
 									// disable C-array print for  char[]
 			typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
