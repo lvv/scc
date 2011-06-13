@@ -322,7 +322,7 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 		operator<<      (ostream& os, const T (&A)[N]) {
 			cout << "{";
 				int i=0;
-				for (; i<N-1;  i++)	os  << A[i] <<  ", ";
+				for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
 				os << A[i];
 			cout << "}";
 			return os;

@@ -111,7 +111,7 @@ out(",", "[]") << V;		//  cout << "[";
 
 
 
-TIP:  Bar's operators: `","`, `^`  and `<<`  unfortunately have different
+Bar's operators: `","`, `^`  and `<<`  unfortunately have different
 precedence.  So +++` scc '_ 1,2^3;' `+++  is actually
 +++` scc '_ 1,(2^3);' `+++ and it will
 print only two numbers. Precedence

@@ -6,15 +6,18 @@
 
 #### get GCC version
 : ${GCC_PATH? must be defined}
-gcc_ver=$${GCC_PATH##*/}
+gcc_ver=${GCC_PATH##*/}
 
-if [[ $ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
+if [[ $gcc_ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
 	gcc_ver_num=${BASH_REMATCH[1]}${BASH_REMATCH[2]}
 fi
 
 #####################################################################################
-CXXFLAGS+=" -Wall  -pipe -O0"
-[[ $gcc_ver_num > 43 ]] && CXXFLAGS+=" -std=gnu++0x"
+CXXFLAGS+=" -Wall  -pipe -O0 "
+echo  === $gcc_ver = $gcc_ver_num ===
+if [[ $gcc_ver_num > 43 ]] ;  then 
+	CXXFLAGS+=" -std=gnu++0x "
+fi 
 [[ $gcc_ver_num < 44 ]] && no_boost=1
 
 FILE=$(find $0  -printf '%l\n')
@@ -92,7 +95,7 @@ cat <<  END	 > $src
 #ifdef MODERN_GCC 
    #include <scc.h>
 #else
-   bool read_line() { cerr << "stream operation no supported for old GCC\n";  exit(1);  return false; };SS
+   bool read_line() { cerr << "stream operation no supported for old GCC\n";  exit(1);  return false; };
    #define WRL read_line();
 #endif
 
