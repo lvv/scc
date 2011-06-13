@@ -35,6 +35,7 @@
 ///////////////////////////////////////////////////////////////////// C++0X STL
 #ifdef  MODERN_GCC
 #include <tuple>
+#include <memory>
 //#include <slist>
 #endif
 //#include <type_traits>
@@ -155,10 +156,14 @@
 	using	std::sort_heap;
 
 	// min/max
-	//using	std::max;
-	//using	std::min;
+	using	std::max;
+	using	std::min;
 	using	std::max_element;
 	using	std::min_element;
+	#ifdef MODERN_GCC
+	using	std::minmax;
+	using	std::minmax_element;
+	#endif
 	using	std::lexicographical_compare;
 	using	std::next_permutation;
 	using	std::prev_permutation;
@@ -171,15 +176,19 @@
 
 
 	// ????
+	using	std::pair;
 	using	std::make_pair;
 	using	std::make_tuple;
 	using	std::tie;
+	using	std::iota;
 	
+	#ifdef MODERN_GCC
 	// memory
 	using	std::shared_ptr;
 	using	std::unique_ptr;
 	using	std::auto_ptr;
 	using	std::weak_ptr;
+	#endif
 	
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT

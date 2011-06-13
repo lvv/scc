@@ -13,9 +13,17 @@
 		using boost::regex_token_iterator;
 		using boost::sregex_token_iterator;
 		using boost::cregex_token_iterator;
+
+
 	#include <boost/format.hpp>
 		using boost::format;
 	//using namespace boost;
+
+	
+	// literals in gcc460  not implemented
+	//boost::regex operator""R (const char* p, size_t n)	{ return boost::regex(p); };
+
+
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////  STR
