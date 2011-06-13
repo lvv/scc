@@ -111,13 +111,13 @@ out(",", "[]") << V;		//  cout << "[";
 
 
 
-Bar's operators: `","`, `^`  and `<<`  unfortunately have different
-precedence.  So +++` scc '_ 1,2^3;' `+++  is actually
-+++` scc '_ 1,(2^3);' `+++ and it will
+Operators: `","`, `^`  and `<<`  unfortunately have different
+precedence.  So `scc '_ 1,2^3;'`  is actually
+`scc '_ 1,(2^3);'` and it will
 print only two numbers. Precedence
 from highest to lowest: `<<`, `^`,  `","`.     This
 problem was present in plain `std::cout` statements too. 
-Workarounds are:  use parenthesis or use separate `_` statements.  
+Workarounds are:  use parenthesis or use separate `_` statement.  
 
 
 ==== Simplified input

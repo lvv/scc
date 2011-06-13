@@ -4,7 +4,7 @@ SCC — Simple CC
 
 // (aka Snippet C++ Compiler)
 
-A bash wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
+A _Bash_ wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
 similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
 features to work. Examples:
 
@@ -15,7 +15,7 @@ scc 2+2
 4
 ----------------------------------------------------------------------------
 
-If snippet have bash special characters,  it must be in single or double quotes:
+If snippet have Bash special characters,  it must be in single or double quotes:
 
 ----------------------------------------------------------------------------
 scc '"hello world"'
@@ -93,14 +93,14 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 ----------------------------------------------------------------------------
 
 Make comma separated fields out of colon separated.  Option `-o` sets `OFS`
-(output field separator).  Snippet is absent in this example.
+(output field separator)., `-i` - set `IFS`  Snippet is empty in this example.
 
 ----------------------------------------------------------------------------
 echo 1:2:3 | scc -i: -o, -p
 1,2,3
 ----------------------------------------------------------------------------
 
-Read CSV file with quoted fields (spaces, commas and escaped quotes in field are allowed):
+Read _CSV_ file with quoted fields (spaces, commas and escaped quotes in field are allowed):
 Option `-I` sets regex `IFS` (input field separator); `CSV` - predefined regex constant.
 How to make your own regexes  for `IFS`  - look in `scc.h`
 
