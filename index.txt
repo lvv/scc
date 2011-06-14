@@ -1,6 +1,4 @@
-
 include::/tmp/t.ad[]
-
 
 == SCC parts
 
@@ -63,19 +61,6 @@ with cold cache - 2s, with warm cache  <1s.
 
 ==== Simplified printing. 
 
-In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
-STL containers (including sets, maps, pairs, tuples) are not printable.
-Simple.h makes all these printable too (C-array must have const-size).
-Container of containers are also printable. 
-In comments is equivalent code:
-
-
---------------------------------------------------------------------
-vint V{1,2,3}; 			//  vector<int> V{1,2,3};
-_ V; 				//  cout << "{";  for(auto it=V.begin(); it!=V.end()-1; it++) cout << *it << ", ";  if(!V.empty()) cout << V.back();  cout << "}";
-				//  prints: {1, 2, 3}
--------------------------------------------------------------------
-
 Syntax `cout << ...` was replaced with bar (underline) print.  The `operator,` is equivalent to `operator<<`.
 
 --------------------------------------------------------------------
@@ -84,6 +69,24 @@ __ x;				//  cout << x << endl;
 __ x,y;				//  cout << x << y << endl;
 __ x^y;				//  cout << x << " " << y << endl;
 __ "list:" ^ x ^ y;		//  cout << "list: "  << x << " " << y << endl;
+-------------------------------------------------------------------
+
+In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
+STL containers (including sets, maps, pairs, tuples) are not printable.
+Having `simple.h` makes all these printable too. Container of containers are also printable. 
+In comments is equivalent code:
+
+--------------------------------------------------------------------
+vint V{1,2,3}; 				//  vector<int> V{1,2,3};
+_ V; 					//  cout << "{"; 
+					//  for(auto it=V.begin(); it!=V.end()-1; it++)
+					//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
+					//  cout << "}";
+					//  prints: {1, 2, 3}
+
+tuple<int,int>    T  {1,2};            _ T;	//  ⟨1, 2⟩
+map<int,int>   	  M  {{1,1},{2,2}};    _ M;	//  {⟨1,1⟩, ⟨2,2⟩} 
+vector<vint>   	  VV {{1,1}, {2,2}};   _ VV;	//  {{1, 1}, {2, 2}}
 -------------------------------------------------------------------
 
 Bar-print is actually just macros:
@@ -99,19 +102,20 @@ CTOR agrument:
 ------------------------------------------------
 x = y = z = 1;
 outln(", ") << x, y, z;		//  cout << x << ", " << y ", " << z << endl;
-1, 1, 1
+				//  prints:  1, 1, 1
 
 
 vint V{1,2,3};			//  vector<int> V{1,2,3}
 out(",", "[]") << V;		//  cout << "["; 
-[1,2,3]				//  for(size_t i=0; i<V.size(); i++) 
+				//  for(size_t i=0; i<V.size(); i++) 
 				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
 				//  cout << "]";
+				//  prints: [1,2,3]
 -----------------------------------------------
 
 
 
-Operators: `","`, `^`  and `<<`  unfortunately have different
+TIP: Operators: `","`, `^`  and `<<`  unfortunately have different
 precedence.  So `scc '_ 1,2^3;'`  is actually
 `scc '_ 1,(2^3);'` and it will
 print only two numbers. Precedence
@@ -172,9 +176,11 @@ context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 === Utility functions
 
+/////////////////////////////
 ==== min/max function
 Functions `min`/`max` which will work with mixed types. Expression
 `std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
+//////////////////////////////////////
 
 
 ==== push_back()/push_front() replacement
@@ -211,6 +217,7 @@ If used outside of `scc`, it must be included last (otherwise name collisions ar
 git clone http://github.com/lvv/scc
 PATH+=":$PWD/scc" 
 echo PATH+=":$PWD/scc" >> ~/.profile
+. ~/.profile
 ---------------------------------------
 ///////////////////////////////////////////////
 == status
