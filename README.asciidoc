@@ -30,14 +30,13 @@ Note trailing semicolon - meaning do not print last statement-expression:
 
 ----------------------------------------------------------------------------
 scc 'float x=0.5;  cout << sin(x) << endl;'			
-0.5 0.479426
+0.479426
 ----------------------------------------------------------------------------
 
 _SCC_ includes `simple.h` which has a lot of shortcuts (à la _Google CodeJam_).  You don't
 have to use these, plain _+++C++ +++_ will work too. 
 
-Same as previous example, but with _SCC's_ shortcut for `std::cout` - bar-print. 
-See http://volnitsky.com/project/scc/#_simplified_printing[bar-print description]. 
+Same as previous example, but with _SCC's_ shortcut for `std::cout` - http://volnitsky.com/project/scc/#_simplified_printing[bar-print]. 
 
 ----------------------------------------------------------------------------
 scc 'float x=0.5;  __ sin(x);'	

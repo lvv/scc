@@ -245,11 +245,12 @@ Simple workaround: use semicolon before last statement.
 
 == Refs 
 
-* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
-* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
-* http://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
-* http://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
-* http://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
+* httpx://www.johndcook.com/cpp_regex.html[Getting started with C++ TR1 * regular expressions]
+* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
+* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
+* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
+* httpx://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
+* httpx://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
 
 ////////////////
 
