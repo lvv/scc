@@ -61,10 +61,10 @@ with cold cache - 2s, with warm cache  <1s.
 
 ==== Simplified printing. 
 
-Syntax `cout << ...` was replaced with bar (underline) print.  The `operator,` is equivalent to `operator<<`.
+Syntax `cout << ...` can be  replaced with bar (underline) print.  The `operator,` is equivalent to `operator<<`.
 
 --------------------------------------------------------------------
-_ x;				//  cout << x;
+_  x;				//  cout << x;
 __ x;				//  cout << x << endl;
 __ x,y;				//  cout << x << y << endl;
 __ x^y;				//  cout << x << " " << y << endl;
@@ -253,6 +253,9 @@ Simple workaround: use semicolon before last statement.
 * httpx://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
 
 ////////////////
+
+PCRE++
+	http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx

@@ -59,8 +59,9 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 ----------------------------------------------------------------------------
 
 Sum-up _DF(1)_ used-disk-space column.
-Shortcut `WRL` is  `while(read_line())`.  
-Class `F` derived from `std::deque<field>`.  Every input line is split into `F`.
+Shortcut `WRL` is  `while(read_line())` .  
+Function `read_line()`, reads input line, split it into fields (in `F`).
+Class `F` derived from `std::deque<field>`. 
 Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.
 
@@ -69,13 +70,14 @@ df  |  scc 'long n=0;  WRL n+=F(2);  n'
 31399199
 ----------------------------------------------------------------------------
 
-In above example,  `long n=0;` was optional.  Variables `i`,`j`,`k`,`n` are
+In above example,  `long n=0` was optional.  Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
 You can re-declare/re-define these if needed.
 
 Prepend line number to every line.
-Option `-p` is similar to _PERL's_;  Global variable `NR` - number of record; 
+Option `-p` is similar to _PERL's_. It does `while(read_line())` and evaluates snippet and prints `F`.
+Global variable `NR` - number of record: 
 
 ----------------------------------------------------------------------------
 echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
@@ -112,7 +114,7 @@ cc
 
 Replace `"-"`, `"none"` and empty fields with `"n/a"` in 2nd column using `boost::regex`. 
 Boost use in _SCC_ is optional, it will be used if `/usr/include/boost` exist.
-`RR` is shortcut for `boost::regex_replace`;  `R` - `boost::regex`
+`RR` is shortcut for `boost::regex_replace`;  shortcut `R` is `boost::regex`
 
 ----------------------------------------------------------------------------
 echo \
