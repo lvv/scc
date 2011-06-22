@@ -4,7 +4,7 @@ SCC — Simple CC
 
 // (aka Snippet C++ Compiler)
 
-A _Bash_ wrapper for _GCC_ which serve as _+++C++ +++_ snippet evaluator or as something
+A _Bash_ wrapper for _GCC_ which serves as _+++C++ +++_ snippet evaluator or as something
 similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
 features to work. Examples:
 
@@ -44,7 +44,7 @@ scc 'float x=0.5;  __ sin(x);'
 ----------------------------------------------------------------------------
 
 Square an array.  +++C++0x+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
-_STL_ containers are printable. Typedef `vint` is `std::vector<int>`: 
+Include `simple.h` makes _STL_ containers as printable objects. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(int& v:V) v*=v;   V'			
@@ -58,19 +58,20 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
 
-Sum-up _DF(1)_ used-disk-space column.
-Shortcut `WRL` is  `while(read_line())` .  
-Function `read_line()`, reads input line, split it into fields (in `F`).
-Class `F` derived from `std::deque<field>`. 
-Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
-The `F` member function  `operator()`  is safe version of `operator[]`.
+Sum-up _DF(1)_ used-disk-space column:
 
 ----------------------------------------------------------------------------
 df  |  scc 'long n=0;  WRL n+=F(2);  n'
 31399199
 ----------------------------------------------------------------------------
 
-In above example,  `long n=0` was optional.  Variables `i`,`j`,`k`,`n` are
+Shortcut `WRL` is  `while(read_line())` .  
+Function `read_line()`, reads input line, split it into fields (in `F`).
+Class `F` derived from `std::deque<field>`. 
+Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
+The `F` member function  `operator()`  is safe version of `operator[]`.
+
+Declaration `long n=0` was optional.  Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
 You can re-declare/re-define these if needed.
