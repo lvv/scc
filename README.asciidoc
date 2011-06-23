@@ -44,10 +44,10 @@ scc 'float x=0.5;  __ sin(x);'
 ----------------------------------------------------------------------------
 
 Square an array.  +++C++0x+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
-Include `simple.h` makes _STL_ containers as printable objects. Typedef `vint` is `std::vector<int>`: 
+Include `simple.h`, makes _STL_ containers as printable objects. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
-scc 'vint V{1,2,3};  for(int& v:V) v*=v;   V'			
+scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
 You can re-declare/re-define these if needed.
 
 Prepend line number to every line.
-Option `-p` is similar to _PERL's_. It does `while(read_line())` and evaluates snippet and prints `F`.
+Option `-p` is similar to _PERL's_. It does `while(read_line())`,  evaluates snippet and prints `F`.
 Global variable `NR` - number of record: 
 
 ----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 ----------------------------------------------------------------------------
 
 Make comma separated fields out of colon separated.  Option `-o` sets `OFS`
-(output field separator)., `-i` - set `IFS`  Snippet is empty in this example.
+(output field separator), `-i` - set `IFS`  Snippet is empty in this example.
 
 ----------------------------------------------------------------------------
 echo 1:2:3 | scc -i: -o, -p

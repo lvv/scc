@@ -1,0 +1,9 @@
+
+scc 'vint 			V  {1,2,3}; 		V'
+scc 'tuple<const char*,int>	T  {"aaa",2};		T'
+scc 'pair<int,int>		P  {1,2};		P'
+scc 'map<int,int>		M  {{1,1},{2,2}};    	M'
+scc 'set<int>			S  {2,2};    		S'
+scc 'vector<vint>		VV {{1,1}, {2,2}};   	VV'
+# scc 'vector<map<str,int>> 	VM {{{"aa",1}, {"bb",2}}}; VM'   # this does not work with gcc-4.4.5
+
