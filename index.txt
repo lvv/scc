@@ -264,6 +264,7 @@ JSON
 	http://www.kirit.com/Thread:/1723074
 	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
 XML
+	awk xml -- http://pastebin.com/Vwvz3gzb
 	http://www.grinninglizard.com/tinyxml/
 	http://stackoverflow.com/questions/170686/best-open-xml-parser-for-c
 	http://rapidxml.sourceforge.net/

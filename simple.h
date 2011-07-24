@@ -315,25 +315,27 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 
 // Print any C-array
 
-	//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	in std::
-			template<class T, std::size_t N> 		
-									// disable C-array print for  char[]
-			typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
-		operator<<      (ostream& os, const T (&A)[N]) {
-			cout << "{";
-				int i=0;
-				for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
-				os << A[i];
-			cout << "}";
-			return os;
-		};
-	//#endif
+//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	in std::
+		template<class T, std::size_t N> 		
+								// disable C-array print for  char[]
+		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+	operator<<      (ostream& os, const T (&A)[N]) {
+		cout << "{";
+			int i=0;
+			for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
+			os << A[i];
+		cout << "}";
+		return os;
+	};
+//#endif
 
 
 
 // print any std::sequance-containter<printable>
-	template<typename E, template<typename E, typename Ct> class Ct > std::ostream&                                              
-operator<<      (ostream& os, const Ct<E, std::allocator<E> >& C) {              
+	template<typename T, template<typename T, typename Al> class Ct >
+	std::ostream&                                              
+	//typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {              
 	cout << "{";
 		auto it=C.begin();
 		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
