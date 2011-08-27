@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -f     .scc ]  && .     .scc
 [ -f   ~/.scc ]  && .   ~/.scc
