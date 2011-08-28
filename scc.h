@@ -111,8 +111,8 @@ typedef		std::deque<std::string>		dstr;
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
 	F_t<field> F;
-	int NF = 0;
-	int NR = -1;
+	long NF = 0;
+	long NR = -1;
 
 	string       __attribute__((unused))	line;
 

@@ -25,7 +25,7 @@ Defines:
 
 Predefined variables (similar to AWK's):
 
-* `line`	-  `std::string`,  set if with `-n` / `-p` options  or after `read_line()`
+* `line`	-  `std::string`;  set if options `-n` / `-p` are used or after `read_line()`
 * `F`	-  derived from  `std::deque<field>` — line's fields; accessible like `F(i)`; counted from 0
 * `NF`	-  `int`,  number of fields (set after read_line())
 * `NR` 	-  `int`,  number of records (set after read_line())
