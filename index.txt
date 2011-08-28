@@ -37,14 +37,15 @@ The `::field` type is derived from `std::string` and can be directly converted
 to/from numeric types:
 
 --------------------------------
-field  s("1");
-int  i;
-i = s;		// 1
-i = s+1;	// 2
-s = 1;		// "1"
-s++		// "2"
-s + " m/s"	// "2 m/s"
-s + 5		// "7"
+field   f("1");
+int     i;
+
+i = f;		// 1
+i = f+1;	// 2
+f = 1;		// "1"
+f++		// "2"
+f + " m/s"	// "2 m/s"
+f + 5		// "7"
 ---------------------------------
 
 === SIMPLE.H
@@ -232,6 +233,7 @@ regex			| 	N 	|	N		| 	Y
 
 == TODO
 
+* RS,FS regex interface should be simplified
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
 - { code-block; } expr
