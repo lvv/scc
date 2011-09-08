@@ -237,13 +237,14 @@ struct	isi : istream_iterator<T> {
 template <class T, class U>	typename std::common_type<T, U>::type	min(T t, U u) { return t <  u ? t : u; }
 template <class T, class U>	typename std::common_type<T, U>::type	max(T t, U u) { return t >= u ? t : u; }
 
-// even / odd
+// Even / Odd
 template <typename  T>  bool  is_even(T x) { return  !(x % 2); }
 template <typename  T>	bool  is_odd (T x) { return    x % 2;  }
 
 
-int gcd(long a,long b) {
-	if(b==0)	return a;
+// Greatest Common divisor
+int gcd(long a, long b) {
+	if (b==0)	return a;
 	else		return gcd(b,a%b);
 }
 

@@ -111,6 +111,16 @@ typedef		std::deque<std::string>		dstr;
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
 	F_t<field> F;
+		#define 	F1	F(1)
+		#define 	F2	F(2)
+		#define 	F3	F(3)
+		#define 	F4	F(4)
+		#define 	F5	F(5)
+		#define 	F6	F(6)
+		#define 	F7	F(7)
+		#define 	F8	F(8)
+		#define 	F9	F(9)
+
 	long NF = 0;
 	long NR = -1;
 

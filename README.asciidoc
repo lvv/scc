@@ -66,20 +66,25 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 Sum-up _DF(1)_ used-disk-space column:
 
 ----------------------------------------------------------------------------
-df  |  scc 'long n=0;  WRL n+=F(2);  n'
+df  |  scc 'WRL n+=F2;  n'
 31399199
 ----------------------------------------------------------------------------
 
-Shortcut `WRL` is  `while(read_line())` .  
+
+__________________________________________________________________
+Explanation: Shortcut `WRL` is  `while(read_line())` .  
 Function `read_line()`, reads input line, split it into fields (in `F`).
+F2 is shortcut for second field,  (macro F2 for F(2)).
 Class `F` derived from `std::deque<field>`. 
 Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.
 
-Declaration `long n=0` was optional.  Variables `i`,`j`,`k`,`n` are
+Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
 You can re-declare/re-define these if needed.
+__________________________________________________________________
+
 
 Prepend line number to every line.
 Option `-p` is similar to _PERL's_. It does `while(read_line())`,  evaluates snippet and prints `F`.
@@ -91,7 +96,7 @@ echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 1 bbb
 ----------------------------------------------------------------------------
 
-Another way for doing the same. Note no trailing semicolon:
+Another way for doing the same. Note that there is no trailing semicolon:
 
 ----------------------------------------------------------------------------
 echo -e 'aaa\nbbb'   |   scc -p NR
@@ -127,7 +132,7 @@ echo \
 '1 -
 2
 3 none
-4 abc'  |   scc -p 'F(1)=RR(F(1),R("^(none|-)?$"),"n/a");'
+4 abc'  |   scc -p 'F1=RR(F1,R("^(none|-)?$"),"n/a");'
 1 n/a
 2 n/a
 3 n/a

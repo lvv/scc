@@ -32,7 +32,7 @@ echo ---------------------------------------------------------
 echo aaa bbb aaa | scc -v 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  &&
 echo -e "\n{⟨aaa,2⟩, ⟨bbb,1⟩}"
 echo ---------------------------------------------------------
-command df | scc -v 'int n=0; WRL n+=F(2);  n'  && 
+command df | scc -v 'WRL n+=F2;  n'  && 
 echo ""  &&
 command df | awk '{n+=$3;};  END{print n}'
 echo ---------------------------------------------------------
