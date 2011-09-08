@@ -15,7 +15,8 @@ scc 2+2
 4
 ----------------------------------------------------------------------------
 
-If snippet have _Bash_ special characters,  it must be in single or double quotes:
+If snippet have _Bash_ special characters,  it must be in single or double
+quotes. If expresion starts with minus, end-of-options indicator "--" must be used:
 
 ----------------------------------------------------------------------------
 scc '"hello world"'
@@ -23,13 +24,17 @@ hello world
 
 scc 'sin(0.5)'						
 0.479426
+
+scc -- -1-INT_MIN
+2147483647
+
 ----------------------------------------------------------------------------
 
 A multi-statement with explicit printing.
 Note trailing semicolon - meaning do not print last statement-expression:
 
 ----------------------------------------------------------------------------
-scc 'float x=0.5;  cout << sin(x) << endl;'			
+scc 'double x=0.5;  cout << sin(x) << endl;'			
 0.479426
 ----------------------------------------------------------------------------
 
@@ -39,11 +44,11 @@ have to use these, plain _+++C++ +++_ will work too.
 Same as previous example, but with _SCC's_ shortcut for `std::cout` - http://volnitsky.com/project/scc/#_simplified_printing[bar-print]. 
 
 ----------------------------------------------------------------------------
-scc 'float x=0.5;  __ sin(x);'	
+scc 'double x=0.5;  __ sin(x);'	
 0.479426
 ----------------------------------------------------------------------------
 
-Square an array.  +++C++0x+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
+Square an array.  +++C++11+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
 Include `simple.h`, makes _STL_ containers as printable objects. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
