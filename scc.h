@@ -122,7 +122,7 @@ typedef		std::deque<std::string>		dstr;
 		#define 	F9	F(9)
 
 	long NF = 0;
-	long NR = -1;
+	long NR = 0;
 
 	string       __attribute__((unused))	line;
 
