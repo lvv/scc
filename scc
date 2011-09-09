@@ -30,13 +30,14 @@ usage_exit() {
 	echo "
 	USAGE:  scc [options]  snippets [args] 
 		
-		-n 	- for each line: read line; split into fields; execute snippet 
-		-p 	- for each line: read line; split into fields; execute snippet;  output fields
-		-i 	- sets simple (not regex)  IFS (input field separator). Needs boost.  
-		-I 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
-		-o 	- sets OFS (output field separator) 
-		-B	- do not use Boost
-		-v 	- vebose
+		-n 		- for each line: read line; split into fields; execute snippet 
+		-p 		- for each line: read line; split into fields; execute snippet;  output fields
+		-i ifs 		- sets simple (not regex)  IFS (input field separator). Needs BOOST.  
+		-I ifs-regex 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
+		-o ofs 		- sets OFS (output field separator) 
+		-B		- do not use Boost
+		-x filename	- save executable to file
+		-v 		- vebose
 	"
 	exit 0
 }
@@ -45,13 +46,14 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npvBI:i:o: opt;  do
+while getopts npvBI:i:o:x: opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
 		B)	no_boost=1;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
+		x)	prg=$OPTARG;;
 		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_ifs=$OPTARG "
 			else   				CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
@@ -161,6 +163,6 @@ fi
 			#echo snippet: $snippet
 			#echo end_prt: $end_prt
 
-${CXX-g++} $CXXFLAGS $prg.cc -o $prg $LIBS && $prg "$@"
+${CXX-g++} $CXXFLAGS $src -o $prg $LIBS && $prg "$@"
 
 # vim:set ts=8 sw=8 syntax=sh:   
