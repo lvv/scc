@@ -13,7 +13,7 @@ if [[ $gcc_ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
 fi
 
 #####################################################################################
-CXXFLAGS+=" -Wall  -pipe -O0 "
+CXXFLAGS+=" -Wall  -pipe -O3 "
 if [[ $gcc_ver_num > 43 ]] ;  then 
 	CXXFLAGS+=" -std=gnu++0x "
 fi 
@@ -28,7 +28,7 @@ src=$prg.cc
 
 usage_exit() {
 	echo "
-	USAGE:  scc [options]  snippets [args] 
+	USAGE:  scc [options]  snippet [args] 
 		
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields

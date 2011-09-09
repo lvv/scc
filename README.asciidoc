@@ -31,7 +31,8 @@ scc -- -1-INT_MIN
 ----------------------------------------------------------------------------
 
 A multi-statement with explicit printing.
-Note trailing semicolon - meaning do send last expression to `std::cout`:
+Note trailing semicolon - meaning do not send last expression +
+to `std::cout`
 
 ----------------------------------------------------------------------------
 scc 'double x=0.5;  cout << sin(x) << endl;'			
@@ -76,8 +77,8 @@ df  |  scc 'WRL n+=F2;  n'
 __________________________________________________________________
 Explanation:
 Shortcut `WRL` expands to `while(read_line())`.  
-Function `read_line()`, reads input line, splits it into fields. One line (record) is an array of fields `F`.
-To access 2nd field use `F(1)` or `F1` (index start from 0).
+Function `read_line()`, reads input line, splits it into fields. One input line is an array of fields `F`.
+To access 3nd field use `F(2)` or `F2`.
 Class `F` derived from `std::deque<field>`. 
 Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.

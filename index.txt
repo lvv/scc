@@ -234,6 +234,7 @@ regex			| 	N 	|	N		| 	Y
 
 == TODO
 
+* Optimize for speed. GAWK is probably faster now. 
 * RS,FS regex interface should be simplified
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
