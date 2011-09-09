@@ -6,7 +6,7 @@ SCC — Simple CC
 
 A _Bash_ wrapper for _GCC_ which serves as _+++C++ +++_ snippet evaluator or as something
 similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
-features to work. Examples:
+features to work. 
 
 _+++C++ +++_ expression  evaluated and printed:
 
@@ -31,7 +31,7 @@ scc -- -1-INT_MIN
 ----------------------------------------------------------------------------
 
 A multi-statement with explicit printing.
-Note trailing semicolon - meaning do not print last statement-expression:
+Note trailing semicolon - meaning do send last expression to `std::cout`:
 
 ----------------------------------------------------------------------------
 scc 'double x=0.5;  cout << sin(x) << endl;'			
@@ -41,15 +41,17 @@ scc 'double x=0.5;  cout << sin(x) << endl;'
 _SCC_ includes `simple.h` which has a lot of shortcuts (à la _Google CodeJam_).  You don't
 have to use these, plain _+++C++ +++_ will work too. 
 
-Same as previous example, but with _SCC's_ shortcut for `std::cout` - http://volnitsky.com/project/scc/#_simplified_printing[bar-print]. 
+Same as previous example, but with _SCC's_ shortcut
+for `std::cout` - http://volnitsky.com/project/scc/#_simplified_printing[bar-print]. 
 
 ----------------------------------------------------------------------------
 scc 'double x=0.5;  __ sin(x);'	
 0.479426
 ----------------------------------------------------------------------------
 
-Square an array.  +++C++11+++ is on by default.  Current (>=4.6.0) _GCC_ is needed for this example. 
-Include `simple.h`, makes _STL_ containers as printable objects. Typedef `vint` is `std::vector<int>`: 
+Square an array.  +++C++11+++ is on by default.  Current (>=4.6.0) _GCC_ is
+needed for this example.  Include `simple.h` makes from _STL_ containers an
+object objects which you can print. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
@@ -72,9 +74,10 @@ df  |  scc 'WRL n+=F2;  n'
 
 
 __________________________________________________________________
-Explanation: Shortcut `WRL` is  `while(read_line())` .  
-Function `read_line()`, reads input line, split it into fields (in `F`).
-F2 is shortcut for second field,  (macro F2 for F(2)).
+Explanation:
+Shortcut `WRL` expands to `while(read_line())`.  
+Function `read_line()`, reads input line, splits it into fields. One line (record) is an array of fields `F`.
+To access 2nd field use `F(2)`  (or `F2`).
 Class `F` derived from `std::deque<field>`. 
 Type `field`  (derived from `std::string`) can be directly converted to/from numeric types.
 The `F` member function  `operator()`  is safe version of `operator[]`.
@@ -82,7 +85,7 @@ The `F` member function  `operator()`  is safe version of `operator[]`.
 Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
-You can re-declare/re-define these if needed.
+You don't need to remember these, you can re-declare/re-define these freely. 
 __________________________________________________________________
 
 
@@ -96,7 +99,7 @@ echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 1 bbb
 ----------------------------------------------------------------------------
 
-Another way for doing the same. Note that there is no trailing semicolon:
+Another way for doing the same:
 
 ----------------------------------------------------------------------------
 echo -e 'aaa\nbbb'   |   scc -p NR
@@ -113,7 +116,7 @@ echo 1:2:3 | scc -i: -o, -p
 ----------------------------------------------------------------------------
 
 Read _CSV_ file with quoted fields (spaces, commas and escaped quotes in field are allowed):
-Option `-I` also sets `IFS`, but you can use regex; `CSV` - predefined regex constant.
+Option `-I`, like `-i`,  also sets `IFS`, but now you can use regex; `CSV` - predefined regex constant.
 How to make your own regexes  for `IFS`  - look in `scc.h`
 
 ----------------------------------------------------------------------------

@@ -62,7 +62,8 @@ with cold cache - 2s, with warm cache  <1s.
 
 ==== Simplified printing. 
 
-Syntax `cout << ...` can be  replaced with bar (underline) print.  The `operator,` is equivalent to `operator<<`.
+Syntax `cout << ...` can be  replaced with bar (underline) print.  The
+`operator,` (comma) is equivalent to `operator<<`.
 
 --------------------------------------------------------------------
 _  x;				//  cout << x;
