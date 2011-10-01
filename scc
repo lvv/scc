@@ -113,6 +113,7 @@ int main(int argc, char** argv) {
 	long j __attribute__((unused)) = 0;
 	long k __attribute__((unused)) = 0;
 	long n __attribute__((unused)) = 0;
+	long l __attribute__((unused)) = 0;
 
 	double x __attribute__((unused)) = 0.0;
 	double y __attribute__((unused)) = 0.0;

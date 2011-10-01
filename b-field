@@ -1,0 +1,10 @@
+#!/bin/bash
+# vim:set ts=4 sw=4 syntax=sh:   
+
+N=10000
+
+if [ ! -f b-field.in ]  ; then  
+	scc 'for(; l<'$N'; l++) { for(i=1;i<=10; i++) _ l*10+i," "; __ l; }' > b-field.in
+fi
+
+
