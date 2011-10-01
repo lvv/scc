@@ -89,6 +89,8 @@ struct field: string {
 	// TODO for double
 };
 
+typedef field string_field; 
+
 
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };

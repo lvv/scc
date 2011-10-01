@@ -25,6 +25,7 @@ CXXFLAGS+=" -I $SCC_HOME "
 
 prg=/tmp/$USER-scc
 src=$prg.cc
+execute=1
 
 usage_exit() {
 	echo "
@@ -36,7 +37,7 @@ usage_exit() {
 		-I ifs-regex 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
 		-o ofs 		- sets OFS (output field separator) 
 		-B		- do not use Boost
-		-x filename	- save executable to file
+		-x filename	- save executable to file and do not execute it
 		-v 		- vebose
 	"
 	exit 0
@@ -53,7 +54,7 @@ while getopts npvBI:i:o:x: opt;  do
 		B)	no_boost=1;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
-		x)	prg=$OPTARG;;
+		x)	execute=0;  prg=$OPTARG;;
 		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_ifs=$OPTARG "
 			else   				CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
@@ -164,6 +165,6 @@ fi
 			#echo snippet: $snippet
 			#echo end_prt: $end_prt
 
-${CXX-g++} $CXXFLAGS $src -o $prg $LIBS && $prg "$@"
+${CXX-g++} $CXXFLAGS $src -o $prg $LIBS && [[ $execute==1 ]] && $prg "$@"
 
 # vim:set ts=8 sw=8 syntax=sh:   
