@@ -1,8 +1,8 @@
 #!/bin/bash
 
-[ -f     .scc ]  && .     .scc
-[ -f   ~/.scc ]  && .   ~/.scc
 [ -f /etc/scc ]  && . /etc/scc
+[ -f   ~/.scc ]  && .   ~/.scc
+[ -f     .scc ]  && .     .scc
 
 #### get GCC version
 : ${GCC_PATH? must be defined}
