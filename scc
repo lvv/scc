@@ -165,6 +165,12 @@ fi
 			#echo snippet: $snippet
 			#echo end_prt: $end_prt
 
-${CXX-g++} $CXXFLAGS $src -o $prg $LIBS && [[ $execute==1 ]] && $prg "$@"
+if  ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS ;  then 
+	if  [[ $execute == 1 ]]  ; then 
+		$prg "$@"
+	else
+		true   # sets exit code
+	fi
+fi
 
 # vim:set ts=8 sw=8 syntax=sh:   

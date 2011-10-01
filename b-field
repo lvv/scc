@@ -3,9 +3,16 @@
 
 N=10000
 
+# generate input file
 if [ ! -f b-field.in ]  ; then  
-	scc 'for(; l<'$N'; l++) { for(i=1;i<=10; i++) _ l*10+i," "; __ l; }' > b-field.in
+	scc /tmp/sf 'for(; l<'$N'; l++) { for(i=1;i<=10; i++) _ l*10+i," "; __ l; }' > b-field.in
 fi
+
+# string-field
+scc -x /tmp/sf 'WRL n+=F9; n'
+time /tmp/sf  < b-field.in
+
+
 
 
 
