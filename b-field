@@ -1,16 +1,25 @@
 #!/bin/bash
 # vim:set ts=4 sw=4 syntax=sh:   
 
-N=10000
 
-# generate input file
+N=1000000
+
+# generate input file (N records, 10 fields)
+
 if [ ! -f b-field.in ]  ; then  
-	scc /tmp/sf 'for(; l<'$N'; l++) { for(i=1;i<=10; i++) _ l*10+i," "; __ l; }' > b-field.in
+	scc 'for(; l<'$N'; l++) { for(i=1;i<=10; i++) _ l*10+i," "; __ l; }' > b-field.in
+else
+	cat b-field.in > /dev/null
 fi
 
+# sup-up 10th field
+
 # string-field
-scc -x /tmp/sf 'WRL n+=F9; n'
-time /tmp/sf  < b-field.in
+CXXFLAGS='-O3' scc -x /tmp/sf 'WRL n+=F9; n'
+command time -f %U   /tmp/sf                       < b-field.in
+command time -f %U   gawk '{s+=$10} END{print s}'  < b-field.in
+command time -f %U   mawk '{s+=$10} END{print s}'  < b-field.in
+
 
 
 
