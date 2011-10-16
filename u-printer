@@ -1,9 +1,12 @@
 
-scc 'vint 			V  {1,2,3}; 		V'
-scc 'tuple<const char*,int>	T  {"aaa",2};		T'
-scc 'pair<int,int>		P  {1,2};		P'
-scc 'map<int,int>		M  {{1,1},{2,2}};    	M'
-scc 'set<int>			S  {2,2};    		S'
-scc 'vector<vint>		VV {{1,1}, {2,2}};   	VV'
-# scc 'vector<map<str,int>> 	VM {{{"aa",1}, {"bb",2}}}; VM'   # this does not work with gcc-4.4.5
+scc 'vint 			v  {1,2,3}; 		__ v; v'
+scc 'tuple<const char*,int>	v  {"aaa",2};		__ v; v'
+scc 'pair<int,int>		v  {1,2};		__ v; v'
+scc 'map<int,int>		v  {{1,1},{2,2}};    	__ v; v'
+scc 'set<int>			v  {2,2};    		__ v; v'
+scc 'vector<vint>		v {{1,1}, {2,2}};   	__ v; v'
+scc 'int 			v[3]{1,2,3};   		__ v; v'
+scc 'const char* 		v = "c string"; 	__ v; v'
+scc 'string  			v = "c++ string"; 	__ v; v'
+scc 'vector<map<str,int>> 	v {{{"aa",1}, {"bb",2}}}; __ v; v'   # this does not work with gcc-4.4.5
 

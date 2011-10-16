@@ -295,6 +295,20 @@ struct  out {
 		//cout << (paren ? paren[1] : '}');
 		return *this; 
 	};
+
+		template<class T, std::size_t N>                
+		typename boost::disable_if<typename boost::is_same<T, char>::type,  out&>::type
+	operator<<      (const T (&A)[N]) {
+		cout << "{";
+			int i=0;
+			for (; i<(int)N-1;  i++)	cout << A[i] <<  ", ";
+			cout << A[i];
+		cout << "}";
+		return *this;
+	};
+
+
+
 		template<typename T, template<typename T, typename Al> class Ct > 
 		out& 
 	operator,       (const Ct<T, std::allocator<T> >& C) {  return operator<<(C); }
@@ -311,7 +325,7 @@ struct  outln : out  {
 #define		__   outln() << 
 
 
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
+std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP - I allway forget to put semicolon  in:   scc '_ 1;'
 
 
 
@@ -319,10 +333,10 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 
 // Print any C-array
 
-//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	in std::
-		template<class T, std::size_t N> 		
-								// disable C-array print for  char[]
-		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+//#ifdef BOOST_VERSION                                         // std::disable_if - does not exist yet in std::
+               template<class T, std::size_t N>                
+                                                               // disable C-array print for  char[]
+               typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
 		cout << "{";
 			int i=0;
@@ -332,7 +346,6 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 		return os;
 	};
 //#endif
-
 
 
 // print any std::sequance-containter<printable>
@@ -471,13 +484,14 @@ struct in_t {
 
 	// input a POD type
 	// usage:   echo 1   | scc 'int N(in);  N'
-	template<typename T> operator T() { T t; cin >> t; return t; }
+	template<typename T>	operator T()		{ T t;   cin >> t;   return t; }
 
 
 	// input  any std::sequance-containter<inputable>
 	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
-	size_t n;
-	in_t& operator() (long N) { n=N;  return *this; }
+
+		size_t n;
+		in_t& operator() (long N) { n=N;  return *this; }
 
 		template<typename T, template<typename T, typename C> class C >
 	operator C<T,std::allocator<T> >()        {
