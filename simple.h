@@ -60,6 +60,8 @@
 	using	std::basic_ostream;
 	using	std::istream;
 	using	std::ostream;
+	using	std::hex;
+	using	std::dec;
 
 	// containers
 	using	std::vector;
