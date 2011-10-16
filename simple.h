@@ -250,6 +250,7 @@ int gcd(long a, long b) {
 	else		return gcd(b,a%b);
 }
 
+#define countof(array) (sizeof (array) / sizeof(array[0]))
 
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
 
