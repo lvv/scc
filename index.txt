@@ -255,6 +255,8 @@ Simple workaround: use semicolon before last statement.
 * httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
 * httpx://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
 * httpx://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
+* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial[+++C++11 +++ regex tutorial. Part-1 ]/
+* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial-part-2[+++C++11 +++  regex tutorial. Part-2]/
 
 ////////////////
 
