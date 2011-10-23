@@ -89,6 +89,10 @@ struct field: string {
 	// TODO for double
 };
 
+	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
+Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
+
+
 typedef field string_field; 
 
 
