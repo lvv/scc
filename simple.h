@@ -325,7 +325,7 @@ struct  outln : out  {
 #define		__   outln() << 
 
 
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP - I allway forget to put semicolon  in:   scc '_ 1;'
+std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 
 
