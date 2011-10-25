@@ -1,14 +1,18 @@
 set -x
+
+// CTORs
 scc 'str s("abc");  new_field f(s);  f'
 scc 'new_field  f("abc");  f'
 scc 'new_field  f("abc");  new_field f2(f);  f2'
 
+// Convertions explicit
 scc 'field s("1.23"); (double)s'
 scc 'field s("1.23"); (float)s'
 scc 'field s("1.23"); (int)s'
 scc 'field s("1.23"); (long)s'
 scc 'field s("1.23"); (int)s'
 
+// Convertions operators 
 scc 'field s("1.11"); s=1'
 scc 'field s("1.11"); s=1l'
 scc 'field s("1.11"); s=1.f'
