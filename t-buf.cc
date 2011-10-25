@@ -1,5 +1,10 @@
 #include <errno.h>
 #include <unistd.h>
+#include <simple.h>
+#include <scc.h>
+
+	const size_t buf_size=1000;
+	char* buf;
 
 int readline(int fd, char *buf, int nbytes) {
 	int     numread = 0;
@@ -24,5 +29,14 @@ int readline(int fd, char *buf, int nbytes) {
 	return -1;
 }
 
-bool get_rec(strr) (
+bool get_rec(int fd, strr) {
+	return false;
 }
+
+int main() {
+	buf = new char[buf_size];
+	strr sr;
+	while(get_rec(0, sr))
+		__ sr;
+}
+
