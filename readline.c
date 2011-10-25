@@ -23,3 +23,6 @@ int readline(int fd, char *buf, int nbytes) {
 	errno = EINVAL;
 	return -1;
 }
+
+bool get_rec(strr) (
+}
