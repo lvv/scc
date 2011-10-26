@@ -34,6 +34,9 @@ struct strr {
 	strr()			: B(0), E(0)  				{};
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
 	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
+
+	// MEMBER
+	size_t size() { return E-B; };
 };
 
 		inline std::ostream&  
