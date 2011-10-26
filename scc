@@ -75,7 +75,7 @@ shift $((OPTIND-1))
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
 
-end_prt="`echo \"$1\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
+end_prt="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
 
 if [[ $verbose ]] ; then 
 	echo -n "$1                                 "
