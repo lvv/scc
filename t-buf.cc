@@ -36,12 +36,13 @@ struct buf_t {
 	}
 
 
-	bool		get_rec		(strr& sr)	{
+	bool		get_rec		(char RS, char FS, strr& sr, vector<strr>& F)	{
 
 		if (!good_file)   return false; 
 
 		char *bor, *eor; // record
 		bor = eor = bod;
+		F.clear()
 
 		do {
 			size_t	unchecked = eod - eor;
@@ -68,7 +69,7 @@ struct buf_t {
 				}
 			}
 								//assert((unchecked = eod - eor,  unchecked >= 0));
-		} while ( *eor++ != '\n');
+		} while ( *eor++ != RS);
 
 
 		return_strr:
@@ -84,14 +85,23 @@ struct buf_t {
 int main() {
 	buf_t buf(0);
 	strr sr;
-	int i=0;
+
+	size_t cnt=0;
 	size_t sz = 0;
-	while(buf.get_rec(sr)) {
+	size_t f_sz = 0;
+	size_t f_cnt = 0;
+
+	vector<strr> F;
+	while(buf.get_rec('\n', ' ', sr, F)) {
 		sz += sr.size();
-		__ i++ ^  sr;
+		f_cnt += F.size();
+		for(size_t i=0;  i<F.size();  i++)  f_sz +=  F[i].size();
+		__ cnt++ ^  sr;
 	}
-	__ "total count: \t", i;
+	__ "total count: \t", cnt;
 	__ "total size: \t", sz;
+	__ "total field size: \t", f_sz;
+	__ "total field count: \t", f_cnt;
 
 }
 

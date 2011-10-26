@@ -26,7 +26,7 @@
 
 #endif
 
-///////////////////////////////////////////////////////////////////////////////  STR
+///////////////////////////////////////////////////////////////////////////////  STRR
 struct strr {
 	const char *B, *E;
 
@@ -35,7 +35,7 @@ struct strr {
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
 	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
 
-	// MEMBER
+	// MEMBERS
 	size_t size() { return E-B; };
 };
 
