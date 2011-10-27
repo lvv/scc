@@ -129,7 +129,8 @@ END
 
 if [[  $is_stream ]];  then 
 
-	echo "	while ( read_line()) { $snippet " >> $src
+	#echo "	while ( read_line()) { $snippet " >> $src
+	echo "	while ( buf.get_rec(strr(RS), strr(FS), rec, F) ) { $snippet " >> $src
 
 	if [[  $p_opt ]];  then 
 

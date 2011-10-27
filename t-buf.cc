@@ -8,7 +8,7 @@
 
 int main() {
 	buf_t buf(0);
-	strr sr;
+	strr rec;
 
 	size_t cnt=0;
 	size_t sz = 0;
@@ -16,11 +16,11 @@ int main() {
 	size_t f_cnt = 0;
 
 	vector<strr> F;
-	while(buf.get_rec('\n', '.', sr, F)) {
-		sz += sr.size();
+	while(buf.get_rec(strr("\n"), strr("."), rec, F)) {
+		sz += rec.size();
 		f_cnt += F.size();
 		for(size_t i=0;  i<F.size();  i++)  { f_sz +=  F[i].size();  _ " \"", F[i], "\" "; }
-		__ "\t" ^ cnt++ ^  sr;
+		__ "\t" ^ cnt++ ^  rec;
 	}
 	__ "total count: \t", cnt;
 	__ "total size: \t", sz;

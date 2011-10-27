@@ -38,6 +38,7 @@ struct strr {           ////////////////////////////////////////////////////////
 
 	// MEMBERS
 	size_t size() { return E-B; };
+	size_t empty() { return E-B == 0; };
 
 	// CONVERSION
 	explicit	operator ssize_t		(void) {
@@ -72,10 +73,12 @@ operator<<      (ostream& os, const strr f) {
 };
 
 
+
+
 struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
-			char		*bob, *eob;	// buffer dimentions
-			char		*bod, *eod;	// unused data in buffer
 	const static	size_t		buf_size=100;
+			char		*bob, *eob;	// buffer dimentions
+			char		*bod, *eod;	// data in buffer
 			int		fd;		// file
 			bool		good_file;	// !eof
 
@@ -103,25 +106,24 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 		return  true;  				// TODO
 	}
 
-
-	bool		get_rec		(const char RS, const char FS, strr& sr, vector<strr>& F)	{
+	bool		get_rec		(strr IRS, strr IFS, strr& rec, vector<strr>& F)	{
 
 		if (!good_file)   return false; 
 
-		char *bor, *eor;	// record
+		char *bor, *p;	// record
 		char *bof; 	// field
-		bor = eor = bof = bod;
+		bor = bof = p = bod;
 		F.clear();
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
-			size_t	unchecked = eod - eor;
+			size_t	unchecked = eod - p;
 			if ( unchecked == 0 )  {
 				size_t  buf_free_space = eob-eod;
 
 				if (buf_free_space == 0) {  // relocate data to begining of buffer
 					if (bor == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
-						goto return_strr; 
+						goto return_rec; 
 					} 
 
 					ssize_t data_size = size();
@@ -131,30 +133,50 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 					memcpy(bob, bod, data_size);
 					size_t diff = bod-bob;
 					bod = bor = bob;
-					eod = eor = bob + data_size;
+					eod = p = bob + data_size;
 					bof -= diff;	
 					for (size_t i=0;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
 				}
 
 				if ( !(good_file = fill()) )  {
-					if ( bor == eor ) 	return false;
-					else 			goto return_strr;
+					if ( bor == p ) 	return false;
+					else 			goto return_rec;
 				}
 			}
 
-			char c = *eor++;
-			if        (c == FS) 	{ F.push_back(strr(bof,eor-1));  bof = eor; }
-			else  if  (c == RS)	goto return_strr;
+			strr data_tail(p, eod);
+			if        (is_separator(data_tail, IFS))   { F.push_back(strr(bof,p));  p += IFS.size(); bof = p; }
+			else  if  (is_separator(data_tail, IRS))	  { goto return_rec; } 
+			else                                      p++;
 		} 
 
 
-		return_strr: 
-			F.push_back(strr(bof,eor-1));  
-			bod = eor;
-			sr.B = bor;
-			sr.E = eor-1;
+		return_rec: 
+			// P shoud point to true EOR+1
+			F.push_back(strr(bof,p));  
+			rec.B = bor;
+			rec.E = p;
+			p += IRS.size();
+			bod = p;
 			return true;
 	}
+
+	private: 
+
+	bool is_separator(strr rec, strr sep) {
+								assert(!sep.empty()  &&  !rec.empty());
+		if  (*rec.B != *sep.B)	return false;
+		else			return true;
+		
+		/*  TO ADD:  multibyte
+		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {
+			if  (rec[i] == sep[i])  continue;
+			else			return false;
+		}
+		return true;
+		*/
+	}
+
 
 };
 
