@@ -122,6 +122,8 @@ int main(int argc, char** argv) {
 
 	std::string s __attribute__((unused));
 
+	buf_t	buf(0);
+
 	{
 END
 

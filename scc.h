@@ -26,6 +26,7 @@
 
 #endif
 
+
 struct strr {           ///////////////////////////////////////////////////////////////////////////////  STRR
 	const char *B, *E;
 
@@ -39,7 +40,28 @@ struct strr {           ////////////////////////////////////////////////////////
 	size_t size() { return E-B; };
 
 	// CONVERSION
-	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
+	explicit	operator ssize_t		(void) {
+		ssize_t 	sign	= 1;
+		const char	*p	= B;   
+		ssize_t		base	= 10;
+
+		for (;  p<E-1;  p++) { 			// read prefix
+			switch(*p) {
+				case ' ':;   case '\t': continue;
+				case '-':	sign = -1;  p++;  goto end_prefix;
+				case '+':	p++;  goto end_prefix; 
+				default: 	goto end_prefix;
+			}
+		}
+
+		end_prefix:;
+
+		ssize_t  n=0;				// read number
+		for (;  p<E && isdigit(*p);  p++)  {
+			n = n*base + (*p-'0'); 
+		}
+		return sign*n;
+	}
 };
 
 		inline std::ostream&  
