@@ -26,17 +26,20 @@
 
 #endif
 
-///////////////////////////////////////////////////////////////////////////////  STRR
-struct strr {
+struct strr {           ///////////////////////////////////////////////////////////////////////////////  STRR
 	const char *B, *E;
 
 	// CTOR
 	strr()			: B(0), E(0)  				{};
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
 	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
+	strr(const char* B, const char* E):  B(B),  E(E)		{};
 
 	// MEMBERS
 	size_t size() { return E-B; };
+
+	// CONVERSION
+	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
 };
 
 		inline std::ostream&  
@@ -47,8 +50,95 @@ operator<<      (ostream& os, const strr f) {
 };
 
 
+struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
+			char		*bob, *eob;	// buffer dimentions
+			char		*bod, *eod;	// unused data in buffer
+	const static	size_t		buf_size=100;
+			int		fd;		// file
+			bool		good_file;	// !eof
 
-struct field: string {
+	explicit	buf_t 		(int fd) : fd(fd), good_file(true) {
+		bob = bod = eod =  new char[buf_size];  
+		eob = bob + buf_size;
+	}
+
+
+	size_t		capacity	()	{ return buf_size; }
+	size_t		size		()	{ return eod-bod; }
+
+
+	bool		fill		()	{
+		size_t buf_free_space = eob-eod;
+		ssize_t got;
+		if (buf_free_space > 0) { 
+			retry:
+			got = read (fd, eod,  buf_free_space);
+			if (got == -1  &&  errno == EINTR)	goto  retry;
+			if (got <=  0)				return  false;
+
+			eod += got;
+		}
+		return  true;  				// TODO
+	}
+
+
+	bool		get_rec		(const char RS, const char FS, strr& sr, vector<strr>& F)	{
+
+		if (!good_file)   return false; 
+
+		char *bor, *eor;	// record
+		char *bof; 	// field
+		bor = eor = bof = bod;
+		F.clear();
+
+		while(1) {	//////////////////////////////////////////////////////// read until EOR
+			size_t	unchecked = eod - eor;
+			if ( unchecked == 0 )  {
+				size_t  buf_free_space = eob-eod;
+
+				if (buf_free_space == 0) {  // relocate data to begining of buffer
+					if (bor == bob ) {
+						cerr << "warning: Line is too big for buffer. Splitting line.\n";
+						goto return_strr; 
+					} 
+
+					ssize_t data_size = size();
+					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
+
+					// rellocate everything to BOB
+					memcpy(bob, bod, data_size);
+					size_t diff = bod-bob;
+					bod = bor = bob;
+					eod = eor = bob + data_size;
+					bof -= diff;	
+					for (size_t i=0;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
+				}
+
+				if ( !(good_file = fill()) )  {
+					if ( bor == eor ) 	return false;
+					else 			goto return_strr;
+				}
+			}
+
+			char c = *eor++;
+			if        (c == FS) 	{ F.push_back(strr(bof,eor-1));  bof = eor; }
+			else  if  (c == RS)	goto return_strr;
+		} 
+
+
+		return_strr: 
+			F.push_back(strr(bof,eor-1));  
+			bod = eor;
+			sr.B = bor;
+			sr.E = eor-1;
+			return true;
+	}
+
+};
+
+
+
+struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD
 
 	// CTOR
 	field(const char*   s)	: string(s) {};
