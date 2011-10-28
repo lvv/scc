@@ -193,6 +193,7 @@ typedef		std::deque<std::string>		dstr;
 
 	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
 
+	/*
 	#ifdef  arg_IFS
 	string       __attribute__((unused))	IFS(arg_IFS);
 	#else
@@ -202,11 +203,19 @@ typedef		std::deque<std::string>		dstr;
 		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
 		#endif
 	#endif
+	*/
+
+	#ifdef  arg_ifs
+	strr       __attribute__((unused))	IFS(arg_ifs);
+	#else
+	strr       __attribute__((unused))	IFS(" ");
+	#endif
 
 	strr IRS("\n");
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
+	/*
 	void	split() {
 		#ifdef USE_BOOST
 			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
@@ -232,6 +241,7 @@ typedef		std::deque<std::string>		dstr;
 			return false;
 		}
 	};
+	*/
 
 	#ifdef xxxxUSE_BOOST
 		// simplified regex_replace (now accept const char* for regex)
@@ -361,14 +371,14 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 			}
 
 			strr data_tail(p, eod);
-			if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size(); bof = p; }
+			if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
 			else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
 			else                                      p++;
 		} 
 
 
 		return_rec: 
-			// P shoud point to true EOR+1
+			// P should point to true EOR+1
 			F.push_back(strr(bof,p));  
 			NF = F.size()-1;
 			F[0].B = bor;
