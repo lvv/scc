@@ -42,7 +42,7 @@ struct strr {           ////////////////////////////////////////////////////////
 	bool	operator==(strr sr)	{ return equal(B, E, sr.B); };
 
 	// CONVERSION
-	operator string			(void) { return string(B,E); }
+	operator const string			(void) { return string(B,E); }
 
 	operator ssize_t		(void) {
 		ssize_t 	sign	= 1;
@@ -179,6 +179,16 @@ typedef		std::deque<std::string>		dstr;
 		#define 	F7	F(7)
 		#define 	F8	F(8)
 		#define 	F9	F(9)
+		#define 	F10	F(10)
+		#define 	F11	F(11)
+		#define 	F12	F(12)
+		#define 	F13	F(13)
+		#define 	F14	F(14)
+		#define 	F15	F(15)
+		#define 	F16	F(16)
+		#define 	F17	F(17)
+		#define 	F18	F(18)
+		#define 	F19	F(19)
 
 	long NF = 0;
 	long NR = 0;
@@ -270,8 +280,8 @@ typedef		std::deque<std::string>		dstr;
 
 	#endif
 
-	#define WRL  while(read_line())
-
+	// #define WRL  while(read_line())
+	#define 	WRL 	while(buf.get_rec(strr(IRS), strr(IFS), F))
 ///// boost
 
 #ifdef  USE_BOOST

@@ -13,8 +13,12 @@ if [[ $gcc_ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
 fi
 
 #####################################################################################
-#CXXFLAGS+=" -Wall  -pipe -O3 "
-CXXFLAGS+=" -Wall  -pipe -ggdb -O0 "
+
+#ifndef CXXFLAGS
+	#CXXFLAGS=" -Wall  -pipe -ggdb -O0 "
+	CXXFLAGS+=" -Wall  -pipe -O3 "
+#endif
+
 if [[ $gcc_ver_num > 43 ]] ;  then 
 	CXXFLAGS+=" -std=gnu++0x "
 fi 

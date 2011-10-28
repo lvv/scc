@@ -15,10 +15,10 @@ fi
 # sup-up 10th field
 
 # string-field
-CXXFLAGS='-O3' scc -x /tmp/sf 'WRL n+=F9; n'
-command time -f %U   /tmp/sf                       < b-field.in
-command time -f %U   gawk '{s+=$10} END{print s}'  < b-field.in
-command time -f %U   mawk '{s+=$10} END{print s}'  < b-field.in
+CXXFLAGS='-O3' scc -x /tmp/sf 'WRL n+=F10; n'
+echo -n "scc: ";	command time -f %U   /tmp/sf                       < b-field.in
+echo -n "gawk: ";	command time -f %U   gawk '{s+=$10} END{print s}'  < b-field.in
+echo -n "mawk: ";	command time -f %U   mawk '{s+=$10} END{print s}'  < b-field.in
 
 
 
