@@ -13,7 +13,8 @@ if [[ $gcc_ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
 fi
 
 #####################################################################################
-CXXFLAGS+=" -Wall  -pipe -O3 "
+#CXXFLAGS+=" -Wall  -pipe -O3 "
+CXXFLAGS+=" -Wall  -pipe -ggdb -O0 "
 if [[ $gcc_ver_num > 43 ]] ;  then 
 	CXXFLAGS+=" -std=gnu++0x "
 fi 
@@ -130,16 +131,16 @@ END
 if [[  $is_stream ]];  then 
 
 	#echo "	while ( read_line()) { $snippet " >> $src
-	echo "	while ( buf.get_rec(strr(RS), strr(FS), rec, F) ) { $snippet " >> $src
+	echo "	while ( buf.get_rec(strr(IRS), strr(IFS), F) ) { $snippet " >> $src
 
 	if [[  $p_opt ]];  then 
 
 		[[ $end_prt ]]   &&  echo 'cout << OFS;' >> $src
 
 		echo "
-			for(int i=0;   i < int(F.size())-1;  i++)
+			for(int i=1;   i < int(F.size())-1;  i++)
 				cout  << F[i] << OFS;
-			if (F.size() > 0)  cout << F.back();
+			if (F.size() > 1)  cout << F.back();
 			cout << endl;
 		" >> $src
 	fi

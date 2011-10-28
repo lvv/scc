@@ -24,7 +24,7 @@
 	//boost::regex operator""R (const char* p, size_t n)	{ return boost::regex(p); };
 
 
-#endif
+ #endif
 
 
 struct strr {           ///////////////////////////////////////////////////////////////////////////////  STRR
@@ -37,11 +37,14 @@ struct strr {           ////////////////////////////////////////////////////////
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
 
 	// MEMBERS
-	size_t size() { return E-B; };
-	size_t empty() { return E-B == 0; };
+	size_t	size()		{ return E-B; };
+	size_t	empty()		{ return E-B == 0; };
+	bool	operator==(strr sr)	{ return equal(B, E, sr.B); };
 
 	// CONVERSION
-	explicit	operator ssize_t		(void) {
+	operator string			(void) { return string(B,E); }
+
+	operator ssize_t		(void) {
 		ssize_t 	sign	= 1;
 		const char	*p	= B;   
 		ssize_t		base	= 10;
@@ -63,122 +66,16 @@ struct strr {           ////////////////////////////////////////////////////////
 		}
 		return sign*n;
 	}
-};
+ };
 
 		inline std::ostream&  
 operator<<      (ostream& os, const strr f) {               
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
 	return os;
-};
+ };
 
 
-
-
-struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
-	const static	size_t		buf_size=100;
-			char		*bob, *eob;	// buffer dimentions
-			char		*bod, *eod;	// data in buffer
-			int		fd;		// file
-			bool		good_file;	// !eof
-
-	explicit	buf_t 		(int fd) : fd(fd), good_file(true) {
-		bob = bod = eod =  new char[buf_size];  
-		eob = bob + buf_size;
-	}
-
-
-	size_t		capacity	()	{ return buf_size; }
-	size_t		size		()	{ return eod-bod; }
-
-
-	bool		fill		()	{
-		size_t buf_free_space = eob-eod;
-		ssize_t got;
-		if (buf_free_space > 0) { 
-			retry:
-			got = read (fd, eod,  buf_free_space);
-			if (got == -1  &&  errno == EINTR)	goto  retry;
-			if (got <=  0)				return  false;
-
-			eod += got;
-		}
-		return  true;  				// TODO
-	}
-
-	bool		get_rec		(strr IRS, strr IFS, strr& rec, vector<strr>& F)	{
-
-		if (!good_file)   return false; 
-
-		char *bor, *p;	// record
-		char *bof; 	// field
-		bor = bof = p = bod;
-		F.clear();
-
-		while(1) {	//////////////////////////////////////////////////////// read until EOR
-			size_t	unchecked = eod - p;
-			if ( unchecked == 0 )  {
-				size_t  buf_free_space = eob-eod;
-
-				if (buf_free_space == 0) {  // relocate data to begining of buffer
-					if (bor == bob ) {
-						cerr << "warning: Line is too big for buffer. Splitting line.\n";
-						goto return_rec; 
-					} 
-
-					ssize_t data_size = size();
-					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
-
-					// rellocate everything to BOB
-					memcpy(bob, bod, data_size);
-					size_t diff = bod-bob;
-					bod = bor = bob;
-					eod = p = bob + data_size;
-					bof -= diff;	
-					for (size_t i=0;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
-				}
-
-				if ( !(good_file = fill()) )  {
-					if ( bor == p ) 	return false;
-					else 			goto return_rec;
-				}
-			}
-
-			strr data_tail(p, eod);
-			if        (is_separator(data_tail, IFS))   { F.push_back(strr(bof,p));  p += IFS.size(); bof = p; }
-			else  if  (is_separator(data_tail, IRS))	  { goto return_rec; } 
-			else                                      p++;
-		} 
-
-
-		return_rec: 
-			// P shoud point to true EOR+1
-			F.push_back(strr(bof,p));  
-			rec.B = bor;
-			rec.E = p;
-			p += IRS.size();
-			bod = p;
-			return true;
-	}
-
-	private: 
-
-	bool is_separator(strr rec, strr sep) {
-								assert(!sep.empty()  &&  !rec.empty());
-		if  (*rec.B != *sep.B)	return false;
-		else			return true;
-		
-		/*  TO ADD:  multibyte
-		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {
-			if  (rec[i] == sep[i])  continue;
-			else			return false;
-		}
-		return true;
-		*/
-	}
-
-
-};
 
 
 
@@ -242,7 +139,7 @@ struct field: string {      ////////////////////////////////////////////////////
 	long operator++(int) { long old = long(*this); *this = long(*this) + 1; return old; }
 	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
 	// TODO for double
-};
+ };
 
 	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
 Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
@@ -261,7 +158,7 @@ typedef		std::deque<std::string>		dstr;
 ///////////////////////////////////////////////////////////////////////////////  F
 
 		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-	struct   F_t : std::deque<_Tp> {
+	struct   F_t : std::vector<_Tp> {
 		_Tp& 	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
@@ -271,7 +168,7 @@ typedef		std::deque<std::string>		dstr;
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t<field> F;
+	F_t<strr> F;
 		#define 	F0	F(0)
 		#define 	F1	F(1)
 		#define 	F2	F(2)
@@ -305,6 +202,8 @@ typedef		std::deque<std::string>		dstr;
 		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
 		#endif
 	#endif
+
+	strr IRS("\n");
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
@@ -390,6 +289,115 @@ typedef 	boost::cregex_token_iterator    CRTI;
 #define 	MRTI		boost::make_regex_token_iterator 
 
 #endif
+
+struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
+	const static	size_t		buf_size=100;
+			char		*bob, *eob;	// buffer dimentions
+			char		*bod, *eod;	// data in buffer
+			int		fd;		// file
+			bool		good_file;	// !eof
+
+	explicit	buf_t 		(int fd) : fd(fd), good_file(true) {
+		bob = bod = eod =  new char[buf_size];  
+		eob = bob + buf_size;
+	}
+
+
+	size_t		capacity	()	{ return buf_size; }
+	size_t		size		()	{ return eod-bod; }
+
+
+	bool		fill		()	{
+		size_t buf_free_space = eob-eod;
+		ssize_t got;
+		if (buf_free_space > 0) { 
+			retry:
+			got = read (fd, eod,  buf_free_space);
+			if (got == -1  &&  errno == EINTR)	goto  retry;
+			if (got <=  0)				return  false;
+
+			eod += got;
+		}
+		return  true;  				// TODO
+	}
+
+	bool		get_rec		(strr IRS, strr IFS, vector<strr>& F)	{
+
+		if (!good_file)   return false; 
+
+		char *bor, *p;	// record
+		char *bof; 	// field
+		bor = bof = p = bod;
+		F.clear();
+		F.push_back(strr());	// F[0] - whole line
+
+		while(1) {	//////////////////////////////////////////////////////// read until EOR
+			size_t	unchecked = eod - p;
+			if ( unchecked == 0 )  {
+				size_t  buf_free_space = eob-eod;
+
+				if (buf_free_space == 0) {  // relocate data to begining of buffer
+					if (bor == bob ) {
+						cerr << "warning: Line is too big for buffer. Splitting line.\n";
+						goto return_rec; 
+					} 
+
+					ssize_t data_size = size();
+					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
+
+					// rellocate everything to BOB
+					memcpy(bob, bod, data_size);
+					size_t diff = bod-bob;
+					bod = bor = bob;
+					eod = p = bob + data_size;
+					bof -= diff;	
+					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
+				}
+
+				if ( !(good_file = fill()) )  {
+					if ( bor == p ) 	return false;
+					else 			goto return_rec;
+				}
+			}
+
+			strr data_tail(p, eod);
+			if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size(); bof = p; }
+			else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
+			else                                      p++;
+		} 
+
+
+		return_rec: 
+			// P shoud point to true EOR+1
+			F.push_back(strr(bof,p));  
+			NF = F.size()-1;
+			F[0].B = bor;
+			F[0].E = p;
+			p += IRS.size();
+			bod = p;
+							assert(F[0].B == F[1].B);
+							assert(F[0].E == F[NF].E);
+			return true;
+	}
+
+		private: 
+	bool is_separator(strr rec, strr sep) {
+								assert(!sep.empty()  &&  !rec.empty());
+		if  (*rec.B != *sep.B)	return false;
+		else			return true;
+		
+		/*  TO ADD:  multibyte
+		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {
+			if  (rec[i] == sep[i])  continue;
+			else			return false;
+		}
+		return true;
+		*/
+	}
+
+
+ };
+
 
 
 #endif // SCC
