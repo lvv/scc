@@ -37,14 +37,14 @@ struct strr {           ////////////////////////////////////////////////////////
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
 
 	// MEMBERS
-	size_t	size()		{ return E-B; };
-	size_t	empty()		{ return E-B == 0; };
-	bool	operator==(strr sr)	{ return equal(B, E, sr.B); };
+	size_t	size()		const { return E-B; };
+	size_t	empty()		const { return E-B == 0; };
+	bool	operator==(strr sr)	const { return equal(B, E, sr.B); };
 
 	// CONVERSION
-	operator const string			(void) { return string(B,E); }
+	operator const string			(void) const { return string(B,E); }
 
-	operator ssize_t		(void) {
+	operator ssize_t		(void) const {
 		ssize_t 	sign	= 1;
 		const char	*p	= B;   
 		ssize_t		base	= 10;
@@ -158,7 +158,7 @@ typedef		std::deque<std::string>		dstr;
 ///////////////////////////////////////////////////////////////////////////////  F
 
 		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-	struct   F_t : std::vector<_Tp> {
+	struct   F_t : std::deque<_Tp> {
 		_Tp& 	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
@@ -193,7 +193,7 @@ typedef		std::deque<std::string>		dstr;
 	long NF = 0;
 	long NR = 0;
 
-	string       __attribute__((unused))	line;
+	//string       __attribute__((unused))	line;
 
 	#ifdef  arg_OFS
 	string	     __attribute__((unused))	OFS(arg_OFS);
@@ -281,37 +281,37 @@ typedef		std::deque<std::string>		dstr;
 	#endif
 
 	// #define WRL  while(read_line())
-	#define 	WRL 	while(buf.get_rec(strr(IRS), strr(IFS), F))
+	#define 	WRL 	while(buf.get_rec(IRS, IFS, F))
 ///// boost
 
 #ifdef  USE_BOOST
 
-#define 	R		boost::regex
-//R 	operator "" r(const char * s, size_t n) {return R(s);};
-#define		FMT 		boost::format
+	#define 	R		boost::regex
+	//R 	operator "" r(const char * s, size_t n) {return R(s);};
+	#define		FMT 		boost::format
 
-#define 	RM		boost::regex_match
-#define 	RS		boost::regex_search
-#define 	RR		boost::regex_replace
+	#define 	RM		boost::regex_match
+	#define 	RS		boost::regex_search
+	#define 	RR		boost::regex_replace
 		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 	
-//#define 	M		boost::match
-#define 	CM		boost::cmatch
-#define 	SM		boost::cmatch
+	//#define 	M		boost::match
+	#define 	CM		boost::cmatch
+	#define 	SM		boost::cmatch
 
-//typedef 	boost::regex_iterator		RI;
-typedef 	boost::sregex_iterator          SRI;
-typedef 	boost::cregex_iterator          CRI;		
+	//typedef 	boost::regex_iterator		RI;
+	typedef 	boost::sregex_iterator          SRI;
+	typedef 	boost::cregex_iterator          CRI;		
 		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-//typedef 	boost::regex_token_iterator     RTI;		
-typedef 	boost::sregex_token_iterator    SRTI;		
-typedef 	boost::cregex_token_iterator    CRTI;		
+	//typedef 	boost::regex_token_iterator     RTI;		
+	typedef 	boost::sregex_token_iterator    SRTI;		
+	typedef 	boost::cregex_token_iterator    CRTI;		
 #define 	MRTI		boost::make_regex_token_iterator 
 
-#endif
+ #endif
 
 struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
-	const static	size_t		buf_size=100;
+	const static	size_t		buf_size=100000;
 			char		*bob, *eob;	// buffer dimentions
 			char		*bod, *eod;	// data in buffer
 			int		fd;		// file
@@ -328,20 +328,19 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 
 
 	bool		fill		()	{
-		size_t buf_free_space = eob-eod;
-		ssize_t got;
-		if (buf_free_space > 0) { 
+		size_t	buf_free_space = eob-eod;
+		ssize_t	got;
+		if  (buf_free_space > 0) { 
 			retry:
 			got = read (fd, eod,  buf_free_space);
 			if (got == -1  &&  errno == EINTR)	goto  retry;
 			if (got <=  0)				return  false;
-
 			eod += got;
 		}
 		return  true;  				// TODO
 	}
 
-	bool		get_rec		(strr IRS, strr IFS, vector<strr>& F)	{
+	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{
 
 		if (!good_file)   return false; 
 
@@ -381,8 +380,10 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 			}
 
 			strr data_tail(p, eod);
-			if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
-			else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
+			if        ( *p == *(IFS.B))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			else  if  ( *p == *(IRS.B))	{ goto return_rec; } 
+			//if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			//else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
 			else                                      p++;
 		} 
 
@@ -403,8 +404,7 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 		private: 
 	bool is_separator(strr rec, strr sep) {
 								assert(!sep.empty()  &&  !rec.empty());
-		if  (*rec.B != *sep.B)	return false;
-		else			return true;
+		return   *rec.B == *sep.B;
 		
 		/*  TO ADD:  multibyte
 		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {

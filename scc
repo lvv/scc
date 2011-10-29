@@ -28,6 +28,7 @@ SCC_HOME=$(dirname $(readlink -f $0))
 CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} "
 
 prg=/tmp/$USER-scc
+rm -f $prg
 src=$prg.cc
 execute=1
 
