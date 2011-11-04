@@ -100,11 +100,17 @@ snippet="`echo \"${1%% }\" | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)
 [[ $n_opt       && $end_prt ]]	&& snippet+="cout << endl;"
 [[ ! $is_stream && $end_prt ]]	&& snippet+="cout << endl;"
 
-shift
 
 #####################################################################################  GENERATE SRC
 
-cat <<  END	 > $src
+echo "/*  This C++ code was generated with SCC from following snippet:"   >  $src
+echo "/*  -------------------------------"                                   >> $src
+echo "/*  $1"                                                                >> $src
+echo "/*  -------------------------------"                                   >> $src
+echo "*/"                                                                    >> $src
+
+cat <<  END	 >> $src
+
 
 #include <simple.h>
 
