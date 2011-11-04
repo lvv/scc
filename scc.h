@@ -31,7 +31,7 @@ struct strr {           ////////////////////////////////////////////////////////
 	const char *B, *E;
 
 	// CTOR
-	strr()			: B(0), E(0)  				{};
+	strr()			/*: B(0), E(0)*/  				{};
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
 	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
@@ -69,7 +69,7 @@ struct strr {           ////////////////////////////////////////////////////////
  };
 
 		inline std::ostream&  
-operator<<      (ostream& os, const strr f) {               
+ operator<<      (ostream& os, const strr f) {               
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
 	return os;
@@ -311,7 +311,7 @@ typedef		std::deque<std::string>		dstr;
  #endif
 
 struct buf_t {		///////////////////////////////////////////////////////////////////////////////  BUF
-	const static	size_t		buf_size=100000;
+	const static	size_t		buf_size=1000000;
 			char		*bob, *eob;	// buffer dimentions
 			char		*bod, *eod;	// data in buffer
 			int		fd;		// file
@@ -379,9 +379,9 @@ struct buf_t {		////////////////////////////////////////////////////////////////
 				}
 			}
 
-			strr data_tail(p, eod);
 			if        ( *p == *(IFS.B))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
 			else  if  ( *p == *(IRS.B))	{ goto return_rec; } 
+			//strr data_tail(p, eod);
 			//if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
 			//else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
 			else                                      p++;

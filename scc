@@ -14,17 +14,19 @@ fi
 
 #####################################################################################
 
-#ifndef CXXFLAGS
-	#CXXFLAGS=" -Wall  -pipe -ggdb -O0 "
-	CXXFLAGS+=" -Wall  -pipe -O3 "
-#endif
+if [[ -z "$CXXFLAGS" ]] ;  then 
+	CXXFLAGS+=" -Wall  -pipe "
+fi
 
 if [[ $gcc_ver_num > 43 ]] ;  then 
 	CXXFLAGS+=" -std=gnu++0x "
 fi 
+
 [[ $gcc_ver_num < 44 ]] && no_boost=1
 
+
 SCC_HOME=$(dirname $(readlink -f $0))
+
 CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} "
 
 prg=/tmp/$USER-scc
@@ -43,7 +45,8 @@ usage_exit() {
 		-o ofs 		- sets OFS (output field separator) 
 		-B		- do not use Boost
 		-x filename	- save executable to file and do not execute it
-		-v 		- vebose
+		-O 		- optimized compile
+		-v 		- debug compile
 	"
 	exit 0
 }
@@ -52,7 +55,7 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npvBI:i:o:x: opt;  do
+while getopts npvBI:i:o:x:Og opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
@@ -61,9 +64,11 @@ while getopts npvBI:i:o:x: opt;  do
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
 		x)	execute=0;  prg=$OPTARG;;
 		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_ifs=$OPTARG "
-			else   				CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
+						  else  CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
-			else   				CXXFLAGS+=" -Darg_OFS=\"$OPTARG\" ";  fi;; 
+						  else  CXXFLAGS+=" -Darg_OFS=\"$OPTARG\" ";  fi;; 
+		O) 	CXXFLAGS+="-O3 -march=native";;
+		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check  -fsignaling-nans";;
 		?) 	usage_exit;;
 	esac
 done
@@ -84,9 +89,9 @@ shift $((OPTIND-1))
 end_prt="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
 
 if [[ $verbose ]] ; then 
-	echo -n "$1                                 "
-	echo -n `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`
-	echo "   no_boost: $no_boost;   n_opt: $n_opt;   p_opt: $p_opt;   is_stream: $is_stream;   end_prt: $end_prt"
+	echo -n "expression: $1             "
+	echo -n "gcc-v: `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`            "
+	echo -n "options:   ${no_boost+no-Boost}   ${n_opt+n-option}   ${p_opt:+p-option}   ${is_stream:+is-stream}   ${end_prt:+print-end}            "
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
