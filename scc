@@ -40,6 +40,7 @@ usage_exit() {
 		
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields
+		-f filename 	- get snippet from filename
 		-i ifs 		- sets simple (not regex)  IFS (input field separator). Needs BOOST.  
 		-I ifs-regex 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
 		-o ofs 		- sets OFS (output field separator) 
@@ -55,10 +56,11 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npvBI:i:o:x:Og opt;  do
+while getopts npf:vBI:i:o:x:Og opt;  do
 	case $opt in
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
+		f)	snippet_file=$OPTARG;;
 		B)	no_boost=1;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
@@ -95,7 +97,10 @@ if [[ $verbose ]] ; then
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
-snippet="`echo \"${1%% }\" | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`"
+if [[ $snippet_file ]]    
+then	snippet="`cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`";
+else	snippet="`echo \"${1%% }\"   | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`";
+fi
 
 [[ $n_opt       && $end_prt ]]	&& snippet+="cout << endl;"
 [[ ! $is_stream && $end_prt ]]	&& snippet+="cout << endl;"
@@ -104,9 +109,13 @@ snippet="`echo \"${1%% }\" | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)
 #####################################################################################  GENERATE SRC
 
 echo "/*  This C++ code was generated with SCC from following snippet:"   >  $src
-echo "/*  -------------------------------"                                   >> $src
-echo "/*  $1"                                                                >> $src
-echo "/*  -------------------------------"                                   >> $src
+echo "-----------------------------------"                                   >> $src
+if [[ $snippet_file ]]
+	then 	cat $snippet_file                                                    >> $src
+	else	echo "/*  $1"                                                        >> $src
+fi
+
+echo "-----------------------------------"                                   >> $src
 echo "*/"                                                                    >> $src
 
 cat <<  END	 >> $src
