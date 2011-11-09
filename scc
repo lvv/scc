@@ -111,8 +111,8 @@ fi
 echo "/*  This C++ code was generated with SCC from following snippet:"   >  $src
 echo "-----------------------------------"                                   >> $src
 if [[ $snippet_file ]]
-	then 	cat $snippet_file                                                    >> $src
-	else	echo "/*  $1"                                                        >> $src
+	then 	cat $snippet_file                                            >> $src
+	else	echo "$1"                                                    >> $src
 fi
 
 echo "-----------------------------------"                                   >> $src

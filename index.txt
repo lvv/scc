@@ -270,6 +270,8 @@ PCRE++
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
+REGEX
+	http://swtch.com/~rsc/regexp/
 JSON
 	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 	http://www.kirit.com/Thread:/1723074

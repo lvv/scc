@@ -253,7 +253,7 @@ typedef		std::deque<std::string>		dstr;
 	};
 	*/
 
-	#ifdef xxxxUSE_BOOST
+	#ifdef xxUSE_BOOST
 		// simplified regex_replace (now accept const char* for regex)
 			template <class traits, class charT>
 			basic_string<charT>
@@ -297,7 +297,7 @@ typedef		std::deque<std::string>		dstr;
 	
 	//#define 	M		boost::match
 	#define 	CM		boost::cmatch
-	#define 	SM		boost::cmatch
+	#define 	SM		boost::smatch
 
 	//typedef 	boost::regex_iterator		RI;
 	typedef 	boost::sregex_iterator          SRI;

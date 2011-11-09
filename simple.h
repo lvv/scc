@@ -281,9 +281,9 @@ struct  out {
 
 	// sequance container
 	
-		template<typename T, template<typename T, typename Al> class Ct > 
+		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
 		out& 
-	operator<<      (const Ct<T, std::allocator<T> >& C) {              
+	operator<<      (const Ct<const T, Al<const T> >& C) {              
 		if (paren)  	{if(strlen(paren)) cout << paren[0];}
 		else 		cout << '{';
 		//cout << (paren ? paren[0] : '{');
@@ -309,9 +309,9 @@ struct  out {
 
 
 
-		template<typename T, template<typename T, typename Al> class Ct > 
+		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
 		out& 
-	operator,       (const Ct<T, std::allocator<T> >& C) {  return operator<<(C); }
+	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
 
 	operator bool   () {  return true; }
  };
