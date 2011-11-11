@@ -252,7 +252,12 @@ int gcd(long a, long b) {
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
+// 11x does not have disable_if
+template <typename COND, typename T = void> 	struct disable_if                     { typedef T type; };
+template <typename T> 				struct disable_if<std::true_type,T>   {};
+
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
+
 
 struct  out { 
 	bool  first_use;
@@ -296,8 +301,9 @@ struct  out {
 		return *this; 
 	};
 
-		template<class T, std::size_t N>                
-		typename boost::disable_if<typename boost::is_same<T, char>::type,  out&>::type
+
+			template<class T, std::size_t N>                
+		typename disable_if<typename std::is_same<T, char>::type,  out&>::type
 	operator<<      (const T (&A)[N]) {
 		cout << "{";
 			int i=0;
@@ -336,7 +342,7 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 //#ifdef BOOST_VERSION                                         // std::disable_if - does not exist yet in std::
                template<class T, std::size_t N>                
                                                                // disable C-array print for  char[]
-               typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+               typename disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
 		cout << "{";
 			int i=0;
