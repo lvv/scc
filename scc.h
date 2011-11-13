@@ -2,22 +2,9 @@
 #define  LVV_SCC_H
 
 	#include <cassert>
-///////////////////////////////////////////////////////////////////// REGEX
-
-	#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-		using std::regex;
-		using std::cmatch;
-		using std::regex_match;
-		using std::regex_token_iterator;
-		using std::sregex_token_iterator;
-		using std::cregex_token_iterator;
-
-	
-	regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
 
 
 //////////////////////////////////////////////////////////////////////////////////////////  STRR
-
 	
 
 struct strr {          
@@ -139,9 +126,6 @@ Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 typedef field string_field; 
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
-
-typedef		std::vector<std::string>	vstr;
-typedef		std::deque<std::string>		dstr;
 
 
 ///////////////////////////////////////////////////////////////////////////////  F
@@ -290,7 +274,20 @@ typedef		std::deque<std::string>		dstr;
 
 // #endif
 
-///////////////////////////////////////////////////////////////////////////////  FIELD BUF
+///////////////////////////////////////////////////////////////////////////////  STRR HEAP
+
+
+struct strr_heap_t {
+		strr_heap_t	(const size_t size=1000000) :  _size(size),  B(new char[size])  {};
+		~strr_heap_t	() { delete []B; };
+
+	size_t	size	() { return _size; };
+	void	clear	() { E = B; };
+
+	size_t	_size;
+	char 	*B;
+	char 	*E;
+}; 
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
 struct buf_t {	

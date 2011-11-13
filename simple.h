@@ -544,5 +544,22 @@ operator>>      (istream& is, Ct<T>& C)    {
 #endif	// MODERN_GCC
 
 
+///////////////////////////////////////////////////////////////////// REGEX
+
+	#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+		using std::regex;
+		using std::cmatch;
+		using std::regex_match;
+		using std::regex_token_iterator;
+		using std::sregex_token_iterator;
+		using std::cregex_token_iterator;
+
+	
+	regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
+
+///////////////////////////////////////////////////////////////////// SORTCUTS
+typedef		std::vector<std::string>	vstr;
+typedef		std::deque<std::string>		dstr;
+
 
 #endif	// LVV_SIMPLE_H
