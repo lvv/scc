@@ -2,6 +2,11 @@
 #define  LVV_SCC_H
 
 	#include <cassert>
+	// BUF
+	#include <cerrno>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <fcntl.h>
 
 
 //////////////////////////////////////////////////////////////////////////////////////////  STRR
@@ -56,7 +61,7 @@ struct strr {
 	return os;
  };
 
-
+/*
 struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD
 
 	// CTOR
@@ -118,7 +123,6 @@ struct field: string {      ////////////////////////////////////////////////////
 	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
 	// TODO for double
  };
-
 	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
 Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 
@@ -126,6 +130,8 @@ Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 typedef field string_field; 
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
+
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////  F
@@ -229,50 +235,6 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 	#define 	WRL 	while(buf.get_rec(IRS, IFS, F))
 
-/////////////////////////////////////////////////////////////////////////////////  REGEX
-//
-		// RR accept const char*  as regex
-			template <class traits, class charT>
-			basic_string<charT>
-		RR (
-			const basic_string<charT>& s,
-	               	//const basic_regex<charT, traits>& e,
-	               	const char* r,
-			const basic_string<charT>& fmt,
-			std::regex_constants::match_flag_type flags = std::regex_constants::match_default
-		)  {
-			return std::regex_replace<traits, charT>  (s, std::regex(r), fmt, flags);
-		}
-
-		// RR accept STRR  as source string
-		// ...
-
-
-//#ifdef  USE_BOOST
-
-	#define 	R		std::regex
-	//R 	operator "" r(const char * s, size_t n) {return R(s);};
-	#define		FMT 		std::format
-
-	#define 	RM		std::regex_match
-	#define 	RS		std::regex_search
-	#define 	RR		std::regex_replace
-		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
-	
-	//#define 	M		std::match
-	#define 	CM		std::cmatch
-	#define 	SM		std::smatch
-
-	//typedef 	std::regex_iterator		RI;
-	typedef 	std::sregex_iterator          SRI;
-	typedef 	std::cregex_iterator          CRI;		
-		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-	//typedef 	std::regex_token_iterator     RTI;		
-	typedef 	std::sregex_token_iterator    SRTI;		
-	typedef 	std::cregex_token_iterator    CRTI;		
-#define 	MRTI		std::make_regex_token_iterator 
-
-// #endif
 
 ///////////////////////////////////////////////////////////////////////////////  STRR HEAP
 
@@ -285,8 +247,7 @@ struct strr_heap_t {
 	void	clear	() { E = B; };
 
 	size_t	_size;
-	char 	*B;
-	char 	*E;
+	char 	*B, *E;
 }; 
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
@@ -296,16 +257,27 @@ struct buf_t {
 			char		*bod, *eod;	// data in buffer
 			int		fd;		// file
 			bool		good_file;	// !eof
+			const char 	*path;	
 
-	explicit	buf_t 		(int fd) : fd(fd), good_file(true) {
-		bob = bod = eod =  new char[buf_size];  
-		eob = bob + buf_size;
-		// fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);  TO-TEST
+	explicit	buf_t 		(const char* path)
+		: fd(open(path, O_RDONLY)),  good_file(true),  
+		  bob(new char[buf_size+1]),  bod(bob), eod(bob),  eob(bob+buf_size),  path(path)  {
+		assert(fd>=0);
+		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
 	}
 
+	explicit	buf_t 		(int fd)
+		: fd(fd), good_file(true), bob(new char[buf_size+1]), bod(bob), eod(bob), eob(bob+buf_size), path(0)  {
+		assert(fd>=0);
+	}
+			~buf_t		()	{ delete [] bob; }
 
-	size_t		capacity	()	{ return buf_size; }
-	size_t		size		()	{ return eod-bod; }
+
+
+	size_t		capacity	() const{ return buf_size; }
+	size_t		size		() const{ return eod-bod; }
+	size_t		empty		() const{ return size() == 0; }
+	void		clear		()	{ eod  = bod = bob; }
 
 
 	bool		fill		()	{
@@ -320,6 +292,7 @@ struct buf_t {
 		}
 		return  true;  				// TODO
 	}
+
 
 	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{
 

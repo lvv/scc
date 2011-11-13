@@ -546,16 +546,60 @@ operator>>      (istream& is, Ct<T>& C)    {
 
 ///////////////////////////////////////////////////////////////////// REGEX
 
-	#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-		using std::regex;
-		using std::cmatch;
-		using std::regex_match;
-		using std::regex_token_iterator;
-		using std::sregex_token_iterator;
-		using std::cregex_token_iterator;
+#ifdef  MODERN_GCC
+#include <boost/regex.hpp> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+	using boost::regex;
+	using boost::cmatch;
+	using boost::regex_match;
+	using boost::regex_token_iterator;
+	using boost::sregex_token_iterator;
+	using boost::cregex_token_iterator;
 
+boost::regex&& operator "" _R (const char* p, size_t n)	{ return std::move(boost::regex(p)); };
+
+boost::regex&& operator  (const char* p, size_t n)	{ return std::move(boost::regex(p)); };
+
+/*
+
+		// RR accept const char*  as regex
+			template <class traits, class charT>
+			basic_string<charT>
+		RR (
+			const basic_string<charT>& s,
+	               	//const basic_regex<charT, traits>& e,
+	               	const char* r,
+			const basic_string<charT>& fmt,
+			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
+		)  {
+			return boost::regex_replace<traits, charT>  (s, boost::regex(r), fmt, flags);
+		}
+*/
+
+
+
+	#define 	R		boost::regex
+	//R 	operator "" r(const char * s, size_t n) {return R(s);};
+	#define		FMT 		boost::format
+
+	#define 	RM		boost::regex_match
+	#define 	RS		boost::regex_search
+	#define 	RR		boost::regex_replace
+		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 	
-	regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
+	//#define 	M		boost::match
+	#define 	CM		boost::cmatch
+	#define 	SM		boost::smatch
+
+	//typedef 	boost::regex_iterator		RI;
+	typedef 	boost::sregex_iterator          SRI;
+	typedef 	boost::cregex_iterator          CRI;		
+		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
+	//typedef 	boost::regex_token_iterator     RTI;		
+	typedef 	boost::sregex_token_iterator    SRTI;		
+	typedef 	boost::cregex_token_iterator    CRTI;		
+	#define 	MRTI		boost::make_regex_token_iterator 
+
+#endif
 
 ///////////////////////////////////////////////////////////////////// SORTCUTS
 typedef		std::vector<std::string>	vstr;

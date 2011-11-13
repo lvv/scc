@@ -22,6 +22,8 @@ if [[ $gcc_ver_num > 43 ]] ;  then
 	CXXFLAGS+=" -std=gnu++0x "
 fi 
 
+[[ $gcc_ver_num < 44 ]] && no_boost=1
+
 
 SCC_HOME=$(dirname $(readlink -f $0))
 
@@ -42,6 +44,7 @@ usage_exit() {
 		-i ifs 		- sets simple (not regex)  IFS (input field separator). Needs BOOST.  
 		-I ifs-regex 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
 		-o ofs 		- sets OFS (output field separator) 
+		-B		- do not use Boost
 		-x filename	- save executable to file and do not execute it
 		-O 		- optimized compile
 		-v 		- debug compile
@@ -58,6 +61,7 @@ while getopts npf:vBI:i:o:x:Og opt;  do
 		n)	n_opt=1;  is_stream=1;;
 		p)	p_opt=1;  is_stream=1;;
 		f)	snippet_file=$OPTARG;;
+		B)	no_boost=1;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
 		x)	execute=0;  prg=$OPTARG;;
@@ -76,6 +80,9 @@ done
 shift $((OPTIND-1))
 
 
+
+[[ ! -d /usr/include/boost  ]]  &&  no_boost=1
+
 #####################################################################################  PARSE SNIPPET
 #echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
@@ -86,7 +93,7 @@ end_prt="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
 if [[ $verbose ]] ; then 
 	echo -n "expression: $1             "
 	echo -n "gcc-v: `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`            "
-	echo -n "options:   ${n_opt+n-option}   ${p_opt:+p-option}   ${is_stream:+is-stream}   ${end_prt:+print-end}            "
+	echo -n "options:   ${no_boost+no-Boost}   ${n_opt+n-option}   ${p_opt:+p-option}   ${is_stream:+is-stream}   ${end_prt:+print-end}            "
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
@@ -174,10 +181,17 @@ echo '	}
 }' >>  $src
 
 
+if [[ $no_boost ]];  then 
+	CXXFLAGS+=" -DNO_BOOST "
+else
+	LIBS+='-lboost_regex'
+	CXXFLAGS+=" -DUSE_BOOST "
+fi 
 
 			#echo "-------------------------------------------------"
 			#echo is_stream: $is_stream
 			#echo p_opt: $p_opt
+			#echo no_boost: $no_boost
 			#echo snippet: $snippet
 			#echo end_prt: $end_prt
 
