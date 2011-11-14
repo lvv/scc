@@ -546,7 +546,10 @@ operator>>      (istream& is, Ct<T>& C)    {
 	using std::sregex_token_iterator;
 	using std::cregex_token_iterator;
 
-regex&& operator "" _R (const char* p, size_t n)	{ return std::move(regex(p)); };
+regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
+
+bool  operator ~     (const char  *p,  const regex &e)	{ return regex_match(p,e); };
+bool  operator ~     (const string s,  const regex &e)	{ return regex_match(s,e); };
 
 
 /*
