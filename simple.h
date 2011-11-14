@@ -36,17 +36,8 @@
 #ifdef  MODERN_GCC
 #include <tuple>
 #include <memory>
-//#include <slist>
 #endif
-//#include <type_traits>
 
-///////////////////////////////////////////////////////////////////// BOOST
-#ifndef NO_BOOST
-#include <boost/utility.hpp>
-	// enable_if
-#include <boost/type_traits/is_same.hpp> 
-	// is_same
-#endif
 
 ///////////////////////////////////////////////////////////////////// 
 
@@ -357,7 +348,6 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 // print any std::sequance-containter<printable>
 	template<typename T, template<typename T, typename Al> class Ct >
 	std::ostream&                                              
-	//typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
 operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {              
 	cout << "{";
 		auto it=C.begin();
@@ -547,17 +537,17 @@ operator>>      (istream& is, Ct<T>& C)    {
 ///////////////////////////////////////////////////////////////////// REGEX
 
 #ifdef  MODERN_GCC
-#include <boost/regex.hpp> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-	using boost::regex;
-	using boost::cmatch;
-	using boost::regex_match;
-	using boost::regex_token_iterator;
-	using boost::sregex_token_iterator;
-	using boost::cregex_token_iterator;
+//#include <boost/regex.hpp> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+	using std::regex;
+	using std::cmatch;
+	using std::regex_match;
+	using std::regex_token_iterator;
+	using std::sregex_token_iterator;
+	using std::cregex_token_iterator;
 
-boost::regex&& operator "" _R (const char* p, size_t n)	{ return std::move(boost::regex(p)); };
+regex&& operator "" _R (const char* p, size_t n)	{ return std::move(regex(p)); };
 
-boost::regex&& operator  (const char* p, size_t n)	{ return std::move(boost::regex(p)); };
 
 /*
 
@@ -577,27 +567,27 @@ boost::regex&& operator  (const char* p, size_t n)	{ return std::move(boost::reg
 
 
 
-	#define 	R		boost::regex
+	#define 	R		std::regex
 	//R 	operator "" r(const char * s, size_t n) {return R(s);};
-	#define		FMT 		boost::format
+	#define		FMT 		std::format
 
-	#define 	RM		boost::regex_match
-	#define 	RS		boost::regex_search
-	#define 	RR		boost::regex_replace
+	#define 	RM		std::regex_match
+	#define 	RS		std::regex_search
+	#define 	RR		std::regex_replace
 		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 	
-	//#define 	M		boost::match
-	#define 	CM		boost::cmatch
-	#define 	SM		boost::smatch
+	//#define 	M		std::match
+	#define 	CM		std::cmatch
+	#define 	SM		std::smatch
 
-	//typedef 	boost::regex_iterator		RI;
-	typedef 	boost::sregex_iterator          SRI;
-	typedef 	boost::cregex_iterator          CRI;		
+	//typedef 	std::regex_iterator		RI;
+	typedef 	std::sregex_iterator          SRI;
+	typedef 	std::cregex_iterator          CRI;		
 		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-	//typedef 	boost::regex_token_iterator     RTI;		
-	typedef 	boost::sregex_token_iterator    SRTI;		
-	typedef 	boost::cregex_token_iterator    CRTI;		
-	#define 	MRTI		boost::make_regex_token_iterator 
+	//typedef 	std::regex_token_iterator     RTI;		
+	typedef 	std::sregex_token_iterator    SRTI;		
+	typedef 	std::cregex_token_iterator    CRTI;		
+	#define 	MRTI		std::make_regex_token_iterator 
 
 #endif
 
