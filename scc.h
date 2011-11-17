@@ -255,17 +255,26 @@ struct strr_heap_t {
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
 struct buf_t {	
 	const static	size_t		buf_size=1000000;
-			char		*bob, *eob;	// buffer dimentions
 			char		*bod, *eod;	// data in buffer
-			int		fd;		// file
 			bool		good_file;	// !eof
+			char		*bob, *eob;	// buffer dimentions
 			const char 	*path;	
+			int		fd;		// file
 
 	explicit	buf_t 		(const char* path)
-		: fd(open(path, O_RDONLY)),  good_file(true),  
-		  bob(new char[buf_size+1]),  bod(bob), eod(bob),  eob(bob+buf_size),  path(path)  {
-		assert(fd>=0);
+	        /*       : fd(open(path, O_RDONLY)),  good_file(true),  
+	                 bob(new char[buf_size+1]),  bod(bob), eod(bob),  eob(bob+buf_size),  path(path)  {}
+		*/
+
+		: good_file(true),   path(path) 
+	{	
+		fd = open(path, O_RDONLY); 
+		assert(fd>0);
+		if (fd < 0)  throw  std::ios::failure (path);
 		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
+		bob = new char[buf_size+1];  
+		bod = eod = bob;
+		eob = bob+buf_size;
 	}
 
 	explicit	buf_t 		(int fd)
@@ -277,8 +286,8 @@ struct buf_t {
 
 
 	size_t		capacity	() const{ return buf_size; }
-	size_t		size		() const{ return eod-bod; }
-	size_t		empty		() const{ return size() == 0; }
+	ssize_t		size		() const{ return eod-bod; }
+	bool		empty		() const{ return size() <= 0; }
 	void		clear		()	{ eod  = bod = bob; }
 
 
