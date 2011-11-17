@@ -6,7 +6,7 @@
 #include <scc/simple.h>
 #endif
 
-#ifndef LVV_MATRIX
+#ifndef LVV_MATRIX_H
 #include <scc/matrix.h>
 #endif
 ///////////////////////////////////////////////////////////////////// SHORTCUTS

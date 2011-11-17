@@ -36,17 +36,8 @@
 #ifdef  MODERN_GCC
 #include <tuple>
 #include <memory>
-//#include <slist>
 #endif
-//#include <type_traits>
 
-///////////////////////////////////////////////////////////////////// BOOST
-#ifndef NO_BOOST
-#include <boost/utility.hpp>
-	// enable_if
-#include <boost/type_traits/is_same.hpp> 
-	// is_same
-#endif
 
 ///////////////////////////////////////////////////////////////////// 
 
@@ -60,6 +51,8 @@
 	using	std::basic_ostream;
 	using	std::istream;
 	using	std::ostream;
+	using	std::hex;
+	using	std::dec;
 
 	// containers
 	using	std::vector;
@@ -248,8 +241,14 @@ int gcd(long a, long b) {
 	else		return gcd(b,a%b);
 }
 
+#define countof(array) (sizeof (array) / sizeof(array[0]))
+
+// 11x does not have disable_if
+template <typename COND, typename T = void> 	struct disable_if                     { typedef T type; };
+template <typename T> 				struct disable_if<std::true_type,T>   {};
 
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
+
 
 struct  out { 
 	bool  first_use;
@@ -278,9 +277,9 @@ struct  out {
 
 	// sequance container
 	
-		template<typename T, template<typename T, typename Al> class Ct > 
+		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
 		out& 
-	operator<<      (const Ct<T, std::allocator<T> >& C) {              
+	operator<<      (const Ct<const T, Al<const T> >& C) {              
 		if (paren)  	{if(strlen(paren)) cout << paren[0];}
 		else 		cout << '{';
 		//cout << (paren ? paren[0] : '{');
@@ -292,9 +291,24 @@ struct  out {
 		//cout << (paren ? paren[1] : '}');
 		return *this; 
 	};
-		template<typename T, template<typename T, typename Al> class Ct > 
+
+
+			template<class T, std::size_t N>                
+		typename disable_if<typename std::is_same<T, char>::type,  out&>::type
+	operator<<      (const T (&A)[N]) {
+		cout << "{";
+			int i=0;
+			for (; i<(int)N-1;  i++)	cout << A[i] <<  ", ";
+			cout << A[i];
+		cout << "}";
+		return *this;
+	};
+
+
+
+		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
 		out& 
-	operator,       (const Ct<T, std::allocator<T> >& C) {  return operator<<(C); }
+	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
 
 	operator bool   () {  return true; }
  };
@@ -308,7 +322,7 @@ struct  outln : out  {
 #define		__   outln() << 
 
 
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I allway forget to put semicolon  in:   scc '_ 1;'
+std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 
 
@@ -316,10 +330,10 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 
 // Print any C-array
 
-//#ifdef BOOST_VERSION						// std::disable_if - does not exist yet	in std::
-		template<class T, std::size_t N> 		
-								// disable C-array print for  char[]
-		typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
+//#ifdef BOOST_VERSION                                         // std::disable_if - does not exist yet in std::
+               template<class T, std::size_t N>                
+                                                               // disable C-array print for  char[]
+               typename disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
 		cout << "{";
 			int i=0;
@@ -331,11 +345,9 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // I a
 //#endif
 
 
-
 // print any std::sequance-containter<printable>
 	template<typename T, template<typename T, typename Al> class Ct >
 	std::ostream&                                              
-	//typename boost::disable_if<typename boost::is_same<T, char>::type,  std::ostream&>::type
 operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {              
 	cout << "{";
 		auto it=C.begin();
@@ -468,13 +480,14 @@ struct in_t {
 
 	// input a POD type
 	// usage:   echo 1   | scc 'int N(in);  N'
-	template<typename T> operator T() { T t; cin >> t; return t; }
+	template<typename T>	operator T()		{ T t;   cin >> t;   return t; }
 
 
 	// input  any std::sequance-containter<inputable>
 	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
-	size_t n;
-	in_t& operator() (long N) { n=N;  return *this; }
+
+		size_t n;
+		in_t& operator() (long N) { n=N;  return *this; }
 
 		template<typename T, template<typename T, typename C> class C >
 	operator C<T,std::allocator<T> >()        {
@@ -520,6 +533,70 @@ operator>>      (istream& is, Ct<T>& C)    {
 
 #endif	// MODERN_GCC
 
+
+///////////////////////////////////////////////////////////////////// REGEX
+
+#ifdef  MODERN_GCC
+//#include <boost/regex.hpp> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+	using std::regex;
+	using std::cmatch;
+	using std::regex_match;
+	using std::regex_token_iterator;
+	using std::sregex_token_iterator;
+	using std::cregex_token_iterator;
+
+regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
+
+bool  operator ==     (const char  *p,  const regex &e)	{ return regex_match(p,e); };
+bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e); };
+
+
+/*
+
+		// RR accept const char*  as regex
+			template <class traits, class charT>
+			basic_string<charT>
+		RR (
+			const basic_string<charT>& s,
+	               	//const basic_regex<charT, traits>& e,
+	               	const char* r,
+			const basic_string<charT>& fmt,
+			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
+		)  {
+			return boost::regex_replace<traits, charT>  (s, boost::regex(r), fmt, flags);
+		}
+*/
+
+
+
+	#define 	R		std::regex
+	//R 	operator "" r(const char * s, size_t n) {return R(s);};
+	#define		FMT 		std::format
+
+	#define 	RM		std::regex_match
+	#define 	RS		std::regex_search
+	#define 	RR		std::regex_replace
+		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+	
+	//#define 	M		std::match
+	#define 	CM		std::cmatch
+	#define 	SM		std::smatch
+
+	//typedef 	std::regex_iterator		RI;
+	typedef 	std::sregex_iterator          SRI;
+	typedef 	std::cregex_iterator          CRI;		
+		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
+	//typedef 	std::regex_token_iterator     RTI;		
+	typedef 	std::sregex_token_iterator    SRTI;		
+	typedef 	std::cregex_token_iterator    CRTI;		
+	#define 	MRTI		std::make_regex_token_iterator 
+
+#endif
+
+///////////////////////////////////////////////////////////////////// SORTCUTS
+typedef		std::vector<std::string>	vstr;
+typedef		std::deque<std::string>		dstr;
 
 
 #endif	// LVV_SIMPLE_H

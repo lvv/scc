@@ -234,7 +234,7 @@ regex			| 	N 	|	N		| 	Y
 
 == TODO
 
-* Optimize for speed. GAWK is probably faster now. 
+* Optimize for speed. GAWK is much faster now. 
 * RS,FS regex interface should be simplified
 * Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
 
@@ -255,6 +255,13 @@ Simple workaround: use semicolon before last statement.
 * httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
 * httpx://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
 * httpx://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
+* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial[+++C++11 +++ regex tutorial. Part-1 ]/
+* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial-part-2[+++C++11 +++  regex tutorial. Part-2]/
+* httpx://en.wikipedia.org/wiki/Delimiter[Delimiter]
+* httpx://en.wikipedia.org/wiki/Comma-separated_values[CSV]
+* httpx://home.vrweb.de/~juergen.kahrs/gawk/XML/[XMLgawk]
+* httpx://en.wikipedia.org/wiki/Awk[Awk]
+* http://people.cs.uu.nl/piet/docs/nawk/nawk_23.html[Awk: Specifying how Fields are Separated]
 
 ////////////////
 
@@ -263,6 +270,8 @@ PCRE++
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
+REGEX
+	http://swtch.com/~rsc/regexp/
 JSON
 	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 	http://www.kirit.com/Thread:/1723074

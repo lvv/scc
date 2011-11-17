@@ -1,33 +1,70 @@
 #ifndef  LVV_SCC_H
 #define  LVV_SCC_H
 
-///////////////////////////////////////////////////////////////////// BOOST
-#ifndef NO_BOOST
+	#include <cassert>
 
-	//#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-
-	#include <boost/regex.hpp>
-		using boost::regex;
-		using boost::cmatch;
-		using boost::regex_match;
-		using boost::regex_token_iterator;
-		using boost::sregex_token_iterator;
-		using boost::cregex_token_iterator;
+	// BUF
+	#include <unistd.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <fcntl.h>
+	#include <cerrno>
 
 
-	#include <boost/format.hpp>
-		using boost::format;
-	//using namespace boost;
-
+//////////////////////////////////////////////////////////////////////////////////////////  STRR
 	
-	// literals in gcc460  not implemented
-	//boost::regex operator""R (const char* p, size_t n)	{ return boost::regex(p); };
 
+struct strr {          
+	const char *B, *E;
 
-#endif
+	// CTOR
+	strr()			/*: B(0), E(0)*/  				{};
+	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
+	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
+	strr(const char* B, const char* E):  B(B),  E(E)		{};
+	//strr& operator=(const strr& sr) : B(sr.B), E(sr
 
-///////////////////////////////////////////////////////////////////////////////  STR
-struct field: string {
+	// MEMBERS
+	size_t	size()		const { return E-B; };
+	size_t	empty()		const { return E-B == 0; };
+	bool	operator==(strr sr)	const { return equal(B, E, sr.B); };
+
+	// CONVERSION
+	operator const string			(void) const { return string(B,E); }
+
+	operator ssize_t		(void) const {
+		ssize_t 	sign	= 1;
+		const char	*p	= B;   
+		ssize_t		base	= 10;
+
+		for (;  p<E-1;  p++) { 			// read prefix
+			switch(*p) {
+				case ' ':;   case '\t': continue;
+				case '-':	sign = -1;  p++;  goto end_prefix;
+				case '+':	p++;  goto end_prefix; 
+				default: 	goto end_prefix;
+			}
+		}
+
+		end_prefix:;
+
+		ssize_t  n=0;				// read number
+		for (;  p<E && isdigit(*p);  p++)  {
+			n = n*base + (*p-'0'); 
+		}
+		return sign*n;
+	}
+ };
+
+		inline std::ostream&  
+ operator<<      (ostream& os, const strr f) {               
+	const char *p = f.B;
+	while (p!=f.E)   os << *p++;
+	return os;
+ };
+
+/*
+struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD
 
 	// CTOR
 	field(const char*   s)	: string(s) {};
@@ -87,14 +124,16 @@ struct field: string {
 	long operator++(int) { long old = long(*this); *this = long(*this) + 1; return old; }
 	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
 	// TODO for double
-};
+ };
+	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
+Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 
 
+typedef field string_field; 
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
 
-typedef		std::vector<std::string>	vstr;
-typedef		std::deque<std::string>		dstr;
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////  F
@@ -110,7 +149,7 @@ typedef		std::deque<std::string>		dstr;
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t<field> F;
+	F_t<strr> F;
 		#define 	F0	F(0)
 		#define 	F1	F(1)
 		#define 	F2	F(2)
@@ -121,11 +160,21 @@ typedef		std::deque<std::string>		dstr;
 		#define 	F7	F(7)
 		#define 	F8	F(8)
 		#define 	F9	F(9)
+		#define 	F10	F(10)
+		#define 	F11	F(11)
+		#define 	F12	F(12)
+		#define 	F13	F(13)
+		#define 	F14	F(14)
+		#define 	F15	F(15)
+		#define 	F16	F(16)
+		#define 	F17	F(17)
+		#define 	F18	F(18)
+		#define 	F19	F(19)
 
 	long NF = 0;
 	long NR = 0;
 
-	string       __attribute__((unused))	line;
+	//string       __attribute__((unused))	line;
 
 	#ifdef  arg_OFS
 	string	     __attribute__((unused))	OFS(arg_OFS);
@@ -135,6 +184,7 @@ typedef		std::deque<std::string>		dstr;
 
 	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
 
+	/*
 	#ifdef  arg_IFS
 	string       __attribute__((unused))	IFS(arg_IFS);
 	#else
@@ -144,9 +194,19 @@ typedef		std::deque<std::string>		dstr;
 		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
 		#endif
 	#endif
+	*/
+
+	#ifdef  arg_ifs
+	strr       __attribute__((unused))	IFS(arg_ifs);
+	#else
+	strr       __attribute__((unused))	IFS(" ");
+	#endif
+
+	strr IRS("\n");
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
+	/*
 	void	split() {
 		#ifdef USE_BOOST
 			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
@@ -172,63 +232,157 @@ typedef		std::deque<std::string>		dstr;
 			return false;
 		}
 	};
+	*/
 
-	#ifdef xxxxUSE_BOOST
-		// simplified regex_replace (now accept const char* for regex)
-			template <class traits, class charT>
-			basic_string<charT>
-		RR (
-			const basic_string<charT>& s,
-	               	const basic_regex<charT, traits>& e,
-			const basic_string<charT>& fmt,
-			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
-		)  {
-			return boost::regex_replace<traits, charT>  (s, e, fmt, flags);
+
+	#define 	WRL 	while(buf.get_rec(IRS, IFS, F))
+
+
+///////////////////////////////////////////////////////////////////////////////  STRR HEAP
+
+
+struct strr_heap_t {
+		strr_heap_t	(const size_t size=1000000) :  _size(size),  B(new char[size])  {};
+		~strr_heap_t	() { delete []B; };
+
+	size_t	size	() { return _size; };
+	void	clear	() { E = B; };
+
+	size_t	_size;
+	char 	*B, *E;
+}; 
+
+///////////////////////////////////////////////////////////////////////////////  INPUT BUF
+struct buf_t {	
+	const static	size_t		buf_size=1000000;
+			char		*bod, *eod;	// data in buffer
+			bool		good_file;	// !eof
+			char		*bob, *eob;	// buffer dimentions
+			const char 	*path;	
+			int		fd;		// file
+
+	explicit	buf_t 		(const char* path)
+	        /*       : fd(open(path, O_RDONLY)),  good_file(true),  
+	                 bob(new char[buf_size+1]),  bod(bob), eod(bob),  eob(bob+buf_size),  path(path)  {}
+		*/
+
+		: good_file(true),   path(path) 
+	{	
+		fd = open(path, O_RDONLY); 
+		assert(fd>0);
+		if (fd < 0)  throw  std::ios::failure (path);
+		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
+		bob = new char[buf_size+1];  
+		bod = eod = bob;
+		eob = bob+buf_size;
+	}
+
+	explicit	buf_t 		(int fd)
+		: fd(fd), good_file(true), bob(new char[buf_size+1]), bod(bob), eod(bob), eob(bob+buf_size), path(0)  {
+		assert(fd>=0);
+	}
+			~buf_t		()	{ delete [] bob; }
+
+
+
+	size_t		capacity	() const{ return buf_size; }
+	ssize_t		size		() const{ return eod-bod; }
+	bool		empty		() const{ return size() <= 0; }
+	void		clear		()	{ eod  = bod = bob; }
+
+
+	bool		fill		()	{
+		size_t	buf_free_space = eob-eod;
+		ssize_t	got;
+		if  (buf_free_space > 0) { 
+			retry:
+			got = read (fd, eod,  buf_free_space);
+			if (got == -1  &&  errno == EINTR)	goto  retry;
+			if (got <=  0)				return  false;
+			eod += got;
 		}
+		return  true;  				// TODO
+	}
 
-			template <class traits, class charT>
-			basic_string<charT>
-		RR (
-			const basic_string<charT>& s,
-	               	//const basic_regex<charT, traits>& e,
-	               	const char* r,
-			const basic_string<charT>& fmt,
-			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
-		)  {
-			return boost::regex_replace<traits, charT>  (s, boost::regex(r), fmt, flags);
+
+	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{
+
+		if (!good_file)   return false; 
+
+		char *bor, *p;	// record
+		char *bof; 	// field
+		bor = bof = p = bod;
+		F.clear();
+		F.push_back(strr());	// F[0] - whole line
+
+		while(1) {	//////////////////////////////////////////////////////// read until EOR
+			size_t	unchecked = eod - p;
+			if ( unchecked == 0 )  {
+				size_t  buf_free_space = eob-eod;
+
+				if (buf_free_space == 0) {  // relocate data to begining of buffer
+					if (bor == bob ) {
+						cerr << "warning: Line is too big for buffer. Splitting line.\n";
+						goto return_rec; 
+					} 
+
+					ssize_t data_size = size();
+					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
+
+					// rellocate everything to BOB
+					memcpy(bob, bod, data_size);
+					size_t diff = bod-bob;
+					bod = bor = bob;
+					eod = p = bob + data_size;
+					bof -= diff;	
+					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
+				}
+
+				if ( !(good_file = fill()) )  {
+					if ( bor == p ) 	return false;
+					else 			goto return_rec;
+				}
+			}
+
+			if        ( *p == *(IFS.B))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			else  if  ( *p == *(IRS.B))	{ goto return_rec; } 
+			//strr data_tail(p, eod);
+			//if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			//else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
+			else                                      p++;
+		} 
+
+
+		return_rec: 
+			// P should point to true EOR+1
+			F.push_back(strr(bof,p));  
+			NF = F.size()-1;
+			F[0].B = bor;
+			F[0].E = p;
+			p += IRS.size();
+			bod = p;
+							assert(F[0].B == F[1].B);
+							assert(F[0].E == F[NF].E);
+			return true;
+	}
+
+		private: 
+	bool is_separator(strr rec, strr sep) {
+								assert(!sep.empty()  &&  !rec.empty());
+		return   *rec.B == *sep.B;
+		
+		/*  TO ADD:  multibyte
+		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {
+			if  (rec[i] == sep[i])  continue;
+			else			return false;
 		}
+		return true;
+		*/
+	}
 
-	#endif
 
-	#define WRL  while(read_line())
+ };
 
-///// boost
-
-#ifdef  USE_BOOST
-
-#define 	R		boost::regex
-//R 	operator "" r(const char * s, size_t n) {return R(s);};
-#define		FMT 		boost::format
-
-#define 	RM		boost::regex_match
-#define 	RS		boost::regex_search
-#define 	RR		boost::regex_replace
-		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
-	
-//#define 	M		boost::match
-#define 	CM		boost::cmatch
-#define 	SM		boost::cmatch
-
-//typedef 	boost::regex_iterator		RI;
-typedef 	boost::sregex_iterator          SRI;
-typedef 	boost::cregex_iterator          CRI;		
-		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-//typedef 	boost::regex_token_iterator     RTI;		
-typedef 	boost::sregex_token_iterator    SRTI;		
-typedef 	boost::cregex_token_iterator    CRTI;		
-#define 	MRTI		boost::make_regex_token_iterator 
-
-#endif
 
 
 #endif // SCC
