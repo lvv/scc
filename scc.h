@@ -206,35 +206,6 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
-	/*
-	void	split() {
-		#ifdef USE_BOOST
-			boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(IFS),1);
-			//boost::sregex_token_iterator   ite, it(line.begin(),line.end(), boost::regex(":"),1);
-			while(it!=ite)   F.push_back(field(*it++));
-		#else
-			stringstream	ss(line);
-			string		f;
-			F.clear();
-			while(ss >> f)   F.push_back(f);
-		#endif
-
-		NF = F.size();
-	};
-
-	bool  read_line() {
-		F.clear();
-		if (getline(cin,line)) {
-			split();
-			++ NR;
-			return true;
-		} else {
-			return false;
-		}
-	};
-	*/
-
-
 	#define 	WRL 	while(buf.get_rec(IRS, IFS, F))
 
 
@@ -309,15 +280,16 @@ struct buf_t {
 
 		if (!good_file)   return false; 
 
-		char *bor, *p;	// record
-		char *bof; 	// field
-		bor = bof = p = bod;
+		char *p   (bod);	
+		char *bor (bod);	// record
+		char *bof (bod);; 	// field
+
 		F.clear();
 		F.push_back(strr());	// F[0] - whole line
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
-			size_t	unchecked = eod - p;
-			if ( unchecked == 0 )  {
+			size_t	unused_data = eod - p;
+			if ( unused_data == 0 )  {
 				size_t  buf_free_space = eob-eod;
 
 				if (buf_free_space == 0) {  // relocate data to begining of buffer
