@@ -64,6 +64,10 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
 
+CAUTION: Currently SCC goes through major changes (to make it x100 faster for AWK ops).
+Readme is not updated and  examples  after this point will work only for commit tagged as v0.1 
+
+
 Sum-up _DF(1)_ used-disk-space column:
 
 ----------------------------------------------------------------------------
