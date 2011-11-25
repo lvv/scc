@@ -2,16 +2,20 @@
 SCC — Simple CC  
 ===============
 
-_+++C++ +++_ snippets evaluator (REPL without L),  implemented as GCC wrapper with some _AWK_ features. 
+_SCC_ is _+++C++ +++_ snippets evaluator (REPL without L), with some _AWK_ features.  Implemented as GCC wrapper.
 
-For all examples to work use commit tagged as v0.1. You need _>=GCC-4.6.0_ and _BOOST_ (optinal).
 
-Tip of master branch (do not use) is about x100 faster for AWK ops, but only  _GCC-4.7_ is supported (_BOOST_ is not used).
+Status
+-------
+For all examples to work use commit tagged as v0.1;  gcc-4.6 or newer and _Boost_ . This page describes v0.1. 
+If used as simple REPL, older gcc (tested with gcc-4.4) will work too and Boost is not needed. 
+
+Tip of master branch (do not use) is about x100 faster for AWK ops, but only  gcc-4.7 is supported  and Boost is not used.
 
 Examples
 --------
 
-_+++C++ +++_ expression  evaluated and printed:
+C++ expression  evaluated and printed:
 
 ----------------------------------------------------------------------------
 scc 2+2								
@@ -51,9 +55,36 @@ scc 'x=0.5;  __ sin(x);'
 0.479426
 ----------------------------------------------------------------------------
 
-Square an array.  +++C++11+++ is on by default.  Current (>=4.6.0) _GCC_ is
-needed for this example.  Include `simple.h` makes from _STL_ containers an
-object which you can print. Typedef `vint` is `std::vector<int>`: 
+All _STL_ containers can be sent to `std::cout`.   Typedef `vint` is `std::vector<int>`: 
+
+---------------------------------------------------------------------------
+scc 'vint  v{1,2,3};  v'
+{1, 2, 3}
+
+scc 'tuple<const char*,int>  v{"aaa",2};  v'
+⟨aaa, 2⟩
+
+scc 'tuple<const char*,int,tuple<int,float>>  v{"aaa",2,make_tuple(3,4.5f)};  v'
+⟨aaa, 2, ⟨3, 4.5⟩⟩
+
+scc 'map<int,int>  v{{1,1},{2,2}};  v'
+{⟨1,1⟩, ⟨2,2⟩}
+
+scc 'set<int>  v{2,2};  v'
+{2}
+
+scc 'vector<vint>  v{{1,1}, {2,2}};  v'
+{{1, 1}, {2, 2}}
+
+scc 'int  v[3]{1,2,3};  v'
+{1, 2, 3}
+
+scc 'vector<map<str,int>>  v{{{"aa",1}, {"bb",2}}};  v' 
+{{⟨aa,1⟩, ⟨bb,2⟩}}
+
+---------------------------------------------------------------------------
+
+Square an array.  +++C++ 11 +++ is on by default.  gcc-4.6.0 or newer is needed for this example
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
@@ -76,7 +107,7 @@ df  |  scc 'WRL n+=F2;  n'
 ----------------------------------------------------------------------------
 
 
-__________________________________________________________________
+***************************************************************************
 Explanation:
 Shortcut `WRL` expands to `while(read_line())`.  
 Function `read_line()`, reads input line, splits it into fields. One input line is an array of fields `F`.
@@ -89,7 +120,7 @@ Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
 You don't need to remember these, you can re-declare/re-define these freely. 
-__________________________________________________________________
+****************************************************************************
 
 
 Prepend line number to every line.
