@@ -114,12 +114,7 @@ cat <<  END	 >> $src
 
 #include <simple.h>
 
-#ifdef MODERN_GCC 
-   #include <scc.h>
-#else
-   bool read_line() { cerr << "stream operation no supported for old GCC\n";  exit(1);  return false; };
-   #define WRL read_line();
-#endif
+#include <scc.h>
 
 #include <cj.h>
 #include <matrix.h>

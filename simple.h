@@ -1,9 +1,13 @@
 #ifndef  LVV_SIMPLE_H
 #define  LVV_SIMPLE_H
 
-#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) ) 
-	#define  MODERN_GCC	1
+#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
+#error "error: SCC/simple.h does not support GCC earlier than 4.7"
 #endif
+
+//#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) ) 
+//	#define  MODERN_GCC	1
+//#endif
 
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
@@ -11,6 +15,7 @@
 #include <cstring>
 #include <cctype>
 #include <cmath>
+//#include <tgmath.h>
 
 ///////////////////////////////////////////////////////////////////// C++ IO
 #include <iostream>
@@ -32,11 +37,9 @@
 #include <queue>
 #include <limits>
 #include <bitset>
-///////////////////////////////////////////////////////////////////// C++0X STL
-#ifdef  MODERN_GCC
+///////////////////////////////////////////////////////////////////// C++11 STL
 #include <tuple>
 #include <memory>
-#endif
 
 
 ///////////////////////////////////////////////////////////////////// 
@@ -143,9 +146,7 @@
 
 
 	// heap
-	#ifdef MODERN_GCC
-	using	std::is_heap;
-	#endif
+	using	std::is_heap;			// C++11
 	using	std::make_heap;
 	using	std::push_heap;
 	using	std::pop_heap;
@@ -156,10 +157,8 @@
 	using	std::min;
 	using	std::max_element;
 	using	std::min_element;
-	#ifdef MODERN_GCC
-	using	std::minmax;
-	using	std::minmax_element;
-	#endif
+	using	std::minmax;			// C++11
+	using	std::minmax_element;		// C++11
 	using	std::lexicographical_compare;
 	using	std::next_permutation;
 	using	std::prev_permutation;
@@ -174,19 +173,15 @@
 	// ????
 	using	std::pair;
 	using	std::make_pair;
-	#ifdef MODERN_GCC
-	using	std::tie;
-	using	std::make_tuple;
-	using	std::iota;
-	#endif
+	using	std::tie;			// C++11
+	using	std::make_tuple;		// C++11
+	using	std::iota;			// C++11
 	
-	#ifdef MODERN_GCC
-	// memory
+	// memory  (C++11)
 	using	std::shared_ptr;
 	using	std::unique_ptr;
 	using	std::auto_ptr;
 	using	std::weak_ptr;
-	#endif
 	
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
@@ -196,9 +191,8 @@
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////   gcc-4.6.0
+///////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
-#ifdef MODERN_GCC
 
 
 // OSI -- Output Stream Iterator 
@@ -213,15 +207,6 @@ struct	osi : ostream_iterator<T> {
 	~osi() { if (self_addr == (void*) this)   cout << endl; };	
 };
 
-/*
-// ISI -- Output Stream Iterator shortcut
-// 	used as:	vector<int> V (isi<int>(cin), isi<int>());
-	template<typename T>
-struct	isi : istream_iterator<T> {
-	isi(istream& is):	istream_iterator<T>(is)	{}; 
-	isi(): 			istream_iterator<T>()	{}; 
-};
-*/
 
 	
 ///////////////////////////////////////////////////////////////////// UTILS
@@ -330,7 +315,6 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 // Print any C-array
 
-//#ifdef BOOST_VERSION                                         // std::disable_if - does not exist yet in std::
                template<class T, std::size_t N>                
                                                                // disable C-array print for  char[]
                typename disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
@@ -342,7 +326,6 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 		cout << "}";
 		return os;
 	};
-//#endif
 
 
 // print any std::sequance-containter<printable>
@@ -396,7 +379,6 @@ operator<<      (ostream& os, const typename std::pair<T,U>& p) {
 // TUPLE -- print any std::tuple<printable ...>
 // 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
 
-#ifdef 	MODERN_GCC
 	using	std::tuple;
 	using	std::tuple_size;
 	using	std::get;
@@ -427,7 +409,6 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };
-#endif
 	// Using C++0x Variadic Templates to Pretty-Print Types 
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 	
@@ -437,9 +418,6 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
-
-#ifdef 	MODERN_GCC
-
 
 
 ////// push_back/push_front replaement
@@ -465,7 +443,6 @@ operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return
 	Ct <T,std::allocator<T>> &                                              
 operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; }; 
 
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT
 
@@ -516,7 +493,6 @@ in_t in;
 // Container must have non-zero size()
 // Used as:   vector<int> V(3);   cin >> V;
 
-	#ifdef 	MODERN_GCC
 	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
 	std::istream&                                              
 operator>>      (istream& is, Ct<T>& C)    {
@@ -528,17 +504,14 @@ operator>>      (istream& is, Ct<T>& C)    {
 	}
 	return is;
 }; 
-	#endif
 
 
-#endif	// MODERN_GCC
 
 
 ///////////////////////////////////////////////////////////////////// REGEX
 
-#ifdef  MODERN_GCC
-//#include <boost/regex.hpp> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
-#include <regex> 	 // std::regex - 4.6.0  fail with: scc 'RS("abc", R("abc"))'
+//#include <boost/regex.hpp> 	
+#include <regex> 	 // C++11;   std::regex - 4.7.0  fail with: scc 'RS("abc", R("abc"))'
 	using std::regex;
 	using std::cmatch;
 	using std::regex_match;
@@ -592,7 +565,6 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	typedef 	std::cregex_token_iterator    CRTI;		
 	#define 	MRTI		std::make_regex_token_iterator 
 
-#endif
 
 ///////////////////////////////////////////////////////////////////// SORTCUTS
 typedef		std::vector<std::string>	vstr;

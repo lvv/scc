@@ -2,11 +2,14 @@
 SCC — Simple CC  
 ===============
 
-// (aka Snippet C++ Compiler)
+_+++C++ +++_ snippets evaluator (REPL without L),  implemented as GCC wrapper with some _AWK_ features. 
 
-A _Bash_ wrapper for _GCC_ which serves as _+++C++ +++_ snippet evaluator or as something
-similar to _AWK_ with _+++C++ +++_ syntax.  You need _>=GCC-4.6.0_ and _BOOST_ for all
-features to work. 
+For all examples to work use commit tagged as v0.1. You need _>=GCC-4.6.0_ and _BOOST_ (optinal).
+
+Tip of master branch (do not use) is about x100 faster for AWK ops, but only  _GCC-4.7_ is supported (_BOOST_ is not used).
+
+Examples
+--------
 
 _+++C++ +++_ expression  evaluated and printed:
 
@@ -40,17 +43,17 @@ scc 'double x=0.5;  cout << sin(x) << endl;'
 ----------------------------------------------------------------------------
 
 _SCC_ includes `simple.h` which has a lot of shortcuts (à la _Google CodeJam_).
-Same as previous example, but with _SCC's_ shortcut
-for `std::cout` - http://volnitsky.com/project/scc/#_simplified_printing[bar-print]. 
+Same as previous example, but with _SCC's_ shortcuts (
+http://volnitsky.com/project/scc/#_simplified_printing[bar-print] and pre-declared vars)
 
 ----------------------------------------------------------------------------
-scc 'double x=0.5;  __ sin(x);'	
+scc 'x=0.5;  __ sin(x);'	
 0.479426
 ----------------------------------------------------------------------------
 
 Square an array.  +++C++11+++ is on by default.  Current (>=4.6.0) _GCC_ is
 needed for this example.  Include `simple.h` makes from _STL_ containers an
-object objects which you can print. Typedef `vint` is `std::vector<int>`: 
+object which you can print. Typedef `vint` is `std::vector<int>`: 
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
@@ -63,9 +66,6 @@ Words frequencies (typedef `str` is `std::string`):
 echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
-
-CAUTION: Currently SCC goes through major changes (to make it x100 faster for AWK ops).
-Readme is not updated and  examples  after this point will work only for commit tagged as v0.1 
 
 
 Sum-up _DF(1)_ used-disk-space column:
