@@ -6,13 +6,8 @@
 
 #### get GCC version
 : ${GCC_PATH? must be defined}
-gcc_ver=${GCC_PATH##*/}
 
-if [[ $gcc_ver =~ ^([[:digit:]])*.([[:digit:]]) ]]  ;   then
-	gcc_ver_num=${BASH_REMATCH[1]}${BASH_REMATCH[2]}
-fi
-
-#####################################################################################
+gcc_ver_num=`gcc -v |& sed -n 's/^gcc version \([[:digit:]]\).\([[:digit:]]\).*/\1\2/p'`
 CXXFLAGS+=" -Wall  -pipe -O3 "
 if [[ $gcc_ver_num > 43 ]] ;  then 
 	CXXFLAGS+=" -std=gnu++0x "
