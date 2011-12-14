@@ -278,9 +278,11 @@ JSON
 	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
 XML
 	awk xml -- http://pastebin.com/Vwvz3gzb
+	http://www.artima.com/cppsource/xml_data_binding.html
 	http://www.grinninglizard.com/tinyxml/
 	http://stackoverflow.com/questions/170686/best-open-xml-parser-for-c
 	http://rapidxml.sourceforge.net/
+	http://www.codeguru.com/cpp/data/data-misc/xml/article.php/c19341
 	-----------
 	There is a boost::xml in the sandbox and it's very good. We use
 	TinyXML++ (which is decent) here but boost::xml was preferred; it was

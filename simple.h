@@ -95,6 +95,7 @@
 	// modifying 
 	using	std::copy;
 	using	std::copy_backward;
+	using	std::copy_if;		//C++11
 	using	std::fill;
 	using	std::fill_n;
 	using	std::transform;
@@ -176,6 +177,8 @@
 	using	std::tie;			// C++11
 	using	std::make_tuple;		// C++11
 	using	std::iota;			// C++11
+	using	std::begin;			// C++11
+	using	std::end;			// C++11
 	
 	// memory  (C++11)
 	using	std::shared_ptr;
