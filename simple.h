@@ -191,23 +191,8 @@
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////   
-
-
-
-// OSI -- Output Stream Iterator 
-// 	shorthand for:	ostream_iterator<T>(cout, " ")
-// 	used as:	copy(V.begin(), V.end(), osi<T>());
-// 	also DTOR adds std::endl 
-
-	template<typename T=int>
-struct	osi : ostream_iterator<T> {
-	osi(): ostream_iterator<T>(cout, " ") { self_addr = (void*) this; }; 
-	void* self_addr;	// to check if we are original instance of osi
-	~osi() { if (self_addr == (void*) this)   cout << endl; };	
-};
-
-// OUTI -- Output Stream Iterator
+///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
+// OUTI -- Output Iterator
 // 	shorthand for:	ostream_iterator<T>(cout, " ")
 // 	used as:	copy(V.begin(), V.end(), outi);
 
