@@ -298,6 +298,7 @@ ENCODING
 		
 	Take a look on Boost.Locale it is a part of it
 DB
+	SQL connectors -- http://www.reddit.com/r/cpp/comments/mrbc5/how_to_connect_to_an_sql_database/
 	http://soci.sourceforge.net/
 	https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.RDB
 	http://webtoolkit.eu/wt#/blog/2009/11/26/wt__dbo__an_orm__c___style
