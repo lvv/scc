@@ -581,9 +581,4 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	#define 	MRTI		std::make_regex_token_iterator 
 
 
-///////////////////////////////////////////////////////////////////// SORTCUTS
-typedef		std::vector<std::string>	vstr;
-typedef		std::deque<std::string>		dstr;
-
-
 #endif	// LVV_SIMPLE_H
