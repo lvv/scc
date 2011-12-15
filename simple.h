@@ -196,26 +196,29 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
 // OUTI -- Output Iterator
-// 	shorthand for:	ostream_iterator<T>(cout, " ")
-// 	used as:	copy(V.begin(), V.end(), outi);
+// 	similar to (but shorter):	ostream_iterator<T>(cout, " ")
+// 	used as:			copy(V.begin(), V.end(), outi);
 
+namespace outi_space {			// to hide outi_any_t
 
-	struct	outi_any_t {
-		// CTOR
-		template<typename T>			outi_any_t(const T& v)		{ cout << v; };
-		template<typename T>			outi_any_t(T&& v)		{ cout << v; };
-		// OP=
-		template<typename T>	outi_any_t&	operator=(const T& v)		{ cout << v;  return *this; };
-		template<typename T>	outi_any_t&	operator=(T&& v)		{ cout << v;  return *this; };
+		struct	outi_any_t {
+			// CTOR
+			template<typename T>			outi_any_t(const T& v)		{ cout << v; };
+			template<typename T>			outi_any_t(T&& v)		{ cout << v; };
+			// OP=
+			template<typename T>	outi_any_t&	operator=(const T& v)		{ cout << v;  return *this; };
+			template<typename T>	outi_any_t&	operator=(T&& v)		{ cout << v;  return *this; };
+		};
+
+		ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
+
+	struct	outi_t  : ostream_iterator<outi_any_t> {
+		outi_t(): ostream_iterator<outi_any_t> (cout, " ") {};
 	};
 
-	ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
+}
 
-struct	outi_t  : ostream_iterator<outi_any_t> {
-	outi_t(): ostream_iterator<outi_any_t> (cout, " ") {};
-};
-
-static outi_t outi;
+static outi_space::outi_t outi;
 
 
 
