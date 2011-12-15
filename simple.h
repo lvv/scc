@@ -55,6 +55,7 @@
 	using	std::istream;
 	using	std::ostream;
 	using	std::hex;
+	using	std::flush;
 	using	std::dec;
 
 	// containers
@@ -202,18 +203,15 @@
 namespace outi_space {			// to hide outi_any_t
 
 		struct	outi_any_t {
-			// CTOR
-			template<typename T>			outi_any_t(const T& v)		{ cout << v; };
-			template<typename T>			outi_any_t(T&& v)		{ cout << v; };
-			// OP=
-			template<typename T>	outi_any_t&	operator=(const T& v)		{ cout << v;  return *this; };
-			template<typename T>	outi_any_t&	operator=(T&& v)		{ cout << v;  return *this; };
+								outi_any_t(char v)		{ cout << v; }; // overload for char
+			template<typename T>			outi_any_t(const T& v)		{ cout << v << " "; };
+			template<typename T>			outi_any_t(T&& v)		{ cout << v << " "; };
 		};
 
 		ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
 
-	struct	outi_t  : ostream_iterator<outi_any_t> {
-		outi_t(): ostream_iterator<outi_any_t> (cout, " ") {};
+	struct	outi_t  : ostream_iterator<outi_any_t> {		//  using only ostream_iterator<outi_any_t> interface
+		outi_t(): ostream_iterator<outi_any_t> (cout, "") {};
 	};
 
 }
