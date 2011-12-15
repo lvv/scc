@@ -11,6 +11,8 @@
 #endif
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
+#define 	ret 	return 	
+
 ///// types
 typedef		std::vector<int>          	vint;
 typedef		std::vector<unsigned int> 	vuint;
