@@ -7,7 +7,7 @@
 
 
 int main() {
-	buf_t buf(0);
+	buf_t buf(0); // stdin
 	strr rec;
 
 	size_t cnt=0;
@@ -15,8 +15,8 @@ int main() {
 	size_t f_sz = 0;
 	size_t f_cnt = 0;
 
-	vector<strr> F;
-	while(buf.get_rec(strr("\n"), strr("."), F)) {
+	F_t<strr> F;
+	while(buf.get_rec('\n', '.', F)) {
 		sz += rec.size();
 		f_cnt += F.size();
 		for(size_t i=0;  i<F.size();  i++)  { f_sz +=  F[i].size();  _ " \"", F[i], "\" "; }

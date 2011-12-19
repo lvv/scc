@@ -226,17 +226,13 @@ struct strr_heap_t {
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
 struct buf_t {	
 	const static	size_t		buf_size=1000000;
-			char		*bod, *eod;	// data in buffer
 			bool		good_file;	// !eof
 			char		*bob, *eob;	// buffer dimentions
+			char		*bod, *eod;	// data in buffer
 			const char 	*path;	
 			int		fd;		// file
 
 	explicit	buf_t 		(const char* path)
-	        /*       : fd(open(path, O_RDONLY)),  good_file(true),  
-	                 bob(new char[buf_size+1]),  bod(bob), eod(bob),  eob(bob+buf_size),  path(path)  {}
-		*/
-
 		: good_file(true),   path(path) 
 	{	
 		fd = open(path, O_RDONLY); 
@@ -249,7 +245,7 @@ struct buf_t {
 	}
 
 	explicit	buf_t 		(int fd)
-		: fd(fd), good_file(true), bob(new char[buf_size+1]), bod(bob), eod(bob), eob(bob+buf_size), path(0)  {
+		: good_file(true), bob(new char[buf_size+1]), eob(bob+buf_size), bod(bob), eod(bob), path(0), fd(fd) {
 		assert(fd>=0);
 	}
 			~buf_t		()	{ delete [] bob; }
@@ -276,7 +272,68 @@ struct buf_t {
 	}
 
 
-	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{
+	bool		get_rec		(char IRS,  char IFS,  F_t<strr>& F)	{	// seperators are strr overload
+
+		if (!good_file)   return false; 
+
+		char *p   (bod);	
+		char *bor (bod);	// record
+		char *bof (bod);; 	// field
+
+		F.clear();
+		F.push_back(strr());	// F[0] - whole line
+
+		while(1) {	//////////////////////////////////////////////////////// read until EOR
+			size_t	unused_data = eod - p;
+			if ( unused_data == 0 )  {
+				size_t  buf_free_space = eob-eod;
+
+				if (buf_free_space == 0) {  // relocate data to begining of buffer
+					if (bor == bob ) {
+						cerr << "warning: Line is too big for buffer. Splitting line.\n";
+						goto return_rec; 
+					} 
+
+					ssize_t data_size = size();
+					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
+
+					// rellocate everything to BOB
+					memcpy(bob, bod, data_size);
+					size_t diff = bod-bob;
+					bod = bor = bob;
+					eod = p = bob + data_size;
+					bof -= diff;	
+					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
+				}
+
+				if ( !(good_file = fill()) )  {
+					if ( bor == p ) 	return false;
+					else 			goto return_rec;
+				}
+			}
+
+			if        (*p == IFS)	{ F.push_back(strr(bof,p));  p += sizeof(IFS);  bof = p; }
+			else  if  (*p == IRS)	{ goto return_rec; } 
+			else                                      p++;
+		} 
+
+
+		return_rec: 
+			// P should point to true EOR+1
+			F.push_back(strr(bof,p));  
+			NF = F.size()-1;
+			F[0].B = bor;
+			F[0].E = p;
+			p += sizeof(IRS);
+			bod = p;
+							assert(F[0].B == F[1].B);
+							assert(F[0].E == F[NF].E);
+			return true;
+	}
+
+
+	// NOT TESTED, NOT EDITED
+	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{	// seperators are strr overload
 
 		if (!good_file)   return false; 
 
