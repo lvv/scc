@@ -55,17 +55,17 @@ usage_exit() {
 while getopts npf:vBI:i:o:x:Og opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
-		n)	CXXFLAGS+=" -Darg_N  -Darg_IS_STREAM ";; 
+		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";; 
 		#p)	p_opt=1;  is_stream=1;;
-		p)	CXXFLAGS+=" -Darg_P  -Darg_IS_STREAM ";; 
+		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";; 
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
-		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
+		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
 		x)	execute=0;  prg=$OPTARG;;
-		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_ifs=$OPTARG "
-						  else  CXXFLAGS+=" -Darg_ifs=\"$OPTARG\" ";  fi;; 
-		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
-						  else  CXXFLAGS+=" -Darg_OFS=\"$OPTARG\" ";  fi;; 
+		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$OPTARG "
+						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
+		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
+						  else  CXXFLAGS+=" -Dscc_OFS=\"$OPTARG\" ";  fi;; 
 		O) 	CXXFLAGS+="-O3 -march=native";;
 		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check";;
 		?) 	usage_exit;;
@@ -82,12 +82,13 @@ shift $((OPTIND-1))
 #echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
 
 
-end_prt="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
+print_last="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
+CXXFLAGS+="${print_last:+ -Dscc_PRINT_LAST }"
 
 if [[ $verbose ]] ; then 
 	echo -n "expression: $1             "
 	echo -n "gcc-v: `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`            "
-	echo -n "options:   ${end_prt:+print-end}            "
+	echo -n "options:   ${print_last:+print-last}            "
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
@@ -96,8 +97,8 @@ then	snippet="`cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;
 else	snippet="`echo \"${1%% }\"   | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`";
 fi
 
-[[ $n_opt       && $end_prt ]]	&& snippet+="cout << endl;"
-[[ ! $is_stream && $end_prt ]]	&& snippet+="cout << endl;"
+[[ $n_opt       && $print_last ]]	&& snippet+="cout << endl;"
+[[ ! $is_stream && $print_last ]]	&& snippet+="cout << endl;"
 
 
 #####################################################################################  GENERATE SRC

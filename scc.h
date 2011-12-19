@@ -176,8 +176,8 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 	//string       __attribute__((unused))	line;
 
-	#ifdef  arg_OFS
-	string	     __attribute__((unused))	OFS(arg_OFS);
+	#ifdef  scc_OFS
+	string	     __attribute__((unused))	OFS(scc_OFS);
 	#else
 	string	     __attribute__((unused))	OFS(" ");
 	#endif
@@ -185,19 +185,19 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
 
 	/*
-	#ifdef  arg_IFS
-	string       __attribute__((unused))	IFS(arg_IFS);
+	#ifdef  scc_IFS
+	string       __attribute__((unused))	IFS(scc_IFS);
 	#else
-		#ifdef  arg_ifs
-		string       __attribute__((unused))	IFS("([^" arg_ifs "]+)(" arg_ifs "|$)");	// field (data) is 1st group; IFS is second group
+		#ifdef  scc_ifs
+		string       __attribute__((unused))	IFS("([^" scc_ifs "]+)(" scc_ifs "|$)");	// field (data) is 1st group; IFS is second group
 		#else
 		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
 		#endif
 	#endif
 	*/
 
-	#ifdef  arg_ifs
-	strr       __attribute__((unused))	IFS(arg_ifs);
+	#ifdef  scc_ifs
+	strr       __attribute__((unused))	IFS(scc_ifs);
 	#else
 	strr       __attribute__((unused))	IFS(" ");
 	#endif
