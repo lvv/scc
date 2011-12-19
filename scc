@@ -26,8 +26,9 @@ SCC_HOME=$(dirname $(readlink -f $0))
 CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} "
 
 prg=/tmp/$USER-scc
-rm -f $prg
-src=$prg.cc
+src=$SCC_HOME/scc.cc
+snippet_h=/tmp/snippet.h
+rm -f $prg $snippet_h
 execute=1
 
 usage_exit() {
@@ -53,8 +54,10 @@ usage_exit() {
 
 while getopts npf:vBI:i:o:x:Og opt;  do
 	case $opt in
-		n)	n_opt=1;  is_stream=1;;
-		p)	p_opt=1;  is_stream=1;;
+		#n)	n_opt=1;  is_stream=1;;
+		n)	CXXFLAGS+=" -Darg_N  -Darg_IS_STREAM ";; 
+		#p)	p_opt=1;  is_stream=1;;
+		p)	CXXFLAGS+=" -Darg_P  -Darg_IS_STREAM ";; 
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Darg_IFS=$OPTARG ";; 
@@ -64,7 +67,7 @@ while getopts npf:vBI:i:o:x:Og opt;  do
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Darg_OFS=$OPTARG "
 						  else  CXXFLAGS+=" -Darg_OFS=\"$OPTARG\" ";  fi;; 
 		O) 	CXXFLAGS+="-O3 -march=native";;
-		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check  -fsignaling-nans";;
+		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check";;
 		?) 	usage_exit;;
 	esac
 done
@@ -84,7 +87,7 @@ end_prt="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
 if [[ $verbose ]] ; then 
 	echo -n "expression: $1             "
 	echo -n "gcc-v: `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`            "
-	echo -n "options:   ${n_opt+n-option}   ${p_opt:+p-option}   ${is_stream:+is-stream}   ${end_prt:+print-end}            "
+	echo -n "options:   ${end_prt:+print-end}            "
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
@@ -99,72 +102,8 @@ fi
 
 #####################################################################################  GENERATE SRC
 
-echo "/*  This C++ code was generated with SCC from following snippet:"   >  $src
-echo "-----------------------------------"                                   >> $src
-if [[ $snippet_file ]]
-	then 	cat $snippet_file                                            >> $src
-	else	echo "$1"                                                    >> $src
-fi
+echo  $snippet > /tmp/snippet.h
 
-echo "-----------------------------------"                                   >> $src
-echo "*/"                                                                    >> $src
-
-cat <<  END	 >> $src
-
-
-#include <simple.h>
-
-#include <scc.h>
-
-#include <cj.h>
-#include <matrix.h>
-
-
-int main(int argc, char** argv) {
-	long i __attribute__((unused)) = 0;
-	long j __attribute__((unused)) = 0;
-	long k __attribute__((unused)) = 0;
-	long n __attribute__((unused)) = 0;
-	long m __attribute__((unused)) = 0;
-	long l __attribute__((unused)) = 0;
-
-	double x __attribute__((unused)) = 0.0;
-	double y __attribute__((unused)) = 0.0;
-	double f __attribute__((unused)) = 0.0;
-
-	std::string s __attribute__((unused));
-
-	buf_t	buf(0);
-
-	{
-END
-
-if [[  $is_stream ]];  then 
-
-	#echo "	while ( read_line()) { $snippet " >> $src
-	echo "	while ( buf.get_rec(strr(IRS), strr(IFS), F) ) { $snippet " >> $src
-
-	if [[  $p_opt ]];  then 
-
-		[[ $end_prt ]]   &&  echo 'cout << OFS;' >> $src
-
-		echo "
-			for(int i=1;   i < int(F.size())-1;  i++)
-				cout  << F[i] << OFS;
-			if (F.size() > 1)  cout << F.back();
-			cout << endl;
-		" >> $src
-	fi
-
-	echo "	}" >> $src
-
-else
-	echo "$snippet" >> $src  
-fi
-
-
-echo '	}
-}' >>  $src
 
 
 if  ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS ;  then 
