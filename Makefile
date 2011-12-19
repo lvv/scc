@@ -21,5 +21,5 @@ index.txt:
 
 ###########################################################
 CXXFLAGS=   -std=gnu++0x -Wall -I/home/lvv/p/ 
-t_buf-r: t-buf
+t-buf-r: t-buf
 	echo 11.22 | ./t-buf
