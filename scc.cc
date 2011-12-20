@@ -18,8 +18,21 @@ int main(int argc, char** argv) {
 
 	std::string s __attribute__((unused));
 	std::string w __attribute__((unused));
+	char* p       __attribute__((unused));;
 
 	buf_t	buf(0);	// stdio
+
+	// IRS
+	p = std::getenv("IRS");
+	if (p==nullptr)		IRS = strr("\n");
+	else			IRS = strr(p);
+
+	// IFS
+	#ifndef  scc_ifs
+	p = std::getenv("IFS");
+	if (p==nullptr)		IFS = strr(" ");
+	else			IFS = strr(p);
+	#endif
 
 	{
 
@@ -27,8 +40,8 @@ int main(int argc, char** argv) {
 
 		std::function<bool()>  read_line;
 
-		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return buf.get_rec(IRS.B, IFS.B, F); };
-		else					read_line = [&]() { return buf.get_rec(strr(IRS), strr(IFS), F); };
+		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return  buf.get_rec(*IRS.B, *IFS.B, F); };
+		else					read_line = [&]() { return  buf.get_rec(IRS, IFS, F); };
 
 		while (read_line()) {
 

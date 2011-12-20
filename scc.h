@@ -216,13 +216,16 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 	#endif
 	*/
 
-	#ifdef  scc_ifs
-	strr       __attribute__((unused))	IFS(scc_ifs);
-	#else
-	strr       __attribute__((unused))	IFS(" ");
-	#endif
+	strr	IRS;
 
-	strr IRS("\n");
+	strr	IFS  __attribute__((unused)) 
+		#ifdef  scc_ifs
+			(scc_ifs);
+		#else
+			(" ");
+		#endif
+
+
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
@@ -334,12 +337,11 @@ struct buf_t {
 
 			if        (*p == IFS)	{ F.push_back(strr(bof,p));  p += sizeof(IFS);  bof = p; }
 			else  if  (*p == IRS)	{ goto return_rec; } 
-			else                                      p++;
+			else			p++;
 		} 
 
 
 		return_rec: 
-			// P should point to true EOR+1
 			F.push_back(strr(bof,p));  
 			NF = F.size()-1;
 			F[0].B = bor;
@@ -353,7 +355,7 @@ struct buf_t {
 
 
 	// NOT TESTED, NOT EDITED
-	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{	// seperators are strr overload
+	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{	// seperators are STRR overload
 
 		if (!good_file)   return false; 
 
@@ -393,17 +395,13 @@ struct buf_t {
 				}
 			}
 
-			if        ( *p == *(IFS.B))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
-			else  if  ( *p == *(IRS.B))	{ goto return_rec; } 
-			//strr data_tail(p, eod);
-			//if        (is_separator(data_tail, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
-			//else  if  (is_separator(data_tail, IRS))	{ goto return_rec; } 
+			if        (is_separator(p, eod, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; } 
 			else                                      p++;
 		} 
 
 
 		return_rec: 
-			// P should point to true EOR+1
 			F.push_back(strr(bof,p));  
 			NF = F.size()-1;
 			F[0].B = bor;
@@ -416,17 +414,11 @@ struct buf_t {
 	}
 
 		private: 
-	bool is_separator(strr rec, strr sep) {
-								assert(!sep.empty()  &&  !rec.empty());
-		return   *rec.B == *sep.B;
-		
-		/*  TO ADD:  multibyte
-		for ( size_t i=1;  i<sep.size() && i<rec.size();  i++) {
-			if  (rec[i] == sep[i])  continue;
-			else			return false;
-		}
-		return true;
-		*/
+	bool is_separator(const char* recB, const char* recE,  const strr sep) const {  // Is begining of Rec a seperator?
+						assert(!sep.empty()  &&  recE-recB > 0);
+		return	/* *recB == *sep.B    		
+			&&  recE-recB >= sep.size() 
+			&& */  std::equal(sep.B, sep.E, recB);
 	}
 
 
