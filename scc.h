@@ -191,6 +191,10 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 		#define 	$17	F(17)
 		#define 	$18	F(18)
 		#define 	$19	F(19)
+
+		#define 	$NF	F(NF)
+		#define 	$	F
+
 	long NF = 0;
 	long NR = 0;
 
