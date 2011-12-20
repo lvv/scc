@@ -196,11 +196,6 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 	//string       __attribute__((unused))	line;
 
-	#ifdef  scc_OFS
-	string	     __attribute__((unused))	OFS(scc_OFS);
-	#else
-	string	     __attribute__((unused))	OFS(" ");
-	#endif
 
 	const char*  __attribute__((unused))	CSV="\"((?:(?:\\\\\")|[^\"])*)\"(\\s*,\\s*|$)";
 
@@ -216,9 +211,17 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 	#endif
 	*/
 
+	strr	ORS;
 	strr	IRS;
 
-	strr	IFS  __attribute__((unused)) 
+	strr	OFS
+		#ifdef  scc_OFS
+			(scc_OFS);
+		#else
+			(" ");
+		#endif
+
+	strr	IFS 
 		#ifdef  scc_ifs
 			(scc_ifs);
 		#else

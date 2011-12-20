@@ -27,6 +27,16 @@ int main(int argc, char** argv) {
 	if (p==nullptr)		IRS = strr("\n");
 	else			IRS = strr(p);
 
+	// ORS
+	p = std::getenv("ORS");
+	if (p==nullptr)		ORS = strr("\n");
+	else			ORS = strr(p);
+
+	// OFS
+	p = std::getenv("OFS");
+	if (p==nullptr)		OFS = strr(" ");
+	else			OFS = strr(p);
+
 	// IFS
 	#ifndef  scc_ifs
 	p = std::getenv("IFS");
@@ -56,14 +66,22 @@ int main(int argc, char** argv) {
 					cout  << F[i] << OFS;
 
 				if (F.size() > 1)  cout << F.back();
-				cout << endl;
+				cout << ORS;
 			#endif
 		}
 
 	#else
 		#include "/tmp/snippet.h"
 	#endif
+
+cout <<  endl;
+cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
+cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
+cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
+cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
+
 	;}
+
 }
 
 
