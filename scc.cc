@@ -3,6 +3,14 @@
 #include <cj.h>
 #include <matrix.h>
 
+void  print_line() {
+	for(int i=1;   i < int(F.size())-1;  i++)
+		cout  << F[i] << OFS;
+
+	if (F.size() > 1)  cout << F.back();
+	cout << ORS;
+ }
+
 int main(int argc, char** argv) {
 	long i __attribute__((unused)) = 0;
 	long j __attribute__((unused)) = 0;
@@ -18,7 +26,7 @@ int main(int argc, char** argv) {
 
 	std::string s __attribute__((unused));
 	std::string w __attribute__((unused));
-	char* p       __attribute__((unused));;
+	char *p       __attribute__((unused)) = nullptr;
 
 	buf_t	buf(0);	// stdio
 
@@ -33,9 +41,11 @@ int main(int argc, char** argv) {
 	else			ORS = strr(p);
 
 	// OFS
+	#ifndef  scc_OFS
 	p = std::getenv("OFS");
 	if (p==nullptr)		OFS = strr(" ");
 	else			OFS = strr(p);
+	#endif
 
 	// IFS
 	#ifndef  scc_ifs
@@ -61,12 +71,8 @@ int main(int argc, char** argv) {
 				#ifdef scc_PRINT_LAST
 					cout << OFS;
 				#endif
-
-				for(int i=1;   i < int(F.size())-1;  i++)
-					cout  << F[i] << OFS;
-
-				if (F.size() > 1)  cout << F.back();
-				cout << ORS;
+				
+				print_line();
 			#endif
 		}
 
@@ -74,11 +80,11 @@ int main(int argc, char** argv) {
 		#include "/tmp/snippet.h"
 	#endif
 
-cout <<  endl;
-cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
-cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
-cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
-cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
+					// cout <<  endl;
+					// cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
+					// cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
+					// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
+					// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 
 	;}
 
