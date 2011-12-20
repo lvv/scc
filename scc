@@ -55,9 +55,9 @@ usage_exit() {
 while getopts npf:vBI:i:o:x:Og opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
-		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";; 
+		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
 		#p)	p_opt=1;  is_stream=1;;
-		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";; 
+		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 

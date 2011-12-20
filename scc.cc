@@ -25,8 +25,12 @@ int main(int argc, char** argv) {
 
 	#ifdef scc_IS_STREAM
 
-		// while ( read_line()) {
-		while ( buf.get_rec(strr(IRS), strr(IFS), F) ) {
+		std::function<bool()>  read_line;
+
+		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return buf.get_rec(IRS.B, IFS.B, F); };
+		else					read_line = [&]() { return buf.get_rec(strr(IRS), strr(IFS), F); };
+
+		while (read_line()) {
 
 			#include "/tmp/snippet.h"
 
@@ -39,15 +43,14 @@ int main(int argc, char** argv) {
 					cout  << F[i] << OFS;
 
 				if (F.size() > 1)  cout << F.back();
-					cout << endl;
+				cout << endl;
 			#endif
 		}
 
 	#else
 		#include "/tmp/snippet.h"
 	#endif
-		;
-	}
+	;}
 }
 
 

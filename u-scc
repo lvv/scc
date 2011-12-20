@@ -1,3 +1,5 @@
+#!/bin/sh 
+
 time (
 echo ---------------------------------------------------------
 echo 'scc 1' 
@@ -41,12 +43,11 @@ echo -e "{1, 2}"
 echo ---------------------------------------------------------
 echo "echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'"
       echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  &&
-echo -e "\n{⟨aaa,2⟩, ⟨bbb,1⟩}"
+echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
 
 echo ---------------------------------------------------------
 echo   "df | scc 'WRL n+=F2;  n'"
 command df | scc 'WRL n+=F2;  n'  && 
-echo ""  &&
 command df | awk '{n+=$3;};  END{print n}'
 
 #echo ---------------------------------------------------------
