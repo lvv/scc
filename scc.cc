@@ -30,6 +30,8 @@ int main(int argc, char** argv) {
 
 	buf_t	buf(0);	// stdio
 
+	////////  READ ENV
+	
 	// IRS
 	p = std::getenv("IRS");
 	if (p==nullptr)		IRS = strr("\n");
@@ -54,40 +56,37 @@ int main(int argc, char** argv) {
 	else			IFS = strr(p);
 	#endif
 
-	{
-
-	#ifdef scc_IS_STREAM
+	{  /////////////////////////////////////////////////////////////////////////////////////////////
 
 		std::function<bool()>  read_line;
 
 		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return  buf.get_rec(*IRS.B, *IFS.B, F); };
 		else					read_line = [&]() { return  buf.get_rec(IRS, IFS, F); };
 
-		while (read_line()) {
+		#ifdef scc_IS_STREAM
 
-			#include "/tmp/snippet.h"
+			while (read_line()) {
 
-			#ifdef scc_P
-				#ifdef scc_PRINT_LAST
-					cout << OFS;
+				#include "/tmp/snippet.h"
+
+				#ifdef scc_P
+					#ifdef scc_PRINT_LAST
+						cout << OFS;
+					#endif
+					
+					print_line();
 				#endif
-				
-				print_line();
-			#endif
-		}
+			}
 
-	#else
-		#include "/tmp/snippet.h"
-	#endif
-
-					// cout <<  endl;
-					// cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
-					// cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
-					// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
-					// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
-
+		#else
+			#include "/tmp/snippet.h"
+		#endif
+						// cout <<  endl;
+						// cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
+						// cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
+						// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
+						// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 	;}
-
 }
 
 

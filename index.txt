@@ -265,6 +265,9 @@ Simple workaround: use semicolon before last statement.
 
 ////////////////
 
+GNU AWK
+	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
+
 PCRE++
 	http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 
