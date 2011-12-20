@@ -52,7 +52,7 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBI:i:o:x:Og opt;  do
+while getopts npf:vBI:i:F:o:x:Og opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
@@ -62,7 +62,7 @@ while getopts npf:vBI:i:o:x:Og opt;  do
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
 		x)	execute=0;  prg=$OPTARG;;
-		i)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$OPTARG "
+		i|F)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$OPTARG "
 						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
 						  else  CXXFLAGS+=" -Dscc_OFS=\"$OPTARG\" ";  fi;; 
