@@ -75,10 +75,11 @@ echo 'vint A{1,2,3}; copy(A.bb, A.ee, outi); str S("ABC"); copy(S.bb, S.ee, outi
 scc  'vint A{1,2,3}; copy(A.bb, A.ee, outi); str S("ABC"); copy(S.bb, S.ee, outi); cout<<endl;'
 echo 1 2 3 ABC
 
+
 echo ---------------------------------------------------------  SEPERATORS
-echo 'echo -n 11,22--111,222 |  IRS=-- ORS="(NL) " scc -p -i, -o:'
-echo -n 11,22--111,222 |  IRS=-- ORS="(NL) " scc -p -i, -o: ; echo 
-echo "11:22(NL) 111:222(NL) "
+echo '-n 11,,-,22--111,,222 |  IRS=-- ORS="(NL) " scc -p -i,, -o:   '
+echo  -n 11,,-,22--111,,222 |  IRS=-- ORS="(NL) " scc -p -i,, -o:   ''; echo
+echo '11:-,22(NL) 111:222(NL)'
 
 echo =====================================================================================================
 

@@ -302,7 +302,7 @@ struct buf_t {
 	}
 
 
-	bool		get_rec		(char IRS,  char IFS,  F_t<strr>& F)	{	// seperators are strr overload
+	bool		get_rec		(char IRS,  char IFS,  F_t<strr>& F)	{	// seperators are CHAR overload
 
 		if (!good_file)   return false; 
 
@@ -361,7 +361,6 @@ struct buf_t {
 	}
 
 
-	// NOT TESTED, NOT EDITED
 	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{	// seperators are STRR overload
 
 		if (!good_file)   return false; 
@@ -423,9 +422,9 @@ struct buf_t {
 		private: 
 	bool is_separator(const char* recB, const char* recE,  const strr sep) const {  // Is begining of Rec a seperator?
 						assert(!sep.empty()  &&  recE-recB > 0);
-		return	/* *recB == *sep.B    		
+		return	*recB == *sep.B    		
 			&&  recE-recB >= sep.size() 
-			&& */  std::equal(sep.B, sep.E, recB);
+			&&  std::equal(sep.B+1, sep.E, recB+1);
 	}
 
 
