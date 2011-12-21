@@ -33,7 +33,7 @@ execute=1
 
 usage_exit() {
 	echo "
-	USAGE:  scc [options]  snippet [args] 
+	usage:  scc  [options]  snippet  [args] 
 		
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields
@@ -43,7 +43,7 @@ usage_exit() {
 		-o ofs 		- sets OFS (output field separator) 
 		-x filename	- save executable to file and do not execute it
 		-O 		- optimized compile
-		-v 		- debug compile
+		-g 		- debug compile
 	"
 	exit 0
 }
