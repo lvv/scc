@@ -19,7 +19,7 @@ if [[ -z "$CXXFLAGS" ]] ;  then
 fi
 
 if [[ $gcc_ver_num > 43 ]] ;  then 
-	CXXFLAGS+=" -std=gnu++0x "
+	CXXFLAGS+=" -std=gnu++11 "
 fi 
 
 SCC_HOME=$(dirname $(readlink -f $0))

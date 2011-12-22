@@ -1,9 +1,9 @@
 #ifndef  LVV_SIMPLE_H
 #define  LVV_SIMPLE_H
 
-#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
-#error "SCC/simple.h does not support GCC earlier than 4.7"
-#endif
+//#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
+//#error "SCC/simple.h does not support GCC earlier than 4.7"
+//#endif
 
 //#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) ) 
 //	#define  MODERN_GCC	1
@@ -195,30 +195,6 @@
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 	
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
-// OUTI -- Output Iterator
-// 	similar to (but shorter):	ostream_iterator<T>(cout, " ")
-// 	used as:			copy(V.begin(), V.end(), outi);
-
-namespace outi_space {			// to hide outi_any_t
-
-		struct	outi_any_t {
-								outi_any_t(char v)		{ cout << v; }; // overload for char
-			template<typename T>			outi_any_t(const T& v)		{ cout << v << " "; };
-			template<typename T>			outi_any_t(T&& v)		{ cout << v << " "; };
-		};
-
-		ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
-
-	struct	outi_t  : ostream_iterator<outi_any_t> {		//  using only ostream_iterator<outi_any_t> interface
-		outi_t(): ostream_iterator<outi_any_t> (cout, "") {};
-	};
-
-}
-
-static outi_space::outi_t outi;
-
-
 
 
 	
@@ -275,7 +251,8 @@ struct  out {
 
 	// sequance container
 	
-		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
+		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
+		//template<typename T, template<typename AlT> class  Al, template<typename CtT, typename Al> class Ct >
 		out& 
 	operator<<      (const Ct<const T, Al<const T> >& C) {              
 		if (paren)  	{if(strlen(paren)) cout << paren[0];}
@@ -577,6 +554,31 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	typedef 	std::sregex_token_iterator    SRTI;		
 	typedef 	std::cregex_token_iterator    CRTI;		
 	#define 	MRTI		std::make_regex_token_iterator 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
+// OUTI -- Output Iterator
+// 	similar to (but shorter):	ostream_iterator<T>(cout, " ")
+// 	used as:			copy(V.begin(), V.end(), outi);
+
+namespace outi_space {			// to hide outi_any_t
+
+		struct	outi_any_t {
+								outi_any_t(char v)		{ cout << v; }; // overload for char
+			template<typename T>			outi_any_t(const T& v)		{ cout << v << " "; };
+			template<typename U, typename V>       	outi_any_t (const typename std::pair<U,V>& v)
+									{ cout << "⟨" << v.first << "," << v.second << "⟩"; };
+		};
+
+		ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
+
+	struct	outi_t  : ostream_iterator<outi_any_t> {		//  using only ostream_iterator<outi_any_t> interface
+		outi_t(): ostream_iterator<outi_any_t> (cout, "") {};
+	};
+
+}
+
+static outi_space::outi_t outi;
+
 
 
 #endif	// LVV_SIMPLE_H
