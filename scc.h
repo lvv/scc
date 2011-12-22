@@ -257,8 +257,8 @@ struct strr_heap_t {
 struct buf_t {	
 	const static	size_t		buf_size=1000000;
 			bool		good_file;	// !eof
-			char		*bob, *eob;	// buffer dimentions
-			char		*bod, *eod;	// data in buffer
+			const char		*bob, *eob;	// buffer dimentions
+			const char		*bod, *eod;	// data in buffer
 			const char 	*path;	
 			int		fd;		// file
 
@@ -293,7 +293,7 @@ struct buf_t {
 		ssize_t	got;
 		if  (buf_free_space > 0) { 
 			retry:
-			got = read (fd, eod,  buf_free_space);
+			got = read (fd, const_cast<char*>(eod),  buf_free_space);
 			if (got == -1  &&  errno == EINTR)	goto  retry;
 			if (got <=  0)				return  false;
 			eod += got;
@@ -302,13 +302,14 @@ struct buf_t {
 	}
 
 
-	bool		get_rec		(char IRS,  char IFS,  F_t<strr>& F)	{	// seperators are CHAR overload
+		template <typename sep_T>
+	bool		get_rec		(sep_T IRS, sep_T IFS, F_t<strr>& F)	{
 
 		if (!good_file)   return false; 
 
-		char *p   (bod);	
-		char *bor (bod);	// record
-		char *bof (bod);; 	// field
+		const char *p   (bod);	
+		const char *bor (bod);	// record
+		const char *bof (bod);; 	// field
 
 		F.clear();
 		F.push_back(strr());	// F[0] - whole line
@@ -328,7 +329,7 @@ struct buf_t {
 					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
 
 					// rellocate everything to BOB
-					memcpy(bob, bod, data_size);
+					memcpy(const_cast<char*>(bob), const_cast<char*>(bod), data_size);
 					size_t diff = bod-bob;
 					bod = bor = bob;
 					eod = p = bob + data_size;
@@ -342,66 +343,7 @@ struct buf_t {
 				}
 			}
 
-			if        (*p == IFS)	{ F.push_back(strr(bof,p));  p += sizeof(IFS);  bof = p; }
-			else  if  (*p == IRS)	{ goto return_rec; } 
-			else			p++;
-		} 
-
-
-		return_rec: 
-			F.push_back(strr(bof,p));  
-			NF = F.size()-1;
-			F[0].B = bor;
-			F[0].E = p;
-			p += sizeof(IRS);
-			bod = p;
-							assert(F[0].B == F[1].B);
-							assert(F[0].E == F[NF].E);
-			return true;
-	}
-
-
-	bool		get_rec		(const strr IRS, const strr IFS, F_t<strr>& F)	{	// seperators are STRR overload
-
-		if (!good_file)   return false; 
-
-		char *p   (bod);	
-		char *bor (bod);	// record
-		char *bof (bod);; 	// field
-
-		F.clear();
-		F.push_back(strr());	// F[0] - whole line
-
-		while(1) {	//////////////////////////////////////////////////////// read until EOR
-			size_t	unused_data = eod - p;
-			if ( unused_data == 0 )  {
-				size_t  buf_free_space = eob-eod;
-
-				if (buf_free_space == 0) {  // relocate data to begining of buffer
-					if (bor == bob ) {
-						cerr << "warning: Line is too big for buffer. Splitting line.\n";
-						goto return_rec; 
-					} 
-
-					ssize_t data_size = size();
-					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
-
-					// rellocate everything to BOB
-					memcpy(bob, bod, data_size);
-					size_t diff = bod-bob;
-					bod = bor = bob;
-					eod = p = bob + data_size;
-					bof -= diff;	
-					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
-				}
-
-				if ( !(good_file = fill()) )  {
-					if ( bor == p ) 	return false;
-					else 			goto return_rec;
-				}
-			}
-
-			if        (is_separator(p, eod, IFS))	{ F.push_back(strr(bof,p));  p += IFS.size();  bof = p; }
+			if        (is_separator(p, eod, IFS))	{ F.push_back(strr(bof,p));  p += sep_size(IFS);  bof = p; }
 			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; } 
 			else                                      p++;
 		} 
@@ -412,21 +354,30 @@ struct buf_t {
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;
-			p += IRS.size();
+			//p += IRS.size();
+			p += sep_size(IRS);
 			bod = p;
 							assert(F[0].B == F[1].B);
 							assert(F[0].E == F[NF].E);
 			return true;
 	}
 
-		private: 
-	bool is_separator(const char* recB, const char* recE,  const strr sep) const {  // Is begining of Rec a seperator?
-						assert(!sep.empty()  &&  recE-recB > 0);
+  private: 
+
+	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
+		assert(!sep.empty()  &&  recE-recB > 0);
 		return	*recB == *sep.B    		
-			&&  recE-recB >= sep.size() 
+			&&  size_t(recE-recB)  >=  sep.size() 
 			&&  std::equal(sep.B+1, sep.E, recB+1);
 	}
 
+	static bool is_separator(const char* recB, const char* recE,  char sep) { 
+		assert(recE-recB > 0);
+		return	*recB == sep;
+	}
+
+	constexpr static size_t		sep_size(char c)	{return sizeof(c);}
+	static size_t			sep_size(const strr s)	{return s.size();}
 
  };
 
