@@ -558,31 +558,31 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
 // OUTI -- Output Iterator
 // 	similar to ostream_iterator<T>(cout, " ")
-// 	used as:	copy(V.begin(), V.end(), outi);
+// 	used as:	copy(V.begin(), V.end(), oi);
 
 	template<typename U, typename V, template<typename U, typename V> class CL>  void
-outi_print(const CL<U,V>& v) { std::cout << v; };
+oi_print(const CL<U,V>& v) { std::cout << v; };
 
-namespace outi_space {  
+namespace oi_space {  
 
-		struct	outi_any_t {
+		struct	oi_any_t {
 				template<typename T>								// POD
-			outi_any_t (const T& v)				{ std::cout << v; };			
+			oi_any_t (const T& v)				{ std::cout << v; };			
 
 				template<typename U, typename V, template<typename U, typename V> class CL>	// std::pair
-			outi_any_t (const CL<U,V>& v)	{ outi_print<U,V>(v); };
+			oi_any_t (const CL<U,V>& v)	{ oi_print<U,V>(v); };
 		};
 
 		// NOP to make acceptable for ostream<<
-		std::ostream&   operator<<      (std::ostream& os, const outi_any_t& s) { return os; };
+		std::ostream&   operator<<      (std::ostream& os, const oi_any_t& s) { return os; };
 
-	struct	outi_t  : std::ostream_iterator<outi_any_t> {
-		outi_t(): std::ostream_iterator<outi_any_t>(std::cout, " ") {}; 
+	struct	oi_t  : std::ostream_iterator<oi_any_t> {
+		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {}; 
 	};
 
 };
 
-static outi_space::outi_t outi;
+static oi_space::oi_t oi;
 
 
 

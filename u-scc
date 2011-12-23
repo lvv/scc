@@ -65,14 +65,14 @@ command df | awk '{n+=$3;};  END{print n}'
 #echo 1:2:3 |  scc  -i:  -o '","'  -p
 #echo 1 2 3 |  scc  -I '"(\\S+)(\\s+|$)"' -o '","'  -p
 
-echo ---------------------------------------------------------  OUTI
-echo "scc \"*outi =  1; *outi = 2;   *outi ='a';  *outi='b';  cout << endl;\""
-scc "*outi =  1; *outi = 2;   *outi ='a';  *outi='b';  *outi=pair<int,int>(11,22);  cout << endl;"
+echo ---------------------------------------------------------  OI
+echo "scc \"*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  cout << endl;\""
+scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;"
 echo 1 2 ab ⟨11,22⟩
 
-echo ---------------------------------------------------------  OUTI
-echo 'vint A{1,2,3}; copy(A.bb, A.ee, outi); str S("ABC"); copy(S.bb, S.ee, outi); cout<<endl;'
-scc  'vint A{1,2,3}; copy(A.bb, A.ee, outi); str S("ABC"); copy(S.bb, S.ee, outi); cout<<endl;'
+echo ---------------------------------------------------------  OI
+echo 'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;'
+scc  'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;'
 echo 1 2 3 ABC
 
 
