@@ -9,5 +9,7 @@ scc 'vector<vint>		v {{1,1}, {2,2}};   	__ v; v'
 scc 'int 			v[3]{1,2,3};   		__ v; v'
 scc 'const char* 		v = "c string"; 	__ v; v'
 scc 'string  			v = "c++ string"; 	__ v; v'
-scc 'vector<map<str,int>> 	v {{{"aa",1}, {"bb",2}}}; __ v; v'   # this does not work with gcc-4.4.5
+scc 'vector<map<str,int>> 	v {{{"aa",1}, {"bb",2}}}; __ v; v'
+scc 'set<int> 			v {10,2,3,4};		__ v; v'
+scc 'multiset<int> 		v {10,2,3,4};		__ v; v'
 

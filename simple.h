@@ -250,9 +250,7 @@ struct  out {
 				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
 	// sequance container
-	
 		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		//template<typename T, template<typename AlT> class  Al, template<typename CtT, typename Al> class Ct >
 		out& 
 	operator<<      (const Ct<const T, Al<const T> >& C) {              
 		if (paren)  	{if(strlen(paren)) cout << paren[0];}
@@ -268,7 +266,8 @@ struct  out {
 	};
 
 
-			template<class T, std::size_t N>                
+	// C-array
+		template<class T, std::size_t N>                
 		typename disable_if<typename std::is_same<T, char>::type,  out&>::type
 	operator<<      (const T (&A)[N]) {
 		cout << "{";
@@ -281,7 +280,8 @@ struct  out {
 
 
 
-		template<typename T, template<typename TT> class  Al, template<typename T, typename Al> class Ct >
+	// alias "," for ">>"
+		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
 		out& 
 	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
 
@@ -333,8 +333,11 @@ operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
 
 
 // SET -- print any std::set<printable>  with std comparator and allocator
-template<typename K> inline std::ostream&                                              
-operator<<      (ostream& os, const set<K, std::less<K>, std::allocator<K> >& C) {              
+	template<typename T, template<typename T> class  Al,  template<typename T> class Cmp,  template<typename T, typename Cmp, typename Al> class Ct >
+	//template<typename K> inline
+	std::ostream&                                              
+//operator<<      (ostream& os, const set<K, std::less<K>, std::allocator<K> >& C) {              
+operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {              
 	cout << "{";
 	auto it=C.begin();
         for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
