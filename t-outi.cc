@@ -20,16 +20,16 @@ outi_print(const CL<U,V>& v) { std::cout << v; };
 
 namespace outi_space {  
 
-	struct	outi_any_t {
-			template<typename T>		
-		outi_any_t (const T& v)				{ std::cout << v; };
+		struct	outi_any_t {
+				template<typename T>		
+			outi_any_t (const T& v)				{ std::cout << v; };
 
-			template<typename U, typename V, template<typename U, typename V> class CL>    
-		outi_any_t (const CL<U,V>& v)	{ outi_print<U,V>(v); };
-	};
+				template<typename U, typename V, template<typename U, typename V> class CL>    
+			outi_any_t (const CL<U,V>& v)	{ outi_print<U,V>(v); };
+		};
 
-	// NOP to make acceptable for ostream<<
-	std::ostream&   operator<<      (std::ostream& os, const outi_any_t& s) { return os; };
+		// NOP to make acceptable for ostream<<
+		std::ostream&   operator<<      (std::ostream& os, const outi_any_t& s) { return os; };
 
 	struct	outi_t  : std::ostream_iterator<outi_any_t> {
 		outi_t(): std::ostream_iterator<outi_any_t>(std::cout, " ") {}; 

@@ -557,25 +557,30 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
 // OUTI -- Output Iterator
-// 	similar to (but shorter):	ostream_iterator<T>(cout, " ")
-// 	used as:			copy(V.begin(), V.end(), outi);
+// 	similar to ostream_iterator<T>(cout, " ")
+// 	used as:	copy(V.begin(), V.end(), outi);
 
-namespace outi_space {			// to hide outi_any_t
+	template<typename U, typename V, template<typename U, typename V> class CL>  void
+outi_print(const CL<U,V>& v) { std::cout << v; };
+
+namespace outi_space {  
 
 		struct	outi_any_t {
-								outi_any_t(char v)		{ cout << v; }; // overload for char
-			template<typename T>			outi_any_t(const T& v)		{ cout << v << " "; };
-			template<typename U, typename V>       	outi_any_t (const typename std::pair<U,V>& v)
-									{ cout << "⟨" << v.first << "," << v.second << "⟩"; };
+				template<typename T>								// POD
+			outi_any_t (const T& v)				{ std::cout << v; };			
+
+				template<typename U, typename V, template<typename U, typename V> class CL>	// std::pair
+			outi_any_t (const CL<U,V>& v)	{ outi_print<U,V>(v); };
 		};
 
-		ostream& operator<< (ostream& os, const outi_any_t& s) { return os; }; // NOP to make outi_any_t accapable for ostream<<
+		// NOP to make acceptable for ostream<<
+		std::ostream&   operator<<      (std::ostream& os, const outi_any_t& s) { return os; };
 
-	struct	outi_t  : ostream_iterator<outi_any_t> {		//  using only ostream_iterator<outi_any_t> interface
-		outi_t(): ostream_iterator<outi_any_t> (cout, "") {};
+	struct	outi_t  : std::ostream_iterator<outi_any_t> {
+		outi_t(): std::ostream_iterator<outi_any_t>(std::cout, " ") {}; 
 	};
 
-}
+};
 
 static outi_space::outi_t outi;
 
