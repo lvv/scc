@@ -18,7 +18,7 @@ int main() {
 	while(buf.get_rec('\n', '.', F)) {
 		f_cnt += F.size();
 		for(size_t i=0;  i<F.size();  i++)  { f_sz +=  F[i].size();  _ " \"", F[i], "\" "; }
-		__ "\t" ^ cnt++; 
+		__ "\t" ^ cnt++;
 	}
 	__ "total count: \t", cnt;
 	__ "total field size: \t", f_sz;

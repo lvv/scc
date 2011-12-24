@@ -5,7 +5,7 @@
 	#error "SCC/simple.h does not support GCC earlier than 4.7"
 #endif
 
-//#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) ) 
+//#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) )
 //	#define  MODERN_GCC	1
 //#endif
 
@@ -20,7 +20,7 @@
 ///////////////////////////////////////////////////////////////////// C++ IO
 #include <iostream>
 #include <iomanip>
-#include <sstream> 
+#include <sstream>
 
 ///////////////////////////////////////////////////////////////////// C++ STL
 #include <algorithm>
@@ -42,7 +42,7 @@
 #include <memory>
 
 
-///////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////
 
 	// io
 	using	std::cin;
@@ -93,7 +93,7 @@
 	using	std::search;
 	using	std::search_n;
 
-	// modifying 
+	// modifying
 	using	std::copy;
 	using	std::copy_backward;
 	using	std::copy_if;		//C++11
@@ -180,24 +180,24 @@
 	using	std::iota;			// C++11
 	using	std::begin;			// C++11
 	using	std::end;			// C++11
-	
+
 	// memory  (C++11)
 	using	std::shared_ptr;
 	using	std::unique_ptr;
 	using	std::auto_ptr;
 	using	std::weak_ptr;
-	
+
 
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
 //
 
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
-	
 
 
 
-	
+
+
 ///////////////////////////////////////////////////////////////////// UTILS
 
 // std::max(1, 2.2)  - compiler error
@@ -224,7 +224,7 @@ template <typename T> 				struct disable_if<std::true_type,T>   {};
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
 
 
-struct  out { 
+struct  out {
 	bool  first_use;
 	const char*	sep;
 	const char*	paren;
@@ -251,8 +251,8 @@ struct  out {
 
 	// sequance container
 		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		out& 
-	operator<<      (const Ct<const T, Al<const T> >& C) {              
+		out&
+	operator<<      (const Ct<const T, Al<const T> >& C) {
 		if (paren)  	{if(strlen(paren)) cout << paren[0];}
 		else 		cout << '{';
 		//cout << (paren ? paren[0] : '{');
@@ -262,12 +262,12 @@ struct  out {
 		if (paren)  	{if(strlen(paren)) cout << paren[1];}
 		else 		cout << '}';
 		//cout << (paren ? paren[1] : '}');
-		return *this; 
+		return *this;
 	};
 
 
 	// C-array
-		template<class T, std::size_t N>                
+		template<class T, std::size_t N>
 		typename disable_if<typename std::is_same<T, char>::type,  out&>::type
 	operator<<      (const T (&A)[N]) {
 		cout << "{";
@@ -282,7 +282,7 @@ struct  out {
 
 	// alias "," for ">>"
 		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		out& 
+		out&
 	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
 
 	operator bool   () {  return true; }
@@ -293,8 +293,8 @@ struct  outln : out  {
 	~outln()				{ cout << endl; }
  };
 
-#define		_    out()   << 
-#define		__   outln() << 
+#define		_    out()   <<
+#define		__   outln() <<
 
 
 std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
@@ -305,7 +305,7 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 // Print any C-array
 
-               template<class T, std::size_t N>                
+               template<class T, std::size_t N>
                                                                // disable C-array print for  char[]
                typename disable_if<typename std::is_same<T, char>::type,  std::ostream&>::type
 	operator<<      (ostream& os, const T (&A)[N]) {
@@ -321,8 +321,8 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 // print any std::sequance-containter<printable>
 	template<typename T, template<typename T, typename Al> class Ct >
-	std::ostream&                                              
-operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {              
+	std::ostream&
+operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
 	cout << "{";
 		auto it=C.begin();
 		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
@@ -335,19 +335,19 @@ operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
 // SET/MULTISET -- print any std::set<printable>  with std comparator and allocator
 	template<
 		typename T,
-		template<typename T>  class  Al, 
+		template<typename T>  class  Al,
 		template<typename T>  class  Cmp,
 		template<typename T, typename Cmp, typename Al> class Ct
 	>
 
-	
+
 	typename std::enable_if<
 		!std::is_same <Ct<T,Cmp<T>,Al<T>>,  std::string>::value,
 		std::ostream&
 	>::type
 
-	//std::ostream&                                              
-operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {              
+	//std::ostream&
+operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {
 	cout << "{";
 	auto it=C.begin();
         for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
@@ -366,9 +366,9 @@ operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {
 		template<typename K, typename V, typename Cmp,
 		typename Al> class Ct
 	>
-	std::ostream&                                              
-operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& C) {              
-//operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::pair<const K,V> > > & C) {              
+	std::ostream&
+operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& C) {
+//operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::pair<const K,V> > > & C) {
 	cout << "{";
 	auto it = C.begin();
         for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
@@ -378,13 +378,13 @@ operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& 
 };
 
 
-	
+
 
 // PAIR -- print any std::pair<printable1, printable2>
 
-		template<typename T, typename U> 
-		std::ostream&  
-operator<<      (ostream& os, const std::pair<T,U>& p) {               
+		template<typename T, typename U>
+		std::ostream&
+operator<<      (ostream& os, const std::pair<T,U>& p) {
 	os << "⟨" << p.first << "," << p.second <<"⟩";
 	return os;
 };
@@ -401,7 +401,7 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 
 			template< int RI, typename... TT>
 	struct	print_tuple_elem  {
-		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {               
+		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {
 			const size_t  tsize = tuple_size<tuple<TT...>>::value;
 			const size_t  i = tsize - RI;
 			os <<  get<i>(tup);
@@ -416,16 +416,16 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 	};
 
 
-		template<typename... TT> 
-		std::ostream&  
-operator<<      (ostream& os, const tuple<TT...>& tup) {               
+		template<typename... TT>
+		std::ostream&
+operator<<      (ostream& os, const tuple<TT...>& tup) {
 	const size_t  tsize = tuple_size<tuple<TT...>>::value;
 	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };
-	// Using C++0x Variadic Templates to Pretty-Print Types 
+	// Using C++0x Variadic Templates to Pretty-Print Types
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
-	
+
 
 
 
@@ -436,7 +436,7 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 
 ////// push_back/push_front replaement
 //
-// usage: 
+// usage:
 //    scc 'vint V;  V << 1 << 2'
 //    {1, 2}
 //
@@ -444,18 +444,18 @@ operator<<      (ostream& os, const tuple<TT...>& tup) {
 //    {11}
 //
 
-	template<typename T, template<typename T, typename Ct> class Ct > 
-	Ct <T,std::allocator<T>> &                                              
-operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(x); return C; }; 
+	template<typename T, template<typename T, typename Ct> class Ct >
+	Ct <T,std::allocator<T>> &
+operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(x); return C; };
 
-	template<typename T, template<typename T, typename Ct> class Ct > 
-	Ct <T,std::allocator<T>> &                                              
-operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return C; }; 
+	template<typename T, template<typename T, typename Ct> class Ct >
+	Ct <T,std::allocator<T>> &
+operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return C; };
 
 // operator-=  -- remove member from container
-	template<typename T, template<typename T, typename Ct> class Ct > 
-	Ct <T,std::allocator<T>> &                                              
-operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; }; 
+	template<typename T, template<typename T, typename Ct> class Ct >
+	Ct <T,std::allocator<T>> &
+operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; };
 
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT
@@ -466,7 +466,7 @@ operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin
 
 
 
-struct in_t {	 
+struct in_t {
 	in_t (): n(0) {};
 
 	// input a POD type
@@ -482,8 +482,8 @@ struct in_t {
 
 		template<typename T, template<typename T, typename C> class C >
 	operator C<T,std::allocator<T> >()        {
-		C<T,std::allocator<T> > c(n);  
-		cin >> c;  
+		C<T,std::allocator<T> > c(n);
+		cin >> c;
 		return c;
 	}
 
@@ -491,9 +491,9 @@ struct in_t {
 	/*  STD::SET  - does not work
 		template<typename T>
 	operator std::set<T,std::allocator<T> >()        {
-		std::set<T,std::allocator<T> > str;  
+		std::set<T,std::allocator<T> > str;
 		T elem;
-		while(n-- && cin) { cin >> elem;  str.insert(elem); } ;  
+		while(n-- && cin) { cin >> elem;  str.insert(elem); } ;
 		return str;
 	}
 	*/
@@ -503,12 +503,12 @@ in_t in;
 
 
 
-// Input any std::sequance-containter<printable> 
+// Input any std::sequance-containter<printable>
 // Container must have non-zero size()
 // Used as:   vector<int> V(3);   cin >> V;
 
 	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
-	std::istream&                                              
+	std::istream&
 operator>>      (istream& is, Ct<T>& C)    {
 	if (C.size() > 0)  {
 		for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
@@ -517,14 +517,14 @@ operator>>      (istream& is, Ct<T>& C)    {
 		T c;   while(is>>c)  C.push_back(c);
 	}
 	return is;
-}; 
+};
 
 
 
 
 ///////////////////////////////////////////////////////////////////// REGEX
 
-//#include <boost/regex.hpp> 	
+//#include <boost/regex.hpp>
 #include <regex> 	 // C++11;   std::regex - 4.7.0  fail with: scc 'RS("abc", R("abc"))'
 	using std::regex;
 	using std::cmatch;
@@ -565,19 +565,19 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	#define 	RS		std::regex_search
 	#define 	RR		std::regex_replace
 		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
-	
+
 	//#define 	M		std::match
 	#define 	CM		std::cmatch
 	#define 	SM		std::smatch
 
 	//typedef 	std::regex_iterator		RI;
 	typedef 	std::sregex_iterator          SRI;
-	typedef 	std::cregex_iterator          CRI;		
+	typedef 	std::cregex_iterator          CRI;
 		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-	//typedef 	std::regex_token_iterator     RTI;		
-	typedef 	std::sregex_token_iterator    SRTI;		
-	typedef 	std::cregex_token_iterator    CRTI;		
-	#define 	MRTI		std::make_regex_token_iterator 
+	//typedef 	std::regex_token_iterator     RTI;
+	typedef 	std::sregex_token_iterator    SRTI;
+	typedef 	std::cregex_token_iterator    CRTI;
+	#define 	MRTI		std::make_regex_token_iterator
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
 // OUTI -- Output Iterator
@@ -587,11 +587,11 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	template<typename U, typename V, template<typename U, typename V> class CL>  void
 oi_print(const CL<U,V>& v) { std::cout << v; };
 
-namespace oi_space {  
+namespace oi_space {
 
 		struct	oi_any_t {
 				template<typename T>								// POD
-			oi_any_t (const T& v)				{ std::cout << v; };			
+			oi_any_t (const T& v)				{ std::cout << v; };
 
 				template<typename U, typename V, template<typename U, typename V> class CL>	// std::pair
 			oi_any_t (const CL<U,V>& v)	{ oi_print<U,V>(v); };
@@ -601,7 +601,7 @@ namespace oi_space {
 		std::ostream&   operator<<      (std::ostream& os, const oi_any_t& s) { return os; };
 
 	struct	oi_t  : std::ostream_iterator<oi_any_t> {
-		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {}; 
+		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
 	};
 
 };

@@ -12,9 +12,9 @@
 
 
 //////////////////////////////////////////////////////////////////////////////////////////  STRR
-	
 
-struct strr {          
+
+struct strr {
 	const char *B, *E;
 
 	// CTOR
@@ -34,14 +34,14 @@ struct strr {
 
 	operator ssize_t		(void) const {
 		ssize_t 	sign	= 1;
-		const char	*p	= B;   
+		const char	*p	= B;
 		ssize_t		base	= 10;
 
 		for (;  p<E-1;  p++) { 			// read prefix
 			switch(*p) {
 				case ' ':;   case '\t': continue;
 				case '-':	sign = -1;  p++;  goto end_prefix;
-				case '+':	p++;  goto end_prefix; 
+				case '+':	p++;  goto end_prefix;
 				default: 	goto end_prefix;
 			}
 		}
@@ -50,14 +50,14 @@ struct strr {
 
 		ssize_t  n=0;				// read number
 		for (;  p<E && isdigit(*p);  p++)  {
-			n = n*base + (*p-'0'); 
+			n = n*base + (*p-'0');
 		}
 		return sign*n;
 	}
  };
 
-		std::ostream&  
- operator<<      (ostream& os, const strr f) {               
+		std::ostream&
+ operator<<      (ostream& os, const strr f) {
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
 	return os;
@@ -104,9 +104,9 @@ struct field: string {      ////////////////////////////////////////////////////
 	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
 
 	// converter to numerics
-		
+
 			operator double		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
-	#if 	 (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) ) 
+	#if 	 (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) )
 	explicit	operator int		(void) { istringstream IS;  int             I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
 	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
@@ -116,7 +116,7 @@ struct field: string {      ////////////////////////////////////////////////////
 	#endif
 
 	////
-	field  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }	
+	field  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }
 
 	// prefix/postfix inc/dec
 	long operator++() {                    return  *this = long(*this) + 1; }
@@ -129,7 +129,7 @@ struct field: string {      ////////////////////////////////////////////////////
 Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 
 
-typedef field string_field; 
+typedef field string_field;
 
 std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
 
@@ -225,7 +225,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 			(" ");
 		#endif
 
-	strr	IFS 
+	strr	IFS
 		#ifdef  scc_ifs
 			(scc_ifs);
 		#else
@@ -251,25 +251,25 @@ struct strr_heap_t {
 
 	size_t	_size;
 	char 	*B, *E;
-}; 
+};
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
-struct buf_t {	
+struct buf_t {
 	const static	size_t		buf_size=1000000;
 			bool		good_file;	// !eof
 			const char		*bob, *eob;	// buffer dimentions
 			const char		*bod, *eod;	// data in buffer
-			const char 	*path;	
+			const char 	*path;
 			int		fd;		// file
 
 	explicit	buf_t 		(const char* path)
-		: good_file(true),   path(path) 
-	{	
-		fd = open(path, O_RDONLY); 
+		: good_file(true),   path(path)
+	{
+		fd = open(path, O_RDONLY);
 		assert(fd>0);
 		if (fd < 0)  throw  std::ios::failure (path);
 		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
-		bob = new char[buf_size+1];  
+		bob = new char[buf_size+1];
 		bod = eod = bob;
 		eob = bob+buf_size;
 	}
@@ -291,7 +291,7 @@ struct buf_t {
 	bool		fill		()	{
 		size_t	buf_free_space = eob-eod;
 		ssize_t	got;
-		if  (buf_free_space > 0) { 
+		if  (buf_free_space > 0) {
 			retry:
 			got = read (fd, const_cast<char*>(eod),  buf_free_space);
 			if (got == -1  &&  errno == EINTR)	goto  retry;
@@ -305,9 +305,9 @@ struct buf_t {
 		template <typename sep_T>
 	bool		get_rec		(sep_T IRS, sep_T IFS, F_t<strr>& F)	{
 
-		if (!good_file)   return false; 
+		if (!good_file)   return false;
 
-		const char *p   (bod);	
+		const char *p   (bod);
 		const char *bor (bod);	// record
 		const char *bof (bod);; 	// field
 
@@ -322,8 +322,8 @@ struct buf_t {
 				if (buf_free_space == 0) {  // relocate data to begining of buffer
 					if (bor == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
-						goto return_rec; 
-					} 
+						goto return_rec;
+					}
 
 					ssize_t data_size = size();
 					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
@@ -333,7 +333,7 @@ struct buf_t {
 					size_t diff = bod-bob;
 					bod = bor = bob;
 					eod = p = bob + data_size;
-					bof -= diff;	
+					bof -= diff;
 					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
 				}
 
@@ -344,13 +344,13 @@ struct buf_t {
 			}
 
 			if        (is_separator(p, eod, IFS))	{ F.push_back(strr(bof,p));  p += sep_size(IFS);  bof = p; }
-			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; } 
+			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; }
 			else                                      p++;
-		} 
+		}
 
 
-		return_rec: 
-			F.push_back(strr(bof,p));  
+		return_rec:
+			F.push_back(strr(bof,p));
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;
@@ -362,16 +362,16 @@ struct buf_t {
 			return true;
 	}
 
-  private: 
+  private:
 
 	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
 		assert(!sep.empty()  &&  recE-recB > 0);
-		return	*recB == *sep.B    		
-			&&  size_t(recE-recB)  >=  sep.size() 
+		return	*recB == *sep.B
+			&&  size_t(recE-recB)  >=  sep.size()
 			&&  std::equal(sep.B+1, sep.E, recB+1);
 	}
 
-	static bool is_separator(const char* recB, const char* recE,  char sep) { 
+	static bool is_separator(const char* recB, const char* recE,  char sep) {
 		assert(recE-recB > 0);
 		return	*recB == sep;
 	}

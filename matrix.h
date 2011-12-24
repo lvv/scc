@@ -25,7 +25,7 @@ struct	pt {
 	static pt	left		()		{ return pt(-1,0);};
 };
 
-	
+
 	template<typename T>
 std::ostream&   operator<<      (std::ostream& os, const pt& P) { os << "(" << P.x << "," << P.y << ")"; return os; };
 
@@ -49,16 +49,16 @@ struct	matrix : vector<T> {
 };
 
 	template<typename T>
-	std::istream&                                              
+	std::istream&
 operator>>      (std::istream& is, matrix<T>& M)    {
-	for(size_t j=0; j<M.h(); j++) 
+	for(size_t j=0; j<M.h(); j++)
 		for (size_t i=0;  i<M.w();  i++)
 			if (!(is>> M(i,j))) break;
 	return is;
-}; 
+};
 
 	template<typename T>
-	std::ostream&  
+	std::ostream&
 operator<<      (std::ostream& os, const matrix<T>& M) {
 	for(size_t j=0; j<M.h(); j++)  {
 		for (size_t i=0;  i<M.w();  i++)  {

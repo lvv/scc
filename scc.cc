@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	buf_t	buf(0);	// stdio
 
 	////////  READ ENV
-	
+
 	// IRS
 	p = std::getenv("IRS");
 	if (p==nullptr)		IRS = strr("\n");
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 					#ifdef scc_PRINT_LAST
 						cout << OFS;
 					#endif
-					
+
 					print_line();
 				#endif
 			}
