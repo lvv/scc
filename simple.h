@@ -318,6 +318,7 @@ std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 	};
 
 
+
 // print any std::sequance-containter<printable>
 	template<typename T, template<typename T, typename Al> class Ct >
 	std::ostream&                                              
@@ -331,7 +332,6 @@ operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
 };
 
 
-
 // SET/MULTISET -- print any std::set<printable>  with std comparator and allocator
 	template<
 		typename T,
@@ -339,14 +339,15 @@ operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
 		template<typename T>  class  Cmp,
 		template<typename T, typename Cmp, typename Al> class Ct
 	>
-	/*typename std::enable_if<
-		std::is_class<typename Ct<T,Cmp<T>,Al<T>>::const_iterator>::value,
-		std::ostream&
-	>::type*/
 
-	std::ostream&                                              
-//operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {              
-operator<<      (ostream& os, const std::set<T,Cmp<T>,Al<T>>& C) {              
+	
+	typename std::enable_if<
+		!std::is_same <Ct<T,Cmp<T>,Al<T>>,  std::string>::value,
+		std::ostream&
+	>::type
+
+	//std::ostream&                                              
+operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {              
 	cout << "{";
 	auto it=C.begin();
         for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
@@ -376,6 +377,7 @@ operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& 
 	cout << "}";
         return os;
 };
+
 
 	
 
