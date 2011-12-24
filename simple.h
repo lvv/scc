@@ -1,9 +1,9 @@
 #ifndef  LVV_SIMPLE_H
 #define  LVV_SIMPLE_H
 
-//#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
-//#error "SCC/simple.h does not support GCC earlier than 4.7"
-//#endif
+#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
+	#error "SCC/simple.h does not support GCC earlier than 4.7"
+#endif
 
 //#if 	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) ) 
 //	#define  MODERN_GCC	1
@@ -359,7 +359,6 @@ operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {
 
 
 // MAP -- print any std::map<printable, printable>  with std comparator and allocator
-	//template<typename K, typename V> inline std::ostream&                                              
 	template<
 		typename K, typename V,
 		template<typename K> class Cmp,
@@ -417,7 +416,7 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 	};
 
 
-		template<typename... TT> inline
+		template<typename... TT> 
 		std::ostream&  
 operator<<      (ostream& os, const tuple<TT...>& tup) {               
 	const size_t  tsize = tuple_size<tuple<TT...>>::value;

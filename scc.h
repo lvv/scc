@@ -56,7 +56,7 @@ struct strr {
 	}
  };
 
-		inline std::ostream&  
+		std::ostream&  
  operator<<      (ostream& os, const strr f) {               
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
