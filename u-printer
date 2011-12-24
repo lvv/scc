@@ -1,4 +1,6 @@
 
+
+scc 'map<str, int> 		v {{"a",1},{"b",2},{"a",11}};		__ v; v'
 scc 'vint 			v  {1,2,3}; 		__ v; v'
 scc 'tuple<const char*,int>	v  {"aaa",2};		__ v; v'
 scc 'tuple<const char*,int,tuple<int,float>>	v  {"aaa",2,make_tuple(3,4.5f)};		__ v; v'

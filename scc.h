@@ -20,7 +20,7 @@ struct strr {
 	// CTOR
 	strr()			/*: B(0), E(0)*/  				{};
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
-	strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
+	//strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
 	//strr& operator=(const strr& sr) : B(sr.B), E(sr
 
