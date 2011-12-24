@@ -200,9 +200,6 @@
 
 ///////////////////////////////////////////////////////////////////// UTILS
 
-// std::max(1, 2.2)  - compiler error
-template <class T, class U>	typename std::common_type<T, U>::type	min(T t, U u) { return t <  u ? t : u; }
-template <class T, class U>	typename std::common_type<T, U>::type	max(T t, U u) { return t >= u ? t : u; }
 
 // Even / Odd
 template <typename  T>  bool  is_even(T x) { return  !(x % 2); }
@@ -217,12 +214,7 @@ int gcd(long a, long b) {
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
-// 11x does not have disable_if
-template <typename COND, typename T = void> 	struct disable_if                     { typedef T type; };
-template <typename T> 				struct disable_if<std::true_type,T>   {};
-
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
-
 
 struct  out {
 	bool  first_use;
