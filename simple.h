@@ -31,7 +31,9 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <set>
+#include <unordered_set>
 #include <string>
 #include <utility>
 #include <vector>
@@ -66,9 +68,11 @@
 	using	std::array;
 	using	std::deque;
 	using	std::set;
+	using	std::unordered_set;
 	using	std::list;
 	using	std::multiset;
 	using	std::map;
+	using	std::unordered_map;
 	using	std::multimap;
 	using	std::stringstream;
 	using	std::istringstream;
