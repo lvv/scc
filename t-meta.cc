@@ -5,6 +5,8 @@
 
 using namespace std;
 
+/////////////////////////////////////////////////////////////////////////  IS_PRINTABLE
+
 	template<class T> T& lvalue_of_type();
 	template<class T> T  rvalue_of_type();
 
@@ -18,6 +20,7 @@ struct is_printable {
 };
 
 
+/////////////////////////////////////////////////////////////////////////
 
 	template<typename T>
 struct has_const_iterator {
@@ -28,6 +31,7 @@ struct has_const_iterator {
 };
 
 
+/////////////////////////////////////////////////////////////////////////  IS_CONTAINER
 
 	template <typename T>
 struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
@@ -42,6 +46,12 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
+template<typename T, size_t N>	struct is_container<T[N]> 	: std::true_type { };
+template<size_t N>		struct is_container<char[N]>	: std::false_type { };
+template<>			struct is_container<std::basic_string<char>> : std::false_type { };
+
+/////////////////////////////////////////////////////////////////////////
+
 struct out_t {};
 
 template<typename S> struct is_sink{ const static bool value =  std::is_same<S,std::ostream>::value || std::is_same<S,out_t>::value; };
@@ -49,7 +59,7 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 int main() {
 
 	cout << left;  cout.width(25);
-	__ endl, "type",  "has_CI\t", "is_C", "is_P", endl; 
+	__ endl, "type",  "is_Ct\t", "h_CI", "is_P", endl; 
 
 	#define for_T(name) cout.width(25);  _ name; \
 		outln ("\t") \

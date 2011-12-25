@@ -41,6 +41,7 @@ struct  out {
 				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
 				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
+/*
 	// sequance container
 		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
 		out&
@@ -70,6 +71,7 @@ struct  out {
 		cout << "}";
 		return *this;
 	};
+*/
 
 
 
@@ -92,6 +94,27 @@ struct  outln : out  {
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
+	template <typename T>
+struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
+	template <typename U>
+	static char test(
+		U* u,
+		typename U::const_iterator b = ((U*)0)->begin(),
+		typename U::const_iterator e = ((U*)0)->end()
+	);
+	template <typename U> static long test(...);
+
+	enum { value = sizeof test<T>(0) == 1 };
+};
+//template<typename T>		struct is_container : public ::std::integral_constant<bool, has_const_iterator<T>::value && has_begin_end<T>::beg_value && has_begin_end<T>::end_value> { };
+
+template<typename T, size_t N>	struct is_container<T[N]> 	: std::true_type { };
+template<size_t N>		struct is_container<char[N]>	: std::false_type { };
+template<>			struct is_container<std::basic_string<char>> : std::false_type { };
+
+
+template<typename S> struct is_sink{ const static bool value =  std::is_same<S,std::ostream>::value || std::is_same<S,out>::value; };
+
 // Print any C-array
 
                template<class T, std::size_t N>
@@ -109,9 +132,14 @@ struct  outln : out  {
 
 
 // print any std::sequance-containter<printable>
-	template<typename T, template<typename T, typename Al> class Ct >
-	std::ostream&
-operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
+	//template<typename T, template<typename T, typename Al> class Ct >
+	template<typename S,  typename Ct >
+	typename std::enable_if<
+		std::integral_constant <bool, is_container<Ct>::value  &&  is_sink<S>::value>::value,
+		std::ostream&
+	>::type
+//operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
+operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto it=C.begin();
 		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
