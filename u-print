@@ -4,11 +4,10 @@ scc '
 { const char* 		v = "abc"; 			_ "c string :  ", v, ";    ";  cout << v << "\n"; }
 { string  		v = "abc"; 			_ "str      :  ", v, ";    ";  cout << v << "\n"; }
 { strr			v = "abc";			_ "strr     :  ", v, ";    ";  cout << v << "\n"; }
-{ vint 			v  {1,2,3}; 			_ "vint     :  ", v, ";    ";  cout << v << "\n"; }
-{ vint 			v  {}; 				_ "vint{}   :  ", v, ";    ";  cout << v << "\n"; }
+{ vint 			v {1,2,3}; 			_ "vint     :  ", v, ";    ";  cout << v << "\n"; }
+{ vint 			v {}; 				_ "vint{}   :  ", v, ";    ";  cout << v << "\n"; }
 { vector<vint>		v {{1,1}, {2,2}};   		_ "v..<vint>:  ", v, ";    ";  cout << v << "\n"; }
 { int 			v[3]{1,2,3};   			_ "int[]    :  ", v, ";    ";  cout << v << "\n"; }
-{ int 			v[0];   			_ "int[0]   :  ", v, ";    ";  cout << v << "\n"; }
 { tuple<const char*,int>v {"aaa",2};			_ "tuple    :  ", v, ";    ";  cout << v << "\n"; }
 { tuple<>		v {};				_ "tuple{}  :  ", v, ";    ";  cout << v << "\n"; }
 { pair<int,int>		v {1,2};			_ "pair     :  ", v, ";    ";  cout << v << "\n"; }
