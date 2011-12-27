@@ -21,10 +21,9 @@ struct  out {
 	const char*	sep;
 	const char*	paren;
 
-	out ()					      : first_use(true), sep(0),   paren(0)     {init();};
+	out ()					      : first_use(true), sep(0),   paren(0)     {init(); };
 	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
 	void init() { if (sep   && !*sep)	sep   = 0; }
-
 
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
@@ -41,45 +40,6 @@ struct  out {
 				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
 				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
-/*
-	// sequance container
-		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		out&
-	operator<<      (const Ct<const T, Al<const T> >& C) {
-		if (paren && *paren)  	cout << paren[0];
-		else			cout << '{';
-
-		for (int i=0;   i < int(C.size());   i++)	{
-			if(i && C.size()) cout  << (sep ? sep : ", ");  cout << C[i];
-		}
-
-		if (paren && *paren)	cout << paren[1];
-		else 			cout << '}';
-
-		return *this;
-	};
-
-
-	// C-array
-		template<class T, std::size_t N>
-		typename std::enable_if<!std::is_same<T, char>::value,  out&>::type
-	operator<<      (const T (&A)[N]) {
-		cout << "{";
-			int i=0;
-			for (; i<(int)N-1;  i++)	cout << A[i] <<  ", ";
-			cout << A[i];
-		cout << "}";
-		return *this;
-	};
-*/
-
-
-
-	// alias "," for ">>"
-		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		out&
-	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
-
 	operator bool   () {  return true; }
  };
 
@@ -88,8 +48,13 @@ struct  outln : out  {
 	~outln()				{ cout << endl; }
  };
 
+std::ostream&    operator<<      (ostream& os, out) {return os; };    // NOP
+
+
 #define		_    out()   <<
 #define		__   outln() <<
+//#define		_    
+//#define		__  
 
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
@@ -108,37 +73,31 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 };
 //template<typename T>		struct is_container : public ::std::integral_constant<bool, has_const_iterator<T>::value && has_begin_end<T>::beg_value && has_begin_end<T>::end_value> { };
 
-template<typename T, size_t N>	struct is_container<T[N]> 	: std::true_type { };
-template<size_t N>		struct is_container<char[N]>	: std::false_type { };
-template<>			struct is_container<std::basic_string<char>> : std::false_type { };
+template<typename T, size_t N>	struct  is_container <T[N]> 	: std::true_type { };
+template<size_t N>		struct  is_container <char[N]>	: std::false_type { };
+template<>			struct  is_container <std::basic_string<char>> : std::false_type { };
 
 
-template<typename S> struct is_sink{ const static bool value =  std::is_same<S,std::ostream>::value || std::is_same<S,out>::value; };
 
 // Print any C-array
 
-               template<class T, std::size_t N>
-                                                               // disable C-array print for  char[]
-               typename std::enable_if< !std::is_same<T, char>::value,  std::ostream&>::type
-	operator<<      (ostream& os, const T (&A)[N]) {
-		cout << "{";
-			int i=0;
-			for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
-			os << A[i];
-		cout << "}";
-		return os;
-	};
+       template<class T, std::size_t N>
+						       // disable C-array print for  char[]
+       typename std::enable_if< !std::is_same<T, char>::value,  std::ostream&>::type
+operator<<      (ostream& os, const T (&A)[N]) {
+	cout << "{";
+		int i=0;
+		for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
+		os << A[i];
+	cout << "}";
+	return os;
+};
 
 
 
 // print any std::sequance-containter<printable>
-	//template<typename T, template<typename T, typename Al> class Ct >
-	template<typename S,  typename Ct >
-	typename std::enable_if<
-		std::integral_constant <bool, is_container<Ct>::value  &&  is_sink<S>::value>::value,
-		std::ostream&
-	>::type
-//operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
+	template<typename Ct >
+	typename std::enable_if <is_container<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto it=C.begin();
@@ -147,53 +106,6 @@ operator<<      (ostream& os, const Ct& C) {
 	cout << "}";
         return os;
 };
-
-
-// SET/MULTISET -- print any std::set<printable>  with std comparator and allocator
-	template<
-		typename T,
-		template<typename T>  class  Al,
-		template<typename T>  class  Cmp,
-		template<typename T, typename Cmp, typename Al> class Ct
-	>
-
-
-	typename std::enable_if<
-		!std::is_same <Ct<T,Cmp<T>,Al<T>>,  std::string>::value,
-		std::ostream&
-	>::type
-
-	//std::ostream&
-operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {
-	cout << "{";
-	auto it=C.begin();
-        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
-	if (!C.empty())  						os  << *it;
-	cout << "}";
-        return os;
-};
-
-
-
-// MAP -- print any std::map<printable, printable>  with std comparator and allocator
-	template<
-		typename K, typename V,
-		template<typename K> class Cmp,
-		template<typename Pr> class Al,
-		template<typename K, typename V, typename Cmp,
-		typename Al> class Ct
-	>
-	std::ostream&
-operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& C) {
-//operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::pair<const K,V> > > & C) {
-	cout << "{";
-	auto it = C.begin();
-        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
-	if (!C.empty())  						os  << *it;
-	cout << "}";
-        return os;
-};
-
 
 
 

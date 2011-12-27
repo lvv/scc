@@ -223,7 +223,6 @@ int gcd(long a, long b) {
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
 
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
 
 
 
