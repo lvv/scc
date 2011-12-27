@@ -16,7 +16,6 @@
 	using	std::ostream;
 	using	std::flush;
 
-/*
 struct  out {
 	bool  first_use;
 	const char*	sep;
@@ -26,7 +25,6 @@ struct  out {
 	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
 	void init() { if (sep   && !*sep)	sep   = 0; }
 
-	ostream& operator() { return cout; };
 
 
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
@@ -44,13 +42,6 @@ struct  out {
 				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
 				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
 
-
-
-	// alias "," for ">>"
-		template<typename T, template<typename T> class  Al, template<typename T, typename Al> class Ct >
-		out&
-	operator,       (const Ct<T, Al<T> >& C) {  return operator<<(C); }
-
 	operator bool   () {  return true; }
  };
 
@@ -58,13 +49,14 @@ struct  outln : out  {
 	outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
 	~outln()				{ cout << endl; }
  };
-std::ostream&    operator<<      (ostream& os, out out) {return os; };    // NOP
- */
 
-//#define		_    out()   <<
-//#define		__   outln() <<
-#define		_    
-#define		__  
+std::ostream&    operator<<      (ostream& os, out) {return os; };    // NOP
+
+
+#define		_    out()   <<
+#define		__   outln() <<
+//#define		_    
+//#define		__  
 
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
