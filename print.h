@@ -79,30 +79,18 @@ template<>			struct  is_container <std::basic_string<char>> : std::false_type { 
 
 
 
-// Print any C-array
 
-       template<class T, std::size_t N>
-						       // disable C-array print for  char[]
-       typename std::enable_if< !std::is_same<T, char>::value,  std::ostream&>::type
-operator<<      (ostream& os, const T (&A)[N]) {
-	cout << "{";
-		int i=0;
-		for (; i<(int)N-1;  i++)	os << A[i] <<  ", ";
-		os << A[i];
-	cout << "}";
-	return os;
-};
-
-
-
-// print any std::sequance-containter<printable>
+// print any std::containter<printable>
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
-		auto it=C.begin();
-		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
-		if (!C.empty())  					os  << *it;
+		auto I=std::begin(C);
+		while (I != std::end(C)) {
+			os  << *I;
+			if (++I == std::end(C))  break;
+			os << ", ";
+		}
 	cout << "}";
         return os;
 };
