@@ -133,19 +133,21 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 // print any std::sequance-containter<printable>
 	//template<typename T, template<typename T, typename Al> class Ct >
-	template<typename S,  typename Ct >
+	template<typename Sink,  typename Ct >
 	typename std::enable_if<
-		std::integral_constant <bool, is_container<Ct>::value  &&  is_sink<S>::value>::value,
-		std::ostream&
+		std::integral_constant <bool, is_container<Ct>::value  &&  is_sink<Sink>::value>::value,
+		//std::ostream&
+		Sink&&
 	>::type
 //operator<<      (ostream& os, const Ct<T, std::allocator<T> >& C) {
-operator<<      (ostream& os, const Ct& C) {
+//operator<<      (ostream& os, const Ct& C) {
+operator<<      (Sink& S, const Ct& C) {
 	cout << "{";
 		auto it=C.begin();
-		for (int i=0;   i < int(C.size())-1;   i++, it++)	os  << *it <<  ", ";
-		if (!C.empty())  					os  << *it;
+		for (int i=0;   i < int(C.size())-1;   i++, it++)	S  << *it <<  ", ";
+		if (!C.empty())  					S  << *it;
 	cout << "}";
-        return os;
+        return S;
 };
 
 

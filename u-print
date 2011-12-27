@@ -1,4 +1,3 @@
-
 scc '
 { char         		v = 97;	 			_ "char     :  ", v, ";    ";  cout << v << "\n"; }
 { const char* 		v = "abc"; 			_ "c string :  ", v, ";    ";  cout << v << "\n"; }
