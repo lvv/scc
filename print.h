@@ -25,8 +25,6 @@ struct  out {
 	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
 	void init() { if (sep   && !*sep)	sep   = 0; }
 
-
-
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
 	template<typename T>	out&  operator<<  (T x)	{ send_sep();  cout <<         x;	return *this; };
@@ -108,53 +106,6 @@ operator<<      (ostream& os, const Ct& C) {
 	cout << "}";
         return os;
 };
-
-
-// SET/MULTISET -- print any std::set<printable>  with std comparator and allocator
-	template<
-		typename T,
-		template<typename T>  class  Al,
-		template<typename T>  class  Cmp,
-		template<typename T, typename Cmp, typename Al> class Ct
-	>
-
-
-	typename std::enable_if<
-		!std::is_same <Ct<T,Cmp<T>,Al<T>>,  std::string>::value,
-		std::ostream&
-	>::type
-
-	//std::ostream&
-operator<<      (ostream& os, const Ct<T,Cmp<T>,Al<T>>& C) {
-	cout << "{";
-	auto it=C.begin();
-        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
-	if (!C.empty())  						os  << *it;
-	cout << "}";
-        return os;
-};
-
-
-
-// MAP -- print any std::map<printable, printable>  with std comparator and allocator
-	template<
-		typename K, typename V,
-		template<typename K> class Cmp,
-		template<typename Pr> class Al,
-		template<typename K, typename V, typename Cmp,
-		typename Al> class Ct
-	>
-	std::ostream&
-operator<<      (ostream& os, const Ct<K, V, Cmp<K>, Al<std::pair<const K,V>>>& C) {
-//operator<<      (ostream& os, const map<K, V, std::less<K>, std::allocator<std::pair<const K,V> > > & C) {
-	cout << "{";
-	auto it = C.begin();
-        for (int i=0;   i < int(C.size())-1;   i++, it++)		os  << *it <<  ", ";
-	if (!C.empty())  						os  << *it;
-	cout << "}";
-        return os;
-};
-
 
 
 
