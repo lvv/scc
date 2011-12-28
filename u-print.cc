@@ -16,4 +16,5 @@ using std::multimap;
 
 int main() {
 	#include "u-print.h"
+	int A[3]{1,2,3};   cout << A << endl;  __ A;
 }
