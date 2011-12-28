@@ -4,10 +4,18 @@
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
 #include <type_traits>
 #include <iterator>
+
 #include <iostream>
-#include <iomanip>
-#include <sstream>
+
+#include <array>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+#include <utility> 	// pair
 #include <tuple>
+
+#include <iomanip>
 #include <sstream>
 	using	std::cout;
 	using	std::cout;
@@ -54,7 +62,7 @@ std::ostream&    operator<<      (ostream& os, out) {return os; };    // NOP
 #define		_    out()   <<
 #define		__   outln() <<
 
-///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
+/////////////////////////////////////////////////////////////////////  IS_CONTAINER
 
 	template <typename T>
 struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
@@ -68,9 +76,9 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 
 	enum { value = sizeof test<T>(0) == 1 };
 };
-//template<typename T>		struct is_container : public ::std::integral_constant<bool, has_const_iterator<T>::value && has_begin_end<T>::beg_value && has_begin_end<T>::end_value> { };
 
 template<typename T, size_t N>	struct  is_container <T[N]> 	: std::true_type { };
+template<typename T, size_t N>	struct  is_container <std::array<T,N>> 	: std::true_type { };
 template<size_t N>		struct  is_container <char[N]>	: std::false_type { };
 template<>			struct  is_container <std::basic_string<char>> : std::false_type { };
 
@@ -108,8 +116,6 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 	using	std::tuple;
 	using	std::tuple_size;
 	using	std::get;
-
-
 
 			template< int RI, typename... TT>
 	struct	print_tuple_elem  {

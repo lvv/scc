@@ -20,7 +20,7 @@ index.txt:
 #COPY_LIST += $(wildcard *.png)
 
 ###########################################################
-CXXFLAGS=   -std=gnu++0x -Wall -I/home/lvv/p/ 
+CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/ 
 t-buf-r: t-buf
 
 
