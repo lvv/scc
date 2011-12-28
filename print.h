@@ -28,6 +28,7 @@ struct  out {
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
 	template<typename T>	out&  operator<<  (T x)	{ send_sep();  cout <<         x;	return *this; };
+	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{ send_sep();  cout <<        x;	return *this; };
 	template<typename T>	out&  operator,   (T x)	{ send_sep();  cout <<         x;	return *this; };
 	//template<typename T>	out&  operator|   (T x)	{ send_sep();  cout << " "  << x;	return *this; };
 	template<typename T>	out&  operator^   (T x)	{ send_sep();  cout << " " << x;	return *this; };
@@ -50,12 +51,8 @@ struct  outln : out  {
 
 std::ostream&    operator<<      (ostream& os, out) {return os; };    // NOP
 
-
 #define		_    out()   <<
 #define		__   outln() <<
-//#define		_    
-//#define		__  
-
 
 ///////////////////////////////////////////////////////////////////// PRINT ANY CONTAINER
 
@@ -78,9 +75,7 @@ template<size_t N>		struct  is_container <char[N]>	: std::false_type { };
 template<>			struct  is_container <std::basic_string<char>> : std::false_type { };
 
 
-
-
-// print any std::containter<printable>
+// print any std::containter<printable> or c-array
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
