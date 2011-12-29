@@ -2,6 +2,7 @@
 
 #include"print.h"
 
+#include <algorithm>
 #include <array>
 #include <vector>
 #include <string>

@@ -132,5 +132,35 @@ operator<<      (ostream& os, const std::tuple<TT...>& tup) {
 	// Using C++0x Variadic Templates to Pretty-Print Types
 	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
+// OUTI -- Output Iterator
+// 	similar to ostream_iterator<T>(cout, " ")
+// 	used as:	copy(V.begin(), V.end(), oi);
+
+	template<typename U, typename V, template<typename U, typename V> class CL>  void
+oi_print(const CL<U,V>& v) { std::cout << v; };
+
+namespace oi_space {
+
+		struct	oi_any_t {
+				template<typename T>								// POD
+			oi_any_t (const T& v)				{ std::cout << v; };
+
+				template<typename U, typename V, template<typename U, typename V> class CL>	// std::pair
+			oi_any_t (const CL<U,V>& v)	{ oi_print<U,V>(v); };
+		};
+
+		// NOP to make acceptable for ostream<<
+		std::ostream&   operator<<      (std::ostream& os, const oi_any_t& s) { return os; };
+
+	struct	oi_t  : std::ostream_iterator<oi_any_t> {
+		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
+	};
+
+};
+
+static oi_space::oi_t oi;
+
+
 #endif	// LVV_PRINT_H
 
