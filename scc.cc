@@ -87,7 +87,6 @@ int main(int argc, char** argv) {
 						// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
 						// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 	;}
-	cout << endl;
 }
 
 
