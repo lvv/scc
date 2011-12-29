@@ -3,6 +3,7 @@
 { string  			v = "abc"; 			_ "str      :  ", v, ";    ";  cout << v << "\n"; }
 { std::array<int,3>		v {{1,2,3}}; 			_ "array    :  ", v, ";    ";  cout << v << "\n"; }
 { vector<int>			v {1,2,3}; 			_ "vint     :  ", v, ";    ";  cout << v << v << "\n"; }
+{ deque<int>			v {1,2,3}; 			_ "vint     :  ", v, ";    ";  cout << v << v << "\n"; }
 { vector<int>			v {}; 				_ "vint{}   :  ", v, ";    ";  cout << v << "\n"; }
 { vector<vector<int>>		v {{1,1}, {2,2}};   		_ "v..<vint>:  ", v, ";    ";  cout << v << "\n"; }
 { int 				v[3]{1,2,3};   			_ "int[]    :  ", v, ";    ";  cout << v << "\n"; }
@@ -21,4 +22,4 @@
 { unordered_set<int> 		v {1,2,3,3};			_ "multiset :  ", v, ";    ";  cout << v << "\n"; }
 
 { auto 				v = make_tuple("aaa",2,make_tuple(3,4.5f));	_ "tuple<tu :  ", v, ";    ";  cout << v << "\n"; }
-{ vector<int>			v {1,2,3}; 			std::copy(v.begin(), v.end(), oi);   cout << endl; }
+{ vector<int>			v {1,2,3}; 			_ "oi       :  "; std::copy(v.begin(), v.end(), oi);   _ endl; }

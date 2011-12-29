@@ -201,19 +201,10 @@
 ///////////////////////////////////////////////////////////////////// LINE INPUT
 //	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
 //
-
 	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
 
 
-
-
-
 ///////////////////////////////////////////////////////////////////// UTILS
-
-
-// Even / Odd
-template <typename  T>  bool  is_even(T x) { return  !(x % 2); }
-template <typename  T>	bool  is_odd (T x) { return    x % 2;  }
 
 
 // Greatest Common divisor
@@ -223,9 +214,6 @@ int gcd(long a, long b) {
 }
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
-
-
-
 
 
 

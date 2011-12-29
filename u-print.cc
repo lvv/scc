@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include <vector>
+#include <deque>
 #include <string>
 #include <map>
 #include <unordered_map>
@@ -13,6 +14,7 @@
 
 using std::array;
 using std::vector;
+using std::deque;
 using std::pair;
 using std::tuple;
 using std::make_tuple;
