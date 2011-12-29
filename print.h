@@ -5,24 +5,16 @@
 #include <type_traits>
 #include <iterator>
 
-#include <iostream>
-
-#include <array>
-#include <vector>
-#include <string>
-#include <map>
-#include <set>
 #include <utility> 	// pair
 #include <tuple>
 
+#include <iostream>
 #include <iomanip>
-#include <sstream>
 	using	std::cout;
 	using	std::cout;
 	using	std::endl;
-	using	std::string;
 	using	std::ostream;
-	using	std::flush;
+
 
 struct  out {
 	bool  first_use;
@@ -112,18 +104,13 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 
 
 // TUPLE -- print any std::tuple<printable ...>
-// 	tr1::tuple() used to be printable, but now with gcc460 - it is not.
-
-	using	std::tuple;
-	using	std::tuple_size;
-	using	std::get;
 
 			template< int RI, typename... TT>
 	struct	print_tuple_elem  {
-		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {
-			const size_t  tsize = tuple_size<tuple<TT...>>::value;
+		print_tuple_elem (ostream& os, const std::tuple<TT...>& tup)  {
+			const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
 			const size_t  i = tsize - RI;
-			os <<  get<i>(tup);
+			os <<  std::get<i>(tup);
 			if  (i != tsize-1)   cout << ", ";
 			print_tuple_elem<RI-1, TT...>(os, tup);
 		};
@@ -131,14 +118,14 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 
 			template<typename... TT>
 	struct	print_tuple_elem <0, TT...> {
-		print_tuple_elem (ostream& os, const tuple<TT...>& tup)  {};
+		print_tuple_elem (ostream& os, const std::tuple<TT...>& tup)  {};
 	};
 
 
 		template<typename... TT>
 		std::ostream&
-operator<<      (ostream& os, const tuple<TT...>& tup) {
-	const size_t  tsize = tuple_size<tuple<TT...>>::value;
+operator<<      (ostream& os, const std::tuple<TT...>& tup) {
+	const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
 	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
 	return os;
 };

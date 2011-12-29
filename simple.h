@@ -69,10 +69,12 @@
 	using	std::deque;
 	using	std::set;
 	using	std::unordered_set;
+	using	std::unordered_multiset;
 	using	std::list;
 	using	std::multiset;
 	using	std::map;
 	using	std::unordered_map;
+	using	std::unordered_multimap;
 	using	std::multimap;
 	using	std::stringstream;
 	using	std::istringstream;
@@ -258,8 +260,6 @@ operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin
 
 // IN   -- read cin when `in` value is accessed.
 //   used as:    	int i(in);
-
-
 
 
 struct in_t {
