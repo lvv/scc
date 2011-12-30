@@ -18,7 +18,7 @@ struct strr {
 	const char *B, *E;
 
 	// CTOR
-	strr()			/*: B(0), E(0)*/  				{};
+	strr()			: B(0), E(0)  				{};
 	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
 	//strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
@@ -59,38 +59,40 @@ struct strr {
 template<>			struct  is_container <strr>	: std::false_type { };
 		ostream&
  operator<<      (ostream& os, const strr f) {
+	assert(f.B && f.E);
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
 	return os;
  };
 
 
-	struct  spool {
+	struct  strr_allocator_t {
 			const static size_t  size = 10000;
 			char *spool_begin;
 			char *spool_end;
 			char *data_end;
-		spool() :  spool_begin(new char[size]),  spool_end(spool_begin+size)  {};
-		~spool() { delete spool_begin;};
+		strr_allocator_t() :  spool_begin(new char[size]),  spool_end(spool_begin+size)  { clear(); };
+		~strr_allocator_t() { delete spool_begin;};
 		void clear() { data_end = spool_begin; }
 
 		char*  allocate(size_t sz)   {
 			char *p = data_end;   
 			data_end += sz;  
+			assert(data_end <= spool_end);
 			return p;
 		}
 	};
 
-spool  sp;
+static strr_allocator_t  strr_allocator;
 
 struct	strr_assignable : strr {
-	spool&  sp;
-	strr_assignable(spool& sp):  sp(sp)  {};
+	//strr_assignable() : strr() {};
 
 	strr_assignable&   operator= (const strr& other) {
-		B = sp.allocate(other.size());
+	
+		B = strr_allocator.allocate(other.size());
 		E = B + other.size();
-		copy (other.B,  other.E,  const_cast<char*>(B));
+		std::copy (other.B,  other.E,  const_cast<char*>(B));
 		return *this;
 	}
 };

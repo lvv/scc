@@ -88,5 +88,3 @@ int main(int argc, char** argv) {
 						// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 	;}
 }
-
-
