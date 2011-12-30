@@ -30,9 +30,9 @@ struct strr {
 	bool	operator==(strr sr)	const { return equal(B, E, sr.B); };
 
 	// CONVERSION
-	operator const string			(void) const { return string(B,E); }
+	operator const string			() const { return string(B,E); }
 
-	operator ssize_t		(void) const {
+	operator ssize_t		() const {
 		ssize_t 	sign	= 1;
 		const char	*p	= B;
 		ssize_t		base	= 10;
@@ -56,12 +56,45 @@ struct strr {
 	}
  };
 
-		std::ostream&
+template<>			struct  is_container <strr>	: std::false_type { };
+		ostream&
  operator<<      (ostream& os, const strr f) {
 	const char *p = f.B;
 	while (p!=f.E)   os << *p++;
 	return os;
  };
+
+
+	struct  spool {
+			const static size_t  size = 10000;
+			char *spool_begin;
+			char *spool_end;
+			char *data_end;
+		spool() :  spool_begin(new char[size]),  spool_end(spool_begin+size)  {};
+		~spool() { delete spool_begin;};
+		void clear() { data_end = spool_begin; }
+
+		char*  allocate(size_t sz)   {
+			char *p = data_end;   
+			data_end += sz;  
+			return p;
+		}
+	};
+
+spool  sp;
+
+struct	strr_assignable : strr {
+	spool&  sp;
+	strr_assignable(spool& sp):  sp(sp)  {};
+
+	strr_assignable&   operator= (const strr& other) {
+		B = sp.allocate(other.size());
+		E = B + other.size();
+		copy (other.B,  other.E,  const_cast<char*>(B));
+		return *this;
+	}
+};
+
 
 /*
 struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD

@@ -268,13 +268,13 @@ Simple workaround: use semicolon before last statement.
 GNU AWK
 	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
 
-PCRE++
-	http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
 REGEX
+	A Regular Expression Matcher by Rob Pike -- http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
 	http://swtch.com/~rsc/regexp/
+	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 JSON
 	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 	http://www.kirit.com/Thread:/1723074
