@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
 
 		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return  buf.get_rec(*IRS.B, *IFS.B, F); };
 		else					read_line = [&]() { return  buf.get_rec(IRS, IFS, F); };
-		#define 	WRL 	while(read_line())
+		#define		WRL	while(read_line())
 
 		#ifdef scc_IS_STREAM
 

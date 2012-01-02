@@ -18,8 +18,8 @@ struct strr {
 	const char *B, *E;
 
 	// CTOR
-	strr()			: B(0), E(0)  				{};
-	strr(const char*   s)	: B(s)           			{  E = B + strlen(s); };
+	strr()			: B(0), E(0)				{};
+	strr(const char*   s)	: B(s)					{  E = B + strlen(s); };
 	//strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
 	strr(const char* B, const char* E):  B(B),  E(E)		{};
 	//strr& operator=(const strr& sr) : B(sr.B), E(sr
@@ -37,12 +37,12 @@ struct strr {
 		const char	*p	= B;
 		ssize_t		base	= 10;
 
-		for (;  p<E-1;  p++) { 			// read prefix
+		for (;  p<E-1;  p++) {			// read prefix
 			switch(*p) {
 				case ' ':;   case '\t': continue;
 				case '-':	sign = -1;  p++;  goto end_prefix;
 				case '+':	p++;  goto end_prefix;
-				default: 	goto end_prefix;
+				default:	goto end_prefix;
 			}
 		}
 
@@ -76,8 +76,8 @@ template<>			struct  is_container <strr>	: std::false_type { };
 		void clear() { data_end = spool_begin; }
 
 		char*  allocate(size_t sz)   {
-			char *p = data_end;   
-			data_end += sz;  
+			char *p = data_end;
+			data_end += sz;
 			assert(data_end <= spool_end);
 			return p;
 		}
@@ -91,7 +91,7 @@ struct	strr_assignable : strr {
 	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
 
 	strr_assignable&   operator= (const strr& other) {
-	
+
 		B = strr_allocator.allocate(other.size());
 		E = B + other.size();
 		std::copy (other.B,  other.E,  const_cast<char*>(B));
