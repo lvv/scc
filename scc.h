@@ -183,10 +183,12 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 		};
 	};
 
+	typedef  strr_assignable	F_t;
+
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	R_t<strr_assignable> F;
+	R_t<F_t> F;
 		#define		F0	F(0)
 		#define		F1	F(1)
 		#define		F2	F(2)
@@ -326,7 +328,7 @@ struct buf_t {
 
 
 		template <typename sep_T>
-	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<strr_assignable>& F)	{
+	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<F_t>& F)	{
 
 		if (!good_file)   return false;
 
@@ -335,7 +337,7 @@ struct buf_t {
 		const char *bof (bod);		// field
 
 		F.clear();
-		F.push_back(strr_assignable());	// F[0] - whole line
+		F.push_back(F_t());	// F[0] - whole line
 		strr_allocator.clear();
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
@@ -367,14 +369,14 @@ struct buf_t {
 				}
 			}
 
-			if        (is_separator(p, eod, IFS))	{ F.push_back(strr_assignable(bof,p));  p += sep_size(IFS);  bof = p; }
+			if        (is_separator(p, eod, IFS))	{ F.push_back(F_t(bof,p));  p += sep_size(IFS);  bof = p; }
 			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; }
 			else                                      p++;
 		}
 
 
 		return_rec:
-			F.push_back(strr_assignable(bof,p));
+			F.push_back(F_t(bof,p));
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;
