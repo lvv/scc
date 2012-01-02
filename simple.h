@@ -43,6 +43,7 @@
 #include <limits>
 #include <bitset>
 ///////////////////////////////////////////////////////////////////// C++11 STL
+#include <type_traits>
 #include <tuple>
 #include <memory>
 

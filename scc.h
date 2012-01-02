@@ -29,31 +29,9 @@ struct strr {
 	size_t	empty()		const { return E-B == 0; };
 	bool	operator==(strr sr)	const { return equal(B, E, sr.B); };
 
-	// CONVERSION
-	operator const string			() const { return string(B,E); }
 
-	operator ssize_t		() const {
-		ssize_t 	sign	= 1;
-		const char	*p	= B;
-		ssize_t		base	= 10;
 
-		for (;  p<E-1;  p++) {			// read prefix
-			switch(*p) {
-				case ' ':;   case '\t': continue;
-				case '-':	sign = -1;  p++;  goto end_prefix;
-				case '+':	p++;  goto end_prefix;
-				default:	goto end_prefix;
-			}
-		}
 
-		end_prefix:;
-
-		ssize_t  n=0;				// read number
-		for (;  p<E && isdigit(*p);  p++)  {
-			n = n*base + (*p-'0');
-		}
-		return sign*n;
-	}
  };
 
 template<>			struct  is_container <strr>	: std::false_type { };
@@ -89,6 +67,7 @@ struct	strr_assignable : strr {
 
 	strr_assignable()				: strr()	{};
 	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
+	strr_assignable(const char*   s)		: strr(s)	{};
 
 	strr_assignable&   operator= (const strr& other) {
 
@@ -96,6 +75,37 @@ struct	strr_assignable : strr {
 		E = B + other.size();
 		std::copy (other.B,  other.E,  const_cast<char*>(B));
 		return *this;
+	}
+
+	// CONVERSION
+			operator const string	() const { return string(B,E); }
+	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
+	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
+
+	// Convertion to Integral
+	template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
+	explicit operator  T() const {
+
+		ssize_t		sign	= 1;
+		const char	*p	= B;
+		ssize_t		base	= 10;
+
+		for (;  p<E-1;  p++) {			// read prefix
+			switch(*p) {
+				case ' ':;   case '\t': continue;
+				case '-':	sign = -1;  p++;  goto end_prefix;
+				case '+':	p++;  goto end_prefix;
+				default:	goto end_prefix;
+			}
+		}
+
+		end_prefix:;
+
+		ssize_t  n=0;				// read number
+		for (;  p<E && isdigit(*p);  p++)  {
+			n = n*base + (*p-'0');
+		}
+		return sign*n;
 	}
 };
 
