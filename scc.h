@@ -86,7 +86,9 @@ template<>			struct  is_container <strr>	: std::false_type { };
 static strr_allocator_t  strr_allocator;
 
 struct	strr_assignable : strr {
-	//strr_assignable() : strr() {};
+
+	strr_assignable() 				: strr()	{};
+	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
 
 	strr_assignable&   operator= (const strr& other) {
 	
@@ -184,7 +186,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t<strr> F;
+	F_t<strr_assignable> F;
 		#define 	F0	F(0)
 		#define 	F1	F(1)
 		#define 	F2	F(2)
@@ -271,22 +273,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
-	#define 	WRL 	while(read_line())
 
-
-///////////////////////////////////////////////////////////////////////////////  STRR HEAP
-
-
-struct strr_heap_t {
-		strr_heap_t	(const size_t size=1000000) :  _size(size),  B(new char[size])  {};
-		~strr_heap_t	() { delete []B; };
-
-	size_t	size	() { return _size; };
-	void	clear	() { E = B; };
-
-	size_t	_size;
-	char 	*B, *E;
-};
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
 struct buf_t {
@@ -337,17 +324,19 @@ struct buf_t {
 	}
 
 
+
 		template <typename sep_T>
-	bool		get_rec		(sep_T IRS, sep_T IFS, F_t<strr>& F)	{
+	bool		get_rec		(sep_T IRS, sep_T IFS, F_t<strr_assignable>& F)	{
 
 		if (!good_file)   return false;
 
 		const char *p   (bod);
-		const char *bor (bod);	// record
-		const char *bof (bod);; 	// field
+		const char *bor (bod);		// record
+		const char *bof (bod); 		// field
 
 		F.clear();
-		F.push_back(strr());	// F[0] - whole line
+		F.push_back(strr_assignable());	// F[0] - whole line
+		strr_allocator.clear();
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
 			size_t	unused_data = eod - p;
@@ -378,14 +367,14 @@ struct buf_t {
 				}
 			}
 
-			if        (is_separator(p, eod, IFS))	{ F.push_back(strr(bof,p));  p += sep_size(IFS);  bof = p; }
+			if        (is_separator(p, eod, IFS))	{ F.push_back(strr_assignable(bof,p));  p += sep_size(IFS);  bof = p; }
 			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; }
 			else                                      p++;
 		}
 
 
 		return_rec:
-			F.push_back(strr(bof,p));
+			F.push_back(strr_assignable(bof,p));
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;

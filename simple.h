@@ -186,6 +186,7 @@
 	using	std::pair;
 	using	std::make_pair;
 	using	std::tie;			// C++11
+	using	std::tuple;			// C++11
 	using	std::make_tuple;		// C++11
 	using	std::iota;			// C++11
 	using	std::begin;			// C++11
