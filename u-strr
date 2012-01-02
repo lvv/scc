@@ -10,12 +10,12 @@ scc '
 	{ F_t s("1.23");	__ (long)s; }
 	{ F_t s("1.23");	__ (char)s; }
 
+	{ F_t s("1.11"); 	__ s=1; }
+	{ F_t s("1.11"); 	__ s=1l; }
+	{ F_t s("1.11"); 	__ s=1.f; }
+
 '
 exit
-# Convertions operators 
-scc 'field s("1.11"); s=1'
-scc 'field s("1.11"); s=1l'
-scc 'field s("1.11"); s=1.f'
 
 scc 'field s("1.11"); s+1'
 scc 'field s("1.11"); s+1l'

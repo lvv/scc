@@ -77,7 +77,7 @@ struct	strr_assignable : strr {
 		return *this;
 	}
 
-	// CONVERSION
+	// CONVERSION TO T
 			operator const string	() const { return string(B,E); }
 	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
 	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
@@ -107,6 +107,10 @@ struct	strr_assignable : strr {
 		}
 		return sign*n;
 	}
+
+	//  Assignment from T
+	//template<typename T>
+	strr_assignable& operator  = (int I) { ostringstream OS;   OS << I;   *this = string(OS.str().c_str());  return *this; }
 };
 
 

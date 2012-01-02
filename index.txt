@@ -273,6 +273,7 @@ TOKENIZER
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
 REGEX
 	A Regular Expression Matcher by Rob Pike -- http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
+	Writing own regular expression parser -- http://www.codeproject.com/KB/recipes/OwnRegExpressionsParser.aspx
 	http://swtch.com/~rsc/regexp/
 	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 JSON
