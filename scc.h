@@ -87,7 +87,7 @@ static strr_allocator_t  strr_allocator;
 
 struct	strr_assignable : strr {
 
-	strr_assignable() 				: strr()	{};
+	strr_assignable()				: strr()	{};
 	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
 
 	strr_assignable&   operator= (const strr& other) {
@@ -177,7 +177,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
 	struct   R_t : std::deque<_Tp> {
-		_Tp& 	operator()(size_t I) {
+		_Tp&	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
@@ -187,50 +187,50 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
 	R_t<strr_assignable> F;
-		#define 	F0	F(0)
-		#define 	F1	F(1)
-		#define 	F2	F(2)
-		#define 	F3	F(3)
-		#define 	F4	F(4)
-		#define 	F5	F(5)
-		#define 	F6	F(6)
-		#define 	F7	F(7)
-		#define 	F8	F(8)
-		#define 	F9	F(9)
-		#define 	F10	F(10)
-		#define 	F11	F(11)
-		#define 	F12	F(12)
-		#define 	F13	F(13)
-		#define 	F14	F(14)
-		#define 	F15	F(15)
-		#define 	F16	F(16)
-		#define 	F17	F(17)
-		#define 	F18	F(18)
-		#define 	F19	F(19)
+		#define		F0	F(0)
+		#define		F1	F(1)
+		#define		F2	F(2)
+		#define		F3	F(3)
+		#define		F4	F(4)
+		#define		F5	F(5)
+		#define		F6	F(6)
+		#define		F7	F(7)
+		#define		F8	F(8)
+		#define		F9	F(9)
+		#define		F10	F(10)
+		#define		F11	F(11)
+		#define		F12	F(12)
+		#define		F13	F(13)
+		#define		F14	F(14)
+		#define		F15	F(15)
+		#define		F16	F(16)
+		#define		F17	F(17)
+		#define		F18	F(18)
+		#define		F19	F(19)
 
-		#define 	$0	F(0)
-		#define 	$1	F(1)
-		#define 	$2	F(2)
-		#define 	$3	F(3)
-		#define 	$4	F(4)
-		#define 	$5	F(5)
-		#define 	$6	F(6)
-		#define 	$7	F(7)
-		#define 	$8	F(8)
-		#define 	$9	F(9)
-		#define 	$10	F(10)
-		#define 	$11	F(11)
-		#define 	$12	F(12)
-		#define 	$13	F(13)
-		#define 	$14	F(14)
-		#define 	$15	F(15)
-		#define 	$16	F(16)
-		#define 	$17	F(17)
-		#define 	$18	F(18)
-		#define 	$19	F(19)
+		#define		$0	F(0)
+		#define		$1	F(1)
+		#define		$2	F(2)
+		#define		$3	F(3)
+		#define		$4	F(4)
+		#define		$5	F(5)
+		#define		$6	F(6)
+		#define		$7	F(7)
+		#define		$8	F(8)
+		#define		$9	F(9)
+		#define		$10	F(10)
+		#define		$11	F(11)
+		#define		$12	F(12)
+		#define		$13	F(13)
+		#define		$14	F(14)
+		#define		$15	F(15)
+		#define		$16	F(16)
+		#define		$17	F(17)
+		#define		$18	F(18)
+		#define		$19	F(19)
 
-		#define 	$NF	F(NF)
-		#define 	$	F
+		#define		$NF	F(NF)
+		#define		$	F
 
 	long NF = 0;
 	long NR = 0;
@@ -281,10 +281,10 @@ struct buf_t {
 			bool		good_file;	// !eof
 			const char		*bob, *eob;	// buffer dimentions
 			const char		*bod, *eod;	// data in buffer
-			const char 	*path;
+			const char	*path;
 			int		fd;		// file
 
-	explicit	buf_t 		(const char* path)
+	explicit	buf_t		(const char* path)
 		: good_file(true),   path(path)
 	{
 		fd = open(path, O_RDONLY);
@@ -296,7 +296,7 @@ struct buf_t {
 		eob = bob+buf_size;
 	}
 
-	explicit	buf_t 		(int fd)
+	explicit	buf_t		(int fd)
 		: good_file(true), bob(new char[buf_size+1]), eob(bob+buf_size), bod(bob), eod(bob), path(0), fd(fd) {
 		assert(fd>=0);
 	}
@@ -320,7 +320,7 @@ struct buf_t {
 			if (got <=  0)				return  false;
 			eod += got;
 		}
-		return  true;  				// TODO
+		return  true;
 	}
 
 
@@ -332,7 +332,7 @@ struct buf_t {
 
 		const char *p   (bod);
 		const char *bor (bod);		// record
-		const char *bof (bod); 		// field
+		const char *bof (bod);		// field
 
 		F.clear();
 		F.push_back(strr_assignable());	// F[0] - whole line
@@ -362,8 +362,8 @@ struct buf_t {
 				}
 
 				if ( !(good_file = fill()) )  {
-					if ( bor == p ) 	return false;
-					else 			goto return_rec;
+					if ( bor == p )		return false;
+					else			goto return_rec;
 				}
 			}
 
