@@ -176,7 +176,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 ///////////////////////////////////////////////////////////////////////////////  F
 
 		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-	struct   F_t : std::deque<_Tp> {
+	struct   R_t : std::deque<_Tp> {
 		_Tp& 	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
@@ -186,7 +186,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	F_t<strr_assignable> F;
+	R_t<strr_assignable> F;
 		#define 	F0	F(0)
 		#define 	F1	F(1)
 		#define 	F2	F(2)
@@ -326,7 +326,7 @@ struct buf_t {
 
 
 		template <typename sep_T>
-	bool		get_rec		(sep_T IRS, sep_T IFS, F_t<strr_assignable>& F)	{
+	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<strr_assignable>& F)	{
 
 		if (!good_file)   return false;
 

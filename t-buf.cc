@@ -14,7 +14,7 @@ int main() {
 	size_t f_sz = 0;
 	size_t f_cnt = 0;
 
-	F_t<strr> F;
+	R_t<strr> F;
 	while(buf.get_rec('\n', '.', F)) {
 		f_cnt += F.size();
 		for(size_t i=0;  i<F.size();  i++)  { f_sz +=  F[i].size();  _ " \"", F[i], "\" "; }
