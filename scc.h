@@ -61,6 +61,31 @@ template<>			struct  is_container <strr>	: std::false_type { };
 		}
 	};
 
+	// CONVERTION TO INTEGRAL
+		template<typename T>
+	T to_integral(const strr& s) {
+		T		sign	= 1;
+		T		base	= 10;
+		const char	*p	= s.B;
+
+		for (;  p<s.E-1;  p++) {			// read prefix
+			switch(*p) {
+				case ' ':;   case '\t': continue;
+				case '-':	sign = -1;  p++;  goto end_prefix;
+				case '+':	p++;  goto end_prefix;
+				default:	goto end_prefix;
+			}
+		}
+
+		end_prefix:;
+
+		ssize_t  n=0;				// read number
+		for (;  p<s.E && isdigit(*p);  p++)  {
+			n = n*base + (*p-'0');
+		}
+		return sign*n;
+	}
+
 static strr_allocator_t  strr_allocator;
 
 struct	strr_assignable : strr {
@@ -88,33 +113,14 @@ struct	strr_assignable : strr {
 	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
 	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
 
-	// CONVERTION TO INTEGRAL
-		template<typename T>
-	T to_integral(const strr& s) const {
-		T		sign	= 1;
-		T		base	= 10;
-		const char	*p	= s.B;
+	//	template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
+	//operator  T() const {  return  to_integral<T>(*this); }
 
-		for (;  p<E-1;  p++) {			// read prefix
-			switch(*p) {
-				case ' ':;   case '\t': continue;
-				case '-':	sign = -1;  p++;  goto end_prefix;
-				case '+':	p++;  goto end_prefix;
-				default:	goto end_prefix;
-			}
-		}
-
-		end_prefix:;
-
-		ssize_t  n=0;				// read number
-		for (;  p<s.E && isdigit(*p);  p++)  {
-			n = n*base + (*p-'0');
-		}
-		return sign*n;
-	}
-
-		template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
-	explicit operator  T() const {  return  to_integral<T>(*this); }
+	operator  char() const {  return  to_integral<char>(*this); }
+	operator  short() const {  return  to_integral<short>(*this); }
+	operator  int() const {  return  to_integral<int>(*this); }
+	operator  long() const {  return  to_integral<long>(*this); }
+	operator  long long() const {  return  to_integral<long long>(*this); }
 
 
 	//  CONVERSION FROM T
@@ -126,6 +132,10 @@ struct	strr_assignable : strr {
 		return *this;
 	}
 };
+
+
+	template <typename T> T operator+(const strr_assignable& sr, T x) {  return  to_integral<T>(sr) + x; }
+	template <typename T> T operator+(T x, const strr_assignable& sr) {  return  to_integral<T>(sr) + x; }
 
 
 /*
