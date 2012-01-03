@@ -71,20 +71,16 @@ struct	fld : strr {
 	fld(const char*   s)			: strr(s)	{};
 
 
-	// CONVERSION TO T
-			operator const string	() const { return string(B,E); }
-	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
-	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
+	// CONVERT TO T
+	template<typename T> T convert_to()    const { istringstream is;  T i;  is.str(string(this->B, this->E));  is >> i;  return i; }
+
+	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
+	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
 
 
-		template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
-	operator  T() const {  return  to_integral<T>(); }
-
-
-
-	// CONVERTION TO INTEGRAL
+	// CONVERT TO INTEGRAL
 		template<typename T>
-	T to_integral() const {
+	T TO_TEST_to_integral() const {
 		T		sign	= 1;
 		T		base	= 10;
 		const char	*p	= B;
@@ -118,29 +114,52 @@ struct	fld : strr {
 		return *this;
 	}
 
-	#define IS_INTEGRAL(T)	typename std::enable_if<std::is_integral<T>::value, T>::type
-	#define IS_FP(T)	typename std::enable_if<std::is_floating_point<T>::value, T>::type
-
 	// op=
-	                        fld&  operator= (const fld& x)	{ assign(x.B, x.E); return *this; }
-	template<typename T>	fld&  operator= (const T& x)	{ ostringstream os; os << x;  string s = os.str(); assign(s.begin(), s.end()); return *this; }
+	                        fld&	operator= (const fld& x)	{ assign(x.B, x.E); return *this; }
+	template<typename T>	fld&	operator= (const T& x)	{ ostringstream os; os << x;  string s = os.str(); assign(s.begin(), s.end()); return *this; }
 
 	// op+=
-	template<typename T>	fld& operator+= (T x)		{  return  *this = T(*this) + x; }
-				fld& operator+= (const fld& s2)	{  return  *this = double(*this) + double(s2); }
-
-
+	template<typename T>	fld&	operator+= (T x)		{  return  *this = T(*this) + x; }
+				fld&	operator+= (const fld& s2)	{  return  *this = double(*this) + double(s2); }
+	// op-=
+	template<typename T>	fld&	operator-= (T x)		{  return  *this = T(*this) - x; }
+				fld&	operator-= (const fld& s2)	{  return  *this = double(*this) - double(s2); }
+	// op*=
+	template<typename T>	fld&	operator*= (T x)		{  return  *this = T(*this) * x; }
+				fld&	operator*= (const fld& s2)	{  return  *this = double(*this) * double(s2); }
+	// op/=
+	template<typename T>	fld&	operator/= (T x)		{  return  *this = T(*this) / x; }
+				fld&	operator/= (const fld& s2)	{  return  *this = double(*this) / double(s2); }
+	// op%=
+	template<typename T>	fld&	operator%= (T x)		{  return  *this = T(*this) % x; }
+				fld&	operator%= (const fld& s2)	{  return  *this = long(*this) % long(s2); }
 };
 
 
-	// +
-	template<typename T> IS_INTEGRAL(T)	operator+ (const fld& sr, T x)		{  return  sr.to_integral<T>() + x; }
-	template<typename T> IS_INTEGRAL(T)	operator+ (T x, const fld& sr)		{  return  sr.to_integral<T>() + x; }
-	template<typename T> IS_FP(T)		operator+ (const fld& sr, T x)		{  return  T(sr) + x; }
-	template<typename T> IS_FP(T)		operator+ (T x, const fld& sr)		{  return  T(sr) + x; }
-	double					operator+ (const fld& s1, const fld& s2){  return  double(s1) + double(s2); }
+	// op+
+	template<typename T>	T	operator+ (const fld& sr, T x)		{  return  T(sr) + x; }
+	template<typename T>	T	operator+ (T x, const fld& sr)		{  return  T(sr) + x; }
+	double				operator+ (const fld& s1, const fld& s2){  return  double(s1) + double(s2); }
 
+	// op-
+	template<typename T>	T	operator- (const fld& sr, T x)		{  return  T(sr) - x; }
+	template<typename T>	T	operator- (T x, const fld& sr)		{  return  T(sr) - x; }
+	double				operator- (const fld& s1, const fld& s2){  return  double(s1) - double(s2); }
 
+	// op*
+	template<typename T>	T	operator* (const fld& sr, T x)		{  return  T(sr) * x; }
+	template<typename T>	T	operator* (T x, const fld& sr)		{  return  T(sr) * x; }
+	double				operator* (const fld& s1, const fld& s2){  return  double(s1) * double(s2); }
+
+	// op/
+	template<typename T>	T	operator/ (const fld& sr, T x)		{  return  T(sr) / x; }
+	template<typename T>	T	operator/ (T x, const fld& sr)		{  return  x / T(sr); }
+	double				operator/ (const fld& s1, const fld& s2){  return  double(s1) / double(s2); }
+
+	// op%
+	template<typename T>	T	operator% (const fld& sr, T x)		{  return  T(sr) % x; }
+	template<typename T>	T	operator% (T x, const fld& sr)		{  return  T(sr) % x; }
+	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 /*
 struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD
 
