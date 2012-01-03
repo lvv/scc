@@ -1,21 +1,25 @@
 set -x
 
 scc '
-	{ F_t f("abc");		__ f;  }
-	{ F_t f("abc");  strr f2(f);  __ f2; }
+	{ F_t f; str s("abc"); f.assign(s.bb, s.ee); 	__ f;  }
+	{ F_t f("abc");			__ f;  }
+	{ F_t f = "abc";		__ f;  }
+	{ F_t f("abc");  F_t f2 (f);	__ f2; }
+	//{ strr f("abc");  F_t f2 (f);	__ f2; }
+	{ F_t f("abc");  F_t f2 = f;	__ f2; }
 
 	{ F_t s("1.23");	__ (double)s; }
 	{ F_t s("1.23");	__ (float)s; }
 	{ F_t s("1.23");	__ (int)s; }
 	{ F_t s("1.23");	__ (long)s; }
 	{ F_t s("1.23");	__ (char)s; }
+'
+exit
 
 	{ F_t s("1.11"); 	__ s=1; }
 	{ F_t s("1.11"); 	__ s=1l; }
 	{ F_t s("1.11"); 	__ s=1.f; }
 
-'
-exit
 
 scc 'field s("1.11"); s+1'
 scc 'field s("1.11"); s+1l'

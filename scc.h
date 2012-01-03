@@ -69,26 +69,31 @@ struct	strr_assignable : strr {
 	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
 	strr_assignable(const char*   s)		: strr(s)	{};
 
-	strr_assignable&   operator= (const strr& other) {
-
-		B = strr_allocator.allocate(other.size());
-		E = B + other.size();
-		std::copy (other.B,  other.E,  const_cast<char*>(B));
+	// ASSIGNMENT
+		template<typename IT>
+		strr_assignable&
+	assign(IT b, IT e)  {
+		size_t size = e-b;
+		B = strr_allocator.allocate(size);
+		E = B + size;
+		std::copy (b,  e,  const_cast<char*>(B));
 		return *this;
 	}
+
+	strr_assignable&  operator= (const strr_assignable& other) { assign(other.B, other.E); return *this; }
+
 
 	// CONVERSION TO T
 			operator const string	() const { return string(B,E); }
 	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
 	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
 
-	// Convertion to Integral
-	template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
-	explicit operator  T() const {
-
-		ssize_t		sign	= 1;
-		const char	*p	= B;
-		ssize_t		base	= 10;
+	// CONVERTION TO INTEGRAL
+		template<typename T>
+	T to_integral(const strr& s) const {
+		T		sign	= 1;
+		T		base	= 10;
+		const char	*p	= s.B;
 
 		for (;  p<E-1;  p++) {			// read prefix
 			switch(*p) {
@@ -102,15 +107,30 @@ struct	strr_assignable : strr {
 		end_prefix:;
 
 		ssize_t  n=0;				// read number
-		for (;  p<E && isdigit(*p);  p++)  {
+		for (;  p<s.E && isdigit(*p);  p++)  {
 			n = n*base + (*p-'0');
 		}
 		return sign*n;
 	}
 
-	//  Assignment from T
-	//template<typename T>
-	strr_assignable& operator  = (int I) { ostringstream OS;   OS << I;   *this = string(OS.str().c_str());  return *this; }
+		template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
+	explicit operator  T() const {  return  to_integral<T>(*this); }
+
+
+/*	//  Assignment from T
+	template<typename T>
+	strr_assignable& operator  = (T x) { // ostringstream OS;   OS << I;   *this = string(OS.str().c_str());  return *this; }
+		*this = 
+		return *this;
+	}
+*/
+	//  CONVERSION FROM
+		template<typename T>
+		typename std::enable_if<std::is_integral<T>::value, strr_assignable>::type&
+	operator= (T n) {
+		ostringstream os;   os << n;   assign(os.str().begin(),  os.str().end());
+		return *this;
+	}
 };
 
 

@@ -107,12 +107,13 @@ echo  "$snippet" > /tmp/snippet.h
 
 
 
-if  ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS ;  then 
-	if  [[ $execute == 1 ]]  ; then 
-		$prg "$@"
-	else
-		true   # sets exit code
-	fi
+${CXX-g++} $CXXFLAGS $src -o $prg $LIBS || exit 1
+	
+if  [[ $execute == 1 ]]  ; then 
+	$prg "$@"
+	exit $?
+else
+	exit 0
 fi
 
 # vim:set ts=8 sw=8 syntax=sh:   

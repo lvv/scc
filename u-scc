@@ -6,22 +6,22 @@ echo ===========================================================================
 
 echo ---------------------------------------------------------
 echo 'scc 1'
-      scc 1  &&
+      scc 1  || exit 1
 echo  1
 
 echo ---------------------------------------------------------	PRINTER
 echo "scc 'vector<int> V{1,2}; V'"
-      scc 'vector<int> V{1,2}; V'  &&
+      scc 'vector<int> V{1,2}; V'  || exit 1
 echo -e "{1, 2}"
 
 echo ---------------------------------------------------------	PRINTER
 echo "scc 'int A[2] = {1,2}; A'"
-      scc 'int A[2] = {1,2}; A'  &&
+      scc 'int A[2] = {1,2}; A'  || exit 1
 echo -e "{1, 2}"
 
 echo ---------------------------------------------------------  FIELD
 echo "echo -e '1 2\n11 22\n111 222'    | scc -p '\$1=9;'"
-      echo -e '1 2\n11 22\n111 222'    | scc -p '$1=9;'   &&
+      echo -e '1 2\n11 22\n111 222'    | scc -p '$1=9;'   || exit 1
 echo -e '\n1 9\n11 9\n111 9'
 
 #echo ---------------------------------------------------------  REGEX
@@ -45,12 +45,12 @@ echo -e '\n1 9\n11 9\n111 9'
 
 echo ---------------------------------------------------------
 echo "echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'"
-      echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  &&
+      echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  || exit 1
 echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
 
 echo ---------------------------------------------------------	STREAM
 echo   "df | scc 'WRL n+=F2;  n'"
-command df | scc 'WRL n+=F2;  n'  &&
+command df | scc 'WRL n+=F2;  n'  || exit 1
 command df | awk '{n+=$3;};  END{print n}'
 
 #echo ---------------------------------------------------------
@@ -67,18 +67,18 @@ command df | awk '{n+=$3;};  END{print n}'
 
 echo ---------------------------------------------------------  OI
 echo "scc \"*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  cout << endl;\""
-scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;"
+scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;" || exit 1
 echo 1 2 ab ⟨11,22⟩
 
 echo ---------------------------------------------------------  OI
 echo 'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;'
-scc  'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;'
+scc  'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;' || exit 1
 echo 1 2 3 ABC
 
 
 echo ---------------------------------------------------------  SEPERATORS
 echo '-n 11,,-,22--111,,222 |  IRS=-- ORS="(NL) " scc -p -i,, -o:   '
-echo  -n 11,,-,22--111,,222 |  IRS=-- ORS="(NL) " scc -p -i,, -o:   ''; echo
+echo  -n 11,,-,22--111,,222 |  IRS=-- ORS="(NL) " scc -p -i,, -o:   '' || exit 1; echo
 echo '11:-,22(NL) 111:222(NL)'
 
 echo =====================================================================================================
