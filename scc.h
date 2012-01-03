@@ -213,9 +213,9 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 ///////////////////////////////////////////////////////////////////////////////  F
 
-		template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-	struct   R_t : std::deque<_Tp> {
-		_Tp&	operator()(size_t I) {
+		template<typename T>
+	struct   R_t : std::deque<T> {
+		T&	operator()(size_t I) {
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
