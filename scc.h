@@ -302,18 +302,18 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 
 	/*
 	#ifdef  scc_IFS
-	string       __attribute__((unused))	IFS(scc_IFS);
+	string       __attribute__((unused))	FS(scc_IFS);
 	#else
 		#ifdef  scc_ifs
-		string       __attribute__((unused))	IFS("([^" scc_ifs "]+)(" scc_ifs "|$)");	// field (data) is 1st group; IFS is second group
+		string       __attribute__((unused))	FS("([^" scc_ifs "]+)(" scc_ifs "|$)");	// field (data) is 1st group; FS is second group
 		#else
-		string       __attribute__((unused))	IFS("(\\S+)(\\s+|$)");	// field (data) is 1st group; IFS is second group
+		string       __attribute__((unused))	FS("(\\S+)(\\s+|$)");	// field (data) is 1st group; FS is second group
 		#endif
 	#endif
 	*/
 
 	strr	ORS;
-	strr	IRS;
+	strr	RS;
 
 	strr	OFS
 		#ifdef  scc_OFS
@@ -322,7 +322,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 			(" ");
 		#endif
 
-	strr	IFS
+	strr	FS
 		#ifdef  scc_ifs
 			(scc_ifs);
 		#else
@@ -386,7 +386,7 @@ struct buf_t {
 
 
 		template <typename sep_T>
-	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<fld>& F)	{
+	bool		get_rec		(sep_T RS, sep_T FS, R_t<fld>& F)	{
 
 		if (!good_file)   return false;
 
@@ -427,8 +427,8 @@ struct buf_t {
 				}
 			}
 
-			if        (is_separator(p, eod, IFS))	{ F.push_back(fld(bof,p));  p += sep_size(IFS);  bof = p; }
-			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; }
+			if        (is_separator(p, eod, FS))	{ F.push_back(fld(bof,p));  p += sep_size(FS);  bof = p; }
+			else  if  (is_separator(p, eod, RS))	{ goto return_rec; }
 			else                                      p++;
 		}
 
@@ -438,8 +438,8 @@ struct buf_t {
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;
-			//p += IRS.size();
-			p += sep_size(IRS);
+			//p += RS.size();
+			p += sep_size(RS);
 			bod = p;
 							assert(F[0].B == F[1].B);
 							assert(F[0].E == F[NF].E);

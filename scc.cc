@@ -32,10 +32,10 @@ int main(int argc, char** argv) {
 
 	////////  READ ENV
 
-	// IRS
-	p = std::getenv("IRS");
-	if (p==nullptr)		IRS = strr("\n");
-	else			IRS = strr(p);
+	// RS
+	p = std::getenv("RS");
+	if (p==nullptr)		RS = strr("\n");
+	else			RS = strr(p);
 
 	// ORS
 	p = std::getenv("ORS");
@@ -49,19 +49,19 @@ int main(int argc, char** argv) {
 	else			OFS = strr(p);
 	#endif
 
-	// IFS
+	// FS
 	#ifndef  scc_ifs
-	p = std::getenv("IFS");
-	if (p==nullptr)		IFS = strr(" ");
-	else			IFS = strr(p);
+	p = std::getenv("FS");
+	if (p==nullptr)		FS = strr(" ");
+	else			FS = strr(p);
 	#endif
 
 	{  /////////////////////////////////////////////////////////////////////////////////////////////
 
 		std::function<bool()>  read_line;
 
-		if (IRS.size()==1  &&  IFS.size()==1)	read_line = [&]() { return  buf.get_rec(*IRS.B, *IFS.B, F); };
-		else					read_line = [&]() { return  buf.get_rec(IRS, IFS, F); };
+		if (RS.size()==1  &&  FS.size()==1)	read_line = [&]() { return  buf.get_rec(*RS.B, *FS.B, F); };
+		else					read_line = [&]() { return  buf.get_rec(RS, FS, F); };
 		#define		WRL	while(read_line())
 
 		#ifdef scc_IS_STREAM
@@ -83,8 +83,8 @@ int main(int argc, char** argv) {
 			#include "/tmp/snippet.h"
 		#endif
 						// cout <<  endl;
-						// cout <<  "IRS=" << hex <<  int(*IRS.B) <<  " " << IRS.size() << endl;
-						// cout <<  "IFS=" << hex <<  int(*IFS.B) <<  " " << IFS.size() << endl;
+						// cout <<  "RS=" << hex <<  int(*RS.B) <<  " " << RS.size() << endl;
+						// cout <<  "FS=" << hex <<  int(*FS.B) <<  " " << FS.size() << endl;
 						// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
 						// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 	;}

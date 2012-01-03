@@ -348,7 +348,7 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	#define		FMT		std::format
 
 	#define		RM		std::regex_match
-	#define		RS		std::regex_search
+	//#define		RS		std::regex_search
 	#define		RR		std::regex_replace
 		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 

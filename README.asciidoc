@@ -142,7 +142,7 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 ----------------------------------------------------------------------------
 
 Make comma separated fields out of colon separated.  Option `-o` sets `OFS`
-(output field separator), `-i` - set `IFS`  Snippet is empty in this example.
+(output field separator), `-i` - set `FS`  Snippet is empty in this example.
 
 ----------------------------------------------------------------------------
 echo 1:2:3 | scc -i: -o, -p
@@ -150,8 +150,8 @@ echo 1:2:3 | scc -i: -o, -p
 ----------------------------------------------------------------------------
 
 Read _CSV_ file with quoted fields (spaces, commas and escaped quotes in field are allowed):
-Option `-I`, like `-i`,  also sets `IFS`, but now you can use regex; `CSV` - predefined regex constant.
-How to make your own regexes  for `IFS`  - look in `scc.h`
+Option `-I`, like `-i`,  also sets `FS`, but now you can use regex; `CSV` - predefined regex constant.
+How to make your own regexes  for `FS`  - look in `scc.h`
 
 ----------------------------------------------------------------------------
 echo '"aa",  "bb\"-, bb",  "cc"'   |   scc -I CSV  -o '"\n"' -p
