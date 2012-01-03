@@ -117,18 +117,12 @@ struct	strr_assignable : strr {
 	explicit operator  T() const {  return  to_integral<T>(*this); }
 
 
-/*	//  Assignment from T
-	template<typename T>
-	strr_assignable& operator  = (T x) { // ostringstream OS;   OS << I;   *this = string(OS.str().c_str());  return *this; }
-		*this = 
-		return *this;
-	}
-*/
-	//  CONVERSION FROM
+	//  CONVERSION FROM T
 		template<typename T>
-		typename std::enable_if<std::is_integral<T>::value, strr_assignable>::type&
+		//typename std::enable_if<std::is_integral<T>::value, strr_assignable>::type&
+		strr_assignable&
 	operator= (T n) {
-		ostringstream os;   os << n;   assign(os.str().begin(),  os.str().end());
+		ostringstream os;   os << n;  string s(os.str());  assign(s.begin(),  s.end());
 		return *this;
 	}
 };
