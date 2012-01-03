@@ -1,22 +1,22 @@
 set -x
 
 scc '
-	{ F_t f; str s("abc"); f.assign(s.bb, s.ee); 	__ f;  }
-	{ F_t f("abc");			__ f;  }
-	{ F_t f = "abc";		__ f;  }
-	{ F_t f("abc");  F_t f2 (f);	__ f2; }
-	//{ strr f("abc");  F_t f2 (f);	__ f2; }
-	{ F_t f("abc");  F_t f2 = f;	__ f2; }
+	{ fld f; str s("abc"); f.assign(s.bb, s.ee); 	__ f;  }
+	{ fld f("abc");			__ f;  }
+	{ fld f = "abc";		__ f;  }
+	{ fld f("abc");  fld f2 (f);	__ f2; }
+	//{ strr f("abc");  fld f2 (f);	__ f2; }
+	{ fld f("abc");  fld f2 = f;	__ f2; }
 
-	{ F_t s("1.23");	__ (double)s; }
-	{ F_t s("1.23");	__ (float)s; }
-	{ F_t s("1.23");	__ (int)s; }
-	{ F_t s("1.23");	__ (long)s; }
-	{ F_t s("1.23");	__ (int)(char)s; }
+	{ fld s("1.23");	__ (double)s; }
+	{ fld s("1.23");	__ (float)s; }
+	{ fld s("1.23");	__ (int)s; }
+	{ fld s("1.23");	__ (long)s; }
+	{ fld s("1.23");	__ (int)(char)s; }
 
-	{ F_t s("3.33"); s=1; 	__ s; }
-	{ F_t s("3.33"); s=1l; 	__ s; }
-	{ F_t s("3.33"); s=1.f;	__ s; }
+	{ fld s("3.33"); s=1; 	__ s; }
+	{ fld s("3.33"); s=1l; 	__ s; }
+	{ fld s("3.33"); s=1.f;	__ s; }
 
 '
 exit

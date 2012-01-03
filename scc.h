@@ -88,15 +88,15 @@ template<>			struct  is_container <strr>	: std::false_type { };
 
 static strr_allocator_t  strr_allocator;
 
-struct	strr_assignable : strr {
+struct	fld : strr {
 
-	strr_assignable()				: strr()	{};
-	strr_assignable(const char* B, const char* E)	: strr(B, E)	{};
-	strr_assignable(const char*   s)		: strr(s)	{};
+	fld()				: strr()	{};
+	fld(const char* B, const char* E)	: strr(B, E)	{};
+	fld(const char*   s)		: strr(s)	{};
 
 	// ASSIGNMENT
 		template<typename IT>
-		strr_assignable&
+		fld&
 	assign(IT b, IT e)  {
 		size_t size = e-b;
 		B = strr_allocator.allocate(size);
@@ -105,7 +105,7 @@ struct	strr_assignable : strr {
 		return *this;
 	}
 
-	strr_assignable&  operator= (const strr_assignable& other) { assign(other.B, other.E); return *this; }
+	fld&  operator= (const fld& other) { assign(other.B, other.E); return *this; }
 
 
 	// CONVERSION TO T
@@ -124,18 +124,16 @@ struct	strr_assignable : strr {
 
 
 	//  CONVERSION FROM T
-		template<typename T>
-		//typename std::enable_if<std::is_integral<T>::value, strr_assignable>::type&
-		strr_assignable&
-	operator= (T n) {
+	template<typename T> fld& operator= (T n) {
 		ostringstream os;   os << n;  string s(os.str());  assign(s.begin(),  s.end());
 		return *this;
 	}
 };
 
 
-	template <typename T> T operator+(const strr_assignable& sr, T x) {  return  to_integral<T>(sr) + x; }
-	template <typename T> T operator+(T x, const strr_assignable& sr) {  return  to_integral<T>(sr) + x; }
+	template <typename T> T operator+(const fld& sr, T x) {  return  to_integral<T>(sr) + x; }
+	template <typename T> T operator+(T x, const fld& sr) {  return  to_integral<T>(sr) + x; }
+	//template <typename T> T operator+(const fld& s1, const fld& s2) {  return  to_integral<T>(sr) + x; }
 
 
 /*
@@ -221,12 +219,10 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 		};
 	};
 
-	typedef  strr_assignable	F_t;
-
 
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
-	R_t<F_t> F;
+	R_t<fld> F;
 		#define		F0	F(0)
 		#define		F1	F(1)
 		#define		F2	F(2)
@@ -366,7 +362,7 @@ struct buf_t {
 
 
 		template <typename sep_T>
-	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<F_t>& F)	{
+	bool		get_rec		(sep_T IRS, sep_T IFS, R_t<fld>& F)	{
 
 		if (!good_file)   return false;
 
@@ -375,7 +371,7 @@ struct buf_t {
 		const char *bof (bod);		// field
 
 		F.clear();
-		F.push_back(F_t());	// F[0] - whole line
+		F.push_back(fld());	// F[0] - whole line
 		strr_allocator.clear();
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
@@ -407,14 +403,14 @@ struct buf_t {
 				}
 			}
 
-			if        (is_separator(p, eod, IFS))	{ F.push_back(F_t(bof,p));  p += sep_size(IFS);  bof = p; }
+			if        (is_separator(p, eod, IFS))	{ F.push_back(fld(bof,p));  p += sep_size(IFS);  bof = p; }
 			else  if  (is_separator(p, eod, IRS))	{ goto return_rec; }
 			else                                      p++;
 		}
 
 
 		return_rec:
-			F.push_back(F_t(bof,p));
+			F.push_back(fld(bof,p));
 			NF = F.size()-1;
 			F[0].B = bor;
 			F[0].E = p;

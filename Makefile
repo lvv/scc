@@ -35,3 +35,6 @@ bench_lines: $(BENCH_FILE)
 
 $(BENCH_FILE):
 	scc 'char C[]="123456789\n"; REP(40*1000*1000) _ C;' > $(BENCH_FILE)
+
+clean:
+	rm -f u-print
