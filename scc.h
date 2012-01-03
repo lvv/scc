@@ -66,22 +66,9 @@ static strr_allocator_t  strr_allocator;
 
 struct	fld : strr {
 
-	fld()				: strr()	{};
+	fld()					: strr()	{};
 	fld(const char* B, const char* E)	: strr(B, E)	{};
-	fld(const char*   s)		: strr(s)	{};
-
-	// ASSIGNMENT
-		template<typename IT>
-		fld&
-	assign(IT b, IT e)  {
-		size_t size = e-b;
-		B = strr_allocator.allocate(size);
-		E = B + size;
-		std::copy (b,  e,  const_cast<char*>(B));
-		return *this;
-	}
-
-	fld&  operator= (const fld& other) { assign(other.B, other.E); return *this; }
+	fld(const char*   s)			: strr(s)	{};
 
 
 	// CONVERSION TO T
@@ -94,11 +81,6 @@ struct	fld : strr {
 	operator  T() const {  return  to_integral<T>(); }
 
 
-	//  CONVERSION FROM T
-	template<typename T> fld& operator= (T n) {
-		ostringstream os;   os << n;  string s(os.str());  assign(s.begin(),  s.end());
-		return *this;
-	}
 
 	// CONVERTION TO INTEGRAL
 		template<typename T>
@@ -124,13 +106,39 @@ struct	fld : strr {
 		}
 		return sign*n;
 	}
+
+	// ASSIGNMENT
+		template<typename IT>
+		fld&
+	assign(IT b, IT e)  {
+		size_t size = e-b;
+		B = strr_allocator.allocate(size);
+		E = B + size;
+		std::copy (b,  e,  const_cast<char*>(B));
+		return *this;
+	}
+
+	#define IS_INTEGRAL(T)	typename std::enable_if<std::is_integral<T>::value, T>::type
+	#define IS_FP(T)	typename std::enable_if<std::is_floating_point<T>::value, T>::type
+
+	// op=
+	                        fld&  operator= (const fld& x)	{ assign(x.B, x.E); return *this; }
+	template<typename T>	fld&  operator= (const T& x)	{ ostringstream os; os << x;  string s = os.str(); assign(s.begin(), s.end()); return *this; }
+
+	// op+=
+	template<typename T>	fld& operator+= (T x)		{  return  *this = T(*this) + x; }
+				fld& operator+= (const fld& s2)	{  return  *this = double(*this) + double(s2); }
+
+
 };
 
-	#define IS_INTEGRAL(T) template<typename T> typename std::enable_if<std::is_integral<T>::value, T>::type
 
-	IS_INTEGRAL(T) operator+ (const fld& sr, T x)		{  return  sr.to_integral<T>() + x; }
-	IS_INTEGRAL(T) operator+ (T x, const fld& sr)		{  return  sr.to_integral<T>() + x; }
-	long           operator+ (const fld& s1, const fld& s2) {  return  s1.to_integral<long>() + s2.to_integral<long>(); }
+	// +
+	template<typename T> IS_INTEGRAL(T)	operator+ (const fld& sr, T x)		{  return  sr.to_integral<T>() + x; }
+	template<typename T> IS_INTEGRAL(T)	operator+ (T x, const fld& sr)		{  return  sr.to_integral<T>() + x; }
+	template<typename T> IS_FP(T)		operator+ (const fld& sr, T x)		{  return  T(sr) + x; }
+	template<typename T> IS_FP(T)		operator+ (T x, const fld& sr)		{  return  T(sr) + x; }
+	double					operator+ (const fld& s1, const fld& s2){  return  double(s1) + double(s2); }
 
 
 /*
