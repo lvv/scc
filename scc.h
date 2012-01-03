@@ -61,30 +61,6 @@ template<>			struct  is_container <strr>	: std::false_type { };
 		}
 	};
 
-	// CONVERTION TO INTEGRAL
-		template<typename T>
-	T to_integral(const strr& s) {
-		T		sign	= 1;
-		T		base	= 10;
-		const char	*p	= s.B;
-
-		for (;  p<s.E-1;  p++) {			// read prefix
-			switch(*p) {
-				case ' ':;   case '\t': continue;
-				case '-':	sign = -1;  p++;  goto end_prefix;
-				case '+':	p++;  goto end_prefix;
-				default:	goto end_prefix;
-			}
-		}
-
-		end_prefix:;
-
-		ssize_t  n=0;				// read number
-		for (;  p<s.E && isdigit(*p);  p++)  {
-			n = n*base + (*p-'0');
-		}
-		return sign*n;
-	}
 
 static strr_allocator_t  strr_allocator;
 
@@ -113,14 +89,9 @@ struct	fld : strr {
 	explicit	operator float		() const { istringstream is;  float  i;  is.str(*this);  is >> i;  return i; }
 	explicit	operator double		() const { istringstream is;  double i;  is.str(*this);  is >> i;  return i; }
 
-	//	template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
-	//operator  T() const {  return  to_integral<T>(*this); }
 
-	operator  char() const {  return  to_integral<char>(*this); }
-	operator  short() const {  return  to_integral<short>(*this); }
-	operator  int() const {  return  to_integral<int>(*this); }
-	operator  long() const {  return  to_integral<long>(*this); }
-	operator  long long() const {  return  to_integral<long long>(*this); }
+		template<typename T, typename NotUsed = typename std::enable_if<std::is_integral<T>::value>::type>
+	operator  T() const {  return  to_integral<T>(); }
 
 
 	//  CONVERSION FROM T
@@ -128,12 +99,38 @@ struct	fld : strr {
 		ostringstream os;   os << n;  string s(os.str());  assign(s.begin(),  s.end());
 		return *this;
 	}
+
+	// CONVERTION TO INTEGRAL
+		template<typename T>
+	T to_integral() const {
+		T		sign	= 1;
+		T		base	= 10;
+		const char	*p	= B;
+
+		for (;  p<E-1;  p++) {			// read prefix
+			switch(*p) {
+				case ' ':;   case '\t': continue;
+				case '-':	sign = -1;  p++;  goto end_prefix;
+				case '+':	p++;  goto end_prefix;
+				default:	goto end_prefix;
+			}
+		}
+
+		end_prefix:;
+
+		ssize_t  n=0;				// read number
+		for (;  p<E && isdigit(*p);  p++)  {
+			n = n*base + (*p-'0');
+		}
+		return sign*n;
+	}
 };
 
+	#define IS_INTEGRAL(T) template<typename T> typename std::enable_if<std::is_integral<T>::value, T>::type
 
-	template <typename T> T operator+(const fld& sr, T x) {  return  to_integral<T>(sr) + x; }
-	template <typename T> T operator+(T x, const fld& sr) {  return  to_integral<T>(sr) + x; }
-	//template <typename T> T operator+(const fld& s1, const fld& s2) {  return  to_integral<T>(sr) + x; }
+	IS_INTEGRAL(T) operator+ (const fld& sr, T x)		{  return  sr.to_integral<T>() + x; }
+	IS_INTEGRAL(T) operator+ (T x, const fld& sr)		{  return  sr.to_integral<T>() + x; }
+	long           operator+ (const fld& s1, const fld& s2) {  return  s1.to_integral<long>() + s2.to_integral<long>(); }
 
 
 /*
