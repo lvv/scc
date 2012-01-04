@@ -280,6 +280,7 @@ JSON
 	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 	http://www.kirit.com/Thread:/1723074
 	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
+	http://stackoverflow.com/a/8560856
 XML
 	awk xml -- http://pastebin.com/Vwvz3gzb
 	http://www.artima.com/cppsource/xml_data_binding.html

@@ -394,16 +394,17 @@ struct buf_t {
 		const char *bor (bod);		// record
 		const char *bof (bod);		// field
 
+
 		F.clear();
 		F.push_back(fld());	// F[0] - whole line
 		strr_allocator.clear();
 
 		while(1) {	//////////////////////////////////////////////////////// read until EOR
 			size_t	unused_data = eod - p;
-			if ( unused_data == 0 )  {
+			if (!unused_data)  {
 				size_t  buf_free_space = eob-eod;
 
-				if (buf_free_space == 0) {  // relocate data to begining of buffer
+				if (!buf_free_space) {  // relocate data to begining of buffer
 					if (bor == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
 						goto return_rec;
