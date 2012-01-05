@@ -442,6 +442,7 @@ struct buf_t {
 			//p += RS.size();
 			p += sep_size(RS);
 			bod = p;
+			NR++;
 							assert(F[0].B == F[1].B);
 							assert(F[0].E == F[NF].E);
 			return true;

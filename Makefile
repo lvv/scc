@@ -33,8 +33,21 @@ bench_lines: $(BENCH_FILE)
 	cat $(BENCH_FILE) > /dev/null
 	/usr/bin/time -f'\t%Es (%Us+%Ss) \t%MKB\n'  /tmp/x < $(BENCH_FILE)
 
+bench: $(BENCH_FILE)
+	cat $(BENCH_FILE) > /dev/null
+	@echo 
+	LC_ALL=C time wc -wl $(BENCH_FILE)
+	@echo 
+	LC_ALL=C time gawk '{n+=NF}; END{print n, NR}'  $(BENCH_FILE)
+	@echo 
+	LC_ALL=C time mawk '{n+=NF}; END{print n, NR}'  $(BENCH_FILE)
+	@echo 
+	scc -O -x /tmp/x -n 'WRL n+=NF; __ NR ^ n;'
+	LC_ALL=C time  /tmp/x < $(BENCH_FILE)
+
+
 $(BENCH_FILE):
-	scc 'char C[]="123456789\n"; REP(40*1000*1000) _ C;' > $(BENCH_FILE)
+	scc 'char C[]="123456789"; REP(5*1000*1000) { REP(10) _ C << " "; __ "";}' > $(BENCH_FILE)
 
 clean:
 	rm -f u-print
