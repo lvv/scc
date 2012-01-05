@@ -425,7 +425,8 @@ struct buf_t {
 				}
 			}
 
-			p = F.a.E = find (p, eod, *(RS.B));
+			p = F.a.E = search (p, eod, RS.B, RS.E);
+
 			if (p != eod) {
 				assert(*p == *RS.B);
 				goto  return_rec;
@@ -449,9 +450,9 @@ struct buf_t {
 		if (F.a.empty())  return;
 		const char *eof, *bof = F.a.B;
 		do {
-			eof = find(bof, F.a.E, *FS.B);
+			eof = search(bof, F.a.E, FS.B, FS.E);
 			F.push_back(fld(bof,eof));
-			bof = eof+1;
+			bof = eof+RS.size();
 		} while (bof < F.a.E);
 	}
 

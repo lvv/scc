@@ -4,10 +4,9 @@
 #include <matrix.h>
 
 void  print_line() {
-	for(int i=1;   i < int(F.size())-1;  i++)
-		cout  << F[i] << OFS;
-
-	if (F.size() > 1)  cout << F.back();
+	if (!F.empty()) cout  << F[0];
+	for(int i=1;   i < (int)F.size();  i++)
+		cout  << OFS << F[i];
 	cout << ORS;
  }
 
