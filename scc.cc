@@ -55,6 +55,17 @@ int main(int argc, char** argv) {
 	else			FS = strr(p);
 	#endif
 
+	// PAD
+	#ifndef  scc_PAD
+	p = std::getenv("PAD");
+	if (p==nullptr)		PAD = strr(" \t");
+	else			PAD = strr(p);
+	#endif
+
+	// PAD_tab
+	for (const char *p = PAD.b;  p!=PAD.e;  p++)
+		PAD_tab[*p] = 1;
+
 	{  /////////////////////////////////////////////////////////////////////////////////////////////
 
 		std::function<bool()>  read_line;

@@ -28,10 +28,6 @@ struct strr {
 	size_t	size()		const { return e-b; };
 	size_t	empty()		const { return e-b == 0; };
 	bool	operator==(strr sr)	const { return equal(b, e, sr.b); };
-
-
-
-
  };
 
 template<>			struct  is_container <strr>	: std::false_type { };
@@ -338,6 +334,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 			(" \t");
 		#endif
 
+	char PAD_tab[256] = {0};
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
 
@@ -448,12 +445,16 @@ struct buf_t {
 	void parse_rec (R_t<fld>& F) {
 		F.clear();
 		if (F.a.empty())  return;
-		const char *eof, *bof = F.a.b;
+		const char *sep, *eof;
+		const char *bof = F.a.b;
+
 		do {
-			eof = search(bof, F.a.e, FS.b, FS.e);
+			while( bof < F.a.e   &&   PAD_tab[*bof]  )  bof++;		// skip padding
+			sep = eof = search(bof, F.a.e, FS.b, FS.e);
+			while( bof < (eof-1)  &&   PAD_tab[*(eof-1)]  )  eof--;
 			F.push_back(fld(bof,eof));
-			bof = eof+RS.size();
-		} while (bof < F.a.e);
+			bof = sep + FS.size();
+		}  while (bof < F.a.e);
 	}
 
  };

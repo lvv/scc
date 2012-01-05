@@ -9,6 +9,9 @@ echo 'scc 1'
       scc 1  || exit 1
 echo  1
 
+echo -e '  a : A\nb  :B\n:C:C  :   C:' | scc -i: -o: -p '_ F.size(), "!";'
+echo -e '  a : A\nb  :B\n:C:C  :   C:' | scc -i: -o: -p '_ F.size(), "!";'
+
 echo ---------------------------------------------------------	PRINTER
 echo "scc 'vector<int> V{1,2}; V'"
       scc 'vector<int> V{1,2}; V'  || exit 1
@@ -68,12 +71,12 @@ command df | awk '{n+=$3;};  END{print n}'
 echo ---------------------------------------------------------  OI
 echo "scc \"*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  cout << endl;\""
 scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;" || exit 1
-echo 1 2 ab ⟨11,22⟩
+echo 1 2 a b ⟨11,22⟩
 
 echo ---------------------------------------------------------  OI
 echo 'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;'
 scc  'vint A{1,2,3}; copy(A.bb, A.ee, oi); str S("ABC"); copy(S.bb, S.ee, oi); cout<<endl;' || exit 1
-echo 1 2 3 ABC
+echo 1 2 3 A B C
 
 
 echo ---------------------------------------------------------  SEPERATORS
