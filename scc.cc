@@ -60,8 +60,9 @@ int main(int argc, char** argv) {
 
 		std::function<bool()>  read_line;
 
-		if (RS.size()==1  &&  FS.size()==1)	read_line = [&]() { return  buf.get_rec(*RS.B, *FS.B, F); };
-		else					read_line = [&]() { return  buf.get_rec(RS, FS, F); };
+		//if (RS.size()==1  &&  FS.size()==1)	read_line = [&]() { return  buf.get_rec(*RS.B, *FS.B, F); };
+		//else					read_line = [&]() { return  buf.get_rec(RS, FS, F); };
+		read_line = [&]() { return  buf.get_rec(RS, FS, F); };
 		#define		WRL	while(read_line())
 
 		#ifdef scc_IS_STREAM

@@ -241,6 +241,8 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 			if (this->size()<I+1) this->resize(I+1);
 			return (*this)[I];
 		};
+		T  a;	// All_of record
+
 	};
 
 
@@ -376,6 +378,7 @@ struct buf_t {
 		if  (buf_free_space > 0) {
 			retry:
 			got = read (fd, const_cast<char*>(eod),  buf_free_space);
+			cerr << got << "==" << errno << ' ' << *eod << flush << endl;
 			if (got == -1  &&  errno == EINTR)	goto  retry;
 			if (got <=  0)				return  false;
 			eod += got;
@@ -385,27 +388,26 @@ struct buf_t {
 
 
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////  GET_REC
 		template <typename sep_T>
 	bool		get_rec		(sep_T RS, sep_T FS, R_t<fld>& F)	{
 
 		if (!good_file)   return false;
 
 		const char *p   (bod);
-		const char *bor (bod);		// record
-		const char *bof (bod);		// field
+		//const char *bof (bod);		// field
+		F.a.B = p;				// record
 
 
-		F.clear();
-		F.push_back(fld());	// F[0] - whole line
 		strr_allocator.clear();
 
-		while(1) {	//////////////////////////////////////////////////////// read until EOR
+		while(1) {	//  read until EOR
 			size_t	unused_data = eod - p;
 			if (!unused_data)  {
 				size_t  buf_free_space = eob-eod;
 
 				if (!buf_free_space) {  // relocate data to begining of buffer
-					if (bor == bob ) {
+					if (F.a.B == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
 						goto return_rec;
 					}
@@ -416,39 +418,58 @@ struct buf_t {
 					// rellocate everything to BOB
 					memcpy(const_cast<char*>(bob), const_cast<char*>(bod), data_size);
 					size_t diff = bod-bob;
-					bod = bor = bob;
+					bod = F.a.B = bob;
 					eod = p = bob + data_size;
-					bof -= diff;
-					for (size_t i=1;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
+					//bof -= diff;
+					//for (size_t i=0;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
 				}
 
 				if ( !(good_file = fill()) )  {
-					if ( bor == p )		return false;
-					else			goto return_rec;
+					if ( F.a.B == p )	return false;				// if EOF at BoR --> return EOF
+					else			{ F.a.E = p;  goto return_rec; }	// else close current record
 				}
 			}
 
-			if        (is_separator(p, eod, FS))	{ F.push_back(fld(bof,p));  p += sep_size(FS);  bof = p; }
-			else  if  (is_separator(p, eod, RS))	{ goto return_rec; }
-			else                                      p++;
+			p = F.a.E = find (p, eod, *(RS.B));
+			if (p != eod) {
+				assert(*p == *RS.B);
+				goto  return_rec;
+			}
+
+			// RS not found read more data
+
+
+			//if        (is_separator(p, eod, FS))	{ F.push_back(fld(bof,p));  p += sep_size(FS);  bof = p; }
+			//else  if  (is_separator(p, eod, RS))	{ goto return_rec; }
+			//else                                      p++;
 		}
 
 
 		return_rec:
-			F.push_back(fld(bof,p));
-			NF = F.size()-1;
-			F[0].B = bor;
-			F[0].E = p;
+			//F.push_back(fld(bof,p));
+			parse_rec(F);
+			NF = F.size();
 			//p += RS.size();
 			p += sep_size(RS);
 			bod = p;
 			NR++;
-							assert(F[0].B == F[1].B);
-							assert(F[0].E == F[NF].E);
+							//assert(F.a.B == F[0].B);
+							//assert(F.a.E == F[NF-1].E);
 			return true;
 	}
 
   private:
+
+	void parse_rec (R_t<fld>& F) {
+		F.clear();
+		if (F.a.empty())  return;
+		const char *eof, *bof = F.a.B;
+		do {
+			eof = find(F.a.B, F.a.E, *FS.B);
+			F.push_back(fld(bof,eof));
+			bof = eof;
+		} while (eof != F.a.E);
+	}
 
 	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
 		assert(!sep.empty()  &&  recE-recB > 0);
