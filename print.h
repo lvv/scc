@@ -28,11 +28,9 @@ struct  out {
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 
 	template<typename T>	out&  operator<<  (T x)	{ send_sep();  cout <<         x;	return *this; };
-	template<typename T>	out&  operator,   (T x)	{ send_sep();  cout <<         x;	return *this; };
+	template<typename T>	out&  operator,   (T x)	{ send_sep();  cout << " " << x;	return *this; };
 	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{ send_sep();  cout <<        x;	return *this; };
 	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{ send_sep();  cout <<        x;	return *this; };
-	//template<typename T>	out&  operator|   (T x)	{ send_sep();  cout << " "  << x;	return *this; };
-	template<typename T>	out&  operator^   (T x)	{ send_sep();  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
 				out&  operator<< (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
