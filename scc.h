@@ -331,6 +331,12 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 			(" ");
 		#endif
 
+	strr	PAD
+		#ifdef  scc_PAD
+			(scc_PAD);
+		#else
+			(" \t");
+		#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////  Utils functions
