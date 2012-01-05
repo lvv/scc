@@ -378,7 +378,6 @@ struct buf_t {
 		if  (buf_free_space > 0) {
 			retry:
 			got = read (fd, const_cast<char*>(eod),  buf_free_space);
-			cerr << got << "==" << errno << ' ' << *eod << flush << endl;
 			if (got == -1  &&  errno == EINTR)	goto  retry;
 			if (got <=  0)				return  false;
 			eod += got;
@@ -461,14 +460,16 @@ struct buf_t {
   private:
 
 	void parse_rec (R_t<fld>& F) {
+								// _ "parse:", F.a;
 		F.clear();
 		if (F.a.empty())  return;
 		const char *eof, *bof = F.a.B;
 		do {
-			eof = find(F.a.B, F.a.E, *FS.B);
+			eof = find(bof, F.a.E, *FS.B);
 			F.push_back(fld(bof,eof));
-			bof = eof;
-		} while (eof != F.a.E);
+			bof = eof+1;
+		} while (bof < F.a.E);
+								//__ ":", F;
 	}
 
 	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
