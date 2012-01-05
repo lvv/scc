@@ -394,7 +394,6 @@ struct buf_t {
 		if (!good_file)   return false;
 
 		const char *p   (bod);
-		//const char *bof (bod);		// field
 		F.a.B = p;				// record
 
 
@@ -414,13 +413,10 @@ struct buf_t {
 					ssize_t data_size = size();
 					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
 
-					// rellocate everything to BOB
 					memcpy(const_cast<char*>(bob), const_cast<char*>(bod), data_size);
 					size_t diff = bod-bob;
 					bod = F.a.B = bob;
 					eod = p = bob + data_size;
-					//bof -= diff;
-					//for (size_t i=0;  i<F.size();  i++)  { F[i].B -= diff; F[i].E -= diff;}
 				}
 
 				if ( !(good_file = fill()) )  {
@@ -434,33 +430,21 @@ struct buf_t {
 				assert(*p == *RS.B);
 				goto  return_rec;
 			}
-
-			// RS not found read more data
-
-
-			//if        (is_separator(p, eod, FS))	{ F.push_back(fld(bof,p));  p += sep_size(FS);  bof = p; }
-			//else  if  (is_separator(p, eod, RS))	{ goto return_rec; }
-			//else                                      p++;
 		}
 
 
 		return_rec:
-			//F.push_back(fld(bof,p));
 			parse_rec(F);
 			NF = F.size();
-			//p += RS.size();
 			p += sep_size(RS);
 			bod = p;
 			NR++;
-							//assert(F.a.B == F[0].B);
-							//assert(F.a.E == F[NF-1].E);
 			return true;
 	}
 
   private:
 
 	void parse_rec (R_t<fld>& F) {
-								// _ "parse:", F.a;
 		F.clear();
 		if (F.a.empty())  return;
 		const char *eof, *bof = F.a.B;
@@ -469,7 +453,6 @@ struct buf_t {
 			F.push_back(fld(bof,eof));
 			bof = eof+1;
 		} while (bof < F.a.E);
-								//__ ":", F;
 	}
 
 	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
