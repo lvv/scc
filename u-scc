@@ -49,8 +49,8 @@ echo "echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'
 echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
 
 echo ---------------------------------------------------------	STREAM
-echo   "df | scc 'WRL n+=F2;  n'"
-command df | scc 'WRL n+=F2;  n'  || exit 1
+echo   "df | scc 'WRL n+=$3;  n'"
+command df | scc 'WRL n+=$3;  n'  || exit 1
 command df | awk '{n+=$3;};  END{print n}'
 
 #echo ---------------------------------------------------------

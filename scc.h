@@ -15,19 +15,19 @@
 
 
 struct strr {
-	const char *B, *E;
+	const char *b, *e;
 
 	// CTOR
-	strr()			: B(0), E(0)				{};
-	strr(const char*   s)	: B(s)					{  E = B + strlen(s); };
-	//strr(const string& s)	: B(s.data()),  E(s.data()+s.size())	{};
-	strr(const char* B, const char* E):  B(B),  E(E)		{};
-	//strr& operator=(const strr& sr) : B(sr.B), E(sr
+	strr()			: b(0), e(0)				{};
+	strr(const char*   s)	: b(s)					{  e = b + strlen(s); };
+	//strr(const string& s)	: b(s.data()),  e(s.data()+s.size())	{};
+	strr(const char* b, const char* e):  b(b),  e(e)		{};
+	//strr& operator=(const strr& sr) : b(sr.b), e(sr
 
 	// MEMBERS
-	size_t	size()		const { return E-B; };
-	size_t	empty()		const { return E-B == 0; };
-	bool	operator==(strr sr)	const { return equal(B, E, sr.B); };
+	size_t	size()		const { return e-b; };
+	size_t	empty()		const { return e-b == 0; };
+	bool	operator==(strr sr)	const { return equal(b, e, sr.b); };
 
 
 
@@ -37,9 +37,9 @@ struct strr {
 template<>			struct  is_container <strr>	: std::false_type { };
 		ostream&
  operator<<      (ostream& os, const strr f) {
-	assert(f.B && f.E);
-	const char *p = f.B;
-	while (p!=f.E)   os << *p++;
+	assert(f.b && f.e);
+	const char *p = f.b;
+	while (p!=f.e)   os << *p++;
 	return os;
  };
 
@@ -67,12 +67,12 @@ static strr_allocator_t  strr_allocator;
 struct	fld : strr {
 
 	fld()					: strr()	{};
-	fld(const char* B, const char* E)	: strr(B, E)	{};
+	fld(const char* b, const char* e)	: strr(b, e)	{};
 	fld(const char*   s)			: strr(s)	{};
 
 
 	// CONVERT TO T
-	template<typename T> T convert_to()    const { istringstream is;  T i;  is.str(string(this->B, this->E));  is >> i;  return i; }
+	template<typename T> T convert_to()    const { istringstream is;  T i;  is.str(string(this->b, this->e));  is >> i;  return i; }
 
 	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
 	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
@@ -83,9 +83,9 @@ struct	fld : strr {
 	T TO_TEST_to_integral() const {
 		T		sign	= 1;
 		T		base	= 10;
-		const char	*p	= B;
+		const char	*p	= b;
 
-		for (;  p<E-1;  p++) {			// read prefix
+		for (;  p<e-1;  p++) {			// read prefix
 			switch(*p) {
 				case ' ':;   case '\t': continue;
 				case '-':	sign = -1;  p++;  goto end_prefix;
@@ -97,7 +97,7 @@ struct	fld : strr {
 		end_prefix:;
 
 		ssize_t  n=0;				// read number
-		for (;  p<E && isdigit(*p);  p++)  {
+		for (;  p<e && isdigit(*p);  p++)  {
 			n = n*base + (*p-'0');
 		}
 		return sign*n;
@@ -106,16 +106,16 @@ struct	fld : strr {
 	// ASSIGNMENT
 		template<typename IT>
 		fld&
-	assign(IT b, IT e)  {
-		size_t size = e-b;
-		B = strr_allocator.allocate(size);
-		E = B + size;
-		std::copy (b,  e,  const_cast<char*>(B));
+	assign(IT b_, IT e_)  {
+		size_t size = e_-b_;
+		b = strr_allocator.allocate(size);
+		e = b + size;
+		std::copy (b_,  e_,  const_cast<char*>(b));
 		return *this;
 	}
 
 	// op=
-	                        fld&	operator= (const fld& x)	{ assign(x.B, x.E); return *this; }
+	                        fld&	operator= (const fld& x)	{ assign(x.b, x.e); return *this; }
 	template<typename T>	fld&	operator= (const T& x)	{ ostringstream os; os << x;  string s = os.str(); assign(s.begin(), s.end()); return *this; }
 
 	// op+=
@@ -364,8 +364,6 @@ struct buf_t {
 	}
 			~buf_t		()	{ delete [] bob; }
 
-
-
 	size_t		capacity	() const{ return buf_size; }
 	ssize_t		size		() const{ return eod-bod; }
 	bool		empty		() const{ return size() <= 0; }
@@ -385,8 +383,6 @@ struct buf_t {
 		return  true;
 	}
 
-
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////  GET_REC
 		template <typename sep_T>
 	bool		get_rec		(sep_T RS, sep_T FS, R_t<fld>& F)	{
@@ -394,8 +390,7 @@ struct buf_t {
 		if (!good_file)   return false;
 
 		const char *p   (bod);
-		F.a.B = p;				// record
-
+		F.a.b = p;				// record
 
 		strr_allocator.clear();
 
@@ -405,7 +400,7 @@ struct buf_t {
 				size_t  buf_free_space = eob-eod;
 
 				if (!buf_free_space) {  // relocate data to begining of buffer
-					if (F.a.B == bob ) {
+					if (F.a.b == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
 						goto return_rec;
 					}
@@ -415,29 +410,28 @@ struct buf_t {
 
 					memcpy(const_cast<char*>(bob), const_cast<char*>(bod), data_size);
 					size_t diff = bod-bob;
-					bod = F.a.B = bob;
+					bod = F.a.b = bob;
 					eod = p = bob + data_size;
 				}
 
 				if ( !(good_file = fill()) )  {
-					if ( F.a.B == p )	return false;				// if EOF at BoR --> return EOF
-					else			{ F.a.E = p;  goto return_rec; }	// else close current record
+					if ( F.a.b == p )	return false;				// if EOF at BoR --> return EOF
+					else			{ F.a.e = p;  goto return_rec; }	// else close current record
 				}
 			}
 
-			p = F.a.E = search (p, eod, RS.B, RS.E);
+			p = F.a.e = search (p, eod, RS.b, RS.e);
 
 			if (p != eod) {
-				assert(*p == *RS.B);
+				assert(*p == *RS.b);
 				goto  return_rec;
 			}
 		}
 
-
 		return_rec:
 			parse_rec(F);
 			NF = F.size();
-			p += sep_size(RS);
+			p += RS.size();
 			bod = p;
 			NR++;
 			return true;
@@ -448,28 +442,13 @@ struct buf_t {
 	void parse_rec (R_t<fld>& F) {
 		F.clear();
 		if (F.a.empty())  return;
-		const char *eof, *bof = F.a.B;
+		const char *eof, *bof = F.a.b;
 		do {
-			eof = search(bof, F.a.E, FS.B, FS.E);
+			eof = search(bof, F.a.e, FS.b, FS.e);
 			F.push_back(fld(bof,eof));
 			bof = eof+RS.size();
-		} while (bof < F.a.E);
+		} while (bof < F.a.e);
 	}
-
-	static bool is_separator(const char* recB, const char* recE,  const strr sep) {  // Is begining of Rec a seperator?
-		assert(!sep.empty()  &&  recE-recB > 0);
-		return	*recB == *sep.B
-			&&  size_t(recE-recB)  >=  sep.size()
-			&&  std::equal(sep.B+1, sep.E, recB+1);
-	}
-
-	static bool is_separator(const char* recB, const char* recE,  char sep) {
-		assert(recE-recB > 0);
-		return	*recB == sep;
-	}
-
-	constexpr static size_t		sep_size(char c)	{return sizeof(c);}
-	static size_t			sep_size(const strr s)	{return s.size();}
 
  };
 
