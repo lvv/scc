@@ -1,7 +1,3 @@
-// test if u-print.h can be used independantly
-
-#include "scc/print.h"
-
 #include <algorithm>
 #include <array>
 #include <vector>

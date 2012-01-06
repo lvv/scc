@@ -51,6 +51,18 @@ template<size_t N>		struct is_container<char[N]>	: std::false_type { };
 template<>			struct is_container<std::basic_string<char>> : std::false_type { };
 
 /////////////////////////////////////////////////////////////////////////
+template<class T>
+struct is_iterator
+{
+    static T makeT();
+    typedef void * twoptrs[2];  // sizeof(twoptrs) > sizeof(void *)
+    static twoptrs & test(...); // Common case
+    template<class R> static typename R::iterator_category * test(R); // Iterator
+    template<class R> static void * test(R *); // Pointer
+
+    static const bool value = sizeof(test(makeT())) == sizeof(void *); 
+};
+////////////////////////////////////////////////////////////////////////
 
 struct out_t {};
 
@@ -66,10 +78,14 @@ int main() {
 		<<  is_container<T>::value\
 		<<  has_const_iterator<T>::value\
 		<<  is_printable<T>::value\
+		<<  is_iterator<T>::value\
 	;
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
+
+	{ typedef vector<int>::iterator  T;
+	for_T(   "vector<int>::iterator"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }
@@ -88,6 +104,9 @@ int main() {
 
 	{ typedef string  T;
 	for_T(   "string"); }
+
+	{ typedef string::iterator  T;
+	for_T(   "string::iterator"); }
 
 	{ typedef int	T[5];
 	for_T(   "int[5]"); }

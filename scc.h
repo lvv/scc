@@ -35,9 +35,6 @@ struct strr {
 	iterator	end()		const { return e; };
  };
 
-// traits
-template<>	struct  is_container <strr>	: std::false_type {};	// we have strr own printer
-template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 
 		ostream&
  operator<<      (ostream& os, const strr f) {
@@ -73,11 +70,17 @@ struct	fld : strr {
 
 	fld()					: strr()	{};
 	fld(const char* b, const char* e)	: strr(b, e)	{};
-	fld(const char*   s)			: strr(s)	{};
 
+
+	// CONVERT FROM T
+	fld(const char*   s)			: strr(s)	{};
+	fld(const string& s)	{ assign (s.begin(), s.end()); };
+	fld(int           i)	{*this = (long)i;};
+	fld(long          i)	{*this = (long)i;};
+	fld(double        i)	{*this = (double)i;};
 
 	// CONVERT TO T
-	template<typename T> T convert_to()    const { istringstream is;  T i;  is.str(string(this->b, this->e));  is >> i;  return i; }
+	template<typename T> T convert_to()    const { istringstream is;  T x;  is.str(string(this->b, this->e));  is >> x;  return x; }
 
 	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
 	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
@@ -447,5 +450,9 @@ struct buf_t {
 
 
 
+// traits
+template<>	struct  is_container <strr>	: std::false_type {};	// we have strr own printer
+template<>	struct  is_container <fld>	: std::false_type {};
+template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 
 #endif // SCC

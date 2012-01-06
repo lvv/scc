@@ -8,7 +8,6 @@ template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
 
 #include <regex> 
-/*
 	using std::regex;
 	using std::cmatch;
 	using std::regex_match;
@@ -16,6 +15,7 @@ template<>		struct  is_string <std::string>	: std::true_type  {};
 	using std::regex_token_iterator;
 	using std::sregex_token_iterator;
 	using std::cregex_token_iterator;
+/*
 */
 
 std::regex operator "" _R (const char* p, size_t n)	{ return std::regex(p); };
@@ -41,7 +41,6 @@ operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begi
 operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 
 
-/*
 
 	#define		R		std::regex
 	#define		FMT		std::format
@@ -51,6 +50,7 @@ operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 	#define		RR		std::regex_replace
 		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 
+/*
 	//#define	M		std::match
 	#define		CM		std::cmatch
 	#define		SM		std::smatch
