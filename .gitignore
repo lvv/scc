@@ -7,3 +7,4 @@ bench
 .old
 t-outi
 t-regex
+t-meta
