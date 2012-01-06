@@ -9,7 +9,8 @@
 //	#define  MODERN_GCC	1
 //#endif
 
-#include <print.h>
+#include "scc/print.h"
+#include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
@@ -42,6 +43,7 @@
 #include <queue>
 #include <limits>
 #include <bitset>
+
 ///////////////////////////////////////////////////////////////////// C++11 STL
 #include <type_traits>
 #include <tuple>
@@ -308,7 +310,6 @@ operator>>      (istream& is, Ct<T>& C)    {
 
 
 
-#include <regex.h>
 
 
 #endif	// LVV_SIMPLE_H

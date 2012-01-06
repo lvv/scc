@@ -16,10 +16,12 @@ index.txt:
 	head -n-1 README.asciidoc > /tmp/t.ad
 
 
-#CLEAN_LIST += $(wildcard *.png)
 #COPY_LIST += $(wildcard *.png)
 
 ###########################################################
+
+CLEAN_LIST += t-print  t-regex
+
 CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/ 
 t-buf-r: t-buf
 
@@ -48,6 +50,3 @@ bench: $(BENCH_FILE)
 
 $(BENCH_FILE):
 	scc 'char C[]="123456789"; REP(5*1000*1000) { REP(10) _ C << " "; __ "";}' > $(BENCH_FILE)
-
-clean:
-	rm -f u-print
