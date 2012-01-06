@@ -25,12 +25,19 @@ struct strr {
 	//strr& operator=(const strr& sr) : b(sr.b), e(sr
 
 	// MEMBERS
-	size_t	size()		const { return e-b; };
-	size_t	empty()		const { return e-b == 0; };
-	bool	operator==(strr sr)	const { return equal(b, e, sr.b); };
+	size_t		size()		const { return e-b; };
+	size_t		empty()		const { return e-b == 0; };
+	bool		operator==(strr sr) const { return equal(b, e, sr.b); };
+
+	//typedef		char*	interatore;
+	//iterator_type	begin()		{ return b; };
+	//iterator_type	end()		{ return e; };
  };
 
-template<>			struct  is_container <strr>	: std::false_type { };
+// traits
+template<>	struct  is_container <strr>	: std::false_type {};
+//template<>	struct  is_string <strr>	: std::true_type  {};
+
 		ostream&
  operator<<      (ostream& os, const strr f) {
 	assert(f.b && f.e);
@@ -38,6 +45,12 @@ template<>			struct  is_container <strr>	: std::false_type { };
 	while (p!=f.e)   os << *p++;
 	return os;
  };
+
+bool  operator == (const strr& s,  const regex &e)	{ return regex_match(s.b, s.e, e); };
+bool  operator %= (const strr& s,  const regex &e)	{ return regex_search(s.b, s.e, e); }; // not yet implemented in LIBSTDC++
+
+std::regex  operator ~     (const strr& e)		{ return  std::regex(e.b, e.e); };
+std::regex  operator ~     (const std::string& e)	{ return  std::regex(e); };
 
 
 	struct  strr_allocator_t {
@@ -126,9 +139,6 @@ struct	fld : strr {
 	// op/=
 	template<typename T>	fld&	operator/= (T x)		{  return  *this = T(*this) / x; }
 				fld&	operator/= (const fld& s2)	{  return  *this = double(*this) / double(s2); }
-	// op%=
-	template<typename T>	fld&	operator%= (T x)		{  return  *this = T(*this) % x; }
-				fld&	operator%= (const fld& s2)	{  return  *this = long(*this) % long(s2); }
 };
 
 
@@ -437,6 +447,7 @@ struct buf_t {
 	}
 
  };
+
 
 
 

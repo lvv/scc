@@ -261,7 +261,8 @@ Simple workaround: use semicolon before last statement.
 * httpx://en.wikipedia.org/wiki/Comma-separated_values[CSV]
 * httpx://home.vrweb.de/~juergen.kahrs/gawk/XML/[XMLgawk]
 * httpx://en.wikipedia.org/wiki/Awk[Awk]
-* http://people.cs.uu.nl/piet/docs/nawk/nawk_23.html[Awk: Specifying how Fields are Separated]
+* httpx://people.cs.uu.nl/piet/docs/nawk/nawk_23.html[Awk: Specifying how Fields are Separated]
+* httpx://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#status.iso.200x[LIBSTDC++ status +++C++11+++]
 
 ////////////////
 
