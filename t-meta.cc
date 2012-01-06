@@ -51,17 +51,17 @@ template<size_t N>		struct is_container<char[N]>	: std::false_type { };
 template<>			struct is_container<std::basic_string<char>> : std::false_type { };
 
 /////////////////////////////////////////////////////////////////////////
-template<class T>
-struct is_iterator
-{
-    static T makeT();
-    typedef void * twoptrs[2];  // sizeof(twoptrs) > sizeof(void *)
-    static twoptrs & test(...); // Common case
-    template<class R> static typename R::iterator_category * test(R); // Iterator
-    template<class R> static void * test(R *); // Pointer
-
-    static const bool value = sizeof(test(makeT())) == sizeof(void *); 
+/* Brokern
+	template<class T>
+struct is_iterator {
+	static T makeT();
+	typedef void * twoptrs[2];  // sizeof(twoptrs) > sizeof(void *)
+	static twoptrs & test(...); // Common case
+	template<class R> static typename R::iterator_category * test(R); // Iterator
+	template<class R> static void * test(R *); // Pointer
+	static const bool value = sizeof(test(makeT())) == sizeof(void *); 
 };
+*/
 ////////////////////////////////////////////////////////////////////////
 
 struct out_t {};
