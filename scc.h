@@ -29,14 +29,15 @@ struct strr {
 	size_t		empty()		const { return e-b == 0; };
 	bool		operator==(strr sr) const { return equal(b, e, sr.b); };
 
-	//typedef		char*	interatore;
-	//iterator_type	begin()		{ return b; };
-	//iterator_type	end()		{ return e; };
+	typedef		const char*		iterator;
+	typedef		const char* const	const_iterator;
+	iterator	begin()		const { return b; };
+	iterator	end()		const { return e; };
  };
 
 // traits
-template<>	struct  is_container <strr>	: std::false_type {};
-//template<>	struct  is_string <strr>	: std::true_type  {};
+template<>	struct  is_container <strr>	: std::false_type {};	// we have strr own printer
+template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 
 		ostream&
  operator<<      (ostream& os, const strr f) {
@@ -46,11 +47,6 @@ template<>	struct  is_container <strr>	: std::false_type {};
 	return os;
  };
 
-bool  operator == (const strr& s,  const regex &e)	{ return regex_match(s.b, s.e, e); };
-bool  operator %= (const strr& s,  const regex &e)	{ return regex_search(s.b, s.e, e); }; // not yet implemented in LIBSTDC++
-
-std::regex  operator ~     (const strr& e)		{ return  std::regex(e.b, e.e); };
-std::regex  operator ~     (const std::string& e)	{ return  std::regex(e); };
 
 
 	struct  strr_allocator_t {
@@ -255,6 +251,7 @@ std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::stri
 ///////////////////////////////////////////////////////////////////////////////  AWK's vars
 
 	R_t<fld> F;
+		#define		$0	F.a
 		#define		$1	F(0)
 		#define		$2	F(1)
 		#define		$3	F(2)
@@ -422,8 +419,8 @@ struct buf_t {
 
 		return_rec:
 			parse_rec(F);
-			NF = F.size();
-			p += RS.size();
+			NF  = F.size();
+			p  += RS.size();
 			bod = p;
 			NR++;
 			return true;
@@ -439,8 +436,8 @@ struct buf_t {
 
 		do {
 			while( bof < F.a.e   &&   PAD_tab[*bof]  )  bof++;		// skip padding
-			sep = eof = search(bof, F.a.e, FS.b, FS.e);
-			while( bof < (eof-1)  &&   PAD_tab[*(eof-1)]  )  eof--;
+			sep = eof = search(bof, F.a.e, FS.b, FS.e);			//
+			while( bof < (eof-1)  &&   PAD_tab[*(eof-1)]  )  eof--;		// eat  padding begore FS
 			F.push_back(fld(bof,eof));
 			bof = sep + FS.size();
 		}  while (bof < F.a.e);

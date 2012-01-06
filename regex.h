@@ -1,11 +1,14 @@
 #ifndef  LVV_REGEX_H
 #define  LVV_REGEX_H
-///////////////////////////////////////////////////////////////////// REGEX
 
-//template<typename T>	struct  is_string		: std::false_type {};
-//template<>		struct  is_string <std::string>	: std::true_type  {};
+#include <type_traits>
+#include <string>
 
-#include <regex> 	 // C++11;   std::regex - 4.7.0  fail with: scc 'RS("abc", R("abc"))'
+template<typename T>	struct  is_string		: std::false_type {};
+template<>		struct  is_string <std::string>	: std::true_type  {};
+
+#include <regex> 
+/*
 	using std::regex;
 	using std::cmatch;
 	using std::regex_match;
@@ -13,30 +16,32 @@
 	using std::regex_token_iterator;
 	using std::sregex_token_iterator;
 	using std::cregex_token_iterator;
+*/
 
-regex operator "" _R (const char* p, size_t n)	{ return regex(p); };
+std::regex operator "" _R (const char* p, size_t n)	{ return std::regex(p); };
 
-bool  operator ==     (const char  *p,  const regex &e)	{ return regex_match(p,e); };
-bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e); };
+
+	template<typename S>
+	typename std::enable_if<is_string<S>::value, bool>::type
+operator == (const S s,  const std::regex &e)		{ return std::regex_match(s.begin(), s.end(), e); };
+	// specialization  for c-string
+	bool  
+operator == (const char  *p,  const std::regex &e)	{ return std::regex_match(p,e); };
+
+
+	// regex_search (does not work) - not yet implemented in LIBSTDC++
+	template<typename S>
+	typename std::enable_if<is_string<S>::value, bool>::type
+operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begin(), s.end(), e); };
+
+
+	// convert to regex operator
+	template<typename S>
+	typename std::enable_if<is_string<S>::value, std::regex>::type
+operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 
 
 /*
-
-		// RR accept const char*  as regex
-			template <class traits, class charT>
-			basic_string<charT>
-		RR (
-			const basic_string<charT>& s,
-			//const basic_regex<charT, traits>& e,
-			const char* r,
-			const basic_string<charT>& fmt,
-			boost::regex_constants::match_flag_type flags = boost::regex_constants::match_default
-		)  {
-			return boost::regex_replace<traits, charT>  (s, boost::regex(r), fmt, flags);
-		}
-*/
-
-
 
 	#define		R		std::regex
 	#define		FMT		std::format
@@ -59,5 +64,6 @@ bool  operator ==     (const string s,  const regex &e)	{ return regex_match(s,e
 	typedef		std::cregex_token_iterator    CRTI;
 	#define		MRTI		std::make_regex_token_iterator
 
+*/
 
 #endif	// LVV_REGEX_H
