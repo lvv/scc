@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <iterator>
 
-#include <utility> 	// pair
+#include <utility>	// pair
 #include <tuple>
 
 #include <iostream>
@@ -48,7 +48,16 @@ struct  outln : out  {
 	~outln()				{ cout << endl; }
  };
 
-std::ostream&    operator<<      (ostream& os, out) {return os; };    // NOP
+
+	// NOP, but scc's print-last will send endl
+	std::ostream&
+operator<<      (ostream& os, const out&) {return os; };
+
+	// NOP, but scc' sprint-last will send endl
+	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
+	std::ostream&
+operator<<      (ostream& os, const IT&) { return os; }; 
+
 
 #define		_    out()   <<
 #define		__   outln() <<
@@ -72,6 +81,7 @@ template<typename T, size_t N>	struct  is_container <T[N]> 	: std::true_type { }
 template<typename T, size_t N>	struct  is_container <std::array<T,N>> 	: std::true_type { };
 template<size_t N>		struct  is_container <char[N]>	: std::false_type { };
 template<>			struct  is_container <std::basic_string<char>> : std::false_type { };
+
 
 
 // print any std::containter<printable> or c-array
