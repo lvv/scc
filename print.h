@@ -49,11 +49,11 @@ struct  outln : out  {
  };
 
 
-	// NOP, but scc's print-last will send endl
-	std::ostream&
-operator<<      (ostream& os, const out&) {return os; };
+// NOP, but scc's print-last will send endl
+std::ostream& operator<<      (ostream& os,  ostream&) {return os; };
+std::ostream& operator<<      (ostream& os, const out&) {return os; };
 
-	// NOP, but scc' sprint-last will send endl
+// NOP, but scc' sprint-last will send endl
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
 	std::ostream&
 operator<<      (ostream& os, const IT&) { return os; }; 

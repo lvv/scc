@@ -11,18 +11,13 @@
 	#include <cerrno>
 
 
-//////////////////////////////////////////////////////////////////////////////////////////  STRR
-
-
-struct strr {
+struct strr {         ///////////////////////////////////////////////////////  STRR
 	const char *b, *e;
 
 	// CTOR
 	strr()			: b(0), e(0)				{};
 	strr(const char*   s)	: b(s)					{  e = b + strlen(s); };
-	//strr(const string& s)	: b(s.data()),  e(s.data()+s.size())	{};
 	strr(const char* b, const char* e):  b(b),  e(e)		{};
-	//strr& operator=(const strr& sr) : b(sr.b), e(sr
 
 	// MEMBERS
 	size_t		size()		const { return e-b; };
@@ -38,7 +33,7 @@ struct strr {
 
 		ostream&
  operator<<      (ostream& os, const strr f) {
-	assert(f.b && f.e);
+	assert(f.size()==0  || (f.b && f.e));
 	const char *p = f.b;
 	while (p!=f.e)   os << *p++;
 	return os;
@@ -138,7 +133,7 @@ struct	fld : strr {
 	// op/=
 	template<typename T>	fld&	operator/= (T x)		{  return  *this = T(*this) / x; }
 				fld&	operator/= (const fld& s2)	{  return  *this = double(*this) / double(s2); }
-};
+ };
 
 
 	// op+
@@ -165,80 +160,9 @@ struct	fld : strr {
 	template<typename T>	T	operator% (const fld& sr, T x)		{  return  T(sr) % x; }
 	template<typename T>	T	operator% (T x, const fld& sr)		{  return  T(sr) % x; }
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
-/*
-struct field: string {      ////////////////////////////////////////////////////////////////  OLD FIELD
-
-	// CTOR
-	field(const char*   s)	: string(s) {};
-	field(const string& s)	: string(s) {};
-	field(int           i)	: string()  {*this = (long)i;};
-	field(long          i)	: string()  {*this = (long)i;};
-	field(double        i)	: string()  {*this = (double)i;};
-	field()			: string()  {};
-
-	// op= assign
-	field& operator  = (int I) { ostringstream OS;   OS <<              I;   this->string::assign(OS.str());  return *this; }
-	field& operator += (int I) { ostringstream OS;   OS << int(*this) + I;   this->string::assign(OS.str());  return *this; }
-	field& operator -= (int I) { ostringstream OS;   OS << int(*this) - I;   this->string::assign(OS.str());  return *this; }
-	field& operator *= (int I) { ostringstream OS;   OS << int(*this) * I;   this->string::assign(OS.str());  return *this; }
-	field& operator /= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
-	field& operator %= (int I) { ostringstream OS;   OS << int(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-	field& operator  = (long I) { ostringstream OS;   OS <<               I;   this->string::assign(OS.str());  return *this; }
-	field& operator += (long I) { ostringstream OS;   OS << long(*this) + I;   this->string::assign(OS.str());  return *this; }
-	field& operator -= (long I) { ostringstream OS;   OS << long(*this) - I;   this->string::assign(OS.str());  return *this; }
-	field& operator *= (long I) { ostringstream OS;   OS << long(*this) * I;   this->string::assign(OS.str());  return *this; }
-	field& operator /= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
-	field& operator %= (long I) { ostringstream OS;   OS << long(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-	field& operator  = (double I) { ostringstream OS;   OS <<                 I;   this->string::assign(OS.str());  return *this; }
-	field& operator += (double I) { ostringstream OS;   OS << double(*this) + I;   this->string::assign(OS.str());  return *this; }
-	field& operator -= (double I) { ostringstream OS;   OS << double(*this) - I;   this->string::assign(OS.str());  return *this; }
-	field& operator *= (double I) { ostringstream OS;   OS << double(*this) * I;   this->string::assign(OS.str());  return *this; }
-	field& operator /= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
-	field& operator %= (double I) { ostringstream OS;   OS << double(*this) / I;   this->string::assign(OS.str());  return *this; }
-
-		template<class T>
-	field& operator << (T t) { ostringstream OS;   OS << *this << t;  *this =  OS.str(); return *this; }
-
-	operator const string&	(void) const 	{ return  *(string*)this; }	// converter to std::string&
-	operator string&	(void) 		{ return  *(string*)this; }	// converter to std::string&
-	operator bool		(void) const 	{ return   this->size() != 0; }	// converter to bool
-
-	// converter to numerics
-
-			operator double		(void) { istringstream IS;  double I;  IS.str(*this);  IS >> I;  return I; }
-	#if 	 (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 6 ) ) )
-	explicit	operator int		(void) { istringstream IS;  int             I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator long		(void) { istringstream IS;  long            I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator unsigned int	(void) { istringstream IS;  unsigned int    I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator unsigned long	(void) { istringstream IS;  unsigned long   I;  IS.str(*this);  IS >> I;  return I; }
-	explicit	operator float		(void) { istringstream IS;  double          I;  IS.str(*this);  IS >> I;  return I; }
-	//explicit	operator void*		(void) { return  this->empty())  ? 0 : 1 ;   }
-	#endif
-
-	////
-	field  operator +  (const char* s) { return  *(std::string*)this +  std::string(s); }
-
-	// prefix/postfix inc/dec
-	long operator++() {                    return  *this = long(*this) + 1; }
-	long operator--() {                    return  *this = long(*this) - 1; }
-	long operator++(int) { long old = long(*this); *this = long(*this) + 1; return old; }
-	long operator--(int) { long old = long(*this); *this = long(*this) - 1; return old; }
-	// TODO for double
- };
-	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
-Ct<T>&  operator<< (Ct<T>& C, field F)  { C.push_back(T(F));   return C; };
 
 
-typedef field string_field;
-
-std::ostream&   operator<<      (ostream& os, const field& s) { os << (std::string)s; return os; };
-
-*/
-
-
-///////////////////////////////////////////////////////////////////////////////  F
+///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>
 	struct   R_t : std::deque<T> {
@@ -454,5 +378,6 @@ struct buf_t {
 template<>	struct  is_container <strr>	: std::false_type {};	// we have strr own printer
 template<>	struct  is_container <fld>	: std::false_type {};
 template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
+template<>	struct  is_string    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
 
 #endif // SCC

@@ -6,14 +6,22 @@ _SCC_ is _+++C++ +++_ snippets evaluator , with some _AWK_ features.
 
 
 Status
--------
+------
 
-Current alpha version is v0.2 (use this git tag). Only GCC-4.7 (pre release) is currently supported.  
+Current alpha version is v0.2 (use this git tag). Only GCC-4.7 (pre release) or later is currently supported.  
 Version v0.2 is about x100 times faster than v0.1 and about x2 times faster than GAWK/MAWK. 
 Boost is not used in v0.2.  Regex in RS/FS are currently not supported (but were in v0.1) 
 
-If you need to use it with older GCC (4.1 was supported) use v0.1.
+If you need to use it with older GCC (4.1 was supported) - use v0.1.
 
+Install
+-------
+
+-----------------------------------------
+git clone http://github.com/lvv/scc
+echo PATH+=":$PWD/scc" >> ~/.profile
+. ~/.profile
+---------------------------------------
 
 REPL
 ----
@@ -25,8 +33,9 @@ scc 2+2
 4
 ----------------------------------------------------------------------------
 
+If last (or only) statement in snippet is not terminated with semicolon it is sent to `std::cout`.
 If snippet have _Bash_ special characters,  it must be in single or double
-quotes. If expresion starts with minus, end-of-options indicator "--" must be used:
+quotes. If expression starts with minus, end-of-options indicator "--" must be used:
 
 ----------------------------------------------------------------------------
 scc '"hello world"'
@@ -38,11 +47,14 @@ scc -- -42
 scc 'double x=0.5;  sin(x)'						
 0.479426
 
+echo "ABC"  |  scc 'char c;  while (cin.get(c))  cout << (char)tolower(c);'
+abc
 ----------------------------------------------------------------------------
 
-If last (or only) statment is not terminated with simicolon it is sent to `std::cout`.
 
-To squise C++ verbosity, shortcuts (typedefs and macros) were defined:
+To squeeze C++ verbosity for SCC's one-liners, seversal things were done. 
+
+Shortcuts (typedefs and macros) were defined:
 
 ------------------------------------------------------
 str   -->   std::string  
@@ -52,14 +64,14 @@ WRL   -->   while(read_line())
 
 Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
-and `s` - pre-declared as `std::string`.  Numeric types initialized to 0.
+and `s` and `w` - pre-declared as `std::string`.  Numeric types initialized to 0.
+So, in last example we could've skipped definition `char c;`.
 You don't need to remember these, you can re-declare/re-define these freely. 
 
-
-C++ printing was replaced with so called
+Also C++ printing was replaced with so called
 http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
 and any stl container can be simply sent to `std::cout`.
-In comments are  equivalent to statement:
+In comments are  equivalent statement:
 
 ---------------------------------------------------------------
 _  x;                           //  cout << x;
@@ -68,14 +80,14 @@ __ x << y;                      //  cout << x << endl;
 __ x, y;                        //  cout << x << " " << y << endl;
 -------------------------------------------------------------------------
 
-More complex examples.  Square an array.  +++C++11 +++ is on by default:
+More examples.  Square an array.  +++C++11 +++ is on by default:
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Calculate words  frequencies from stdin:
+Calculate words frequencies from stdin:
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M' 
@@ -85,16 +97,15 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 Native AWK
 ----------
 
-After inital use as simple REPL calculator, I realised that SCC can be usefull
+After initial use as simple REPL calculator, I realised that SCC can be useful
 tool for stream processing - something like native AWK.  So it was bolted on to SCC.
-Sintax is not exactly AWK's but I've tried to make it similar.
+Syntax is not exactly AWK's but I've tried to make it similar.
 
-
-AWK's statements have following layout:
+AWK's program have following layout:
 
 `awk 'BEGIN{begin-expr};  /re1/{expr1};  /re2/{expr2};  END{end-expr}'`
 
-SCC have two equvalent alternative for above. First is simple while-loop:
+SCC have two alternatives. First is simple while-loop:
 
 `scc 'begin-expr;  WRL { expr1; expr2;};   end-expr;'`
 
@@ -103,16 +114,16 @@ Function `read_line()`, reads input line, splits it into fields.
 
 Second is `-n` and `-p` (equivalent to PERL's)  options:
 
-`scc 'expr1; expr2'`
+`scc -n 'expr1; expr2;'`
 
-SCC does not dedicated place for regexes, but we can use vanilla if-statment.
+SCC does not have dedicated place for regexes, se we use vanilla if-statement.
 
-But luck, GCC supports (as extention)  use of `$` in identifiers, so all AWK's
+With luck, GCC supports (as extension)  use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
-`$` variables have special type, which is simplar to `std::string` but which can
-be used in arithmetic expresion and be assigned/retrived a numeric value (like
-in AWK).
+In SCC, `$` variables are special string type (`strr`), similar to `std::string` but which can be
+used in arithmetic expressions - implicitly converted to a numeric type.  That is thay behave like AWK's vars.
+and can be assigned a numeric value.
 
 
 Examples.
@@ -136,7 +147,7 @@ echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
 2 bbb
 ----------------------------------------------------------------------------
 
-Fields  are kept in `std::vector<fld> F`, so to prepend line number we `push_front`-ed  `NR`.
+Fields are kept in `std::deque<fld> F`, so to prepend line number we `push_front` variable  `NR`.
 Another way for doing the same:
 
 ----------------------------------------------------------------------------
@@ -154,32 +165,19 @@ echo 1:2:3 | scc -i: -o, -p
 ----------------------------------------------------------------------------
 
 
-
-
-
-
-
-
-Replace `"-"`, `"none"` and empty fields with `"n/a"` in 2nd column using `boost::regex`. 
-Boost use in _SCC_ is optional, it will be used if `/usr/include/boost` exist.
-`RR` is shortcut for `boost::regex_replace`;  shortcut `R` is `boost::regex`
+Replace `"-"` or  `"none"` with `"n/a"` in 2nd column using `std::regex`. 
 
 ----------------------------------------------------------------------------
 echo \
 '1 -
-2
-3 none
-4 abc'  |   scc -p 'F1=RR(F1,R("^(none|-)?$"),"n/a");'
+2 none
+3 abc'  |  scc -p 'if ($2=="(none|-)"_R) $2="n/a";'
 1 n/a
-2 n/a
 3 n/a
 4 abc
 ----------------------------------------------------------------------------
 
-
-/////////////////////////////////
- echo -e '11 222222222222\n1111111111 22' |scc -n 'FMT("%s %|20t| %s") %F[0] %F[1]'
-///////////////////////////////////
-
+C-string with `_R` suffix are `std::regex` literal.  The `operator==` does `std::regex_match`.
+Unfortunately GCC's LIBSTDC++ not yet have working `std::regex_replace` and `std::regex_search` and we have to use if.
 
 See full docs at http://volnitsky.com/project/scc[]

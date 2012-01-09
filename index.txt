@@ -29,9 +29,10 @@ Predefined variables (similar to AWK's):
 * `F`	-  derived from  `std::deque<field>` — line's fields; accessible like `F(i)`; counted from 0
 * `NF`	-  `int`,  number of fields (set after read_line())
 * `NR` 	-  `int`,  number of records (set after read_line())
-* `OFS` 	-  `std::string`, output field separator 
-* `IFS` 	-  `std::string`, input field separator.  
-* `CSV` 	-  `const char[]`,  predefined regex for IFS
+* `OFS`	-  `strr`, output field separator 
+* `FS` 	-  `strr`, input field separator.  
+* `ORS`	-  `strr`, output record separator 
+* `RS` 	-  `strr`, input record separator.  
 
 The `::field` type is derived from `std::string` and can be directly converted
 to/from numeric types:
@@ -213,14 +214,6 @@ These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
 
 
-== Install
-
------------------------------------------
-git clone http://github.com/lvv/scc
-PATH+=":$PWD/scc" 
-echo PATH+=":$PWD/scc" >> ~/.profile
-. ~/.profile
----------------------------------------
 ///////////////////////////////////////////////
 == status
 capability		|  C++200?	|	>=GCC-4.4.4	|  >=GCC-4.4.4 && Boost
