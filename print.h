@@ -29,18 +29,18 @@ struct  out {
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 	*/
 
-	template<typename T>	out&  operator<<  (T x)	{ /*send_sep();*/  cout <<        x;	return *this; };
-	template<typename T>	out&  operator,   (T x)	{ /*send_sep();*/  cout << " " << x;	return *this; };
-	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{ /*send_sep();*/  cout <<        x;	return *this; };
-	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{ /*send_sep();*/  cout << " " << x;	return *this; };
+	template<typename T>		out&  operator<<  (T x)			{  cout <<        x;	return *this; };
+	template<typename T>		out&  operator,   (T x)			{  cout << " " << x;	return *this; };
+	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{  cout <<        x;	return *this; };
+	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
-				out&  operator<< (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
-				out&  operator<< (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
-				out&  operator<< (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
-				out&  operator,  (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
-				out&  operator,  (std::ios&      (*pf) (std::ios&     ) ) { cout << pf;  return *this; };
-				out&  operator,  (std::ios_base& (*pf) (std::ios_base&) ) { cout << pf;  return *this; };
+				out&  operator<< (std::ostream&  (*x) (std::ostream& ))  { cout << x;  return *this; };
+				out&  operator<< (std::ios&      (*x) (std::ios&     ))  { cout << x;  return *this; };
+				out&  operator<< (std::ios_base& (*x) (std::ios_base&))  { cout << x;  return *this; };
+				out&  operator,  (std::ostream&  (*x) (std::ostream& ))  { cout << x;  return *this; };
+				out&  operator,  (std::ios&      (*x) (std::ios&     ))  { cout << x;  return *this; };
+				out&  operator,  (std::ios_base& (*x) (std::ios_base&))  { cout << x;  return *this; };
 
 	operator bool   () {  return true; }
  };
@@ -86,7 +86,7 @@ template<>			struct  is_container <std::basic_string<char>> : std::false_type { 
 
 
 
-// print any std::containter<printable> or c-array
+// std::CONTAINTER<printable> or C-Array
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
@@ -140,12 +140,12 @@ operator<<      (ostream& os, const std::tuple<TT...>& tup) {
 	return os;
 };
 	// Using C++0x Variadic Templates to Pretty-Print Types
-	// 	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
+	//	-- http://mlangc.wordpress.com/2010/04/18/using-c0x-variadic-templates-to-pretty-print-types/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////  OUTI
 // OUTI -- Output Iterator
-// 	similar to ostream_iterator<T>(cout, " ")
-// 	used as:	copy(V.begin(), V.end(), oi);
+//	similar to ostream_iterator<T>(cout, " ")
+//	used as:	copy(V.begin(), V.end(), oi);
 
 	template<typename U, typename V, template<typename U, typename V> class CL>  void
 oi_print(const CL<U,V>& v) { std::cout << v; };
