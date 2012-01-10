@@ -31,7 +31,7 @@ BENCH_FILE=/tmp/bf
 
 bench_lines: $(BENCH_FILE)
 	#sh -c "[ -x /tmp/x ] && mv /tmp/x{,.old}"
-	scc -O -x /tmp/x -n 'O n++; n'
+	scc -O -x /tmp/x -n 'WRl n++; n'
 	cat $(BENCH_FILE) > /dev/null
 	/usr/bin/time -f'\t%Es (%Us+%Ss) \t%MKB\n'  /tmp/x < $(BENCH_FILE)
 
@@ -44,7 +44,7 @@ bench: $(BENCH_FILE)
 	@echo 
 	LC_ALL=C time mawk '{n+=NF}; END{print n, NR}'  $(BENCH_FILE)
 	@echo 
-	scc -O -x /tmp/x -n 'O n+=NF; __ NR ^ n;'
+	scc -O -x /tmp/x -n 'WRl n+=NF; __ NR ^ n;'
 	LC_ALL=C time  /tmp/x < $(BENCH_FILE)
 
 

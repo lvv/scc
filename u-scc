@@ -14,8 +14,9 @@ echo 'scc 1'
       scc 1  || exit 1
 echo  1
 
-echo -e '  a : A\nb  :B\n:C:C  :   C:' | scc -i: -o: -p '_ F.size(), "!";'
-echo -e '  a : A\nb  :B\n:C:C  :   C:' | scc -i: -o: -p '_ F.size(), "!";'
+echo ---------------------------------------------------------
+echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), "!";'
+echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), "!";'
 
 
 echo ---------------------------------------------------------	PRINTER
@@ -45,7 +46,7 @@ echo -e '\n1 9\n11 9\n111 9'
 #echo -e '\n1  aaa bbb\n2  ccc ddd'
 
 #echo ---------------------------------------------------------
-#echo -e "AA\nBB\nCC"  | scc 'O  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
+#echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
 #echo -e "\nAA\nBB"
 
 echo ---------------------------------------------------------
@@ -54,8 +55,8 @@ echo "echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'
 echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
 
 echo ---------------------------------------------------------	STREAM
-echo   "df | scc 'O n+=$3;  n'"
-command df | scc 'O n+=$3;  n'  || exit 1
+echo   "df | scc 'WRL n+=$3;  n'"
+command df | scc 'WRL n+=$3;  n'  || exit 1
 command df | awk '{n+=$3;};  END{print n}'
 
 #echo ---------------------------------------------------------
@@ -63,7 +64,7 @@ command df | awk '{n+=$3;};  END{print n}'
 #echo -e "\n*aa* *bb*"
 
 #echo ---------------------------------------------------------
-#echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; O for (str f:F) cout << f << endl;'  &&
+#echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (str f:F) cout << f << endl;'  &&
 #echo -e "\naa\nbb\"-, bb\ncc"
 
 #echo ---------------------------------------------------------
