@@ -14,11 +14,10 @@
 
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
-#include <cstddef>
+//#include <cstddef>
 #include <cstring>
-#include <cctype>
+//#include <cctype>
 #include <cmath>
-//#include <tgmath.h>
 
 ///////////////////////////////////////////////////////////////////// C++ IO
 #include <iostream>

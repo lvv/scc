@@ -147,8 +147,9 @@ echo -e 'aaa\nbbb'   |  scc -p '$.push_front(NR);'
 2 bbb
 ----------------------------------------------------------------------------
 
-Fields are kept in `std::deque<fld> F`, so to prepend line number we `push_front` variable  `NR`.
-Another way for doing the same:
+When input line split into fiels, they are kept in `std::deque<fld> F`  ($ - is
+alias to F), so prepend  new 1st field we can use `std::deque`  member function
+`push_front`.  Another way for doing the same:
 
 ----------------------------------------------------------------------------
 echo -e 'aaa\nbbb'   |   scc -p NR
@@ -168,10 +169,14 @@ echo 1:2:3 | scc -i: -o, -p
 Replace `"-"` or  `"none"` with `"n/a"` in 2nd column using `std::regex`. 
 
 ----------------------------------------------------------------------------
-echo \
-'1 -
-2 none
-3 abc'  |  scc -p 'if ($2=="(none|-)"_R) $2="n/a";'
+echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2=="(none|-)"_R)  $2="n/a";'
+1 n/a
+3 n/a
+4 abc
+
+
+// awk
+echo -e '1 -\n2 none\n3 abc'  |  awk '{if ($2~/^(none|-)$/) $2="n/a"; print $0}'
 1 n/a
 3 n/a
 4 abc

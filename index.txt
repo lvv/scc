@@ -7,7 +7,6 @@ In `scc` shall script:
 
 * +++ C++ +++ snippet is decorated with usual boilerplate
 * `simple.h`, `scc.h` and `cj.h` are included
-* if `/usr/include/boost` is exist then `boost/regex.hpp` is included
 * If last (or only) statement (should be an expression) is not terminated by  `;` it is sent to `std::cout`.
 * if stream options are used (-n or -p), then one line is read from `std::cin` per input cycle.
 	Line split into fields and snippet is executed.
@@ -16,7 +15,7 @@ In `scc` shall script:
 
 === SCC.H
 
-Defines:
+Defines SCC's specific objects.   All other includes can be used independtly:
 
 * `F` — derived from  deque<field>
 * `read_line()`
@@ -25,20 +24,19 @@ Defines:
 
 Predefined variables (similar to AWK's):
 
-* `line`	-  `std::string`;  set if options `-n` / `-p` are used or after `read_line()`
 * `F`	-  derived from  `std::deque<field>` — line's fields; accessible like `F(i)`; counted from 0
-* `NF`	-  `int`,  number of fields (set after read_line())
-* `NR` 	-  `int`,  number of records (set after read_line())
+* `NF`	-  `long`,  number of fields (set after read_line())
+* `NR` 	-  `long`,  number of records (set after read_line())
 * `OFS`	-  `strr`, output field separator 
 * `FS` 	-  `strr`, input field separator.  
 * `ORS`	-  `strr`, output record separator 
 * `RS` 	-  `strr`, input record separator.  
 
-The `::field` type is derived from `std::string` and can be directly converted
+The `::fld` type is custom string type which can be directly converted
 to/from numeric types:
 
 --------------------------------
-field   f("1");
+fld   f("1");
 int     i;
 
 i = f;		// 1
@@ -52,31 +50,33 @@ f + 5		// "7"
 === SIMPLE.H
 
 This include was initially created for use in small, one-file _+++C++ +++_ programs.
-For something like Google CodeJam. Now it is (optinal) part of _SCC_ project,
-but it still can be used independently.  
+For something like Google CodeJam.
 
-==== Everything is included
+All of STL's includes are included with `using std::...`
+for most common objects. As are some C:  math.h string.h.
 
-Most of STL's includes are included with `using std::...`
-for most common objects. On my 4yr old laptop (no SSD), run time
-with cold cache - 2s, with warm cache  <1s.
+Now it is (optimal) part of _SCC_ project, but it still can be used independently.  
 
-==== Simplified printing. 
 
-Syntax `cout << ...` can be  replaced with bar (underline) print.  The
-`operator,` (comma) is equivalent to `operator<<`.
+=== PRINT.H - simplified console printing. 
+
+==== Bar __ print
+
+Syntax `cout << ...` can be  replaced with bar (underline) print. New 
+`operator,` prints also separator " " between items. 
 
 --------------------------------------------------------------------
 _  x;				//  cout << x;
 __ x;				//  cout << x << endl;
-__ x,y;				//  cout << x << y << endl;
-__ x^y;				//  cout << x << " " << y << endl;
-__ "list:" ^ x ^ y;		//  cout << "list: "  << x << " " << y << endl;
+__ x << y;			//  cout << x << y << endl;
+__ x, y;			//  cout << x << " " << y << endl;
 -------------------------------------------------------------------
+
+==== Everything is printable
 
 In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
 STL containers (including sets, maps, pairs, tuples) are not printable.
-Having `simple.h` makes all these printable too. Container of containers are also printable. 
+The `print.h` makes all these printable too. Container of containers are also printable. 
 In comments is equivalent code:
 
 --------------------------------------------------------------------
@@ -92,6 +92,8 @@ map<int,int>   	  M  {{1,1},{2,2}};    _ M;	//  {⟨1,1⟩, ⟨2,2⟩}
 vector<vint>   	  VV {{1,1}, {2,2}};   _ VV;	//  {{1, 1}, {2, 2}}
 -------------------------------------------------------------------
 
+
+/////////////////////////
 Bar-print is actually just macros:
 
 -------------------------------------------
@@ -99,8 +101,8 @@ Bar-print is actually just macros:
 #define         __   outln() << 
 --------------------------------------------
 
-If you will use class `out` or `outln` directly, you can specify seperator in
-CTOR agrument:
+If you will use class `out` or `outln` directly, you can specify separator in
+CTOR argument:
 
 ------------------------------------------------
 x = y = z = 1;
@@ -115,21 +117,35 @@ out(",", "[]") << V;		//  cout << "[";
 				//  cout << "]";
 				//  prints: [1,2,3]
 -----------------------------------------------
+///////////////////////////////
 
 
+==== OI - generic output iterator
 
-TIP: Operators: `","`, `^`  and `<<`  unfortunately have different
-precedence.  So `scc '_ 1,2^3;'`  is actually
-`scc '_ 1,(2^3);'` and it will
-print only two numbers. Precedence
-from highest to lowest: `<<`, `^`,  `","`.     This
-problem was present in plain `std::cout` statements too. 
-Workarounds are:  use parenthesis or use separate `_` statement.  
+Standard library include `std::ostream_iterator`, unlike `std::cout` it accept
+only one specific type and it is not pre-declared object.   So to use it with
+STL algorithms, you need call its verbose constructor.
+
+Let say we have `vector<int> V;` and `set<string> S;` and we want
+copy these to `cout`.  With standard library:
+
+------------------------------------------------------------------
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
+-------------------------------------------------------------------
+
+With print.h
+
+-------------------------------------------------------------------
+copy(V.begin(), V.end(), oi);
+copy(S.begin(), S.end(), oi);
+-------------------------------------------------------------------
+
 
 
 ==== Simplified input
 
-Object `in` can be used in initialiser expression. When a value
+Pre-declared object `in` can be used in initialiser expression. When a value
 is read from `in`, it reads from `cin`. 
 
 --------------------------------------------------------------------
@@ -177,13 +193,12 @@ WARNING: Object `in` does not check for EOF. With scalar objects use only in
 context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 
+/////////////////////////////
 === Utility functions
 
-/////////////////////////////
 ==== min/max function
 Functions `min`/`max` which will work with mixed types. Expression
 `std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
-//////////////////////////////////////
 
 
 ==== push_back()/push_front() replacement
@@ -196,8 +211,10 @@ _ D; 				//  cout << "{";  for(auto it=D.begin(); it!=D.end()-1; it++) cout << *
 				//  prints:  {1,2,3,4}
 
 -----------------------------------
+//////////////////////////////////////
 
 
+///////////////////////////////////////////////
 === CJ.H  — shortcuts
 
 
@@ -214,7 +231,6 @@ These are ugly hacks, full of side effect and name-pollution.
 If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
 
 
-///////////////////////////////////////////////
 == status
 capability		|  C++200?	|	>=GCC-4.4.4	|  >=GCC-4.4.4 && Boost
 
@@ -225,20 +241,6 @@ stream filter		| 	Y 	|	Y		| 	Y
 regex			| 	N 	|	N		| 	Y
 ///////////////////////////////////////////////
 
-== TODO
-
-* Optimize for speed. GAWK is much faster now. 
-* RS,FS regex interface should be simplified
-* Regex which parse out last statement (for sending it to std::cout) just looks for ';', so it won't work correctly for:
-
-- { code-block; } expr
-- string literals with '"(){}' characters. +
-Simple workaround: use semicolon before last statement.
-
-* All (now only part) of STL should included;
-* All (now only part) of STL containers should be printable;
-* Is it possible to make _+++C++0x +++_ literal for regex?  Ideally something
-	like `/abc/` or `"abc"re` for `boost::regex("abc")`. 
 
 == Refs 
 
