@@ -78,6 +78,7 @@ struct	fld : strr {
 	template<typename T> T convert_to()    const { istringstream is;  T x;  is.str(string(this->b, this->e));  is >> x;  return x; }
 
 	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
+					operator  string() const {  return  string(this->b, this->e); }
 	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
 
 
@@ -166,19 +167,32 @@ struct	fld : strr {
 
 		template<typename T>
 	struct   R_t : std::deque<T> {
+
 		T&	operator()(size_t I) {
 			if (I==0)  return a;
 			if (this->size()<I) this->resize(I);	// reference to non existant field
 			return (*this)[I-1];
 		};
+
+		T&	operator()(const char* s) {
+			auto it = header.find(s);
+			if (it ==  header.end()) {
+				cerr << "scc error:  header \"" <<  s << "\"  not found\n";
+				return (*this)[0];
+			} else {
+				return (*this)[it->second];
+			}
+		};
+
 		T  a;	// All_of record
+		map<std::string,size_t>  header;
 
 	};
 
-
-///////////////////////////////////////////////////////////////////////////////  AWK's vars
-
 	R_t<fld> F;
+
+///////////////////////////////////////////////////////////////////////////////  AWK's vars 
+
 		#define		$0	F.a
 		#define		$1	F(1)
 		#define		$2	F(2)

@@ -75,6 +75,12 @@ int main(int argc, char** argv) {
 		read_line = [&]() { return  buf.get_rec(RS, FS, F); };
 		#define		WRL	while(read_line())
 
+		#ifdef scc_HEADER
+			read_line();
+			for (size_t i = 0;  i<F.size();  i++)
+				F.header[F[i]] = i;
+		#endif
+
 		#ifdef scc_IS_STREAM
 
 			while (read_line()) {
