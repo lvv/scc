@@ -167,8 +167,9 @@ struct	fld : strr {
 		template<typename T>
 	struct   R_t : std::deque<T> {
 		T&	operator()(size_t I) {
-			if (this->size()<I+1) this->resize(I+1);
-			return (*this)[I];
+			if (I==0)  return a;
+			if (this->size()<I) this->resize(I);	// reference to non existant field
+			return (*this)[I-1];
 		};
 		T  a;	// All_of record
 
@@ -179,28 +180,28 @@ struct	fld : strr {
 
 	R_t<fld> F;
 		#define		$0	F.a
-		#define		$1	F(0)
-		#define		$2	F(1)
-		#define		$3	F(2)
-		#define		$4	F(3)
-		#define		$5	F(4)
-		#define		$6	F(5)
-		#define		$7	F(6)
-		#define		$8	F(7)
-		#define		$9	F(8)
-		#define		$10	F(9)
-		#define		$11	F(10)
-		#define		$12	F(11)
-		#define		$13	F(12)
-		#define		$14	F(13)
-		#define		$15	F(14)
-		#define		$16	F(15)
-		#define		$17	F(16)
-		#define		$18	F(17)
-		#define		$19	F(18)
-		#define		$20	F(19)
+		#define		$1	F(1)
+		#define		$2	F(2)
+		#define		$3	F(3)
+		#define		$4	F(4)
+		#define		$5	F(5)
+		#define		$6	F(6)
+		#define		$7	F(7)
+		#define		$8	F(8)
+		#define		$9	F(9)
+		#define		$10	F(10)
+		#define		$11	F(11)
+		#define		$12	F(12)
+		#define		$13	F(13)
+		#define		$14	F(14)
+		#define		$15	F(15)
+		#define		$16	F(16)
+		#define		$17	F(17)
+		#define		$18	F(18)
+		#define		$19	F(19)
+		#define		$20	F(20)
 
-		#define		$NF	F(NF-1)
+		#define		$NF	F(NF)
 		#define		$	F
 
 	long NF = 0;

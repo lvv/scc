@@ -116,14 +116,14 @@ Second is `-n` and `-p` (equivalent to PERL's)  options:
 
 `scc -n 'expr1; expr2;'`
 
-SCC does not have dedicated place for regexes, se we use vanilla if-statement.
+SCC does not have dedicated place for regexes, so we use vanilla if-statement.
 
 With luck, GCC supports (as extension)  use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
-In SCC, `$` variables are special string type (`strr`), similar to `std::string` but which can be
-used in arithmetic expressions - implicitly converted to a numeric type.  That is thay behave like AWK's vars.
-and can be assigned a numeric value.
+In SCC, `$` variables are special string type `strr`, it is similar to `std::string` but which can be
+used in arithmetic expressions - implicitly converted to a numeric type.  Type `strr` behave like AWK's vars.
+and can be assigned a numeric value or.  Numeric type is any of `int`, `float`, etc - dependant on the type.
 
 
 Examples.
@@ -142,7 +142,7 @@ df | awk '{n+=$3};  END{print n}'
 Prepend line number to every line.
 
 ----------------------------------------------------------------------------
-echo -e 'aaa\nbbb'   |  scc -p 'F.push_front(NR);'
+echo -e 'aaa\nbbb'   |  scc -p '$.push_front(NR);'
 1 aaa
 2 bbb
 ----------------------------------------------------------------------------
