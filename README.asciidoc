@@ -128,14 +128,26 @@ and can be assigned a numeric value or.  Numeric type is any of `int`, `float`, 
 
 Examples.
 
-Sum-up _DF(1)_ used-disk-space column:
+Sum-up _DF(1)_ used-disk-space column. 
+In AWK:
+
+----------------------------------------------------------------------------
+df | awk '{n+=$3};  END{print n}'
+31399199
+----------------------------------------------------------------------------
+
+If your `df` output sizes in human readable sizes, replace it with `command df`
+Same in SCC:
 
 ----------------------------------------------------------------------------
 df | scc 'WRL n+=$3;  n' 
 31399199
+----------------------------------------------------------------------------
 
-// same as:
-df | awk '{n+=$3};  END{print n}'
+We can also replace column number with symbolic name (from df output header):
+
+----------------------------------------------------------------------------
+df | scc -H 'WRL n+=$("Used");  n' 
 31399199
 ----------------------------------------------------------------------------
 
@@ -148,7 +160,7 @@ echo -e 'aaa\nbbb'   |  scc -p '$.push_front(NR);'
 ----------------------------------------------------------------------------
 
 When input line split into fiels, they are kept in `std::deque<fld> F`  ($ - is
-alias to F), so prepend  new 1st field we can use `std::deque`  member function
+alias to F).  So to prepend  new field with `NR`, we used `std::deque`  member function
 `push_front`.  Another way for doing the same:
 
 ----------------------------------------------------------------------------
@@ -169,14 +181,14 @@ echo 1:2:3 | scc -i: -o, -p
 Replace `"-"` or  `"none"` with `"n/a"` in 2nd column using `std::regex`. 
 
 ----------------------------------------------------------------------------
-echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2=="(none|-)"_R)  $2="n/a";'
+echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2 == "(none|-)"_R)  $2="n/a";'
 1 n/a
 3 n/a
 4 abc
 
 
 // awk
-echo -e '1 -\n2 none\n3 abc'  |  awk '{if ($2~/^(none|-)$/) $2="n/a"; print $0}'
+echo -e '1 -\n2 none\n3 abc'  |  awk '{if ($2 ~ /^(none|-)$/)  $2="n/a"; print $0}'
 1 n/a
 3 n/a
 4 abc
