@@ -41,8 +41,7 @@ int     i;
 
 i = f;		// 1
 i = f+1;	// 2
-f = 1;		// "1"
-f++		// "2"
+f = 2;		// "s"
 f + " m/s"	// "2 m/s"
 f + 5		// "7"
 ---------------------------------
@@ -268,6 +267,8 @@ GNU AWK
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
 REGEX
+	constexpr (at complie time) --
+	http://cpptruths.blogspot.com/2011/07/compile-time-regex-matcher-using.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+CppTruths+%28C%2B%2B+Truths%29&utm_content=Google+Reader
 	A Regular Expression Matcher by Rob Pike -- http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
 	Writing own regular expression parser -- http://www.codeproject.com/KB/recipes/OwnRegExpressionsParser.aspx
 	http://swtch.com/~rsc/regexp/

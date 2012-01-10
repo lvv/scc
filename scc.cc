@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 		//if (RS.size()==1  &&  FS.size()==1)	read_line = [&]() { return  buf.get_rec(*RS.B, *FS.B, F); };
 		//else					read_line = [&]() { return  buf.get_rec(RS, FS, F); };
 		read_line = [&]() { return  buf.get_rec(RS, FS, F); };
-		#define		O	while(read_line())
+		#define		WRL	while(read_line())
 
 		#ifdef scc_HEADER
 			read_line();
