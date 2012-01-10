@@ -52,21 +52,21 @@ abc
 ----------------------------------------------------------------------------
 
 
-To squeeze C++ verbosity for SCC's one-liners, seversal things were done. 
+To squeeze C++ verbosity for SCC's one-liners, several things were done. 
 
 Shortcuts (typedefs and macros) were defined:
 
 ------------------------------------------------------
-str   -->   std::string  
-vint  -->   std::vector<int>  
-O   -->   while(read_line())      
+str	-->   std::string  
+vint	-->   std::vector<int>  
+O	-->   while(read_line())      
 ------------------------------------------------------
 
 Variables `i`,`j`,`k`,`n` are
 pre-declared as `long`; variables `x`,`y`,`z` are pre-declared as `double`; 
 and `s` and `w` - pre-declared as `std::string`.  Numeric types initialized to 0.
 So, in last example we could've skipped definition `char c;`.
-You don't need to remember these, you can re-declare/re-define these freely. 
+You don't need to remember these, you can re-declare/re-define these as you want. 
 
 Also C++ printing was replaced with so called
 http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
@@ -97,9 +97,9 @@ echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M'
 Native AWK
 ----------
 
-After initial use as simple REPL calculator, I realised that SCC can be useful
+After initial use as simple REPL evaluator, I realised that SCC can be useful
 tool for stream processing - something like native AWK.  So it was bolted on to SCC.
-Syntax is not exactly AWK's but I've tried to make it similar.
+Syntax is not exactly AWK's,  it is still +++C++ +++,  but I've tried to make it similar.
 
 AWK's program have following layout:
 
@@ -110,20 +110,23 @@ SCC have two alternatives. First is simple while-loop:
 `scc 'begin-expr;  O { expr1; expr2;};   end-expr;'`
 
 Shortcut `O` expands to `while(read_line())`.  
-Function `read_line()`, reads input line, splits it into fields.
+Function `read_line()`, reads input line and splits it into fields.
 
 Second is `-n` and `-p` (equivalent to PERL's)  options:
 
 `scc -n 'expr1; expr2;'`
+
+Options `-p`, after splitting and evaluating snippet also prints `$0`.
 
 SCC does not have dedicated place for regexes, so we use vanilla if-statement.
 
 With luck, GCC supports (as extension)  use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
-In SCC, `$` variables are special string type `strr`, it is similar to `std::string` but which can be
-used in arithmetic expressions - implicitly converted to a numeric type.  Type `strr` behave like AWK's vars.
-and can be assigned a numeric value or.  Numeric type is any of `int`, `float`, etc - dependant on the type.
+In SCC, `$` variables are special string type `fld`, it is similar to `std::string` but it can be
+used in arithmetic expressions - implicitly converted to a numeric type. And it
+can be assigned a numeric value. That is `fld` behave like AWK's vars.
+Numeric types are any of `int`, `float`, etc.
 
 
 Examples.
@@ -136,7 +139,8 @@ df | awk '{n+=$3};  END{print n}'
 31399199
 ----------------------------------------------------------------------------
 
-If your `df` output sizes in human readable sizes, replace it with `command df`
+If your `df` output sizes in human readable sizes, you need to replace `df` with `command df`.
+
 Same in SCC:
 
 ----------------------------------------------------------------------------
@@ -159,8 +163,8 @@ echo -e 'aaa\nbbb'   |  scc -p '$.push_front(NR);'
 2 bbb
 ----------------------------------------------------------------------------
 
-When input line split into fiels, they are kept in `std::deque<fld> F`  ($ - is
-alias to F).  So to prepend  new field with `NR`, we used `std::deque`  member function
+When input line split into fiels, they are kept in `std::deque<fld> F`  (`$` - is
+alias to `F`).  So to prepend  new field with `NR`, we used `std::deque`  member function
 `push_front`.  Another way for doing the same:
 
 ----------------------------------------------------------------------------
@@ -168,6 +172,8 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 1 aaa
 2 bbb
 ----------------------------------------------------------------------------
+
+Note no-trailing-semicolon.
 
 Make comma separated fields out of colon separated.  Option `-o` sets `OFS`
 (output field separator), `-i` - set `FS`  Snippet is empty in this example.
@@ -194,7 +200,7 @@ echo -e '1 -\n2 none\n3 abc'  |  awk '{if ($2 ~ /^(none|-)$/)  $2="n/a"; print $
 4 abc
 ----------------------------------------------------------------------------
 
-C-string with `_R` suffix are `std::regex` literal.  The `operator==` does `std::regex_match`.
+C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std::regex_match()`.
 Unfortunately GCC's LIBSTDC++ not yet have working `std::regex_replace` and `std::regex_search` and we have to use if.
 
 See full docs at http://volnitsky.com/project/scc[]
