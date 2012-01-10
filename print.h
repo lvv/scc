@@ -17,6 +17,7 @@
 
 
 struct  out {
+	/*
 	bool  first_use;
 	const char*	sep;
 	const char*	paren;
@@ -26,11 +27,12 @@ struct  out {
 	void init() { if (sep   && !*sep)	sep   = 0; }
 
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
+	*/
 
-	template<typename T>	out&  operator<<  (T x)	{ send_sep();  cout <<        x;	return *this; };
-	template<typename T>	out&  operator,   (T x)	{ send_sep();  cout << " " << x;	return *this; };
-	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{ send_sep();  cout <<        x;	return *this; };
-	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{ send_sep();  cout <<        x;	return *this; };
+	template<typename T>	out&  operator<<  (T x)	{ /*send_sep();*/  cout <<        x;	return *this; };
+	template<typename T>	out&  operator,   (T x)	{ /*send_sep();*/  cout << " " << x;	return *this; };
+	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{ /*send_sep();*/  cout <<        x;	return *this; };
+	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{ /*send_sep();*/  cout << " " << x;	return *this; };
 
 	// endl, hex, ..
 				out&  operator<< (std::ostream&  (*pf) (std::ostream& ) ) { cout << pf;  return *this; };
@@ -44,16 +46,16 @@ struct  out {
  };
 
 struct  outln : out  {
-	outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
+	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
 	~outln()				{ cout << endl; }
  };
 
 
 // NOP, but scc's print-last will send endl
-std::ostream& operator<<      (ostream& os,  ostream&) {return os; };
+std::ostream& operator<<      (ostream& os,  ostream& ) {return os; };
 std::ostream& operator<<      (ostream& os, const out&) {return os; };
 
-// NOP, but scc' sprint-last will send endl
+// NOP, but scc' print-last will send endl
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
 	std::ostream&
 operator<<      (ostream& os, const IT&) { return os; }; 
@@ -167,7 +169,7 @@ namespace oi_space {
 
 };
 
-static oi_space::oi_t oi;
+static oi_space::oi_t  oi;
 
 
 #endif	// LVV_PRINT_H
