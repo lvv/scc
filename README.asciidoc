@@ -9,7 +9,7 @@ Status
 ------
 
 Current alpha version is v0.2 (use this git tag). Only GCC-4.7 (pre release) or later is currently supported.  
-Version v0.2 is about x100 times faster than v0.1 and about x2 times faster than GAWK/MAWK. 
+Version v0.2 is about x100 times faster than v0.1 and several times faster than GAWK/MAWK. 
 Boost is not used in v0.2.  Regex in RS/FS are currently not supported (but were in v0.1) 
 
 If you need to use it with older GCC (4.1 was supported) - use v0.1.
@@ -59,6 +59,9 @@ abc
 
 To squeeze C++ verbosity for SCC's one-liners, several things were done. 
 
+Snippet is evaluated in environ where all STL includes are included and almost
+all STL objects are imported into default namespace with `using std::...;`
+
 Shortcuts (typedefs and macros) were defined:
 
 ------------------------------------------------------
@@ -81,8 +84,8 @@ definition `char c;`.
 
 Also C++ printing was replaced with so called
 http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
-and any stl container can be simply sent to `std::cout`.
-Below is bar-print statments with equivalent code in comments:
+and any STL container can be simply sent to `std::cout`.
+Below are bar-print statements with equivalent code in comments:
 
 ---------------------------------------------------------------
 _  x;                           //  cout << x;
@@ -101,11 +104,10 @@ scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'
 Calculate words frequencies from stdin.
 
 ----------------------------------------------------------------------------
-echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
+echo aa bb aa | scc 'str w; map<str,int> M;  while(cin>>w) M[w]++;  M' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
 
-Variable `w`, if you remember,  was pre-declared as `std::string`.
 
 Native AWK
 ~~~~~~~~~~

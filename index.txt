@@ -17,14 +17,14 @@ In `scc` shall script:
 
 Defines SCC's specific objects.   All other includes can be used independtly:
 
-* `F` — derived from  deque<field>
+* `F` — derived from  deque<fld>
 * `read_line()`
-* type `field`
+* type `fld`
 * SCC specific shortcuts
 
 Predefined variables (similar to AWK's):
 
-* `F`	-  derived from  `std::deque<field>` — line's fields; accessible like `F(i)`; counted from 0
+* `F`	-  derived from  `std::deque<fld>` — line's fields; accessible like `F(i)`; index starts at  1
 * `NF`	-  `long`,  number of fields (set after read_line())
 * `NR` 	-  `long`,  number of records (set after read_line())
 * `OFS`	-  `strr`, output field separator 
@@ -92,6 +92,7 @@ vector<vint>   	  VV {{1,1}, {2,2}};   _ VV;	//  {{1, 1}, {2, 2}}
 -------------------------------------------------------------------
 
 
+
 /////////////////////////
 Bar-print is actually just macros:
 
@@ -140,6 +141,7 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
+File `print.h` can be used as standalone, independent include. 
 
 
 ==== Simplified input
