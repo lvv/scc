@@ -59,7 +59,7 @@ Shortcuts (typedefs and macros) were defined:
 ------------------------------------------------------
 str   -->   std::string  
 vint  -->   std::vector<int>  
-WRL   -->   while(read_line())      
+O   -->   while(read_line())      
 ------------------------------------------------------
 
 Variables `i`,`j`,`k`,`n` are
@@ -107,9 +107,9 @@ AWK's program have following layout:
 
 SCC have two alternatives. First is simple while-loop:
 
-`scc 'begin-expr;  WRL { expr1; expr2;};   end-expr;'`
+`scc 'begin-expr;  O { expr1; expr2;};   end-expr;'`
 
-Shortcut `WRL` expands to `while(read_line())`.  
+Shortcut `O` expands to `while(read_line())`.  
 Function `read_line()`, reads input line, splits it into fields.
 
 Second is `-n` and `-p` (equivalent to PERL's)  options:
@@ -140,14 +140,14 @@ If your `df` output sizes in human readable sizes, replace it with `command df`
 Same in SCC:
 
 ----------------------------------------------------------------------------
-df | scc 'WRL n+=$3;  n' 
+df | scc 'O n+=$3;  n' 
 31399199
 ----------------------------------------------------------------------------
 
 We can also replace column number with symbolic name (from df output header):
 
 ----------------------------------------------------------------------------
-df | scc -H 'WRL n+=$("Used");  n' 
+df | scc -H 'O n+=$("Used");  n' 
 31399199
 ----------------------------------------------------------------------------
 

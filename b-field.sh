@@ -16,7 +16,7 @@ fi
 
 # string-field
 rm -f /tmp/sf
-CXXFLAGS='-O3' scc -x /tmp/sf 'WRL n+=F10; n'
+CXXFLAGS='-O3' scc -x /tmp/sf 'O n+=F10; n'
 echo -n "scc: ";	command time -f %U   /tmp/sf                       < b-field.in
 echo -n "scc: ";	command time -f %U   /tmp/sf                       < b-field.in
 echo -n "scc: ";	command time -f %U   /tmp/sf                       < b-field.in

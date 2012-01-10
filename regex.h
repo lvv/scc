@@ -58,7 +58,7 @@ operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 	//typedef	std::regex_iterator		RI;
 	typedef		std::sregex_iterator          SRI;
 	typedef		std::cregex_iterator          CRI;
-		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
+		// usage:  echo 'aa bb' | scc 'O {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
 	//typedef	std::regex_token_iterator     RTI;
 	typedef		std::sregex_token_iterator    SRTI;
 	typedef		std::cregex_token_iterator    CRTI;
