@@ -38,28 +38,28 @@ int main(int argc, char** argv) {
 
 	// ORS
 	p = std::getenv("ORS");
-	if (p==nullptr)		ORS = strr("\n");
+	if (p==nullptr)		ORS = strr(RS);
 	else			ORS = strr(p);
-
-	// OFS
-	#ifndef  scc_OFS
-	p = std::getenv("OFS");
-	if (p==nullptr)		OFS = strr(" ");
-	else			OFS = strr(p);
-	#endif
 
 	// FS
 	#ifndef  scc_ifs
-	p = std::getenv("FS");
-	if (p==nullptr)		FS = strr(" ");
-	else			FS = strr(p);
+		p = std::getenv("FS");
+		if (p==nullptr)		FS = strr(" ");
+		else			FS = strr(p);
+	#endif
+
+	// OFS
+	#ifndef  scc_OFS
+		p = std::getenv("OFS");
+		if (p==nullptr)		OFS = strr(FS);
+		else			OFS = strr(p);
 	#endif
 
 	// PAD
 	#ifndef  scc_PAD
-	p = std::getenv("PAD");
-	if (p==nullptr)		PAD = strr(" \t");
-	else			PAD = strr(p);
+		p = std::getenv("PAD");
+		if (p==nullptr)		PAD = strr(" \t");
+		else			PAD = strr(p);
 	#endif
 
 	// PAD_tab

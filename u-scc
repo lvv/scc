@@ -10,9 +10,11 @@ echo "scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"
 echo "{1} {1} {1} CS STR SR FLD"
 
 
-echo ---------------------------------------------------------
-echo "echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), \"!\";'"
-echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), "!";'
+echo ---------------------------------------------------------  PARSER
+
+echo "echo '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!' ORS='!' scc -i: -o: -p"
+echo '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!' ORS='!' scc -i: -o: -p
+echo '11:12!21:22!31:32:33:'
 
 
 echo ---------------------------------------------------------	PRINTER
