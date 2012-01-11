@@ -38,13 +38,13 @@ usage_exit() {
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields
 		-f filename 	- get snippet from filename
-		-i ifs 		- sets simple (not regex)  IFS (input field separator). Needs BOOST.  
-		-I ifs-regex 	- sets regex IFS. For space separated fields: (\\S+)(\\s+|$) - field data is 1st group; separator is 2nd group 
+		-i ifs 		- sets simple (not regex)  IFS (input field separator).
+		-F ifs 		- sets simple (not regex)  IFS (input field separator).
 		-o ofs 		- sets OFS (output field separator) 
 		-x filename	- save executable to file and do not execute it
 		-O 		- optimized compile
 		-g 		- debug compile
-		-H 		- read header line
+		-H 		- read header 
 	"
 	exit 0
 }
@@ -53,7 +53,7 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBI:i:F:o:x:OgH opt;  do
+while getopts npf:vBi:F:o:x:OgH opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;

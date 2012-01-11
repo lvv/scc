@@ -5,22 +5,18 @@ time (
 echo =====================================================================================================
 
 echo ---------------------------------------------------------	PRINTER
-echo "scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\";  strr sr(\"SR\");  fld f(\"FLD\");  __ vi,ca,ar,cs,s,sr,f;'"
-      scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR";  strr sr("SR");  fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;'   || exit 1
+echo "scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\"; strr sr(\"SR\"); fld f(\"FLD\");  __ vi,ca,ar,cs,s,sr,f;'"
+      scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR"; strr sr("SR"); fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;'   || exit 1
 echo "{1} {1} {1} CS STR SR FLD"
 
-echo ---------------------------------------------------------
-echo 'scc 1'
-      scc 1  || exit 1
-echo  1
 
 echo ---------------------------------------------------------
-echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), "!";'
+echo "echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), \"!\";'"
 echo '  a : A|b  :B|:C:C  :   C:' | RS='|' scc -i: -o: -p '_ F.size(), "!";'
 
 
 echo ---------------------------------------------------------	PRINTER
-echo "scc 'int A[2] = {1,2}; A'"
+echo "echo \"scc 'int A[2] = {1,2}; A'\""
       scc 'int A[2] = {1,2}; A'  || exit 1
 echo -e "{1, 2}"
 
