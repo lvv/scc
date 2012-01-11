@@ -87,12 +87,14 @@ int main(int argc, char** argv) {
 		read_line = [&]() { return  buf.get_rec(RS, FS, F); };
 		#define		WRL	while(read_line())
 
+
 		#ifdef scc_HEADER
 			read_line();
 			itALL (F)
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
 		#endif
+
 
 		#ifdef scc_IS_STREAM
 
@@ -112,10 +114,5 @@ int main(int argc, char** argv) {
 		#else
 			#include "/tmp/snippet.h"
 		#endif
-						// cout <<  endl;
-						// cout <<  "RS=" << hex <<  int(*RS.B) <<  " " << RS.size() << endl;
-						// cout <<  "FS=" << hex <<  int(*FS.B) <<  " " << FS.size() << endl;
-						// cout <<  "ORS=" << hex <<  int(*ORS.B) <<  " " << ORS.size() << endl;
-						// cout <<  "OFS=" << hex <<  int(*OFS.B) <<  " " << OFS.size() << endl;
 	;}
 }

@@ -62,7 +62,7 @@ To squeeze C++ verbosity for SCC's one-liners, several things were done.
 Snippet is evaluated in environ where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
-Shortcuts (typedefs and macros) were defined:
+Some shortcuts (typedefs and macros) were defined:
 
 ------------------------------------------------------
 str	-->   std::string  
@@ -70,9 +70,10 @@ vint	-->   std::vector<int>
 WRL	-->   while(read_line())      
 ------------------------------------------------------
 
+
 Several variables were pre-declared:
 
-* `i`, `j`, `k`, `n` -- `long`, initialized to 0
+* `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
 * `x`, `y`, `z` --  `double`, initialized to 0
 * `s`, `w` -- `std::string`
 * `c` -- char
