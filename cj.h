@@ -51,19 +51,23 @@ typedef		std::deque<std::string>		dstr;
 
 
 #define		FOR(i,i0,N)	for (long i = (i0), N_FOR_d8s7d8s9=(N);   i < N_FOR_d8s7d8s9;   i++)
-#define		FORD(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
+#define		ROF(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
 #define		REP(N)		for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++)
 
 #define		iFOR(N)		FOR(i,0,N)
 #define		jFOR(N)		FOR(j,0,N)
 #define		kFOR(N)		FOR(k,0,N)
 #define		tFOR(N)		FOR(t,0,N)
+#define		nFOR(N)		FOR(m,0,N)
 #define		mFOR(N)		FOR(m,0,N)
 
 #define		ALL(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
+#define		LLA(IT, C)	for (auto IT=end(C)-1;  IT >= begin(C);   IT--)
 #define		itALL(C)	ALL(it,C)
 #define		pALL(C)		ALL(p,C)
 #define		iALL(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
 #define		jALL(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
+#define		cALL(C)		for (auto c:C) if(c != '\0')
+#define		xALL(C)		for (auto x:C)
 
 #endif  // LVV_CODEJAM_H

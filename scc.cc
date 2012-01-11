@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 	for (const char *p = PAD.b;  p!=PAD.e;  p++)
 		PAD_tab[*p] = 1;
 
-	{  /////////////////////////////////////////////////////////////////////////////////////////////
+	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
 		std::function<bool()>  read_line;
 
@@ -77,6 +77,7 @@ int main(int argc, char** argv) {
 
 		#ifdef scc_HEADER
 			read_line();
+			itALL (F)
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
 		#endif
