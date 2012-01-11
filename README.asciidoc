@@ -1,8 +1,11 @@
 // vim:set ft=asciidoc:
-SCC — Simple CC  
+SCC — Simple C++  
 ===============
 
-_SCC_ is _+++C++ +++_ snippets evaluator , with some _AWK_ features.
+_SCC_ is _+++C++ +++_ snippets evaluator , with some _AWK_ features. +
+
+* Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
+* License:  httpx://www.gnu.org/licenses/gpl-3.0.html[GPL3]
 
 
 Status
@@ -151,16 +154,12 @@ can be assigned a numeric value. That is `fld` behave like AWK's vars.
 Numeric types are any of `int`, `float`, etc.
 
 
-More examples.  Sum-up `DF(1)` used-disk-space column.  In AWK:
+More examples.  Sum-up `DF(1)` used-disk-space column.  In AWK and SCC:
 
 ----------------------------------------------------------------------------
 df | awk '{n+=$3};  END{print n}'
 31399199
-----------------------------------------------------------------------------
 
-Same in SCC:
-
-----------------------------------------------------------------------------
 df | scc 'WRL n+=$3;  n' 
 31399199
 ----------------------------------------------------------------------------
