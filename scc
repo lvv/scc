@@ -33,7 +33,7 @@ execute=1
 
 usage_exit() {
 	echo "
-	usage:  scc  [options]  snippet  [args] 
+	usage:  scc  [options]  snippet  [files|args] 
 		
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields
@@ -53,7 +53,7 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBi:F:o:x:OgH opt;  do
+while getopts npf:vBi:F:o:x:OgHt opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
@@ -70,6 +70,7 @@ while getopts npf:vBi:F:o:x:OgH opt;  do
 		O) 	CXXFLAGS+="-O3 -march=native";;
 		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check";;
 		H)	CXXFLAGS+=" -Dscc_HEADER "; ;;
+		t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		?) 	usage_exit;;
 	esac
 done
@@ -112,7 +113,7 @@ echo  "$snippet" > /tmp/snippet.h
 ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS || exit 1
 	
 if  [[ $execute == 1 ]]  ; then 
-	$prg "$@"
+	LCC_ALL=C $time $prg "$@"
 	exit $?
 else
 	exit 0

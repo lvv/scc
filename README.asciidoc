@@ -116,7 +116,7 @@ After initial use as simple REPL evaluator, I realised that SCC can be useful
 tool for stream processing - something like native AWK.  So it was bolted on to SCC.
 Syntax is not exactly AWK's,  it is still +++C++ +++,  but I've tried to make it similar.
 
-AWK's program have following layout:
+AWK's program have following elements (simplified):
 
 ----------------------------------------------------------------------------
 awk 'BEGIN{begin-expr};  per-record-expr;  END{end-expr}'
@@ -131,20 +131,21 @@ scc 'begin-expr;  WRL  per-record-expr;   end-expr;'
 Shortcut `WRL` expands to `while(read_line())`.  
 Function `read_line()`, reads input line and splits it into fields.
 
-Second alternative is to use options `-n` and `-p`. They are equivalent to PERL's and 
-are convenient when we do not have `begin-expr` and `end-expr`:
+Second alternative is to use options `-n` and `-p`.
+With `-n`, record is read, split into fields and snippet is eveluated for every
+record.  With `-p`, additionally all fields are printed after snippet was
+evaluated.  These are equivalent to PERL's and 
+are convenient when we do not have `begin-expr` and `end-expr`.
 
 ----------------------------------------------------------------------------
 scc -n 'per-record-expr;'
 ----------------------------------------------------------------------------
 
-Options `-p`, after splitting and evaluating snippet also prints `$0`.
-
-Fortnently,  GCC supports (as extension)  use of `$` in identifiers, so AWK's dollar 
+Fortunately,  GCC allows use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
 In SCC, `$` variables are of special string type `fld`, it is similar to `std::string` but it can be
-used in arithmetic expressions - implicitly converted to a numeric type. And it
+used in arithmetic expressions - they will be implicitly converted to corresponding numeric type. And it
 can be assigned a numeric value. That is `fld` behave like AWK's vars.
 Numeric types are any of `int`, `float`, etc.
 
@@ -181,10 +182,10 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 For every line: first `NR` is printed (notice that there is no semicolon), then $0.
 
 Now lets make comma separated fields out of colon separated.  Option `-o` sets `OFS`
-(output field separator), `-i` - set `FS`  Snippet is empty in this example.
+(output field separator), `-F` - set `FS`  Snippet is empty in this example.
 
 ----------------------------------------------------------------------------
-echo 1:2:3 | scc -i: -o, -p
+echo 1:2:3 | scc -F: -o, -p
 1,2,3
 ----------------------------------------------------------------------------
 
