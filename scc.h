@@ -269,30 +269,47 @@ struct	fld : strr {
 
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT BUF
+
+static const char	 * FILENAME = 0;
+
 struct buf_t {
 	const static	size_t		buf_size=1000000;
 			bool		good_file;	// !eof
-			const char		*bob, *eob;	// buffer dimentions
-			const char		*bod, *eod;	// data in buffer
+			const char	*bob, *eob;	// buffer dimentions
+			const char	*bod, *eod;	// data in buffer
 			const char	*path;
 			int		fd;		// file
+			char		**&argv, **argv_e;
 
-	explicit	buf_t		(const char* path)
-		: good_file(true),   path(path)
-	{
-		fd = open(path, O_RDONLY);
-		assert(fd>0);
-		if (fd < 0)  throw  std::ios::failure (path);
+
+	bool  next_file()   {
+		if (fd==0)		return  false;	// stdin, no next-file
+		if (argv == argv_e)	return  false;	// last arg
+
+		FILENAME = *argv++;
+		if (fd > 0)  close(fd);
+		fd = open(FILENAME, O_RDONLY);
+		if (fd < 0)  { cerr << "scc error:  can not open file \"" << FILENAME << "\"\n";   exit(1); }
 		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
+		NR = 0;
+		return  true;
+	}
+
+
+	buf_t		(char**&argv, char**argv_e)
+		: good_file(true),  argv(argv),  argv_e(argv_e), fd(-1)
+	{
+		if (argv <  argv_e)  {
+			next_file();
+		} else {
+			FILENAME = "stdin";
+			fd = 0;
+		}
 		bob = new char[buf_size+1];
 		bod = eod = bob;
 		eob = bob+buf_size;
 	}
 
-	explicit	buf_t		(int fd)
-		: good_file(true), bob(new char[buf_size+1]), eob(bob+buf_size), bod(bob), eod(bob), path(0), fd(fd) {
-		assert(fd>=0);
-	}
 			~buf_t		()	{ delete [] bob; }
 
 	size_t		capacity	() const{ return buf_size; }
@@ -318,12 +335,15 @@ struct buf_t {
 		template <typename sep_T>
 	bool		get_rec		(sep_T RS, sep_T FS, R_t<fld>& F)	{
 
-		if (!good_file)   return false;
+		restart:
+
+		if (!good_file  &&  !next_file())   return false;
 
 		const char *p   (bod);
 		F.a.b = p;				// record
 
 		strr_allocator.clear();
+		#define   FINISH_RECORD   { parse_rec(F);   NF = F.size();   bod = p;   NR++; }
 
 		while(1) {	//  read until EOR
 			size_t	unused_data = eod - p;
@@ -333,7 +353,8 @@ struct buf_t {
 				if (!buf_free_space) {  // relocate data to begining of buffer
 					if (F.a.b == bob ) {
 						cerr << "warning: Line is too big for buffer. Splitting line.\n";
-						goto return_rec;
+						FINISH_RECORD;
+						return true;
 					}
 
 					ssize_t data_size = size();
@@ -345,27 +366,24 @@ struct buf_t {
 					eod = p = bob + data_size;
 				}
 
-				if ( !(good_file = fill()) )  {
-					if ( F.a.b == p )	return false;				// if EOF at BoR --> return EOF
-					else			{ F.a.e = p;  goto return_rec; }	// else close current record
+				if ( !(good_file = fill()) )  {		// EOF
+					if ( F.a.b == p )     goto restart;		// if EOF at BoR --> try next file
+					F.a.e = p;
+					FINISH_RECORD;
+					return  true;
 				}
 			}
 
 			p = F.a.e = search (p, eod, RS.b, RS.e);
-
 			if (p != eod) {
-				assert(*p == *RS.b);
-				goto  return_rec;
+				p += RS.size();
+				FINISH_RECORD;
+				return  true;
 			}
 		}
 
-		return_rec:
-			parse_rec(F);
-			NF  = F.size();
-			p  += RS.size();
-			bod = p;
-			NR++;
-			return true;
+		FINISH_RECORD;
+		return true;
 	}
 
   private:
@@ -394,5 +412,7 @@ template<>	struct  is_container <strr>	: std::false_type {};	// we have strr own
 template<>	struct  is_container <fld>	: std::false_type {};
 template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 template<>	struct  is_string    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
+
+
 
 #endif // SCC

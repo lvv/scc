@@ -27,19 +27,8 @@ int main(int argc, char** argv) {
 	std::string w __attribute__((unused));
 	char *p       __attribute__((unused)) = nullptr;
 
-	const char  *FILENAME;
-	int FD=0;
-	if (argc>2) {
-		FILENAME=argv[2];
-		FD = open(FILENAME,  O_RDONLY);
-		if (FD<0) {
-			cerr << "scc error:  can not open file \"" << FILENAME << "\"\n";
-			exit(1);
-		}
-	}
-
-
-	buf_t	buf(FD);	// stdio
+	char	**first_file_argv = argv+2;
+	buf_t	buf(first_file_argv, argv+argc);	// stdio
 
 	////////  READ ENV
 
