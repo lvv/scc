@@ -78,8 +78,10 @@ struct	fld : strr {
 	template<typename T> T convert_to()    const { istringstream is;  T x;  is.str(string(this->b, this->e));  is >> x;  return x; }
 
 	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
-					operator  string() const {  return  string(this->b, this->e); }
 	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
+
+					operator  string() const {  return  string(this->b, this->e); }
+
 
 
 	// CONVERT TO INTEGRAL
@@ -218,8 +220,9 @@ struct	fld : strr {
 		#define		$NF	F(NF)
 		#define		$	F
 
-	long NF = 0;
-	long NR = 0;
+	long NF  = 0;
+	long FNR = 0;
+	long NR  = 0;
 
 	//string       __attribute__((unused))	line;
 
@@ -291,7 +294,7 @@ struct buf_t {
 		fd = open(FILENAME, O_RDONLY);
 		if (fd < 0)  { cerr << "scc error:  can not open file \"" << FILENAME << "\"\n";   exit(1); }
 		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
-		NR = 0;
+		FNR = 0;
 		return  true;
 	}
 
@@ -343,7 +346,7 @@ struct buf_t {
 		F.a.b = p;				// record
 
 		strr_allocator.clear();
-		#define   FINISH_RECORD   { parse_rec(F);   NF = F.size();   bod = p;   NR++; }
+		#define   FINISH_RECORD   { parse_rec(F);   NF = F.size();   bod = p;   FNR++; NR++; }
 
 		while(1) {	//  read until EOR
 			size_t	unused_data = eod - p;
