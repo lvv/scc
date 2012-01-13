@@ -10,6 +10,35 @@
 	#include <fcntl.h>
 	#include <cerrno>
 
+//  CONFIG
+
+	const static bool  is_header =
+		#ifdef scc_IS_HEADER
+			true;
+		#else
+			false;
+		#endif
+
+	const static bool  is_stream =
+		#ifdef scc_IS_STREAM
+			true;
+		#else
+			false;
+		#endif
+
+	const static bool  is_print_last =
+		#ifdef scc_IS_PRINT_LAST
+			true;
+		#else
+			false;
+		#endif
+
+	const static bool  is_p =
+		#ifdef scc_P
+			true;
+		#else
+			false;
+		#endif
 
 struct strr {         ///////////////////////////////////////////////////////  STRR
 	const char *b, *e;
@@ -278,7 +307,8 @@ static const char	 * FILENAME = 0;
 struct buf_t {
 	const static	size_t		buf_size=1000000;
 			bool		good_file;	// !eof
-			const char	*bob, *eob;	// buffer dimentions
+			char		bob[buf_size+1];// buffer dimentions
+			const char	*eob;		// end of buffer
 			const char	*bod, *eod;	// data in buffer
 			const char	*path;
 			int		fd;		// file
@@ -308,12 +338,9 @@ struct buf_t {
 			FILENAME = "stdin";
 			fd = 0;
 		}
-		bob = new char[buf_size+1];
 		bod = eod = bob;
 		eob = bob+buf_size;
 	}
-
-			~buf_t		()	{ delete [] bob; }
 
 	size_t		capacity	() const{ return buf_size; }
 	ssize_t		size		() const{ return eod-bod; }

@@ -10,6 +10,13 @@ void  print_line() {
 	cout << ORS;
  }
 
+struct buf_t;
+buf_t	*buf;
+
+bool  read_line()  { return  buf->get_rec(RS, FS, F); };
+#define		WRL	while(read_line())
+
+
 int main(int argc, char** argv) {
 	long i __attribute__((unused)) = 0;
 	long j __attribute__((unused)) = 0;
@@ -28,7 +35,8 @@ int main(int argc, char** argv) {
 	char *p       __attribute__((unused)) = nullptr;
 
 	char	**first_file_argv = argv+2;
-	buf_t	buf(first_file_argv, argv+argc);	// stdio
+	buf = new buf_t(first_file_argv, argv+argc);	// stdio
+
 
 	////////  READ ENV
 
@@ -69,39 +77,25 @@ int main(int argc, char** argv) {
 
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
-		std::function<bool()>  read_line;
-
-		//if (RS.size()==1  &&  FS.size()==1)	read_line = [&]() { return  buf.get_rec(*RS.B, *FS.B, F); };
-		//else					read_line = [&]() { return  buf.get_rec(RS, FS, F); };
-		read_line = [&]() { return  buf.get_rec(RS, FS, F); };
-		#define		WRL	while(read_line())
-
-
-		#ifdef scc_HEADER
+		if (is_header) {
 			read_line();
 			itALL (F)
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
-		#endif
+		}
 
-
-		#ifdef scc_IS_STREAM
-
+		if (is_stream)  {
 			while (read_line()) {
-
 				#include "/tmp/snippet.h"
-
-				#ifdef scc_P
-					#ifdef scc_PRINT_LAST
-						cout << OFS;
-					#endif
-
+				if (is_p) {
+					if (is_print_last)  cout << OFS;
 					print_line();
-				#endif
+				}
 			}
-
-		#else
+		} else {
 			#include "/tmp/snippet.h"
-		#endif
+		}
 	;}
+
+	delete buf;
 }
