@@ -11,10 +11,11 @@ void  print_line() {
  }
 
 struct buf_t;
-buf_t	*buf;
+static buf_t	*buf;
 
-bool  read_line()  { return  buf->get_rec(RS, FS, F); };
-#define		WRL	while(read_line())
+static bool  read_line()  { return  buf->get_rec(RS, FS, F); };
+static bool  next_file()  { return  buf->next_file(); };
+#define		WRL	while( read_line()  ||  next_file()  &&  read_line() )
 
 
 int main(int argc, char** argv) {

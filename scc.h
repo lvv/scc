@@ -316,8 +316,10 @@ struct buf_t {
 
 
 	bool  next_file()   {
-		if (fd==0)		return  false;	// stdin, no next-file
-		if (argv == argv_e)	return  false;	// last arg
+		if (fd==0 || argv==argv_e) {
+			good_file = false;
+			return  false;
+		}
 
 		FILENAME = *argv++;
 		if (fd > 0)  close(fd);
@@ -325,6 +327,7 @@ struct buf_t {
 		if (fd < 0)  { cerr << "scc error:  can not open file \"" << FILENAME << "\"\n";   exit(1); }
 		posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL);
 		FNR = 0;
+		good_file = true;
 		return  true;
 	}
 
@@ -365,9 +368,9 @@ struct buf_t {
 		template <typename sep_T>
 	bool		get_rec		(sep_T RS, sep_T FS, R_t<fld>& F)	{
 
-		restart:
-
-		if (!good_file  &&  !next_file())   return false;
+		try_next_file:
+		if (!good_file  &&   is_stream && !next_file() )	return false;
+		if (!good_file  &&  !is_stream )			return false;
 
 		const char *p   (bod);
 		F.a.b = p;				// record
@@ -397,7 +400,7 @@ struct buf_t {
 				}
 
 				if ( !(good_file = fill()) )  {		// EOF
-					if ( F.a.b == p )     goto restart;		// if EOF at BoR --> try next file
+					if ( F.a.b == p  )    goto try_next_file;		// if EOF at BoR --> try next file
 					F.a.e = p;
 					FINISH_RECORD;
 					return  true;
