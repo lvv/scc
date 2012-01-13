@@ -10,13 +10,45 @@
 
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 	using	std::cout;
 	using	std::cout;
 	using	std::endl;
 	using	std::ostream;
 
 
+struct  io_t {	
+	std::streambuf  *sb;
+	std::ofstream    ofs;
+	std::ostream	*osp;
+
+	io_t() :
+		sb(std::cout.rdbuf()),
+		osp(new std::ostream(sb))
+		{}
+
+	~io_t() {
+		if ( ofs.is_open()) {
+			ofs.close();
+		}
+		delete  osp;
+	}
+
+	void out(const char* path) {
+		if (ofs.is_open())  ofs.close();
+		ofs.open (path);
+		sb = ofs.rdbuf();
+		delete osp;
+		osp = new std::ostream(sb);
+	}
+
+	// docs http://stackoverflow.com/questions/366955/obtain-a-stdostream-either-from-stdcout-or-stdofstreamfile
+};
+
+static io_t io;
+
 struct  out {
+
 	/*
 	bool  first_use;
 	const char*	sep;
@@ -29,25 +61,23 @@ struct  out {
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 	*/
 
-	template<typename T>		out&  operator<<  (T x)			{  cout <<        x;	return *this; };
-	template<typename T>		out&  operator,   (T x)			{  cout << " " << x;	return *this; };
-	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])	{  cout <<        x;	return *this; };
-	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])	{  cout << " " << x;	return *this; };
-
-	// endl, hex, ..
-				out&  operator<< (std::ostream&  (*x) (std::ostream& ))  { cout << x;  return *this; };
-				out&  operator<< (std::ios&      (*x) (std::ios&     ))  { cout << x;  return *this; };
-				out&  operator<< (std::ios_base& (*x) (std::ios_base&))  { cout << x;  return *this; };
-				out&  operator,  (std::ostream&  (*x) (std::ostream& ))  { cout << x;  return *this; };
-				out&  operator,  (std::ios&      (*x) (std::ios&     ))  { cout << x;  return *this; };
-				out&  operator,  (std::ios_base& (*x) (std::ios_base&))  { cout << x;  return *this; };
+	template<typename T>		out&  operator<<  (T x)				{ *io.osp <<        x;	return *this; };
+	template<typename T>		out&  operator,   (T x)				{ *io.osp << " " << x;	return *this; };
+	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])		{ *io.osp <<        x;	return *this; };
+	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])		{ *io.osp << " " << x;	return *this; };
+	/* endl, hex, ..  */	out&  operator<< (std::ostream&  (*x) (std::ostream& ))	{ *io.osp << x;		return *this; };
+				out&  operator<< (std::ios&      (*x) (std::ios&     ))	{ *io.osp << x;		return *this; };
+				out&  operator<< (std::ios_base& (*x) (std::ios_base&))	{ *io.osp << x;		return *this; };
+				out&  operator,  (std::ostream&  (*x) (std::ostream& ))	{ *io.osp << x;		return *this; };
+				out&  operator,  (std::ios&      (*x) (std::ios&     ))	{ *io.osp << x;		return *this; };
+				out&  operator,  (std::ios_base& (*x) (std::ios_base&))	{ *io.osp << x;		return *this; };
 
 	operator bool   () {  return true; }
  };
 
 struct  outln : out  {
 	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
-	~outln()				{ cout << endl; }
+	~outln()				{ *io.osp << endl; }
  };
 
 
