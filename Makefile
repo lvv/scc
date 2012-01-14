@@ -20,13 +20,17 @@ index.txt:
 
 ###########################################################
 
+
+
 CLEAN_LIST += t-print  t-regex t-meta
 
 CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/ 
 t-buf-r: t-buf
 
 
+sccpp: CXXFLAGS=-Wall -ggdb -D_GLIBCXX_DEBUG  
 
+########################################################  BENCH
 BENCH_FILE=/tmp/bf
 
 bench_lines: $(BENCH_FILE)

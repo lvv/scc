@@ -9,14 +9,20 @@ template<>		struct  is_string <std::string>	: std::true_type  {};
 
 #include <regex> 
 	using std::regex;
-	using std::cmatch;
-	using std::regex_match;
+	using std::sregex;
+	using std::cregex;
+
 	using std::match_results;
+	using std::cmatch;
+	using std::smatch;
+
+	using std::regex_match;
+	using std::regex_search;
+	using std::regex_replace;
+
 	using std::regex_token_iterator;
 	using std::sregex_token_iterator;
 	using std::cregex_token_iterator;
-/*
-*/
 
 std::regex operator "" _R (const char* p, size_t n)	{ return std::regex(p); };
 
@@ -41,29 +47,11 @@ operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begi
 operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 
 
-
 	#define		R		std::regex
-	#define		FMT		std::format
-
 	#define		RM		std::regex_match
-	//#define		RS		std::regex_search
+	//#define	RS		std::regex_search
 	#define		RR		std::regex_replace
-		// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+	// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
 
-/*
-	//#define	M		std::match
-	#define		CM		std::cmatch
-	#define		SM		std::smatch
-
-	//typedef	std::regex_iterator		RI;
-	typedef		std::sregex_iterator          SRI;
-	typedef		std::cregex_iterator          CRI;
-		// usage:  echo 'aa bb' | scc 'WRL {SRI it(line.begin(), line.end(), R("\\w+")), e; while (it!=e) cout << *it++ << endl;}
-	//typedef	std::regex_token_iterator     RTI;
-	typedef		std::sregex_token_iterator    SRTI;
-	typedef		std::cregex_token_iterator    CRTI;
-	#define		MRTI		std::make_regex_token_iterator
-
-*/
 
 #endif	// LVV_REGEX_H
