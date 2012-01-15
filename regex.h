@@ -7,10 +7,8 @@
 template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
 
-#include <regex> 
+#include <regex>
 	using std::regex;
-	using std::sregex;
-	using std::cregex;
 
 	using std::match_results;
 	using std::cmatch;

@@ -28,7 +28,7 @@ CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/
 t-buf-r: t-buf
 
 
-sccpp: CXXFLAGS=-Wall -ggdb -D_GLIBCXX_DEBUG  
+sccpp: CXXFLAGS=-Wall  -D_GLIBCXX_DEBUG  
 
 ########################################################  BENCH
 BENCH_FILE=/tmp/bf
