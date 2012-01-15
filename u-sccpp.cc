@@ -76,6 +76,8 @@ int main() {
 		C.push_back(test(1,	"last; // ;)[\" "			));
 		C.push_back(test(1,	"ab; // ;)[\"\n last "			));
 
+		C.push_back(test(1,	"ab; ({last1;last2;}) "			));
+
 	smatch	what;
 	string fmt("$1 << $2 >> ;");
 	#include "scc/sccpp.h"
