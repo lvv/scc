@@ -9,5 +9,6 @@ t-outi
 t-regex
 t-meta
 awkspeed
+u-sccpp
 sccpp
 .gitignore

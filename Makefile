@@ -27,8 +27,10 @@ CLEAN_LIST += t-print  t-regex t-meta
 CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/ 
 t-buf-r: t-buf
 
+########################################################  SCCPP
 
-sccpp: CXXFLAGS=-Wall  -D_GLIBCXX_DEBUG  
+u-sccpp sccpp: CXXFLAGS=-Wall  -D_GLIBCXX_DEBUG  -I/home/lvv/p/ 
+u-sccpp.cc sccpp.cc: sccpp.h
 
 ########################################################  BENCH
 BENCH_FILE=/tmp/bf
