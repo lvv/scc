@@ -24,7 +24,7 @@ int main(int argc, char** argv)  {
 	#include "scc/sccpp.h"
 
 	smatch	what;
-	string fmt("$1\n\tstd::cout << ( $2 ) << std::endl;" );
+	string fmt("$1\n\tstd::cout << ( $2 );  is_print_last=true;" );
 
 	bool valid = regex_match(in_str, what, valid_snippet);
 	if (!valid)   cerr << "sccpp warning: invalid snippet\n";

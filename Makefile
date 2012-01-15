@@ -30,7 +30,10 @@ t-buf-r: t-buf
 ########################################################  SCCPP
 
 u-sccpp sccpp: CXXFLAGS=-Wall  -D_GLIBCXX_DEBUG  -I/home/lvv/p/ 
-u-sccpp.cc sccpp.cc: sccpp.h
+u-sccpp: u-sccpp.cc 
+sccpp:	sccpp.cc 
+u-sccpp.cc: sccpp.h
+sccpp.cc: sccpp.h
 
 ########################################################  BENCH
 BENCH_FILE=/tmp/bf

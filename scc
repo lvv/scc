@@ -90,14 +90,23 @@ if [[ $verbose ]] ; then
 fi 
 
 
-if [[ $snippet_file ]]    
-then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h;
-else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h;
+if [[ -x $SCC_HOME/sccpp ]];   then 
+	#  SCCPP
+	if [[ $snippet_file ]]    
+	then	cat  $snippet_file | sccpp /dev/stdin   /tmp/snippet.h
+	else	echo "${1%% }"     | sccpp /dev/stdin   /tmp/snippet.h
+	fi
+else
+	exit 33
+	#  SED
+	if [[ $snippet_file ]]    
+	then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h
+	else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h
+	fi
 fi
 
 
 #####################################################################################  GENERATE SRC
-
 
 
 ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS || exit 1

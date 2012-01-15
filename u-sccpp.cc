@@ -9,7 +9,7 @@
 //using namespace std;
 
 #include <boost/xpressive/xpressive.hpp>
-using namespace boost::xpressive;
+	using namespace boost::xpressive;
 
 // Displays nested results to std::cout with indenting
 struct output_nested_results {
@@ -51,6 +51,7 @@ int main() {
 
 	std::vector<test> C;
 		C.push_back(test(1,	""					));
+		C.push_back(test(1,	" "					));
 		C.push_back(test(1,	"aa;"					));
 		C.push_back(test(1,	"bb"					));
 		C.push_back(test(1,	"aa;bb;"				));
@@ -77,6 +78,18 @@ int main() {
 		C.push_back(test(1,	"ab; // ;)[\"\n last "			));
 
 		C.push_back(test(1,	"ab; ({last1;last2;}) "			));
+
+		C.push_back(test(1,	"int A[2] = {1,2}; A"			));
+		C.push_back(test(1,	"$"					));
+		C.push_back(test(1,	"$1=9;"					));
+		C.push_back(test(1,	"WRL n+=$3;  n"				));
+		C.push_back(test(1,	"vint A{1,2,3}; copy(A.bb, A.ee, oi); str S(\"ABC\"); copy(S.bb, S.ee, oi); cout<<endl;"));
+		C.push_back(test(1,	"vint A{1,2,3};"));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi);"));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi)z;"));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi)"));
+		C.push_back(test(1,	"copy()"));
+		C.push_back(test(1,	"a.b"));
 
 	smatch	what;
 	string fmt("$1 << $2 >> ;");
