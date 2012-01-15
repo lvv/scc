@@ -26,15 +26,17 @@
 			false;
 		#endif
 
-	const static bool  is_print_last =
-		#ifdef scc_IS_PRINT_LAST
+	static bool  is_print_last = false;
+
+	const static bool  is_p =
+		#ifdef scc_P
 			true;
 		#else
 			false;
 		#endif
 
-	const static bool  is_p =
-		#ifdef scc_P
+	const static bool  is_n =
+		#ifdef scc_N
 			true;
 		#else
 			false;

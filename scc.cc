@@ -80,7 +80,6 @@ int main(int argc, char** argv) {
 
 		if (is_header) {
 			read_line();
-			itALL (F)
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
 		}
@@ -88,13 +87,17 @@ int main(int argc, char** argv) {
 		if (is_stream)  {
 			while (read_line()) {
 				#include "/tmp/snippet.h"
-				if (is_p) {
-					if (is_print_last)  cout << OFS;
-					print_line();
+
+				if (is_print_last)  {
+					if (is_n) cout << ORS;
+					if (is_p) cout << OFS;
 				}
+
+				if (is_p)  print_line();
 			}
 		} else {
 			#include "/tmp/snippet.h"
+			if (is_print_last)  cout << ORS;
 		}
 	;}
 

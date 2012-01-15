@@ -82,32 +82,21 @@ done
 
 
 #####################################################################################  PARSE SNIPPET
-#echo -e ' A;\n B; A\n A\n B; A\n {}A\n B({A})\n'|tee /dev/tty|   sed 's/\({[^}]*}\)\{0\}\(\(\((.*)\)\|[^;]\)\+$\)/cout << ( \2 );/'
-#echo "$@" | sed 's/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/' >> $src
-
-
-print_last="`echo \"${1%% }\" | sed -n 's/\(.*[;}]\)*\([^;}]\+$\)/1/p'`"
-CXXFLAGS+="${print_last:+ -Dscc_PRINT_LAST }"
 
 if [[ $verbose ]] ; then 
 	echo -n "expression: $1             "
 	echo -n "gcc-v: `(gcc -v  2>&1) | sed -n '/^gcc version/s/^gcc version \([.0-9]*\) .*/\1/p'`            "
-	echo -n "options:   ${print_last:+print-last}            "
 	echo "CXXFLAGS:  ${CXXFLAGS}"
 fi 
 
-if [[ $snippet_file ]]    
-then	snippet="`cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`";
-else	snippet="`echo \"${1%% }\"   | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 );/'`";
-fi
 
-[[ $n_opt       && $print_last ]]	&& snippet+="cout << endl;"
-[[ ! $is_stream && $print_last ]]	&& snippet+="cout << endl;"
+if [[ $snippet_file ]]    
+then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h;
+else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h;
+fi
 
 
 #####################################################################################  GENERATE SRC
-
-echo  "$snippet" > /tmp/snippet.h
 
 
 
