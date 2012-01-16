@@ -3,7 +3,7 @@
 
 	sregex	atom, expr1, expr, code1, code, block, statement, compaund_expr,
 		op, postfix_op, prefix_op,
-		word, paran, str, ch, esc,
+		word, paran, str, ch, esc, seq,
 		comment_cpp, comment_c, comment, blnk,
 		valid_snippet, with_last;
 
@@ -11,7 +11,7 @@
 	comment_cpp	= as_xpr('/') >> '/' >> *~_ln >> (_ln | eos);
 	comment_c	= as_xpr('/') >> '*' >>  -*_ >>  '*' >> '/';
 	comment		= comment_c | comment_cpp;
-	blnk		= *_s;// >> *(comment >> *_s);
+	blnk		= *_s >> *(comment >> *_s);
 
 
 	///  STRING
@@ -25,37 +25,29 @@
 				);
 
 
-	str		= as_xpr('\"') >> -*(~(set='\"','\\') /*|  esc*/) >> '\"';
+	str		= as_xpr('\"') >> -*(~(set='\"','\\') | esc) >> '\"';
 	ch		= as_xpr('\'') >> -+~as_xpr('\'') >> '\'';
 
 	////  OP
-	// & $ ? && &
-	op		= (set= '+','-', '*', '/', '%',  '|',  ':', '=', ',', '.', '<', '>')
-				| (as_xpr('=')>> '=')
-				//| as_xpr("::") |  "->" | ".*" | "->*" | ">>" | "<<" |  "||" | "<=" | ">=" | "!="
-				//| (( as_xpr(">>") | "<<" | (set = '<', '>', '=', '!', '+', '-', '*', '/', '%',  '^', '|')) >> '=')
+	//   && &
+	op		= (set= '+','-', '*', '/', '%',    '|', '&', '^',   '<', '>',   '=', ',', '.', '?', ':')
+				| "::" |  "->" | ".*" | "->*" | ">>" | "<<" |  "||" | "&&"| "<=" | ">=" | "!=" | "==" | ">>" | "<<" |
+				(((set = '<', '>', '=', '!', '+', '-', '*', '/', '%',  '^', '|') ) >> '=')
 				;
 
-	//prefix_op	= sregex::compile("[-+^!]|(\+\+)|(--)");
-	prefix_op	= (set =  '+', '-', '*', '^', '!', '~');// | as_xpr("++") | as_xpr("--");
+	prefix_op	= (set =  '+', '-', '*', '^', '!', '~') | "++" | "--";
 
-	//postfix_op	= sregex::compile("(++)|(--)");
-	postfix_op	= (as_xpr('+') >> '+') | (as_xpr('-') >> '-');
+	postfix_op	= as_xpr("++") | "--";
 
 	/////  EXPR
-	word		=   +_w ;
-	//word		= ~after(set[_w|_d|'$']) >> +(_w | _d | '$') >> ~before(set[_w|_d|'$']);
-	atom		= word ; //| ch | str | by_ref(paran) | by_ref(compaund_expr);
+	word		= ~after(set[_w|_d|'$']) >> +(_w | _d | '$') >> ~before(set[_w|_d|'$']);
+	atom		= word  | ch | str | by_ref(paran) | by_ref(compaund_expr);
+	seq		= (atom | by_ref(paran)) >> *( blnk >> (atom | by_ref(paran)));
 
-
-	expr1		= (*(prefix_op >> blnk) >>   by_ref(atom)  >> *(blnk >> postfix_op));
+	expr1		= *(prefix_op >> blnk) >>   by_ref(seq)  >> *(blnk >> postfix_op);
 	expr		=  expr1 >> *(blnk >> op >> blnk  >> expr1);
 				;
 	//////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	//expr1		=  word|op|str|ch|by_ref(paran)|by_ref(compaund_expr);
-	//expr		=  expr1 >> *(blnk >> expr1);
 
 
 	paran		= ('(' >> blnk >> !(by_ref(expr) >> blnk) >> ')') |
