@@ -12,6 +12,7 @@
 	using namespace boost::xpressive;
 
 // Displays nested results to std::cout with indenting
+// even better display:  http://stackoverflow.com/questions/7657130/how-to-get-the-ast-of-a-regular-expression-string
 struct output_nested_results {
 	int tabs_;
 	regex_id_type id_;
@@ -84,12 +85,16 @@ int main() {
 		C.push_back(test(1,	"$1=9;"					));
 		C.push_back(test(1,	"WRL n+=$3;  n"				));
 		C.push_back(test(1,	"vint A{1,2,3}; copy(A.bb, A.ee, oi); str S(\"ABC\"); copy(S.bb, S.ee, oi); cout<<endl;"));
-		C.push_back(test(1,	"vint A{1,2,3};"));
-		C.push_back(test(1,	"copy(A.bb, A.ee, oi);"));
-		C.push_back(test(1,	"copy(A.bb, A.ee, oi)z;"));
-		C.push_back(test(1,	"copy(A.bb, A.ee, oi)"));
-		C.push_back(test(1,	"copy()"));
-		C.push_back(test(1,	"a.b"));
+		C.push_back(test(1,	"vint A{1,2,3};"			));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi);"			));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi)z;"		));
+		C.push_back(test(1,	"copy(A.bb, A.ee, oi)"			));
+		C.push_back(test(1,	"copy()"				));
+		C.push_back(test(1,	"a.b"					));
+		C.push_back(test(1,	"{}"					));
+		C.push_back(test(1,	"{ fld f; str s(\"abc\"); f.assign(s.bb, s.ee); 	__ f;  }"));
+		C.push_back(test(1,	"\n\t{ fld f; str s(\"abc\"); f.assign(s.bb, s.ee);\t__ f;  }\n"));
+		C.push_back(test(1,	"// not-last"				));
 
 	smatch	what;
 	string fmt("$1 << $2 >> ;");

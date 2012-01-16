@@ -1,3 +1,6 @@
+
+	// full C++ grammar:  http://www.nongnu.org/hcb/#escape-sequence
+
 	sregex	ws, snippet, expr, last_expr, code, block, statement, compaund_expr, op, word, paran, str, ch, esc,
 		comment_cpp, comment_c, comment,
 		valid_snippet, with_last_snippet;

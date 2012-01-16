@@ -1,11 +1,18 @@
 set -x
 
 scc '
+	//{ strr f("abc");  fld f2 (f);	__ f2; }
+
+'
+exit
 	{ fld f; str s("abc"); f.assign(s.bb, s.ee); 	__ f;  }
+
 	{ fld f("abc");			__ f;  }
 	{ fld f = "abc";		__ f;  }
 	{ fld f("abc");  fld f2 (f);	__ f2; }
-	//{ strr f("abc");  fld f2 (f);	__ f2; }
+
+
+
 	{ fld f("abc");  fld f2 = f;	__ f2; }
 
 	{ fld s("1.23");	__ (double)s; }
@@ -30,8 +37,6 @@ scc '
 	{ fld s("22.22");  	__ (s-=12); }
 	{ fld s("22.22");  	__ (s-=12.22); }
 
-'
-exit
 
 scc 'field s("1.11"); s+1'
 scc 'field s("1.11"); s+1l'
