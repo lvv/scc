@@ -491,11 +491,15 @@ REGEX
 	http://swtch.com/~rsc/regexp/
 	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 JSON
+	json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
 	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 	http://www.kirit.com/Thread:/1723074
 	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
 	http://stackoverflow.com/a/8560856
 XML
+	xml parser in spirit
+		-- http://boost-spirit.com/repository/applications/xml.zip
+		-- http://boost-spirit.com/repository/applications/Arabica.html
 	awk xml -- http://pastebin.com/Vwvz3gzb
 	http://www.artima.com/cppsource/xml_data_binding.html
 	http://www.grinninglizard.com/tinyxml/
@@ -519,6 +523,7 @@ ENCODING
 		
 	Take a look on Boost.Locale it is a part of it
 DB
+	SQL parser in spriti -- http://boost-spirit.com/repository/applications/spirit_sql.zip
 	SQL connectors -- http://www.reddit.com/r/cpp/comments/mrbc5/how_to_connect_to_an_sql_database/
 	http://soci.sourceforge.net/
 	https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.RDB

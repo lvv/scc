@@ -60,6 +60,11 @@ int main() {
 	std::vector<test> C;
 
 		// ======================================================  CODE
+		C.push_back(test(1, Q(code),		"array<int,1> ar{{1}};"			));
+		C.push_back(test(1, Q(code),		"array<int,1> ar;"			));
+		C.push_back(test(1, Q(code),		"array<> ar;"			));
+		C.push_back(test(1, Q(code),		"array ar{{1}};"			));
+		C.push_back(test(1, Q(code),		"array ar{{}};"			));
 		C.push_back(test(1, Q(code),		"int a;"			));
 		C.push_back(test(1, Q(valid_snippet),	"while(1){} 1"					));
 		C.push_back(test(1, Q(valid_snippet),	""					));

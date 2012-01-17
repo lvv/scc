@@ -1,10 +1,12 @@
 
-	// full C++ grammar:  http://www.nongnu.org/hcb/#escape-sequence
+	// full C++ grammar 
+	// 	BNF -- http://www.nongnu.org/hcb/#escape-sequence
+	// 	C++ lexer in spirit -- http://boost-spirit.com/repository/applications/cpp_lexer.zip
 
 	sregex	id, atom, word, paran, str, ch, esc,
 		comment_cpp, comment_c, comment, blnk,
 		op, postfix_op, prefix_op,
-		seq, expr1, expr, code1, code, block, compaund_expr,
+		seq, expr1, expr, code1, code, block, initializer_block, compaund_expr,
 		statement_semicolon, declaration_initialized, statement_with_block,
 		valid_snippet, with_last;
 
@@ -42,21 +44,24 @@
 	word		= ~after(set[_w|_d|'$']) >> +(_w | _d | '$') >> ~before(set[_w|_d|'$']);
 	id		= ~after(set[_w|_d|'$']) >> +(_w | '$') >> *(_w | _d | '$') >> ~before(set[_w|_d|'$']);
 	atom		= word  | ch | str | by_ref(paran) | by_ref(compaund_expr);
-	seq		= (atom | by_ref(paran)) >> *( blnk >> (atom | by_ref(paran)));
+	seq		= (atom | by_ref(paran)) >> *( blnk >> (atom | by_ref(paran) | by_ref(initializer_block)));
 
 	expr1		= *(prefix_op >> blnk) >>   by_ref(seq)  >> *(blnk >> postfix_op);
 	expr		=  expr1 >> *(blnk >> op >> blnk  >> expr1);
 				;
-	//////////////////////////////////////////////////////////////////////////////////////////////
-
-
 	paran		= ('(' >> blnk >> !(by_ref(expr) >> blnk) >> ')') |
 			  ('[' >> blnk >> !(by_ref(expr) >> blnk) >> ']') |
 			  ('<' >> blnk >> !(by_ref(expr) >> blnk) >> '>');
 			  //('{' >> blnk >> !(by_ref(expr) >> blnk) >> '}');
 
-	declaration_initialized =
-			id >> blnk >> !(~before('(') >> expr >> ~after(')') >> blnk) >> !('=' >> blnk ) >>  '{' >> blnk >> !(expr >> blnk) >> '}';
+	//////  CODE
+
+
+	initializer_block = /*~after(')') >> blnk >>*/ '{' >> blnk >> !(( expr | by_ref(initializer_block)) >> blnk ) >>  '}';
+
+	declaration_initialized = id >> blnk
+			>> !(~before('(') >> expr >> ~after(')') >> blnk)
+			>> !('=' >> blnk ) >>  initializer_block;
 
 	statement_with_block =
 			id >> blnk >> '(' >> blnk >> expr >> blnk >> ')' >> blnk >> by_ref(block);
