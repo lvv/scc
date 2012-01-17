@@ -32,9 +32,10 @@ t-buf-r: t-buf
 u-sccpp:	CXXFLAGS=-Wall  -I/home/lvv/p/  -O0 -D_GLIBCXX_DEBUG 
 sccpp:		CXXFLAGS=-Wall  -I/home/lvv/p/  -O3 
 u-sccpp: u-sccpp.cc 
-sccpp:	sccpp.cc 
-u-sccpp.cc: sccpp.h
-sccpp.cc: sccpp.h
+	$(CXX) $(CXXFLAGS) $< -o $@ 
+sccpp:	sccpp.cc
+	$(CXX) $(CXXFLAGS) $< -o $@ 
+u-sccpp sccpp: sccpp.h
 
 ########################################################  BENCH
 BENCH_FILE=/tmp/bf

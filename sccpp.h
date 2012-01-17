@@ -11,8 +11,8 @@
 		valid_snippet, with_last;
 
 	// BLANK
-	comment_cpp	= as_xpr('/') >> '/' >> *~_ln >> (_ln | eos);
-	comment_c	= as_xpr('/') >> '*' >>  -*_ >>  '*' >> '/';
+	comment_cpp	= keep("//") >> *~_ln >> (_ln | eos);
+	comment_c	= as_xpr("/*") >>  -*_ >>  "*/";
 	comment		= comment_c | comment_cpp;
 	blnk		= *_s >> *(comment >> *_s);
 
@@ -66,11 +66,11 @@
 	statement_with_block =
 			id >> blnk >> '(' >> blnk >> expr >> blnk >> ')' >> blnk >> by_ref(block);
 
-	statement_semicolon	= (expr | declaration_initialized) >> blnk >> ';';
+	statement_semicolon	= (expr | declaration_initialized) >> blnk >> keep(';');
 
 	code1		= statement_semicolon | by_ref(block) | statement_with_block;
 	code		= code1 >> *(blnk >> code1);
-	compaund_expr	= as_xpr("({") >>  blnk >> by_ref(code) >> blnk >> "})";
+	compaund_expr	= keep("({") >>  blnk >> by_ref(code) >> blnk >> keep("})");
 
 	block		= '{' >> blnk >> !(by_ref(code) >> blnk ) >> '}';
 
