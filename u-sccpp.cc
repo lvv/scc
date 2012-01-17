@@ -60,6 +60,8 @@ int main() {
 	std::vector<test> C;
 
 		// ======================================================  CODE
+		C.push_back(test(1, Q(code),		"int a;"			));
+		C.push_back(test(1, Q(valid_snippet),	"while(1){} 1"					));
 		C.push_back(test(1, Q(valid_snippet),	""					));
 		C.push_back(test(1, Q(valid_snippet),	" "					));
 		C.push_back(test(1, Q(valid_snippet),	"aa;"					));
@@ -77,8 +79,7 @@ int main() {
 
 
 		// ======================================================  EXPR
-		C.push_back(test(1, Q(statement),	"int a;"			));
-		C.push_back(test(1, Q(expr),		"f(a+(c<1>(2))"				));
+		C.push_back(test(1, Q(expr),		"f(a+(c<1>(2)))"			));
 		C.push_back(test(1, Q(expr),		"1"					));
 		C.push_back(test(0, Q(expr),		"1-"					));
 		C.push_back(test(1, Q(expr),		"-a"					));

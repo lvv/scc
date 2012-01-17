@@ -1,10 +1,11 @@
 
 	// full C++ grammar:  http://www.nongnu.org/hcb/#escape-sequence
 
-	sregex	atom, expr1, expr, code1, code, block, statement, compaund_expr,
-		op, postfix_op, prefix_op,
-		word, paran, str, ch, esc, seq,
+	sregex	id, atom, word, paran, str, ch, esc,
 		comment_cpp, comment_c, comment, blnk,
+		op, postfix_op, prefix_op,
+		seq, expr1, expr, code1, code, block, compaund_expr,
+		statement_semicolon, declaration_initialized, statement_with_block,
 		valid_snippet, with_last;
 
 	// BLANK
@@ -29,18 +30,17 @@
 	ch		= as_xpr('\'') >> -+~as_xpr('\'') >> '\'';
 
 	////  OP
-	//   && &
 	op		= (set= '+','-', '*', '/', '%',    '|', '&', '^',   '<', '>',   '=', ',', '.', '?', ':')
 				| "::" |  "->" | ".*" | "->*" | ">>" | "<<" |  "||" | "&&"| "<=" | ">=" | "!=" | "==" | ">>" | "<<" |
 				(((set = '<', '>', '=', '!', '+', '-', '*', '/', '%',  '^', '|') ) >> '=')
 				;
-
 	prefix_op	= (set =  '+', '-', '*', '^', '!', '~') | "++" | "--";
 
 	postfix_op	= as_xpr("++") | "--";
 
 	/////  EXPR
 	word		= ~after(set[_w|_d|'$']) >> +(_w | _d | '$') >> ~before(set[_w|_d|'$']);
+	id		= ~after(set[_w|_d|'$']) >> +(_w | '$') >> *(_w | _d | '$') >> ~before(set[_w|_d|'$']);
 	atom		= word  | ch | str | by_ref(paran) | by_ref(compaund_expr);
 	seq		= (atom | by_ref(paran)) >> *( blnk >> (atom | by_ref(paran)));
 
@@ -55,13 +55,19 @@
 			  ('<' >> blnk >> !(by_ref(expr) >> blnk) >> '>');
 			  //('{' >> blnk >> !(by_ref(expr) >> blnk) >> '}');
 
-	statement	= by_ref(expr) >> blnk >> ';';
+	declaration_initialized =
+			id >> blnk >> !(~before('(') >> expr >> ~after(')') >> blnk) >> !('=' >> blnk ) >>  '{' >> blnk >> !(expr >> blnk) >> '}';
 
-	code1		= statement | by_ref(block);
+	statement_with_block =
+			id >> blnk >> '(' >> blnk >> expr >> blnk >> ')' >> blnk >> by_ref(block);
+
+	statement_semicolon	= (expr | declaration_initialized) >> blnk >> ';';
+
+	code1		= statement_semicolon | by_ref(block) | statement_with_block;
 	code		= code1 >> *(blnk >> code1);
-	compaund_expr	= as_xpr('(') >> '{' >>  blnk >> by_ref(code) >> blnk >> '}' >> ')';
+	compaund_expr	= as_xpr("({") >>  blnk >> by_ref(code) >> blnk >> "})";
 
-	block		= '{' >> blnk >> by_ref(code) >> blnk >> '}';
+	block		= '{' >> blnk >> !(by_ref(code) >> blnk ) >> '}';
 
 	valid_snippet	= bos >> !(s1 = (blnk >> code >> blnk)) >> !(s2 = expr) >> (s3 = blnk) >> eos;
 	with_last	= bos >> !(s1 = (blnk >> code >> blnk)) >>  (s2 = expr) >> (s3 = blnk) >> eos;
