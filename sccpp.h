@@ -1,20 +1,17 @@
-
-	// full C++ grammar 
-	// 	BNF -- http://www.nongnu.org/hcb/#escape-sequence
-	// 	C++ lexer in spirit -- http://boost-spirit.com/repository/applications/cpp_lexer.zip
-
-	sregex	id, atom, word, paran, str, ch, esc,
-		comment_cpp, comment_c, comment, blnk,
-		op, postfix_op, prefix_op,
+	sregex	id, atom, word, str, ch, esc,
+		round_paran, square_paran, angle_paran,
+		comment_cpp, comment_c, comment, s,
+		infix_op, postfix_op, prefix_op,
 		seq, expr1, expr, code1, code, block, initializer_block, compaund_expr,
-		statement_semicolon, declaration_initialized, statement_with_block,
+		type, expr_type, decl_id, ctor,
+		statement_semicolon, statement_scc, declaration, statement_with_block,
 		valid_snippet, with_last;
 
 	// BLANK
 	comment_cpp	= keep("//") >> *~_ln >> (_ln | eos);
 	comment_c	= as_xpr("/*") >>  -*_ >>  "*/";
 	comment		= comment_c | comment_cpp;
-	blnk		= *_s >> *(comment >> *_s);
+	s		= *_s >> *(comment >> *_s);
 
 
 	///  STRING
@@ -32,47 +29,70 @@
 	ch		= as_xpr('\'') >> -+~as_xpr('\'') >> '\'';
 
 	////  OP
-	op		= (set= '+','-', '*', '/', '%',    '|', '&', '^',   '<', '>',   '=', ',', '.', '?', ':')
+	infix_op		= (set= '+','-', '*', '/', '%',    '|', '&', '^',   '<', '>',   '=', ',', '.', '?', ':')
 				| "::" |  "->" | ".*" | "->*" | ">>" | "<<" |  "||" | "&&"| "<=" | ">=" | "!=" | "==" | ">>" | "<<" |
 				(((set = '<', '>', '=', '!', '+', '-', '*', '/', '%',  '^', '|') ) >> '=')
 				;
 	prefix_op	= (set =  '+', '-', '*', '^', '!', '~') | "++" | "--";
 
-	postfix_op	= as_xpr("++") | "--";
+	postfix_op	= as_xpr("++") | "--" | by_ref(round_paran) | by_ref(square_paran);
+
+
 
 	/////  EXPR
 	word		= ~after(set[_w|_d|'$']) >> +(_w | _d | '$') >> ~before(set[_w|_d|'$']);
 	id		= ~after(set[_w|_d|'$']) >> +(_w | '$') >> *(_w | _d | '$') >> ~before(set[_w|_d|'$']);
-	atom		= word  | ch | str | by_ref(paran) | by_ref(compaund_expr);
-	seq		= (atom | by_ref(paran)) >> *( blnk >> (atom | by_ref(paran) | by_ref(initializer_block)));
+	atom		= word  | ch | str | by_ref(round_paran) | by_ref(compaund_expr) | by_ref(ctor);
 
-	expr1		= *(prefix_op >> blnk) >>   by_ref(seq)  >> *(blnk >> postfix_op);
-	expr		=  expr1 >> *(blnk >> op >> blnk  >> expr1);
+	expr1		= *(prefix_op >> s) >>   by_ref(atom)  >> *(s >> postfix_op);
+	expr		=  expr1 >> *(s >> infix_op >> s  >> expr1);
 				;
-	paran		= ('(' >> blnk >> !(by_ref(expr) >> blnk) >> ')') |
-			  ('[' >> blnk >> !(by_ref(expr) >> blnk) >> ']') |
-			  ('<' >> blnk >> !(by_ref(expr) >> blnk) >> '>');
-			  //('{' >> blnk >> !(by_ref(expr) >> blnk) >> '}');
+	round_paran	= ('(' >> s >> !(by_ref(expr) >> s) >> ')');
+	square_paran	= ('[' >> s >> !(by_ref(expr) >> s) >> ']');
+	angle_paran	= ('<' >> s >> !(by_ref(expr) >> s) >> '>');
+
+
+	//////  TYPE
+
+	initializer_block = /*~after(')') >> s >>*/ '{' >> s >> !(( expr | by_ref(initializer_block)) >> s ) >>  '}' ;
+
+	type		=           *(id >> s) >> id >> !(s >> angle_paran) >> !( s >> "::" >> s >> id);
+	expr_type	=  ( '(' >> *(id >> s) >> id >> !(s >> angle_paran) >> !( s >> "::" >> s >> id) >>')' )
+			 | (                      id >> !(s >> angle_paran) >> !( s >> "::" >> s >> id)       );
+
+	decl_id		=  id >> *( s >> square_paran)
+				>> !( s >>
+					( (!as_xpr('=') >> s >> initializer_block)	// = {exp}
+					|  round_paran					// (ctro-arg)
+					| ( as_xpr('=') >> s >> expr)			// = expr
+					)
+				);
+
+	declaration	= type >> !(s >> (set='*','&')) >> s
+			>> decl_id >> *( s >> ',' >> s >> decl_id);
+
+	ctor		=  expr_type >> s >> ( round_paran |  initializer_block );
+
 
 	//////  CODE
-
-
-	initializer_block = /*~after(')') >> blnk >>*/ '{' >> blnk >> !(( expr | by_ref(initializer_block)) >> blnk ) >>  '}';
-
-	declaration_initialized = id >> blnk
-			>> !(~before('(') >> expr >> ~after(')') >> blnk)
-			>> !('=' >> blnk ) >>  initializer_block;
-
 	statement_with_block =
-			id >> blnk >> '(' >> blnk >> expr >> blnk >> ')' >> blnk >> by_ref(block);
+			id >> s >> '(' >> s >> expr >> s >> ')' >> !( s >> (by_ref(block)|expr));
 
-	statement_semicolon	= (expr | declaration_initialized) >> blnk >> keep(';');
+	statement_semicolon	= (expr | declaration) >> s >> ';';
+	statement_scc	= keep(as_xpr("_") | "__" | "WRL") >> s >> ((by_ref(block) | by_ref(expr))) >> s >> ';' ;
 
-	code1		= statement_semicolon | by_ref(block) | statement_with_block;
-	code		= code1 >> *(blnk >> code1);
-	compaund_expr	= keep("({") >>  blnk >> by_ref(code) >> blnk >> keep("})");
+	code1		= statement_semicolon | statement_scc | by_ref(block) | statement_with_block;
+	code		= code1 >> *(s >> code1);
+	compaund_expr	= keep("({") >>  s >> by_ref(code) >> s >> keep("})");
 
-	block		= '{' >> blnk >> !(by_ref(code) >> blnk ) >> '}';
+	block		= '{' >> s >> !(by_ref(code) >> s ) >> '}';
 
-	valid_snippet	= bos >> !(s1 = (blnk >> code >> blnk)) >> !(s2 = expr) >> (s3 = blnk) >> eos;
-	with_last	= bos >> !(s1 = (blnk >> code >> blnk)) >>  (s2 = expr) >> (s3 = blnk) >> eos;
+	valid_snippet	= bos >> !(s1 = (s >> code >> s)) >> !(s2 = expr) >> (s3 = s) >> eos;
+	with_last	= bos >> !(s1 = (s >> code >> s)) >>  (s2 = expr) >> (s3 = s) >> eos;
+
+	//  	C++ grammar:
+	//		BNF -- http://www.nongnu.org/hcb/#escape-sequence
+	//		http://homepages.e3.net.nz/~djm/cppgrammar.html
+	//	C++ lexer in spirit -- http://boost-spirit.com/repository/applications/cpp_lexer.zip
+	//	http://www.nobugs.org/developer/parsingcpp/
+	//	yacc-able C++ grammar -- http://www.parashift.com/c++-faq-lite/compiler-dependencies.html#faq-38.11

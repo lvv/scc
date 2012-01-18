@@ -496,6 +496,9 @@ JSON
 	http://www.kirit.com/Thread:/1723074
 	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
 	http://stackoverflow.com/a/8560856
+
+CSV
+	http://csvkit.readthedocs.org/en/latest/index.html
 XML
 	xml parser in spirit
 		-- http://boost-spirit.com/repository/applications/xml.zip

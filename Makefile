@@ -29,7 +29,7 @@ t-buf-r: t-buf
 
 ########################################################  SCCPP
 
-u-sccpp:	CXXFLAGS=-Wall  -I/home/lvv/p/  -O0 -D_GLIBCXX_DEBUG 
+u-sccpp:	CXXFLAGS=-Wall  -I/home/lvv/p/  -D_GLIBCXX_DEBUG 
 sccpp:		CXXFLAGS=-Wall  -I/home/lvv/p/  -O3 
 u-sccpp: u-sccpp.cc 
 	$(CXX) $(CXXFLAGS) $< -o $@ 

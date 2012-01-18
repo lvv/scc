@@ -58,14 +58,22 @@ int main() {
 	#include "scc/sccpp.h"
 
 	std::vector<test> C;
+		C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;  while(cin>>w) m[w]++;  m"			));
+		C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;"			));
+		C.push_back(test(1, Q(valid_snippet),	"while(cin>>w) m[w]++;  m"			));
 
-		// ======================================================  CODE
+		C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
+		C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\";"			));
+		C.push_back(test(1, Q(valid_snippet),	"str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
+		// ======================================================  DECL
+		C.push_back(test(1, Q(code),		"int a;"			));
+		C.push_back(test(1, Q(code),		"int a,b;"			));
 		C.push_back(test(1, Q(code),		"array<int,1> ar{{1}};"			));
 		C.push_back(test(1, Q(code),		"array<int,1> ar;"			));
 		C.push_back(test(1, Q(code),		"array<> ar;"			));
 		C.push_back(test(1, Q(code),		"array ar{{1}};"			));
 		C.push_back(test(1, Q(code),		"array ar{{}};"			));
-		C.push_back(test(1, Q(code),		"int a;"			));
+		// ======================================================  CODE
 		C.push_back(test(1, Q(valid_snippet),	"while(1){} 1"					));
 		C.push_back(test(1, Q(valid_snippet),	""					));
 		C.push_back(test(1, Q(valid_snippet),	" "					));
@@ -83,6 +91,7 @@ int main() {
 		C.push_back(test(1, Q(valid_snippet),	"ab; ({last1;last2;}) "			));
 
 
+		// ======================================================  EXPR
 		// ======================================================  EXPR
 		C.push_back(test(1, Q(expr),		"f(a+(c<1>(2)))"			));
 		C.push_back(test(1, Q(expr),		"1"					));
@@ -152,9 +161,8 @@ int main() {
 		// ======================================================  PARAN
 		C.push_back(test(0, Q(valid_snippet),	"([)]"					));
 		C.push_back(test(0, Q(valid_snippet),	"(;)"					));
-		C.push_back(test(1, Q(valid_snippet),	"aa[[(1+2)[]]()]"			));
-		C.push_back(test(1, Q(expr),		"aa[[(1+2)[]]()]"			));
-		C.push_back(test(1, Q(paran),		"[[(1+2)[]]()]"				));
+		C.push_back(test(0, Q(valid_snippet),	"aa[[(1+2)[]]()]"			));
+		C.push_back(test(1, Q(expr),		"(((1+2))())"				));
 
 
 		// ======================================================  STRING
@@ -174,7 +182,7 @@ int main() {
 		C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3}; copy(A.bb, A.ee, oi); str S(\"ABC\"); copy(S.bb, S.ee, oi); cout<<endl;"));
 		C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3};"			));
 		C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi);"			));
-		C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi)z;"		));
+		C.push_back(test(0, Q(valid_snippet),	"copy(A.bb, A.ee, oi)z;"		));
 		C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi)"			));
 		C.push_back(test(1, Q(valid_snippet),	"copy()"				));
 		C.push_back(test(1, Q(valid_snippet),	"a.b"					));

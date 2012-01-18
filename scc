@@ -90,11 +90,12 @@ if [[ $verbose ]] ; then
 fi 
 
 
+
 if [[ -x $SCC_HOME/sccpp ]];   then 
 	#  SCCPP
 	if [[ $snippet_file ]]    
-	then	cat  $snippet_file | sccpp /dev/stdin   /tmp/snippet.h
-	else	echo "${1%% }"     | sccpp /dev/stdin   /tmp/snippet.h
+	then	cat  $snippet_file | $SCC_HOME/sccpp /dev/stdin   /tmp/snippet.h
+	else	echo "${1%% }"     | $SCC_HOME/sccpp /dev/stdin   /tmp/snippet.h
 	fi
 else
 	#  SED
