@@ -41,18 +41,26 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_container <T[N]> 	: std::true_type { };
-template<typename T, size_t N>	struct  is_container <std::array<T,N>> 	: std::true_type { };
+template<typename T, size_t N>	struct  is_container <T[N]>	: std::true_type { };
+template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////  BEGIN/END
 
+// begin()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator-      (Ct& C) { return C.begin(); };
+operator-      (Ct& C) { return begin(C); };
 
+// end()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator+      (Ct& C) { return C.end(); };
+operator+      (Ct& C) { return  end(C); };
+
+// size()
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, typename Ct::size_type>::type
+operator!      (const Ct& C) { return size(C); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
+
 
 #endif	// LVV_STL_H

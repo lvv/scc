@@ -17,7 +17,7 @@
 	using	std::ostream;
 
 
-struct  io_t {	
+struct  io_t {
 	std::streambuf  *sb;
 	std::ofstream    ofs;
 	std::ostream	*osp;
