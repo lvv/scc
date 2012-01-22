@@ -97,7 +97,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 /////////////////////////////////////////////////////////////////////  IS_CONTAINER
 
 	template <typename T>
-struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
+struct is_not_string_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
 	template <typename U>
 	static char test(
 		U* u,
@@ -109,16 +109,16 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_container <T[N]> 	: std::true_type { };
-template<typename T, size_t N>	struct  is_container <std::array<T,N>> 	: std::true_type { };
-template<size_t N>		struct  is_container <char[N]>	: std::false_type { };
-template<>			struct  is_container <std::basic_string<char>> : std::false_type { };
+template<typename T, size_t N>	struct  is_not_string_container <T[N]> 	: std::true_type { };
+template<typename T, size_t N>	struct  is_not_string_container <std::array<T,N>> 	: std::true_type { };
+template<size_t N>		struct  is_not_string_container <char[N]>	: std::false_type { };
+template<>			struct  is_not_string_container <std::basic_string<char>> : std::false_type { };
 
 
 
 // std::CONTAINTER<printable> or C-Array
 	template<typename Ct >
-	typename std::enable_if <is_container<Ct>::value, std::ostream&>::type
+	typename std::enable_if <is_not_string_container<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);

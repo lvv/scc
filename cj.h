@@ -39,13 +39,6 @@ typedef		std::deque<std::string>		dstr;
 #define		GL(x)		std::getline(cin,x)
 #define		NL		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
 
-//// container / iterators
-#define		bb		begin()
-#define		ee		end()
-#define		rbb		rbegin()
-#define		ree		rend()
-//#define		sz		size()
-
 
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 
