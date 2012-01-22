@@ -58,135 +58,134 @@ int main() {
 	#include "scc/sccpp.h"
 
 	std::vector<test> C;
-		C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;  while(cin>>w) m[w]++;  m"			));
-		C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;"			));
-		C.push_back(test(1, Q(valid_snippet),	"while(cin>>w) m[w]++;  m"			));
+	C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;  while(cin>>w) m[w]++;  m"			));
+	C.push_back(test(1, Q(valid_snippet),	"str w;  map<str,int> m;"			));
+	C.push_back(test(1, Q(valid_snippet),	"while(cin>>w) m[w]++;  m"			));
 
-		C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
-		C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\";"			));
-		C.push_back(test(1, Q(valid_snippet),	"str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
-		// ======================================================  DECL
-		C.push_back(test(1, Q(code),		"int a;"			));
-		C.push_back(test(1, Q(code),		"int a,b;"			));
-		C.push_back(test(1, Q(code),		"array<int,1> ar{{1}};"			));
-		C.push_back(test(1, Q(code),		"array<int,1> ar;"			));
-		C.push_back(test(1, Q(code),		"array<> ar;"			));
-		C.push_back(test(1, Q(code),		"array ar{{1}};"			));
-		C.push_back(test(1, Q(code),		"array ar{{}};"			));
-		// ======================================================  CODE
-		C.push_back(test(1, Q(valid_snippet),	"while(1){} 1"					));
-		C.push_back(test(1, Q(valid_snippet),	""					));
-		C.push_back(test(1, Q(valid_snippet),	" "					));
-		C.push_back(test(1, Q(valid_snippet),	"aa;"					));
-		C.push_back(test(1, Q(valid_snippet),	"bb"					));
-		C.push_back(test(1, Q(valid_snippet),	"aa;bb;"				));
-		C.push_back(test(1, Q(valid_snippet),	"aa;bb"					));
-		C.push_back(test(1, Q(valid_snippet),	"aa;bb;cc"				));
-		C.push_back(test(1, Q(valid_snippet),	"    aa;{++bb;} - LAST"			));
-		C.push_back(test(1, Q(valid_snippet),	"int aa;{++bb;} - LAST"			));
-		C.push_back(test(1, Q(valid_snippet),	"int/aa;{++bb;} - LAST"			));
-		C.push_back(test(1, Q(valid_snippet),	" aa; bb; LAST"			));
-		C.push_back(test(1, Q(valid_snippet),	"aa; bb; LAST"			));
-		C.push_back(test(0, Q(valid_snippet),	"(()"					));
-		C.push_back(test(1, Q(valid_snippet),	"ab; ({last1;last2;}) "			));
+	C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
+	C.push_back(test(1, Q(valid_snippet),	"vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\";"			));
+	C.push_back(test(1, Q(valid_snippet),	"str s=\"STR\";   __ vi,ca,ar,cs,s,sr,f;"			));
+	// ======================================================  DECL
+	C.push_back(test(1, Q(code),		"int a;"			));
+	C.push_back(test(1, Q(code),		"int a,b;"			));
+	C.push_back(test(1, Q(code),		"array<int,1> ar{{1}};"			));
+	C.push_back(test(1, Q(code),		"array<int,1> ar;"			));
+	C.push_back(test(1, Q(code),		"array<> ar;"			));
+	C.push_back(test(1, Q(code),		"array ar{{1}};"			));
+	C.push_back(test(1, Q(code),		"array ar{{}};"			));
 
+	// ======================================================  CODE
+	C.push_back(test(1, Q(valid_snippet),	"while(1){} 1"					));
+	C.push_back(test(1, Q(valid_snippet),	""					));
+	C.push_back(test(1, Q(valid_snippet),	" "					));
+	C.push_back(test(1, Q(valid_snippet),	"aa;"					));
+	C.push_back(test(1, Q(valid_snippet),	"bb"					));
+	C.push_back(test(1, Q(valid_snippet),	"aa;bb;"				));
+	C.push_back(test(1, Q(valid_snippet),	"aa;bb"					));
+	C.push_back(test(1, Q(valid_snippet),	"aa;bb;cc"				));
+	C.push_back(test(1, Q(valid_snippet),	"    aa;{++bb;} - LAST"			));
+	C.push_back(test(1, Q(valid_snippet),	"int aa;{++bb;} - LAST"			));
+	C.push_back(test(1, Q(valid_snippet),	"int/aa;{++bb;} - LAST"			));
+	C.push_back(test(1, Q(valid_snippet),	" aa; bb; LAST"			));
+	C.push_back(test(1, Q(valid_snippet),	"aa; bb; LAST"			));
+	C.push_back(test(0, Q(valid_snippet),	"(()"					));
+	C.push_back(test(1, Q(valid_snippet),	"ab; ({last1;last2;}) "			));
 
-		// ======================================================  EXPR
-		// ======================================================  EXPR
-		C.push_back(test(1, Q(expr),		"f(a+(c<1>(2)))"			));
-		C.push_back(test(1, Q(expr),		"1"					));
-		C.push_back(test(0, Q(expr),		"1-"					));
-		C.push_back(test(1, Q(expr),		"-a"					));
-		C.push_back(test(1, Q(expr),		"-*$"					));
-		C.push_back(test(0, Q(expr),		"==a"					));
-		C.push_back(test(0, Q(expr),		"=="					));
-		C.push_back(test(0, Q(expr),		"="					));
-		C.push_back(test(1, Q(expr),		"b==a"					));
-		C.push_back(test(0, Q(expr),		"b=="					));
-		C.push_back(test(0, Q(expr),		"=a"					));
-		C.push_back(test(0, Q(expr),		"=/a"					));
-		C.push_back(test(0, Q(expr),		"=a/"					));
+	// ======================================================  EXPR
+	C.push_back(test(1, Q(expr),		"f(a+(c<1>(2)))"			));
+	C.push_back(test(1, Q(expr),		"1"					));
+	C.push_back(test(0, Q(expr),		"1-"					));
+	C.push_back(test(1, Q(expr),		"-a"					));
+	C.push_back(test(1, Q(expr),		"-*$"					));
+	C.push_back(test(0, Q(expr),		"==a"					));
+	C.push_back(test(0, Q(expr),		"=="					));
+	C.push_back(test(0, Q(expr),		"="					));
+	C.push_back(test(1, Q(expr),		"b==a"					));
+	C.push_back(test(0, Q(expr),		"b=="					));
+	C.push_back(test(0, Q(expr),		"=a"					));
+	C.push_back(test(0, Q(expr),		"=/a"					));
+	C.push_back(test(0, Q(expr),		"=a/"					));
 
-		C.push_back(test(0, Q(expr),		"/*0x1"					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(0, Q(expr),		" /*aa"					));
-		C.push_back(test(0, Q(expr),		"/aa"					));
-		C.push_back(test(0, Q(expr),		"/"					));
-		C.push_back(test(0, Q(expr),		" / "					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(0, Q(expr),		"/*a"					));
-		C.push_back(test(0, Q(expr),		"/aa"					));
-		C.push_back(test(0, Q(expr),		"/+aa"					));
-		C.push_back(test(0, Q(expr),		"(/aa)"					));
-		C.push_back(test(0, Q(expr),		"(/+aa)"				));
-		C.push_back(test(0, Q(expr),		"%aa"					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(1, Q(expr),		"bb/*aa"				));
-		C.push_back(test(0, Q(expr),		"bb%/*aa"				));
-		C.push_back(test(0, Q(expr),		"bb/*"					));
-		C.push_back(test(0, Q(expr),		"/ *aa"					));
-		C.push_back(test(0, Q(expr),		" / *aa"				));
-		C.push_back(test(0, Q(expr),		"%*aa"					));
-		C.push_back(test(1, Q(expr),		"*aa"					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(0, Q(expr),		"/1"					));
-		C.push_back(test(0, Q(expr),		"+/1"					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(0, Q(expr),		"/*aa"					));
-		C.push_back(test(0, Q(expr),		"/aa"					));
-		C.push_back(test(0, Q(expr),		"aa*/"					));
+	C.push_back(test(0, Q(expr),		"/*0x1"					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(0, Q(expr),		" /*aa"					));
+	C.push_back(test(0, Q(expr),		"/aa"					));
+	C.push_back(test(0, Q(expr),		"/"					));
+	C.push_back(test(0, Q(expr),		" / "					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(0, Q(expr),		"/*a"					));
+	C.push_back(test(0, Q(expr),		"/aa"					));
+	C.push_back(test(0, Q(expr),		"/+aa"					));
+	C.push_back(test(0, Q(expr),		"(/aa)"					));
+	C.push_back(test(0, Q(expr),		"(/+aa)"				));
+	C.push_back(test(0, Q(expr),		"%aa"					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(1, Q(expr),		"bb/*aa"				));
+	C.push_back(test(0, Q(expr),		"bb%/*aa"				));
+	C.push_back(test(0, Q(expr),		"bb/*"					));
+	C.push_back(test(0, Q(expr),		"/ *aa"					));
+	C.push_back(test(0, Q(expr),		" / *aa"				));
+	C.push_back(test(0, Q(expr),		"%*aa"					));
+	C.push_back(test(1, Q(expr),		"*aa"					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(0, Q(expr),		"/1"					));
+	C.push_back(test(0, Q(expr),		"+/1"					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(0, Q(expr),		"/*aa"					));
+	C.push_back(test(0, Q(expr),		"/aa"					));
+	C.push_back(test(0, Q(expr),		"aa*/"					));
 
-		// ======================================================  COMMENT
-		C.push_back(test(1, Q(comment),		"//"					));
-		C.push_back(test(1, Q(comment),		"/**/"					));
-		C.push_back(test(0, Q(comment),		"/*/"					));
-		C.push_back(test(0, Q(comment),		"/*"					));
-		C.push_back(test(0, Q(comment),		"/*aa"					));
-		C.push_back(test(1, Q(valid_snippet),	"/*0x1*/"				));
-		C.push_back(test(1, Q(valid_snippet),	"//"					));
-		C.push_back(test(1, Q(valid_snippet),	"last; /* ;)[\" */"			));
-		C.push_back(test(1, Q(valid_snippet),	"last; /* ;)[\" */ "			));
-		C.push_back(test(1, Q(valid_snippet),	"last; /*  */ "				));
-		C.push_back(test(1, Q(valid_snippet),	"last; // ;)[\" "			));
-		C.push_back(test(1, Q(valid_snippet),	"ab; // ;)[\"\n last "			));
-		C.push_back(test(1, Q(valid_snippet),	"// not-last"				));
-		C.push_back(test(1, Q(valid_snippet),	"// not-last\n"				));
-		C.push_back(test(1, Q(valid_snippet),	"last; // not-last"			));
-		C.push_back(test(1, Q(valid_snippet),	"last; // not-last\n"			));
-		C.push_back(test(1, Q(valid_snippet),	"first; // not-last\n last"		));
-		C.push_back(test(1, Q(valid_snippet),	"first; // not-last\n non-last /*comm*/"));
-		C.push_back(test(1, Q(valid_snippet),	"/*com*/"));
-
-
-		// ======================================================  PARAN
-		C.push_back(test(0, Q(valid_snippet),	"([)]"					));
-		C.push_back(test(0, Q(valid_snippet),	"(;)"					));
-		C.push_back(test(0, Q(valid_snippet),	"aa[[(1+2)[]]()]"			));
-		C.push_back(test(1, Q(expr),		"(((1+2))())"				));
+	// ======================================================  COMMENT
+	C.push_back(test(1, Q(comment),		"//"					));
+	C.push_back(test(1, Q(comment),		"/**/"					));
+	C.push_back(test(0, Q(comment),		"/*/"					));
+	C.push_back(test(0, Q(comment),		"/*"					));
+	C.push_back(test(0, Q(comment),		"/*aa"					));
+	C.push_back(test(1, Q(valid_snippet),	"/*0x1*/"				));
+	C.push_back(test(1, Q(valid_snippet),	"//"					));
+	C.push_back(test(1, Q(valid_snippet),	"last; /* ;)[\" */"			));
+	C.push_back(test(1, Q(valid_snippet),	"last; /* ;)[\" */ "			));
+	C.push_back(test(1, Q(valid_snippet),	"last; /*  */ "				));
+	C.push_back(test(1, Q(valid_snippet),	"last; // ;)[\" "			));
+	C.push_back(test(1, Q(valid_snippet),	"ab; // ;)[\"\n last "			));
+	C.push_back(test(1, Q(valid_snippet),	"// not-last"				));
+	C.push_back(test(1, Q(valid_snippet),	"// not-last\n"				));
+	C.push_back(test(1, Q(valid_snippet),	"last; // not-last"			));
+	C.push_back(test(1, Q(valid_snippet),	"last; // not-last\n"			));
+	C.push_back(test(1, Q(valid_snippet),	"first; // not-last\n last"		));
+	C.push_back(test(1, Q(valid_snippet),	"first; // not-last\n non-last /*comm*/"));
+	C.push_back(test(1, Q(valid_snippet),	"/*com*/"));
 
 
-		// ======================================================  STRING
-		C.push_back(test(0, Q(str),		"\""					));
-		C.push_back(test(0, Q(str),		"\"\\\""				));
-		C.push_back(test(1, Q(str),		"\"\""					));
-		C.push_back(test(1, Q(valid_snippet),	"\"\\\"\""				));
-		C.push_back(test(0, Q(valid_snippet),	"''"					));
-		C.push_back(test(1, Q(valid_snippet),	"';'"					));
-		C.push_back(test(1, Q(valid_snippet),	"'\"'"					));
-		C.push_back(test(1, Q(valid_snippet),	"\";})'{(\""				));
+	// ======================================================  PARAN
+	C.push_back(test(0, Q(valid_snippet),	"([)]"					));
+	C.push_back(test(0, Q(valid_snippet),	"(;)"					));
+	C.push_back(test(0, Q(valid_snippet),	"aa[[(1+2)[]]()]"			));
+	C.push_back(test(1, Q(expr),		"(((1+2))())"				));
 
-		C.push_back(test(1, Q(valid_snippet),	"int A[2] = {1,2}; A"			));
-		C.push_back(test(1, Q(valid_snippet),	"$"					));
-		C.push_back(test(1, Q(valid_snippet),	"$1=9;"					));
-		C.push_back(test(1, Q(valid_snippet),	"WRL n+=$3;  n"				));
-		C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3}; copy(A.bb, A.ee, oi); str S(\"ABC\"); copy(S.bb, S.ee, oi); cout<<endl;"));
-		C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3};"			));
-		C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi);"			));
-		C.push_back(test(0, Q(valid_snippet),	"copy(A.bb, A.ee, oi)z;"		));
-		C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi)"			));
-		C.push_back(test(1, Q(valid_snippet),	"copy()"				));
-		C.push_back(test(1, Q(valid_snippet),	"a.b"					));
-		C.push_back(test(1, Q(valid_snippet),	"{}"					));
+
+	// ======================================================  STRING
+	C.push_back(test(0, Q(str),		"\""					));
+	C.push_back(test(0, Q(str),		"\"\\\""				));
+	C.push_back(test(1, Q(str),		"\"\""					));
+	C.push_back(test(1, Q(valid_snippet),	"\"\\\"\""				));
+	C.push_back(test(0, Q(valid_snippet),	"''"					));
+	C.push_back(test(1, Q(valid_snippet),	"';'"					));
+	C.push_back(test(1, Q(valid_snippet),	"'\"'"					));
+	C.push_back(test(1, Q(valid_snippet),	"\";})'{(\""				));
+
+	C.push_back(test(1, Q(valid_snippet),	"int A[2] = {1,2}; A"			));
+	C.push_back(test(1, Q(valid_snippet),	"$"					));
+	C.push_back(test(1, Q(valid_snippet),	"$1=9;"					));
+	C.push_back(test(1, Q(valid_snippet),	"WRL n+=$3;  n"				));
+	C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3}; copy(A.bb, A.ee, oi); str S(\"ABC\"); copy(S.bb, S.ee, oi); cout<<endl;"));
+	C.push_back(test(1, Q(valid_snippet),	"vint A{1,2,3};"			));
+	C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi);"			));
+	C.push_back(test(0, Q(valid_snippet),	"copy(A.bb, A.ee, oi)z;"		));
+	C.push_back(test(1, Q(valid_snippet),	"copy(A.bb, A.ee, oi)"			));
+	C.push_back(test(1, Q(valid_snippet),	"copy()"				));
+	C.push_back(test(1, Q(valid_snippet),	"a.b"					));
+	C.push_back(test(1, Q(valid_snippet),	"{}"					));
 
 	smatch	what;
 

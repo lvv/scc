@@ -25,8 +25,8 @@
 				);
 
 
-	str		= as_xpr('\"') >> -*(~(set='\"','\\') | esc) >> '\"';
-	ch		= as_xpr('\'') >> -+~as_xpr('\'') >> '\'';
+	str		= keep(as_xpr('\"') >> -*(~(set='\"','\\') | esc) >> '\"');
+	ch		= keep(as_xpr('\'') >> -+~as_xpr('\'') >> '\'');
 
 	////  OP
 	infix_op		= (set= '+','-', '*', '/', '%',    '|', '&', '^',   '<', '>',   '=', ',', '.', '?', ':')
@@ -85,7 +85,7 @@
 	code		= code1 >> *(s >> code1);
 	compaund_expr	= keep("({") >>  s >> by_ref(code) >> s >> keep("})");
 
-	block		= '{' >> s >> !(by_ref(code) >> s ) >> '}';
+	block		= keep('{') >> s >> !(by_ref(code) >> s ) >> keep('}');
 
 	valid_snippet	= bos >> !(s1 = (s >> code >> s)) >> !(s2 = expr) >> (s3 = s) >> eos;
 	with_last	= bos >> !(s1 = (s >> code >> s)) >>  (s2 = expr) >> (s3 = s) >> eos;

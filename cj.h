@@ -44,7 +44,7 @@ typedef		std::deque<std::string>		dstr;
 #define		ee		end()
 #define		rbb		rbegin()
 #define		ree		rend()
-#define		sz		size()
+//#define		sz		size()
 
 
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM

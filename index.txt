@@ -490,29 +490,32 @@ REGEX
 	Writing own regular expression parser -- http://www.codeproject.com/KB/recipes/OwnRegExpressionsParser.aspx
 	http://swtch.com/~rsc/regexp/
 	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
-JSON
-	json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
-	http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
-	http://www.kirit.com/Thread:/1723074
-	http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
-	http://stackoverflow.com/a/8560856
+FORMATS
+	JSON
+		json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
+		http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
+		http://www.kirit.com/Thread:/1723074
+		http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
+		http://stackoverflow.com/a/8560856
 
-CSV
-	http://csvkit.readthedocs.org/en/latest/index.html
-XML
-	xml parser in spirit
-		-- http://boost-spirit.com/repository/applications/xml.zip
-		-- http://boost-spirit.com/repository/applications/Arabica.html
-	awk xml -- http://pastebin.com/Vwvz3gzb
-	http://www.artima.com/cppsource/xml_data_binding.html
-	http://www.grinninglizard.com/tinyxml/
-	http://stackoverflow.com/questions/170686/best-open-xml-parser-for-c
-	http://rapidxml.sourceforge.net/
-	http://www.codeguru.com/cpp/data/data-misc/xml/article.php/c19341
-	-----------
-	There is a boost::xml in the sandbox and it's very good. We use
-	TinyXML++ (which is decent) here but boost::xml was preferred; it was
-	just too likely to change
+	CSV
+		http://csvkit.readthedocs.org/en/latest/index.html
+	XML
+		xml parser in spirit
+			-- http://boost-spirit.com/repository/applications/xml.zip
+			-- http://boost-spirit.com/repository/applications/Arabica.html
+		awk xml -- http://pastebin.com/Vwvz3gzb
+		http://www.artima.com/cppsource/xml_data_binding.html
+		http://www.grinninglizard.com/tinyxml/
+		http://stackoverflow.com/questions/170686/best-open-xml-parser-for-c
+		http://rapidxml.sourceforge.net/
+		http://www.codeguru.com/cpp/data/data-misc/xml/article.php/c19341
+		-----------
+		There is a boost::xml in the sandbox and it's very good. We use
+		TinyXML++ (which is decent) here but boost::xml was preferred; it was
+		just too likely to change
+	S-Expressions
+		http://shinkirou.org/blog/2010/06/s-expressions-the-fat-free-alternative-to-json/
 ENCODING
 	Boost.Unicode: Aims at providing the foundation tools to
 	accurately represent and deal with natural text in C++ in a
