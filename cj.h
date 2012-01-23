@@ -21,6 +21,7 @@ typedef		std::vector<unsigned long>	vulong;
 typedef		std::vector<char>		vchar;
 typedef		std::vector<float>		vfloat;
 typedef		std::vector<double>		vdouble;
+
 typedef		std::deque<int>			dint;
 typedef		std::deque<int>			dlong;
 typedef		std::deque<unsigned int>	duint;
@@ -28,9 +29,18 @@ typedef		std::deque<float>		dfloat;
 typedef		std::deque<double>		ddouble;
 typedef		std::deque<char>		dchar;
 
+typedef		std::list<int>			lint;
+typedef		std::list<unsigned int>		luint;
+typedef		std::list<long>			llong;
+typedef		std::list<unsigned long>	lulong;
+typedef		std::list<char>			lchar;
+typedef		std::list<float>		lfloat;
+typedef		std::list<double>		ldouble;
+
 typedef		std::string			str;
 typedef		std::vector<std::string>	vstr;
 typedef		std::deque<std::string>		dstr;
+typedef		std::list<std::string>		lstr;
 
 ///// utils
 #define		MT		std::make_tuple

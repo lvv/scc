@@ -73,5 +73,16 @@ operator-      (Ct& C) { return  end(C); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::size_type>::type
 operator!      (const Ct& C) { return C.size(); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
 
+// front()
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
+operator++      (Ct& C) { return C.front(); };
+
+// back()
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
+operator++      (Ct& C, int) { return C.back(); };
+
+// front() 
 
 #endif	// LVV_STL_H
