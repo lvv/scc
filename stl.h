@@ -8,28 +8,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  CONTAINER MANIP
 
-////// push_back/push_front replaement
-//
-// usage:
-//    scc 'vint V;  V << 1 << 2'
-//    {1, 2}
-//
-//    scc 'dint V;  11 >> (22 >> V)'
-//    {11}
-//
-
-	template<typename T, template<typename T, typename Ct> class Ct >
-	Ct <T,std::allocator<T>> &
-operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(T(x)); return C; };
-
-	template<typename T, template<typename T, typename Ct> class Ct >
-	Ct <T,std::allocator<T>> &
-operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return C; };
-
-// operator-=  -- remove member from container
-	template<typename T, template<typename T, typename Ct> class Ct >
-	Ct <T,std::allocator<T>> &
-operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; };
 
 /////////////////////////////////////////////////////////////////////////////////////////  META
 
@@ -83,6 +61,24 @@ operator++      (Ct& C) { return C.front(); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
 
-// front() 
+// push_back() 
+////// push_back/push_front replaement
+//
+// usage:
+//    scc 'vint V;  V << 1 << 2'
+//    {1, 2}
+//
+//    scc 'dint V;  11 >> (22 >> V)'
+//    {11}
+//
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct&>::type
+operator<<      (Ct& C, typename Ct::value_type x)    { C.push_back(x); return C; };
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct&>::type
+operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x); return C; };
+
 
 #endif	// LVV_STL_H
