@@ -1,6 +1,7 @@
 #ifndef  LVV_STL_H
 #define  LVV_STL_H
 
+#include <stddef.h>
 /////////////////////////////////////////////////////////////////////////////////////////  CONTAINER MANIP
 
 ////// push_back/push_front replaement
@@ -15,7 +16,7 @@
 
 	template<typename T, template<typename T, typename Ct> class Ct >
 	Ct <T,std::allocator<T>> &
-operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(x); return C; };
+operator<<      (Ct<T, std::allocator<T> >& C, T x)    { C.push_back(T(x)); return C; };
 
 	template<typename T, template<typename T, typename Ct> class Ct >
 	Ct <T,std::allocator<T>> &
@@ -50,17 +51,17 @@ template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::tru
 // begin()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator-      (Ct& C) { return begin(C); };
+operator+      (Ct& C) { return begin(C); };
 
 // end()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator+      (Ct& C) { return  end(C); };
+operator-      (Ct& C) { return  end(C); };
 
 // size()
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::size_type>::type
-operator!      (const Ct& C) { return size(C); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
+operator!      (const Ct& C) { return C.size(); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
 
 
 #endif	// LVV_STL_H

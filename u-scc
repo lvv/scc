@@ -75,8 +75,8 @@ scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout <
 echo 1 2 a b ⟨11,22⟩
 
 echo ---------------------------------------------------------  OI
-echo 'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(-S, +S, oi); cout<<endl;'
-scc  'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(+S, +S, oi); cout<<endl;' || exit 1
+echo 'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(+S, -S, oi); cout<<endl;'
+scc  'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(+S, -S, oi); cout<<endl;' || exit 1
 echo 1 2 3 A B C
 
 
