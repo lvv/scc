@@ -1,12 +1,6 @@
 #ifndef  LVV_REGEX_H
 #define  LVV_REGEX_H
 
-#include <type_traits>
-#include <string>
-
-template<typename T>	struct  is_string		: std::false_type {};
-template<>		struct  is_string <std::string>	: std::true_type  {};
-
 #include <regex>
 	using std::regex;
 

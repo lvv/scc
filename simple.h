@@ -11,7 +11,7 @@
 
 #include "scc/print.h"
 #include "scc/stl.h"
-#include "scc/regex.h"
+//#include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>

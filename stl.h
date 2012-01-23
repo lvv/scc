@@ -2,6 +2,10 @@
 #define  LVV_STL_H
 
 #include <stddef.h>
+
+#include <type_traits>	 // for META
+#include <string>
+
 /////////////////////////////////////////////////////////////////////////////////////////  CONTAINER MANIP
 
 ////// push_back/push_front replaement
@@ -27,8 +31,10 @@ operator>>      (T x, Ct<T, std::allocator<T> >& C)    { C.push_front(x); return
 	Ct <T,std::allocator<T>> &
 operator-=      (Ct<T, std::allocator<T> >& C, T x )    { C.erase(remove(C.begin(), C.end(), x), C.end()); return C; };
 
-/////////////////////////////////////////////////////////////////////////////////////////  IS_CONTAINER
+/////////////////////////////////////////////////////////////////////////////////////////  META
 
+
+///// IS_CONTAINER
 	template <typename T>
 struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
 	template <typename U>
@@ -44,6 +50,10 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 
 template<typename T, size_t N>	struct  is_container <T[N]>	: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
+
+/////  IS STRING
+template<typename T>	struct  is_string		: std::false_type {};
+template<>		struct  is_string <std::string>	: std::true_type  {};
 
 
 /////////////////////////////////////////////////////////////////////////////////////////  BEGIN/END
