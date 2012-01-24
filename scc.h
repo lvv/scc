@@ -199,7 +199,7 @@ struct	fld : strr {
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>
-	struct   R_t : std::deque<T> {
+	struct   R_t : std::vector<T> {
 
 		T&	operator()(size_t I) {
 			if (I==0)  return a;

@@ -13,6 +13,7 @@
 
 
 ///// IS_CONTAINER
+
 	template <typename T>
 struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
 	template <typename U>
@@ -26,7 +27,7 @@ struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_container <T[N]>	: std::true_type { };
+template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
 
 /////  IS STRING

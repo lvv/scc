@@ -109,10 +109,10 @@ struct is_not_string_container {	// from http://stackoverflow.com/questions/4347
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_not_string_container <T[N]> 	: std::true_type { };
-template<typename T, size_t N>	struct  is_not_string_container <std::array<T,N>> 	: std::true_type { };
-template<size_t N>		struct  is_not_string_container <char[N]>	: std::false_type { };
-template<>			struct  is_not_string_container <std::basic_string<char>> : std::false_type { };
+template<typename T, size_t N>	struct  is_not_string_container <T[N]>				: std::true_type  {};
+template<typename T, size_t N>	struct  is_not_string_container <std::array<T,N>>		: std::true_type  {};
+template<size_t N>		struct  is_not_string_container <char[N]>			: std::false_type {};
+template<>			struct  is_not_string_container <std::basic_string<char>>	: std::false_type {};
 
 
 
