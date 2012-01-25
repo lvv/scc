@@ -37,7 +37,7 @@ template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
 
 
-/////////////////////////////////////////////////////////////////////////////////////////  BEGIN/END
+/////////////////////////////////////////////////////////////////////////////////////////  MEMEBERS ALIASES
 
 //  +Ct / -Ct   ---   end() /begin()
 	template<typename Ct >
@@ -50,7 +50,7 @@ operator-      (Ct& C) { return  end(C); };
 
 //  !Ct  --- size()
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::size_type>::type
+	typename std::enable_if <is_container<Ct>::value, ssize_t>::type
 operator!      (const Ct& C) { return C.size(); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
 
 
@@ -65,24 +65,33 @@ operator++      (Ct& C, int) { return C.back(); };
 
 
 //  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct&>::type
+operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);   return C; };
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct>::type&
+operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
+
+
+//  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct>::type&
+operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_back();    return C; };
 
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
-operator<<      (Ct& C, typename Ct::value_type x)    { C.push_back(x); return C; };
+operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
 
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct&>::type
-operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x); return C; };
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
-
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
 operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop_front();   return  std::move(x); };
 
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type &&
+	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
 operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
 
 #endif	// LVV_STL_H

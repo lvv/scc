@@ -53,7 +53,8 @@ typedef		std::list<std::string>		lstr;
 ///////////////////////////////////////////////////////////////////// CLASSIC CODEJAM
 
 
-#define		FOR(i,i0,N)	for (long i = (i0), N_FOR_d8s7d8s9=(N);   i < N_FOR_d8s7d8s9;   i++)
+// TODO #define FOR(i,a,b)  for(int i=(a),_##i=(b);i<_##i;++i)
+#define		FOR(i,i0,N)	for (long i = (i0), max_##i=(N);   i < max_##i;   i++)
 #define		ROF(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
 #define		REP(N)		for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++)
 
@@ -70,7 +71,7 @@ typedef		std::list<std::string>		lstr;
 #define		pALL(C)		ALL(p,C)
 #define		iALL(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
 #define		jALL(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
-#define		cALL(C)		for (auto c:C) if(c != '\0')
+#define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
 #define		xALL(C)		for (auto x:C)
 
 #endif  // LVV_CODEJAM_H
