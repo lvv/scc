@@ -39,43 +39,32 @@ template<>		struct  is_string <std::string>	: std::true_type  {};
 
 /////////////////////////////////////////////////////////////////////////////////////////  BEGIN/END
 
-// begin()
+//  +Ct / -Ct   ---   end() /begin()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
 operator+      (Ct& C) { return begin(C); };
 
-// end()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
 operator-      (Ct& C) { return  end(C); };
 
-// size()
+//  !Ct  --- size()
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::size_type>::type
 operator!      (const Ct& C) { return C.size(); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
 
-/*
-// front()
+
+//  ++Ct / Ct++  ---  front()/back()
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C) { return C.front(); };
 
-// back()
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
-*/
 
-// push_back() 
-////// push_back/push_front replaement
-//
-// usage:
-//    scc 'vint V;  V << 1 << 2'
-//    {1, 2}
-//
-//    scc 'dint V;  11 >> (22 >> V)'
-//    {11}
-//
+
+//  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
@@ -85,5 +74,15 @@ operator<<      (Ct& C, typename Ct::value_type x)    { C.push_back(x); return C
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
 operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x); return C; };
 
+// --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
+operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop_front();   return  std::move(x); };
+
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type &&
+operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
 
 #endif	// LVV_STL_H
