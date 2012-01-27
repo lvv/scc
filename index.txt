@@ -6,9 +6,8 @@ Status
 
 Current alpha version is v0.2.1, use "latest" git tag for relatively stable
 version. SCC uses C+11 extensively and some GCC extensions, so currently it can
-work only with GCC-4.7 (pre release).  It might work with latest CLANG and
-MSVS, but this
-was not tested.  Version v0.2.* is about x100 times faster than v0.1 and several
+work only with GCC-4.7 (pre release).  It might work with CLANG and
+MSVS, but this was not tested.  For stream ops, version v0.2.* is about x100 times faster than v0.1 and several
 times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in RS/FS are
 currently not supported (but were in v0.1) 
 
