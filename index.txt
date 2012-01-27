@@ -4,11 +4,16 @@ include::/tmp/t.ad[]
 Status
 ------
 
-Current alpha version is v0.2 (use this git tag). Only GCC-4.7 (pre release) or
-later is currently supported.  It might work with latest CLANG and MSVS, but it
-was not tested.  Version v0.2 is about x100 times faster than v0.1 and several
+Current alpha version is v0.2.1, use "latest" git tag for relatively stable
+version. SCC uses C+11 extensively and some GCC extensions, so currently it can
+work only with GCC-4.7 (pre release).  It might work with latest CLANG and
+MSVS, but this
+was not tested.  Version v0.2.* is about x100 times faster than v0.1 and several
 times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in RS/FS are
 currently not supported (but were in v0.1) 
+
++++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
+at the end of the line (even in comments).
 
 If you need to use it with older GCC (4.1 was supported) - use v0.1.
 
@@ -118,13 +123,14 @@ tool for stream processing - something like native AWK.  So AWK-like capability
 were incorporated into SCC.  Syntax is not exactly AWK's,  it is still +++C++ +++, 
 but it is quite similar.
 
-Biggest difference  is snippet layout. AWK's program have following elements (simplified):
+Biggest difference  is AWK ans SCC script layout. AWK's program have following
+elements (simplified):
 
 ----------------------------------------------------------------------------
 awk 'BEGIN{begin-expr};  {per-record-expr};  END{end-expr}'
 ----------------------------------------------------------------------------
 
-SCC have two alternatives for above. First is simple while-loop:
+SCC have two alternatives for above. First is explicit while-loop:
 
 ----------------------------------------------------------------------------
 scc 'begin-expr;  WRL  per-record-expr;   end-expr;'
@@ -267,7 +273,7 @@ This include was initially created for use in small, one-file _+++C++ +++_ progr
 For something like Google CodeJam.
 
 All of STL's includes are included with `using std::...`
-for most common objects. As are some C:  math.h string.h.
+for most common objects. As are some C's includes  `math.h`,  `string.h`.
 
 Now it is (optimal) part of _SCC_ project, but it still can be used independently.  
 
