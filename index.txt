@@ -1,32 +1,6 @@
 include::/tmp/t.ad[]
 
 
-Status
-------
-
-Current alpha version is v0.2.1, use "latest" git tag for relatively stable
-version. SCC uses C+11 extensively and some GCC extensions, so currently it can
-work only with GCC-4.7 (pre release).  It might work with CLANG and
-MSVS, but this was not tested.  For stream ops, version v0.2.* is about x100 times faster than v0.1 and several
-times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in RS/FS are
-currently not supported (but were in v0.1) 
-
-+++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
-at the end of the line (even in comments).
-
-If you need to use it with older GCC (4.1 was supported) - use v0.1.
-
-Install
--------
-
------------------------------------------
-git clone http://github.com/lvv/scc
-echo PATH+=":$PWD/scc" >> ~/.profile
-. ~/.profile
----------------------------------------
-
-
-
 C++ REPL
 --------
 
@@ -62,9 +36,10 @@ abc
 Snippet is evaluated in environ where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
-If you need only plain C++ REPL, thats is about all you need to know. 
-SCC also have C++ extensions to aliviate C++ verbosity and some AWK like
-cababilties.   For these - continue reading
+If you need only plain +++C++ +++ REPL, thats is about all you need to know, you can
+skip to link:#_install[Install] section.  SCC also have C++ extensions to
+alleviate +++C++ +++ verbosity and some AWK like capabilities.   For these - continue
+reading.
 
 
 Simple IO
@@ -81,13 +56,13 @@ Instead of C++ printing, in SCC we can use was so called
 Below are bar-print statements with equivalent code in comments:
 
 ---------------------------------------------------------------
-_  x;                           //  cout << x;
-__ x;                           //  cout << x << endl;
-__ x << y;                      //  cout << x << y << endl;
-__ x, y;                        //  cout << x << " " << y << endl;
+_  x;                  //  cout << x;
+__ x;                  //  cout << x << endl;
+__ x << y;             //  cout << x << y << endl;
+__ x, y;               //  cout << x << " " << y << endl;
 -------------------------------------------------------------------------
 
-oi - generic ostream_iterator
+OI - Generic ostream_iterator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Standard library include `std::ostream_iterator`, unlike `std::cout` it accept
@@ -103,7 +78,7 @@ copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
 -------------------------------------------------------------------
 
-print.h defines `oi` object, which as `std::cout` can work with any type and
+print.h defines `oi` object, which similar to `std::cout` can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -112,7 +87,7 @@ copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
 
-Container printing
+Container Printing
 ~~~~~~~~~~~~~~~~~~
 
 Any STL container can be simply sent to `std::cout`.
@@ -120,12 +95,12 @@ Any STL container can be simply sent to `std::cout`.
 In comments is equivalent code:
 
 --------------------------------------------------------------------
-vint V{1,2,3}; 				//  vector<int> V{1,2,3};
-__ V; 					//  cout << "{"; 
-					//  for(auto it=V.begin(); it!=V.end()-1; it++)
-					//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
-					//  cout << "}";
-					//  prints: {1, 2, 3}
+vint V{1,2,3}; 			//  vector<int> V{1,2,3};
+__ V; 				//  cout << "{"; 
+				//  for(auto it=V.begin(); it!=V.end()-1; it++)
+				//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
+				//  cout << "}";
+				//  prints: {1, 2, 3}
 int  C[]={1,2,3}
 __ C;
 
@@ -133,52 +108,25 @@ array<int,3>  A{1,2,3}
 __ A;
 
 tuple<int,int>  T{1,2};           
-__ T;					//  ⟨1, 2⟩
+__ T;				//  ⟨1, 2⟩
 
 map<int,int>  M{{1,1},{2,2}};
-__ M;					//  {⟨1,1⟩, ⟨2,2⟩} 
+__ M;				//  {⟨1,1⟩, ⟨2,2⟩} 
+
 vector<vint>  VV{{1,1},{2,2}}; 
-__ VV;					//  {{1, 1}, {2, 2}}
+__ VV;				//  {{1, 1}, {2, 2}}
 -------------------------------------------------------------------
 
 
-
-/////////////////////////
-Bar-print is actually just macros:
-
--------------------------------------------
-#define         _    out()   << 
-#define         __   outln() << 
---------------------------------------------
-
-If you will use class `out` or `outln` directly, you can specify separator in
-CTOR argument:
-
-------------------------------------------------
-x = y = z = 1;
-outln(", ") << x, y, z;		//  cout << x << ", " << y ", " << z << endl;
-				//  prints:  1, 1, 1
-
-
-vint V{1,2,3};			//  vector<int> V{1,2,3}
-out(",", "[]") << V;		//  cout << "["; 
-				//  for(size_t i=0; i<V.size(); i++) 
-				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
-				//  cout << "]";
-				//  prints: [1,2,3]
------------------------------------------------
-///////////////////////////////
-
-
 Object IN
-~~~~~~~~~~~~~~~~
+~~~~~~~~~
 
 Pre-declared object `in` can be used in initialiser expression. When a value
 is read from `in`, it reads from `cin`. 
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
-float x = 1.1 + float(in)	//  float y;  cin >> y;   float x = 1.1 + y;
+float x = 1.1 + float(in);	//  float y;  cin >> y;   float x = 1.1 + y;
 --------------------------------------------------------------
 
 WARNING: Object `in` does not check for EOF. With scalar objects use only in
@@ -186,14 +134,14 @@ context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 
 Object `in` can be used to input container too, but we need somehow to
-tell it how many elements needs to read.
+tell it how many elements needs to be read.
 
 If a container have non-zero length, `in` will just read as many elements as
 container size:
 
 --------------------------------------------------------------------
-vint V(10);			//  vector<int> V(10);
-cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
+vint V(10);		//  vector<int> V(10);
+cin >> V;		//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 --------------------------------------------------------------------
 
 Another way to do the same:
@@ -202,19 +150,19 @@ Another way to do the same:
 vint V = in(10);
 --------------------------------------------------------------------
 
-Google CodeJam and Facebook Hackercup  often have input format to input an
+Google CodeJam and FaceBook Hackercup  often have input format to input an
 array where first goes a number (N) followed by N elements of an array.  To
 read it, we can use:
 
 --------------------------------------------------------------------
-int  N(in);			//  int N;  cin >> N;
-vint V = in(N);			//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
+int  N(in);		//  int N;  cin >> N;
+vint V = in(N);		//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
 --------------------------------------------------------------------
 
 Or even shorter:
 
 --------------------------------------------------------------------
-vint V = in(in);		// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
+vint V = in(in);	// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
 --------------------------------------------------------------------
 
 If aggregate have zero length (is empty), container is filled up until EOF. 
@@ -238,44 +186,48 @@ int main() {
 }
 -------------------------------------------
 
-Files `simple.h`, `cj.h` and `stl.h` can also be used independantly.
+Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
 
 
 Simple STL
 ----------
 
-Prints `" H e l l o   w o r l d ! "`:
+This string manipulation example prints -  `" H e l l o   w o r l d ! "`:
 
 ------------------------------------------------------
-dchar  	S;		//  deque<char>	S;    const char cS[]="hello world";
-S <<= "hello world.";	//  for (int i; i<(sizeof cS); i++)  S.push_back(cS[i])
+dchar  S;		  //  deque<char>  S;   
 
-S--;			//  S.pop_back();
+S <= "Thello world?";	  //  const char cS[]="Thello world?";
+			  //  for (int i; i<(sizeof cS); i++) 
+			  //       S.push_back(cS[i])
+
+--S;			  //  S.pop_front();
+S--;			  //  S.pop_back();	     //  '\0'
  
-++S = 'H';		//  S.front() = 'H';
-S++ = '!';		//  S.back()  = '!';
+++S = 'H';		  //  S.front() = 'H';       //  h --> H
+S++ = '!';		  //  S.back()  = '!';       //  ? --> !
 
-'"' >> S << '"';	//  S.push_front('"');
-			//  S.push_back('"'); 
+'"' >> S << '"' << '\n';  //  S.push_front('"');     
+			  //  S.push_back('"'); 
+			  //  S.push_back('\n'); 
 					
-copy(+S, -S, oi);	//  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
+copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
-Note that all operators, do not create temp copy, they are modifing container itself.
-Some operators  we can not use. For example `operator=` must be member function, so
-we use `<<=` instead.
+Note that all operators, do not create temp copy, they are modifying container itself.
+We can not use some more intuitive operators. For example `operator=` must be member function, so
+we use `<=` instead.
+
+Few more containers operators, that are not shown in example : 
 
 ----------------------------------------------------------------
---D					//  S.pop_front()
-D--					//  S.pop_back()
-
-!S					//  S.size()
-!!S					//  S.empty()
+!S			//  S.size()
+!!S			//  S.empty()
 ----------------------------------------------------------------
 
 
-Sortcuts and predeclared vars
------------------------------
+Shortcuts and predeclared vars
+-------------------------------
 
 Some shortcuts (typedefs and macros) were defined:
 
@@ -308,7 +260,7 @@ scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Calculate words frequencies from stdin.
+Calculate words frequencies from stdin. (w - is pre-declared std::string)
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
@@ -317,15 +269,15 @@ echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M'
 
 
 
+
 Native AWK
 ~~~~~~~~~~
 
-After initial use as simple REPL evaluator, I realised that SCC can be useful
-tool for stream processing - something like native AWK.  So AWK-like capability
-were incorporated into SCC.  Syntax is not exactly AWK's,  it is still +++C++ +++, 
+SCC also can be used as tool for stream processing - something like native AWK. 
+Syntax is not exactly AWK's,  it is still +++C++ +++, 
 but it is quite similar.
 
-Biggest difference  is AWK ans SCC script layout. AWK's program have following
+Biggest difference  is script layout. AWK's script have following
 elements (simplified):
 
 ----------------------------------------------------------------------------
@@ -358,6 +310,28 @@ In SCC, `$` variables are of special string type `fld`, it is similar to `std::s
 used in arithmetic expressions - they will be implicitly converted to corresponding numeric type. And it
 can be assigned a numeric value. That is `fld` behave like AWK's vars.
 Numeric types are any of `int`, `float`, etc.
+
+--------------------------------
+fld   f("1");
+int     i;
+
+i = f;		// 1
+i = f+1;	// 2
+f = 2;		// "s"
+f + " m/s"	// "2 m/s"
+f + 5		// "7"
+---------------------------------
+
+SCC defines following AWK's global variables:
+
+* `$`	-  derived from  `std::deque<fld>` — line's fields
+* `NF`	-  `long`,  number of fields (set after read_line())
+* `NR` 	-  `long`,  number of records (set after read_line())
+* `OFS`	-  `strr`, output field separator 
+* `FS` 	-  `strr`, input field separator.  
+* `ORS`	-  `strr`, output record separator 
+* `RS` 	-  `strr`, input record separator.  
+* `FILENAME` - `const char[]`, current filename being processed
 
 
 More examples.  Sum-up `DF(1)` used-disk-space column.  In AWK and SCC:
@@ -423,112 +397,31 @@ C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std
 Unfortunately GCC's LIBSTDC++ not yet have working `std::regex_replace` and `std::regex_search` and we have to use `if`.
 
 
-== SCC parts
 
-=== SCC
-In `scc` shall script:
 
-* +++ C++ +++ snippet is decorated with usual boilerplate
-* `simple.h`, `scc.h` and `cj.h` are included
-* If last (or only) statement (should be an expression) is not terminated by  `;` it is sent to `std::cout`.
-* if stream options are used (-n or -p), then one line is read from `std::cin` per input cycle.
-	Line split into fields and snippet is executed.
-	If `-p` then  line is reassembled back from fields  and sent to `std::cout`
-* Generated source compiled and executed.
+Install
+-------
 
-=== SCC.H
+-----------------------------------------
+git clone http://github.com/lvv/scc
+echo PATH+=":$PWD/scc" >> ~/.profile
+. ~/.profile
+---------------------------------------
 
-Defines SCC's specific objects.   All other includes can be used independtly:
+Current alpha version is v0.2.1, use "latest" git tag for relatively stable
+version. SCC uses C+11 extensively and some GCC extensions, so currently it can
+work only with GCC-4.7 (pre release).  It might work with CLANG and
+MSVS, but this was not tested.  For stream ops, version v0.2.* is about x100 times faster than v0.1 and several
+times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in RS/FS are
+currently not supported (but were in v0.1) 
 
-* `F` — derived from  deque<fld>
-* `read_line()`
-* type `fld`
-* SCC specific shortcuts
++++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
+at the end of the line (even in comments).
 
-Predefined variables (similar to AWK's):
-
-* `F`	-  derived from  `std::deque<fld>` — line's fields; accessible like `F(i)`; index starts at  1
-* `NF`	-  `long`,  number of fields (set after read_line())
-* `NR` 	-  `long`,  number of records (set after read_line())
-* `OFS`	-  `strr`, output field separator 
-* `FS` 	-  `strr`, input field separator.  
-* `ORS`	-  `strr`, output record separator 
-* `RS` 	-  `strr`, input record separator.  
-
-The `::fld` type is custom string type which can be directly converted
-to/from numeric types:
-
---------------------------------
-fld   f("1");
-int     i;
-
-i = f;		// 1
-i = f+1;	// 2
-f = 2;		// "s"
-f + " m/s"	// "2 m/s"
-f + 5		// "7"
----------------------------------
-
-=== SIMPLE.H
-
-This include was initially created for use in small, one-file _+++C++ +++_ programs.
-For something like Google CodeJam.
-
-All of STL's includes are included with `using std::...`
-for most common objects. As are some C's includes  `math.h`,  `string.h`.
-
-Now it is (optimal) part of _SCC_ project, but it still can be used independently.  
+If you need to use it with older GCC (4.1 was supported) - use v0.1.
 
 
 
-
-/////////////////////////////
-=== Utility functions
-
-==== min/max function
-Functions `min`/`max` which will work with mixed types. Expression
-`std::max(10, V.size())` - won't compile (you need to use `(size_t)10`).
-
-
-==== push_back()/push_front() replacement
-
-------------------------------------
-dint D; 			//  deque<int> D;
-1 >> D;				//  D.push_front(1);  
-D << 2 << 3 << 4;		//  D.push_back(2);  D.push_back(3);  D.push_back(4);
-_ D; 				//  cout << "{";  for(auto it=D.begin(); it!=D.end()-1; it++) cout << *it << ", ";  if(!D.empty()) cout << D.back();  cout << "}";
-				//  prints:  {1,2,3,4}
-
------------------------------------
-//////////////////////////////////////
-
-
-///////////////////////////////////////////////
-=== CJ.H  — shortcuts
-
-
-This is very similar to to what is found in typical CodeJam  source - shortcut
-(macros and typedefs).  These are to squeeze _+++C++ +++_ verbosity for one-liner
-context. 
-
-See http://github.com/lvv/scc/blob/master/cj.h[cj.h source] for full list.
-
-
-WARNING: cj.h is not  recommended for anything more serious than simple,
-one-file programs.  _SCC_ does not use it internally,  you can comment it out. 
-These are ugly hacks, full of side effect and name-pollution.
-If used outside of `scc`, it must be included last (otherwise name collisions are guaranteed).
-
-
-== status
-capability		|  C++200?	|	>=GCC-4.4.4	|  >=GCC-4.4.4 && Boost
-
-expression evaluation	|	Y	|	Y		| 	Y
-stl container print	|	N 	|	Y		|	Y
-c-array print		| 	N 	|	N		| 	Y
-stream filter		| 	Y 	|	Y		| 	Y
-regex			| 	N 	|	N		| 	Y
-///////////////////////////////////////////////
 
 
 == Refs 
