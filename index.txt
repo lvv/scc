@@ -4,7 +4,7 @@ include::/tmp/t.ad[]
 C++ REPL
 --------
 
-SCC can be used as simple REPL for +++ C++ +++.  Expression  evaluated and printed:
+SCC is  +++ C++ +++ REPL.  Expression  evaluated and printed:
 
 ----------------------------------------------------------------------------
 scc 2+2								
