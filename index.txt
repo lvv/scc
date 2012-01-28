@@ -26,11 +26,9 @@ echo PATH+=":$PWD/scc" >> ~/.profile
 ---------------------------------------
 
 
-Overview
---------
 
 C++ REPL
-~~~~~~~~~
+--------
 
 SCC can be used as simple REPL for +++ C++ +++.  Expression  evaluated and printed:
 
@@ -61,15 +59,25 @@ echo "ABC"  |  scc 'char c;  while (cin.get(c))  cout << (char)tolower(c);'
 abc
 ----------------------------------------------------------------------------
 
-
-To squeeze C++ verbosity for SCC's one-liners, several things were done. 
-
 Snippet is evaluated in environ where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
-C++ printing was replaced with so called
-http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
-and any STL container can be simply sent to `std::cout`.
+If you need only plain C++ REPL, thats is about all you need to know. 
+SCC also have C++ extensions to aliviate C++ verbosity and some AWK like
+cababilties.   For these - continue reading
+
+
+Simple IO
+---------
+
+Bar-print
+~~~~~~~~~
+
+Instead of C++ printing, in SCC we can use was so called
+**bar-print**.
+
+//http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
+
 Below are bar-print statements with equivalent code in comments:
 
 ---------------------------------------------------------------
@@ -78,6 +86,196 @@ __ x;                           //  cout << x << endl;
 __ x << y;                      //  cout << x << y << endl;
 __ x, y;                        //  cout << x << " " << y << endl;
 -------------------------------------------------------------------------
+
+oi - generic ostream_iterator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Standard library include `std::ostream_iterator`, unlike `std::cout` it accept
+only one specific type and it is not pre-declared object.   So to use it with
+STL algorithms functions, you need call its quite verbose constructor for
+a specific type.
+
+Let say we have `vector<int> V;` and `set<string> S;` and we want
+copy these to `cout`.  With standard library:
+
+------------------------------------------------------------------
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
+-------------------------------------------------------------------
+
+print.h defines `oi` object, which as `std::cout` can work with any type and
+is pre-defined.  With `oi`, above example will be:
+
+-------------------------------------------------------------------
+copy(V.begin(), V.end(), oi);
+copy(S.begin(), S.end(), oi);
+-------------------------------------------------------------------
+
+
+Container printing
+~~~~~~~~~~~~~~~~~~
+
+Any STL container can be simply sent to `std::cout`.
+
+In comments is equivalent code:
+
+--------------------------------------------------------------------
+vint V{1,2,3}; 				//  vector<int> V{1,2,3};
+__ V; 					//  cout << "{"; 
+					//  for(auto it=V.begin(); it!=V.end()-1; it++)
+					//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
+					//  cout << "}";
+					//  prints: {1, 2, 3}
+int  C[]={1,2,3}
+__ C;
+
+array<int,3>  A{1,2,3}
+__ A;
+
+tuple<int,int>  T{1,2};           
+__ T;					//  ⟨1, 2⟩
+
+map<int,int>  M{{1,1},{2,2}};
+__ M;					//  {⟨1,1⟩, ⟨2,2⟩} 
+vector<vint>  VV{{1,1},{2,2}}; 
+__ VV;					//  {{1, 1}, {2, 2}}
+-------------------------------------------------------------------
+
+
+
+/////////////////////////
+Bar-print is actually just macros:
+
+-------------------------------------------
+#define         _    out()   << 
+#define         __   outln() << 
+--------------------------------------------
+
+If you will use class `out` or `outln` directly, you can specify separator in
+CTOR argument:
+
+------------------------------------------------
+x = y = z = 1;
+outln(", ") << x, y, z;		//  cout << x << ", " << y ", " << z << endl;
+				//  prints:  1, 1, 1
+
+
+vint V{1,2,3};			//  vector<int> V{1,2,3}
+out(",", "[]") << V;		//  cout << "["; 
+				//  for(size_t i=0; i<V.size(); i++) 
+				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
+				//  cout << "]";
+				//  prints: [1,2,3]
+-----------------------------------------------
+///////////////////////////////
+
+
+Object IN
+~~~~~~~~~~~~~~~~
+
+Pre-declared object `in` can be used in initialiser expression. When a value
+is read from `in`, it reads from `cin`. 
+
+--------------------------------------------------------------------
+int i(in);			//  int i;  cin >> i;	
+float x = 1.1 + float(in)	//  float y;  cin >> y;   float x = 1.1 + y;
+--------------------------------------------------------------
+
+WARNING: Object `in` does not check for EOF. With scalar objects use only in
+context where you can ignore or do not expect EOF (like in Google CodeJam).
+
+
+Object `in` can be used to input container too, but we need somehow to
+tell it how many elements needs to read.
+
+If a container have non-zero length, `in` will just read as many elements as
+container size:
+
+--------------------------------------------------------------------
+vint V(10);			//  vector<int> V(10);
+cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
+--------------------------------------------------------------------
+
+Another way to do the same:
+
+--------------------------------------------------------------------
+vint V = in(10);
+--------------------------------------------------------------------
+
+Google CodeJam and Facebook Hackercup  often have input format to input an
+array where first goes a number (N) followed by N elements of an array.  To
+read it, we can use:
+
+--------------------------------------------------------------------
+int  N(in);			//  int N;  cin >> N;
+vint V = in(N);			//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
+--------------------------------------------------------------------
+
+Or even shorter:
+
+--------------------------------------------------------------------
+vint V = in(in);		// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
+--------------------------------------------------------------------
+
+If aggregate have zero length (is empty), container is filled up until EOF. 
+
+--------------------------------------------------------------------
+echo 1 2 3 | scc 'vint V = in;  V' 	// Note:  we can not use:  vint V(in);
+{1,2,3} 
+--------------------------------------------------------------------
+
+
+
+print.h standalone use
+~~~~~~~~~~~~~~~~~~~~~~
+
+File `print.h` can be used as standalone, independent include. 
+
+--------------------------------------------
+#include <print.h>
+int main() {
+	__ "hello world";
+}
+-------------------------------------------
+
+Files `simple.h`, `cj.h` and `stl.h` can also be used independantly.
+
+
+Simple STL
+----------
+
+Prints `" H e l l o   w o r l d ! "`:
+
+------------------------------------------------------
+dchar  	S;		//  deque<char>	S;    const char cS[]="hello world";
+S <<= "hello world.";	//  for (int i; i<(sizeof cS); i++)  S.push_back(cS[i])
+
+S--;			//  S.pop_back();
+ 
+++S = 'H';		//  S.front() = 'H';
+S++ = '!';		//  S.back()  = '!';
+
+'"' >> S << '"';	//  S.push_front('"');
+			//  S.push_back('"'); 
+					
+copy(+S, -S, oi);	//  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
+------------------------------------------------------
+
+Note that all operators, do not create temp copy, they are modifing container itself.
+Some operators  we can not use. For example `operator=` must be member function, so
+we use `<<=` instead.
+
+----------------------------------------------------------------
+--D					//  S.pop_front()
+D--					//  S.pop_back()
+
+!S					//  S.size()
+!!S					//  S.empty()
+----------------------------------------------------------------
+
+
+Sortcuts and predeclared vars
+-----------------------------
 
 Some shortcuts (typedefs and macros) were defined:
 
@@ -99,7 +297,11 @@ re-define these to what ever you want.
 So, in last example we could've skipped
 definition `char c;`. 
 
-More examples.  Square an array.  +++C++11 +++ is on by default:
+
+Examples. 
+--------
+
+Square an array.  +++C++11 +++ is on by default:
 
 ----------------------------------------------------------------------------
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
@@ -109,9 +311,10 @@ scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'
 Calculate words frequencies from stdin.
 
 ----------------------------------------------------------------------------
-echo aa bb aa | scc 'str w;  map<str,int> M;  while(cin>>w) M[w]++;  M' 
+echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
 {⟨aa,2⟩, ⟨bb,1⟩}
 ----------------------------------------------------------------------------
+
 
 
 Native AWK
@@ -277,141 +480,6 @@ for most common objects. As are some C's includes  `math.h`,  `string.h`.
 Now it is (optimal) part of _SCC_ project, but it still can be used independently.  
 
 
-=== PRINT.H - simplified console printing. 
-
-==== Bar __ print
-
-Syntax `cout << ...` can be  replaced with bar (underline) print. New 
-`operator,` prints also separator " " between items. 
-
---------------------------------------------------------------------
-_  x;				//  cout << x;
-__ x;				//  cout << x << endl;
-__ x << y;			//  cout << x << y << endl;
-__ x, y;			//  cout << x << " " << y << endl;
--------------------------------------------------------------------
-
-==== Everything is printable
-
-In _+++C++ +++_ something like numbers or strings are printable objects.  C-arrays  or
-STL containers (including sets, maps, pairs, tuples) are not printable.
-The `print.h` makes all these printable too. Container of containers are also printable. 
-In comments is equivalent code:
-
---------------------------------------------------------------------
-vint V{1,2,3}; 				//  vector<int> V{1,2,3};
-_ V; 					//  cout << "{"; 
-					//  for(auto it=V.begin(); it!=V.end()-1; it++)
-					//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
-					//  cout << "}";
-					//  prints: {1, 2, 3}
-
-tuple<int,int>    T  {1,2};            _ T;	//  ⟨1, 2⟩
-map<int,int>   	  M  {{1,1},{2,2}};    _ M;	//  {⟨1,1⟩, ⟨2,2⟩} 
-vector<vint>   	  VV {{1,1}, {2,2}};   _ VV;	//  {{1, 1}, {2, 2}}
--------------------------------------------------------------------
-
-
-
-/////////////////////////
-Bar-print is actually just macros:
-
--------------------------------------------
-#define         _    out()   << 
-#define         __   outln() << 
---------------------------------------------
-
-If you will use class `out` or `outln` directly, you can specify separator in
-CTOR argument:
-
-------------------------------------------------
-x = y = z = 1;
-outln(", ") << x, y, z;		//  cout << x << ", " << y ", " << z << endl;
-				//  prints:  1, 1, 1
-
-
-vint V{1,2,3};			//  vector<int> V{1,2,3}
-out(",", "[]") << V;		//  cout << "["; 
-				//  for(size_t i=0; i<V.size(); i++) 
-				// 	cout <<  V[i] << (i<V.size()-1 ? "," : "");
-				//  cout << "]";
-				//  prints: [1,2,3]
------------------------------------------------
-///////////////////////////////
-
-
-==== OI - generic output iterator
-
-Standard library include `std::ostream_iterator`, unlike `std::cout` it accept
-only one specific type and it is not pre-declared object.   So to use it with
-STL algorithms, you need call its verbose constructor.
-
-Let say we have `vector<int> V;` and `set<string> S;` and we want
-copy these to `cout`.  With standard library:
-
-------------------------------------------------------------------
-copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
-copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
--------------------------------------------------------------------
-
-With print.h
-
--------------------------------------------------------------------
-copy(V.begin(), V.end(), oi);
-copy(S.begin(), S.end(), oi);
--------------------------------------------------------------------
-
-File `print.h` can be used as standalone, independent include. 
-
-
-==== Simplified input
-
-Pre-declared object `in` can be used in initialiser expression. When a value
-is read from `in`, it reads from `cin`. 
-
---------------------------------------------------------------------
-int i(in);			//  int i;  cin >> i;	
-float x = 1.1 + float(in)	//  float y;  cin >> y;   float x = 1.1 + y;
---------------------------------------------------------------
-
-For aggregate types, we can specify how many elements to read. 
-One way to do this is to have an aggregate with non zero length:
-
---------------------------------------------------------------------
-vint V(10);			//  vector<int> V(10);
-cin >> V;			//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
---------------------------------------------------------------------
-
-Another way to do the same:
-
---------------------------------------------------------------------
-vint V = in(10);
---------------------------------------------------------------------
-
-Google CodeJam often have input format to input an array where first goes a
-number (N) followed by N elements of an array.  To read it, we can use:
-
---------------------------------------------------------------------
-int  N(in);			//  int N;  cin >> N;
-vint V = in(N);			//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
---------------------------------------------------------------------
-
-Or even shorter:
-
---------------------------------------------------------------------
-vint V = in(in);		// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
---------------------------------------------------------------------
-
-If aggregate have zero length (is empty), container is filled up until EOF. 
-
---------------------------------------------------------------------
-echo 1 2 3 | scc 'vint V = in;  V' 	// Note:  we can not use:  vint V(in);
-{1,2,3} 
---------------------------------------------------------------------
-
-
-WARNING: Object `in` does not check for EOF. With scalar objects use only in
-context where you can ignore or do not expect EOF (like in Google CodeJam).
 
 
 /////////////////////////////

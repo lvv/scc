@@ -34,16 +34,18 @@ struct  io_t {
 		delete  osp;
 	}
 
-	void out(const char* path) {
+	bool out(const char* path) {
 		if (ofs.is_open())  ofs.close();
 		ofs.open (path);
 		sb = ofs.rdbuf();
 		delete osp;
 		osp = new std::ostream(sb);
+		return true;
 	}
 
 	// docs http://stackoverflow.com/questions/366955/obtain-a-stdostream-either-from-stdcout-or-stdofstreamfile
 };
+
 
 static io_t io;
 

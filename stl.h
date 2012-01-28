@@ -90,4 +90,16 @@ operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop
 	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
 operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
 
+// Ct1 <<= Ct2
+	template<typename Ct1, typename Ct2>
+	typename std::enable_if <
+		is_container<Ct1>::value   &&  is_container<Ct2>::value
+			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value
+		, Ct1
+	>::type &
+operator <<=      (Ct1& C1, const Ct2& C2)    { C1.clear(); for(auto x: C2) C1.push_back(x);   return  C1; };
+
+	template<typename Ct, size_t N>
+	typename std::enable_if < is_container<Ct>::value , Ct >::type &
+operator <<=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear();  for(auto x: A) C.push_back(x);   return  C; };
 #endif	// LVV_STL_H
