@@ -16,17 +16,13 @@
 ///// IS_CONTAINER
 
 	template <typename T>
-struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
-	template <typename U>
-	static char test(
-		U* u,
-		typename U::const_iterator b = ((U*)0)->begin(),
-		typename U::const_iterator e = ((U*)0)->end()
-	);
+struct is_container {
+	template <typename U, typename S = decltype (((U*)0)->size()), typename I = typename U::const_iterator>
+	static char test(U* u);
 	template <typename U> static long test(...);
-
 	enum { value = sizeof test<T>(0) == 1 };
 };
+
 
 
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
