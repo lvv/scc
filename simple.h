@@ -66,6 +66,7 @@
 	using	std::ostream;
 	using	std::hex;
 	using	std::flush;
+	using	std::setw;
 	using	std::dec;
 
 	// containers

@@ -74,4 +74,7 @@ typedef		std::list<std::string>		lstr;
 #define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
 #define		xALL(C)		for (auto x:C)
 
+
+
+
 #endif  // LVV_CODEJAM_H

@@ -36,10 +36,9 @@ abc
 Snippet is evaluated in environ where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
-If you need only plain +++C++ +++ REPL, thats is about all you need to know, you can
-skip to link:#_install[Install] section.  SCC also have C++ extensions to
-alleviate +++C++ +++ verbosity and some AWK like capabilities.   For these - continue
-reading.
+If you need only plain +++C++ +++ REPL, that is about all you need to know.  You can
+skip to link:#_install[Install] section now.  Sections that follow are about
+SCC C++ extensions to alleviate +++C++ +++ verbosity and AWK like capabilities.
 
 
 Simple IO
@@ -48,8 +47,7 @@ Simple IO
 Bar-print
 ~~~~~~~~~
 
-Instead of C++ printing, in SCC we can use was so called
-**bar-print**.
+Instead of C++ `std::cout` printing, SCC uses so called **bar-print**.
 
 //http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
 
@@ -65,10 +63,10 @@ __ x, y;               //  cout << x << " " << y << endl;
 OI - Generic ostream_iterator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Standard library include `std::ostream_iterator`, unlike `std::cout` it accept
-only one specific type and it is not pre-declared object.   So to use it with
-STL algorithms functions, you need call its quite verbose constructor for
-a specific type.
+Standard library includes `std::ostream_iterator`. Unlike `std::cout` it
+accept only one specific type (specified at construction time) and it is not
+pre-declared object.   So to use it with STL algorithms, you need
+call its quite verbose constructor;
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
 copy these to `cout`.  With standard library:
@@ -78,7 +76,7 @@ copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
 -------------------------------------------------------------------
 
-print.h defines `oi` object, which similar to `std::cout` can work with any type and
+print.h defines `oi` object, which similarly to `std::cout`, can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -105,7 +103,7 @@ int  C[]={1,2,3}
 __ C;
 
 array<int,3>  A{1,2,3}
-__ A;
+__ A;				//  {1,2,3}
 
 tuple<int,int>  T{1,2};           
 __ T;				//  ⟨1, 2⟩
@@ -121,7 +119,7 @@ __ VV;				//  {{1, 1}, {2, 2}}
 Object IN
 ~~~~~~~~~
 
-Pre-declared object `in` can be used in initialiser expression. When a value
+Pre-defined object `in` can be used in initialiser expression. When a value
 is read from `in`, it reads from `cin`. 
 
 --------------------------------------------------------------------
@@ -215,14 +213,13 @@ copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " 
 ------------------------------------------------------
 
 Note that all operators, do not create temp copy, they are modifying container itself.
-We can not use some more intuitive operators. For example `operator=` must be member function, so
-we use `<=` instead.
 
-Few more containers operators, that are not shown in example : 
+Below are few more containers operators, that are not shown in example. Here `Ct` is
+a container type and `x` is `Ct::value_type` :
 
 ----------------------------------------------------------------
-!S			//  S.size()
-!!S			//  S.empty()
+!Ct			//  Ct.size()
+Ct1 << Ct2		//  copy(Ct2.begin(), Ct2.end(), Ct1.begin());
 ----------------------------------------------------------------
 
 
@@ -440,6 +437,7 @@ If you need to use it with older GCC (4.1 was supported) - use v0.1.
 * httpx://en.wikipedia.org/wiki/Awk[Awk]
 * httpx://people.cs.uu.nl/piet/docs/nawk/nawk_23.html[Awk: Specifying how Fields are Separated]
 * httpx://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#status.iso.200x[LIBSTDC++ status +++C++11+++]
+* httpx://www.informit.com/guides/content.aspx?g=cplusplus&seqNum=286[Why I Hate Namespaces]
 
 ////////////////
 

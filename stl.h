@@ -79,6 +79,14 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_b
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
 
+// Ct1 << Ct2
+	template<typename Ct1, typename Ct2>
+	typename std::enable_if <
+		is_container<Ct1>::value   &&  is_container<Ct2>::value
+			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value
+		, Ct1
+	>::type &
+operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x);   return  C1; };
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
@@ -89,6 +97,7 @@ operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
 operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
+
 
 // Ct1 <<= Ct2
 	template<typename Ct1, typename Ct2>
