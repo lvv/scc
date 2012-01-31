@@ -50,7 +50,7 @@ operator-      (Ct& C) { return  end(C); };
 operator!      (const Ct& C) { return C.size(); };	// FIXME: specialization for non-contigues-mem-Ct, C-arr
 
 
-//  ++Ct / Ct++  ---  front()/back()
+//  ++T / t++  ---  front()/back()/.first/.second
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C) { return C.front(); };
@@ -58,6 +58,19 @@ operator++      (Ct& C) { return C.front(); };
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
+
+template<typename U, typename V>   U&     operator++   (std::pair<U,V>& P)      { return P.first;  };
+template<typename U, typename V>   V&     operator++   (std::pair<U,V>& P, int) { return P.second; };
+
+	template <class... Types>
+	typename std::tuple_element<std::tuple_size<std::tuple<Types...> >::value-1, typename std::tuple<Types...> >::type&
+operator++	(typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
+
+
+	template <class... Types>
+	typename std::tuple_element<0, std::tuple<Types...> >::type&
+operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
+
 
 
 //  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
