@@ -137,4 +137,7 @@ operator <=      (Ct1& C1, const Ct2& C2)    { C1.clear(); for(auto x: C2) C1.pu
 	typename std::enable_if < is_container<Ct>::value , Ct >::type &
 operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear();  for(auto x: A) C.push_back(x);   return  C; };
 
+
+
+
 #endif	// LVV_STL_H

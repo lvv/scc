@@ -65,7 +65,7 @@ OI - Generic ostream_iterator
 
 Standard library includes `std::ostream_iterator`. Unlike `std::cout` it
 accept only one specific type (specified at construction time) and it is not
-pre-declared object.   So to use it with STL algorithms, you need
+pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor;
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
@@ -76,7 +76,7 @@ copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
 -------------------------------------------------------------------
 
-print.h defines `oi` object, which similarly to `std::cout`, can work with any type and
+Include `print.h` defines `oi` object, which similarly to `std::cout`. It can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -99,11 +99,12 @@ __ V; 				//  cout << "{";
 				//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
 				//  cout << "}";
 				//  prints: {1, 2, 3}
-int  C[]={1,2,3}
-__ C;
 
 array<int,3>  A{1,2,3}
 __ A;				//  {1,2,3}
+
+int  C[]={1,2,3}
+__ C; 				//  {1,2,3}
 
 tuple<int,int>  T{1,2};           
 __ T;				//  ⟨1, 2⟩
@@ -199,34 +200,34 @@ S <= "Thello world?";	  //  const char cS[]="Thello world?";
 			  //  for (int i; i<(sizeof cS); i++) 
 			  //       S.push_back(cS[i])
 
---S;			  //  S.pop_front();
-S--;			  //  S.pop_back();	     //  '\0'
+--S;			  //  S.pop_front();		//  remove 'T'
+S--;			  //  S.pop_back();		//  remove '\0'
  
-++S = 'H';		  //  S.front() = 'H';       //  h --> H
-S++ = '!';		  //  S.back()  = '!';       //  ? --> !
+++S = 'H';		  //  S.front() = 'H';		//  h --> H
+S++ = '!';		  //  S.back()  = '!';		//  ? --> !
 
-'"' >> S << '"' << '\n';  //  S.push_front('"');     
+'"' >> S << '"' << '\n';  //  S.push_front('"');     	//  add quotes 
 			  //  S.push_back('"'); 
-			  //  S.push_back('\n'); 
+			  //  S.push_back('\n'); 	//  and endl
 					
 copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
 Note that all operators, do not create temp copy, they are modifying container itself.
 
-Below are few more containers operators, that are not shown in example. Here `Ct` is
-a container type and `x` is `Ct::value_type` :
+Below are few more containers operators, that are not shown in example. Here `C` is
+a container and `x` is `Ct::value_type` :
 
 ----------------------------------------------------------------
-!Ct			//  Ct.size()
-Ct1 << Ct2		//  copy(Ct2.begin(), Ct2.end(), Ct1.begin());
+!C			//  C.size()
+C1 << C2		//  copy(C2.begin(), C2.end(), C1.begin());
 ----------------------------------------------------------------
 
 
 Shortcuts and predeclared vars
 -------------------------------
 
-Some shortcuts (typedefs and macros) were defined:
+SCC also uses typedefs and macros to cut verboisty:
 
 ------------------------------------------------------
 str	-->   std::string  
@@ -234,7 +235,7 @@ vint	-->   std::vector<int>
 WRL	-->   while(read_line())      
 ------------------------------------------------------
 
-Several variables were pre-declared:
+Several variables were pre-defined:
 
 * `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
 * `x`, `y`, `z` --  `double`, initialized to 0
@@ -257,7 +258,7 @@ scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Calculate words frequencies from stdin. (w - is pre-declared std::string)
+Calculate words frequencies from stdin. (`w` - is pre-defined `std::string`)
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 

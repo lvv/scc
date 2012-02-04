@@ -140,7 +140,7 @@ operator<<      (ostream& os, const Ct& C) {
 		template<typename T, typename U>
 		std::ostream&
 operator<<      (ostream& os, const std::pair<T,U>& p) {
-	os << "⟨" << p.first << "," << p.second <<"⟩";
+	os << u8"⟨" << p.first << "," << p.second << u8"⟩";
 	return os;
 };
 
@@ -168,7 +168,7 @@ operator<<      (ostream& os, const std::pair<T,U>& p) {
 		std::ostream&
 operator<<      (ostream& os, const std::tuple<TT...>& tup) {
 	const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
-	os << "⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << "⟩";
+	os << u8"⟨";     print_tuple_elem<tsize, TT...>(os, tup);    os << u8"⟩";
 	return os;
 };
 	// Using C++0x Variadic Templates to Pretty-Print Types
