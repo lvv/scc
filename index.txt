@@ -84,6 +84,13 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
+Assigning (`operator=`) a container to `oi` is equivalent to doing
+`std::copy`, so above example we could also written as:
+
+-------------------------------------------------------------------
+oi = V;
+oi = S;
+-------------------------------------------------------------------
 
 Container Printing
 ~~~~~~~~~~~~~~~~~~
@@ -121,7 +128,7 @@ Object IN
 ~~~~~~~~~
 
 Pre-defined object `in` can be used in initialiser expression. When a value
-is read from `in`, it reads from `cin`. 
+is read from `in`, it reads from `std::cin`. 
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
@@ -129,7 +136,7 @@ float x = 1.1 + float(in);	//  float y;  cin >> y;   float x = 1.1 + y;
 --------------------------------------------------------------
 
 WARNING: Object `in` does not check for EOF. With scalar objects use only in
-context where you can ignore or do not expect EOF (like in Google CodeJam).
+context where you can ignore or do not expect EOF.
 
 
 Object `in` can be used to input container too, but we need somehow to
@@ -143,7 +150,7 @@ vint V(10);		//  vector<int> V(10);
 cin >> V;		//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 --------------------------------------------------------------------
 
-Another way to do the same:
+If container have zero length, we tell object `in` how many object to read:
 
 --------------------------------------------------------------------
 vint V = in(10);
@@ -164,7 +171,8 @@ Or even shorter:
 vint V = in(in);	// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
 --------------------------------------------------------------------
 
-If aggregate have zero length (is empty), container is filled up until EOF. 
+If container have zero length (is empty) and we didn't specified how many
+elements to read, container is filled up until EOF. 
 
 --------------------------------------------------------------------
 echo 1 2 3 | scc 'vint V = in;  V' 	// Note:  we can not use:  vint V(in);
@@ -191,7 +199,7 @@ Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
 Simple STL
 ----------
 
-This string manipulation example prints -  `" H e l l o   w o r l d ! "`:
+This string manipulation example: given `Thello world?` string, it prints -  `" H e l l o   w o r l d ! "`:
 
 ------------------------------------------------------
 dchar  S;		  //  deque<char>  S;   
@@ -206,9 +214,9 @@ S--;			  //  S.pop_back();		//  remove '\0'
 ++S = 'H';		  //  S.front() = 'H';		//  h --> H
 S++ = '!';		  //  S.back()  = '!';		//  ? --> !
 
-'"' >> S << '"' << '\n';  //  S.push_front('"');     	//  add quotes 
+'"' >> S << '"' << '\n';  //  S.push_front('"');     	//  add "
 			  //  S.push_back('"'); 
-			  //  S.push_back('\n'); 	//  and endl
+			  //  S.push_back('\n'); 	//  add \n
 					
 copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------

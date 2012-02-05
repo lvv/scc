@@ -16,6 +16,7 @@
 	using	std::endl;
 	using	std::ostream;
 
+#include "meta.h"
 
 struct  io_t {
 	std::streambuf  *sb;
@@ -197,6 +198,12 @@ namespace oi_space {
 
 	struct	oi_t  : std::ostream_iterator<oi_any_t> {
 		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
+
+		template<typename Ct >
+		typename std::enable_if <is_container<Ct>::value,  void>::type
+		operator=(const Ct& C)  {
+			copy(C.begin(),  C.end(),  *this);
+		}
 	};
 
 };

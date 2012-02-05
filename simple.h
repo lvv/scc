@@ -9,8 +9,8 @@
 //	#define  MODERN_GCC	1
 //#endif
 
-#include "scc/print.h"
 #include "scc/stl.h"
+#include "scc/print.h"
 //#include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C
