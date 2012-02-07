@@ -18,6 +18,14 @@ index.txt:
 
 #COPY_LIST += $(wildcard *.png)
 
+###########################################################  Precompiled Headers
+# http://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html#manual.intro.using.headers.pre 
+# TR http://gcc.gnu.org/onlinedocs/gcc/Precompiled-Headers.html
+ALL_INC=/usr/lib64/gcc/x86_64-pc-linux-gnu/4.7.0-alpha20120114/include/g++-v4/x86_64-pc-linux-gnu/bits/stdc++.h
+
+stdc++.h.gch:
+	g++ -Winvalid-pch -x c++-header -g -O2 -o $@  $(ALL_INC)
+
 ###########################################################
 
 

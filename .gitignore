@@ -2,6 +2,11 @@ t-buf
 index.html
 b-field.in
 t
+tt
+t.cc
+tt.cc
+hello.cc
+hello
 x
 bench
 .old
@@ -12,3 +17,4 @@ awkspeed
 u-sccpp
 sccpp
 .gitignore
+*.gch
