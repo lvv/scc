@@ -1,7 +1,10 @@
 #ifndef  LVV_SCC_H
 #define  LVV_SCC_H
 
+	#include "allocator.h"
+
 	#include <cassert>
+
 
 	// BUF
 	#include <unistd.h>
