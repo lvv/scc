@@ -1,17 +1,15 @@
 #include "simple.h"
 #include "allocator.h"
-/*
-#include <iostream>
-#include <vector>
-#include <map>
-#include <utility>
-*/
 
+//#define  ALLOC	trace_allocator
+#define  ALLOC	nd_allocator
 
 int main()  {
+	
+	ALLOC<int> A;
 
 	__ "\nVECTOR";
-	std::vector<int,trace_allocator<int>> v;
+	std::vector<int,ALLOC<int>> v;
 		v << 1 << 2 << 3;
 		v--;
 		v.clear();
@@ -20,7 +18,7 @@ int main()  {
 
 
 	__ "\nMAP";
-	std::map<int, float, std::less<int>, trace_allocator<std::pair<const int, float>> > m;
+	std::map<int, float, std::less<int>, ALLOC<std::pair<const int, float>> > m;
 		m[1]=1.1;
 		m[2]=2.2;
 	__ flush;
