@@ -19,3 +19,4 @@ sccpp
 .gitignore
 *.gch
 test
+t-allocator

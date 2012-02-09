@@ -1,16 +1,26 @@
 #ifndef  LVV_META_H
 #define  LVV_META_H
 
-#include <type_traits>	 // for META
+#include <type_traits>
 #include <array>
 
 ///// IS_CONTAINER
 
 	template <typename T>
 struct is_container {
-	template <typename U, typename S = decltype (((U*)0)->size()), typename I = typename U::const_iterator>
-	static char test(U* u);
-	template <typename U> static long test(...);
+
+		template <
+			typename U,
+			typename S = decltype (((U*)0)->size()),
+			typename I = typename U::const_iterator
+		>
+		static char
+	test(U* u);
+
+		template <typename U>
+		static long
+	test(...);
+
 	enum { value = sizeof test<T>(0) == 1 };
 };
 
