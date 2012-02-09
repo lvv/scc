@@ -4,7 +4,7 @@ include::/tmp/t.ad[]
 C++ REPL
 --------
 
-SCC is  +++ C++ +++ REPL.  Expression  evaluated and printed:
+Expression evaluated and printed:
 
 ----------------------------------------------------------------------------
 scc 2+2								
@@ -76,7 +76,7 @@ copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
 -------------------------------------------------------------------
 
-Include `print.h` defines `oi` object, which similarly to `std::cout`. It can work with any type and
+Include `print.h` defines `oi` object, which similarly to `std::cout`, can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -84,7 +84,7 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
-Assigning (`operator=`) a container to `oi` is equivalent to doing
+Assigning a container to `oi` is equivalent to doing
 `std::copy`, so above example we could also written as:
 
 -------------------------------------------------------------------
@@ -104,7 +104,7 @@ vint V{1,2,3}; 			//  vector<int> V{1,2,3};
 __ V; 				//  cout << "{"; 
 				//  for(auto it=V.begin(); it!=V.end()-1; it++)
 				//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
-				//  cout << "}";
+				//  cout << "}\n";
 				//  prints: {1, 2, 3}
 
 array<int,3>  A{1,2,3}
@@ -139,16 +139,15 @@ WARNING: Object `in` does not check for EOF. With scalar objects use only in
 context where you can ignore or do not expect EOF.
 
 
-Object `in` can be used to input container too, but we need somehow to
-tell it how many elements needs to be read.
-
-If a container have non-zero length, `in` will just read as many elements as
-container size:
+If a container have non-zero length,  we can use `std::cin`:
 
 --------------------------------------------------------------------
 vint V(10);		//  vector<int> V(10);
 cin >> V;		//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
 --------------------------------------------------------------------
+
+Object `in` can be used to input container too, but we need somehow to
+tell it how many elements needs to be read.
 
 If container have zero length, we tell object `in` how many object to read:
 
@@ -199,7 +198,9 @@ Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
 Simple STL
 ----------
 
-This string manipulation example: given `Thello world?` string, it prints -  `" H e l l o   w o r l d ! "`:
+This is intended for those who likes terse C-style code.
+Below is string manipulation example.   Given `Thello world?` string, it
+transforms it and prints -  `" H e l l o   w o r l d ! "`:
 
 ------------------------------------------------------
 dchar  S;		  //  deque<char>  S;   
@@ -208,15 +209,15 @@ S <= "Thello world?";	  //  const char cS[]="Thello world?";
 			  //  for (int i; i<(sizeof cS); i++) 
 			  //       S.push_back(cS[i])
 
---S;			  //  S.pop_front();		//  remove 'T'
-S--;			  //  S.pop_back();		//  remove '\0'
+--S;			  //  S.pop_front();
+S--;			  //  S.pop_back();	// '\0'
  
-++S = 'H';		  //  S.front() = 'H';		//  h --> H
-S++ = '!';		  //  S.back()  = '!';		//  ? --> !
+++S = 'H';		  //  S.front() = 'H';
+S++ = '!';		  //  S.back()  = '!';
 
-'"' >> S << '"' << '\n';  //  S.push_front('"');     	//  add "
-			  //  S.push_back('"'); 
-			  //  S.push_back('\n'); 	//  add \n
+'"' >> S << '"' << '\n';  //  S.push_front('"');
+			  //  S.push_back('"');
+			  //  S.push_back('\n');
 					
 copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
@@ -323,12 +324,12 @@ int     i;
 
 i = f;		// 1
 i = f+1;	// 2
-f = 2;		// "s"
+f = 2;		// "2"
 f + " m/s"	// "2 m/s"
 f + 5		// "7"
 ---------------------------------
 
-SCC defines following AWK's global variables:
+SCC supports following AWK's global variables:
 
 * `$`	-  derived from  `std::deque<fld>` — line's fields
 * `NF`	-  `long`,  number of fields (set after read_line())
