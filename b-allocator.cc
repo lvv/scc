@@ -8,19 +8,30 @@
 int main()  {
 
 
-	const size_t	N	= 100000;
+	const size_t	N	= 20000;
 	char		*P[N]	= { nullptr };
 
+	nd_allocator<char> Al;
+	__ "*********************  N=", N, "      nd-cap=", Al.capacity;
 	lvv::Timer tm;
 
-	iALL(P)  P[i] = new char[i%27];
-	__ "N=", N;
-	__ "new:\t", tm.interval_ticks();
+
+	/////  ND_ALLOCATOR
+	*Al.data = 'a';
+	tm.reset();
+	pALL(P)  { *p = Al.allocate((p-P)%27);  **p='a'; }
+	__ "nd_allocator:    ", tm.interval_ticks(), flush;
+
+	//pALL(P)   delete[] *p;
+	//__ "delete:\t", tm.interval_ticks();
+
+
+	/////  NEW
+	tm.reset();
+	pALL(P)  { *p = new char[(p-P)%27]; **p='a'; }
+	__ "new:             ", tm.interval_ticks(), flush;
 	pALL(P)   delete[] *p;
-	__ "delete:\t", tm.interval_ticks();
-
-
-
+	__ "delete:          ", tm.interval_ticks(), flush;
 
 	atexit( []{ delete[]  nd_allocator<char>::data; });
 }
