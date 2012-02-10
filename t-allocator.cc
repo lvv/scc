@@ -6,7 +6,6 @@
 
 int main()  {
 	
-	ALLOC<int> A;
 
 	__ "\nVECTOR";
 	std::vector<int,ALLOC<int>> v;
@@ -25,4 +24,6 @@ int main()  {
 	__ m, flush;
 
 	__ "\n AT EXIT", flush;
+
+	atexit( []{ delete[]  nd_allocator<char>::data; });
 }

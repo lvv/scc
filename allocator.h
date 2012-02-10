@@ -37,8 +37,6 @@ struct nd_allocator : std::allocator<T> {
 		static char		*data;
 		static char		*b;		// free begin
 		static char		*e;		// end of data buffer;
-	 //nd_allocator() : std::allocator<T>(),  data(new char[capacity]),  b(data),  e(data + capacity) {};
-	 //nd_allocator() :   std::allocator<T>() {if (!data)  data = new char[capacity];  b=data;  e=data + capacity; };
 	 nd_allocator() :   std::allocator<T>() {};
 	 template<typename U>
 	 nd_allocator(const nd_allocator<U>& other)  {}
@@ -64,8 +62,8 @@ struct nd_allocator : std::allocator<T> {
 };
 
 template<typename T> char* nd_allocator<T>::data = new char[capacity];
-template<typename T> char* nd_allocator<T>::b = nd_allocator<char>::data;
-template<typename T> char* nd_allocator<T>::e = nd_allocator<char>::data + capacity;
+template<typename T> char* nd_allocator<T>::b    = nd_allocator<char>::data;
+template<typename T> char* nd_allocator<T>::e    = nd_allocator<char>::data + capacity;
 
 
 #endif
