@@ -32,7 +32,8 @@ stdc++.h.gch:
 
 CLEAN_LIST += t-print  t-regex t-meta
 
-CXXFLAGS=   -std=gnu++11 -Wall -I/home/lvv/p/ 
+CXXFLAGS +=   -std=gnu++11 -Wall -I/home/lvv/p/ 
+
 t-buf-r: t-buf
 
 ########################################################  SCCPP

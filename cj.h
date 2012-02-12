@@ -12,6 +12,7 @@
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
+typedef		const	int			cint;
 typedef		std::vector<int>		vint;
 typedef		std::vector<unsigned int>	vuint;
 typedef		std::vector<long>		vlong;
@@ -67,8 +68,14 @@ typedef		std::list<std::string>		lstr;
 #define		LLA(IT, C)	for (auto IT=end(C)-1;  IT >= begin(C);   IT--)
 #define		itALL(C)	ALL(it,C)
 #define		pALL(C)		ALL(p,C)
+#define		qALL(C)		ALL(q,C)
+#define		pLLA(C)		LLA(p,C)
 #define		iALL(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
 #define		jALL(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
+#define		kALL(C)		for (long k=0;  k<(long)(end(C)-begin(C));   k++)
+#define		lALL(C)		for (long l=0;  l<(long)(end(C)-begin(C));   l++)
+#define		mALL(C)		for (long m=0;  m<(long)(end(C)-begin(C));   m++)
+#define		nALL(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
 #define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
 #define		xALL(C)		for (auto x:C)
 

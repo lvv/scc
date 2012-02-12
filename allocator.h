@@ -33,7 +33,7 @@ struct trace_allocator : std::allocator<T> {
 
 		template<typename T>					//  NO DELETE ALLOCATOR
 struct nd_allocator : std::allocator<T> {
-		static const size_t	capacity  = 500*1000*1000; // 500MB
+		static const size_t	capacity  = 200*1000*1000; // 500MB
 		static char		*data;
 		static char		*b;		// free begin
 		static char		*e;		// end of data buffer;
