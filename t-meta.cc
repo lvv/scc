@@ -2,6 +2,7 @@
 //#include<type_traits>
 //#include"lvv/lvv.h"
 #include <type_traits>
+#include <typeinfo>
 #include<scc/simple>
 
 using namespace std;

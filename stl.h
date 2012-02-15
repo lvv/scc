@@ -99,7 +99,7 @@ operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop
 operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
 
 
-// Ct1 <<= Ct2
+// Ct1 <= Ct2
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
@@ -113,6 +113,52 @@ operator <=      (Ct1& C1, const Ct2& C2)    { C1.clear(); for(auto x: C2) C1.pu
 operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear();  for(auto x: A) C.push_back(x);   return  C; };
 
 
+/////////////////////////////////////////////////////////////////////////////////////////  RANGE
+
+	template<typename I>
+struct  range_t {
+		typedef		      I			iterator;
+		typedef		const I			const_iterator;
+		typedef		typename I::value_type	value_type;
+	I b_, e_;
+	range_t(I b, I e)  : b_(b), e_(e) {};
+
+	//template<typename Ct>
+	//range_t( typename std::enable_if<std::is_same<I, typename Ct::iterator>::value, Ct>::type&  C)  : b_(begin(C)), e_(end(C)) {};
+
+	iterator	begin()		{ return b_; };
+	iterator	end()		{ return e_; };
+	const_iterator	begin() const	{ return b_; };
+	const_iterator	end()   const	{ return e_; };
+
+	range_t& operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
+};
+
+	template<typename I>
+	typename std::enable_if<is_iterator<I>::value, range_t<I>>::type
+range(I b, I e) { return range_t<I>(b,e); };
+
+
+	template<typename I>
+	typename std::enable_if<is_iterator<I>::value, range_t<I>>::type
+operator / (I b, I e) { return range_t<I>(b,e); };
+
+	template<typename Ct>
+	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator>>::type
+range(Ct& C) { return range_t<typename Ct::iterator>(begin(C),end(C)); };
+
+
+template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
+
+struct rng_t {} rng;
+
+	template<typename Ct>
+	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator> >::type
+operator | (Ct& C, rng_t r) { return range(C); };
+
+	template<typename Ct>
+	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator> >::type
+operator | (rng_t rng, Ct& C) { return range(C); };
 
 
 #endif	// LVV_STL_H

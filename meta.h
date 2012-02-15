@@ -34,6 +34,10 @@ template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
+// iterator_reference<T>::type operator*(void) const;
+// iterator_pointer<T>::type operator->(void) const;
+// T & operator++(void);
+// T operator++(int);
 
 	template<typename T>
 struct is_iterator {

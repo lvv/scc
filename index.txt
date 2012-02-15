@@ -198,7 +198,7 @@ Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
 Simple STL
 ----------
 
-This is intended for those who likes terse C-style code.
+This is for those who likes terse C-style code.
 Below is string manipulation example.   Given `Thello world?` string, it
 transforms it and prints -  `" H e l l o   w o r l d ! "`:
 
@@ -223,13 +223,27 @@ copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " 
 ------------------------------------------------------
 
 Note that all operators, do not create temp copy, they are modifying container itself.
-
-Below are few more containers operators, that are not shown in example. Here `C` is
-a container and `x` is `Ct::value_type` :
+Full list of container operators:
 
 ----------------------------------------------------------------
++C			//  C.begin()
+-C			//  C.end()
 !C			//  C.size()
-C1 << C2		//  copy(C2.begin(), C2.end(), C1.begin());
+++C			//  C.front()
+C++			//  C.back()
+++Pair			//  Pair.first
+Pair++			//  Pair.second
+++Tuple			//  get\<0>(Tuple)
+Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
+--C			//  C.pop_front()
+C--			//  C.pop_back()
+C << x			//  C.push_back(x)
+x >> C			//  C.push_front(x)
+C >> x			//  x = C.back(x);   C.pop_back();
+x << C			//  x = C.front(x);  C.pop_front();
+C1 << C2		//  for(auto x: C2)  C1.push_back(x);
+C1 >> C2		//  for(auto x: C1)  C2.push_back(x);
+C1 <= C2		//  C1.clear();  for(auto x: C2)  C1.push_back(x); 
 ----------------------------------------------------------------
 
 
