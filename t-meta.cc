@@ -1,6 +1,7 @@
 //#include<iostream>
 //#include<type_traits>
 //#include"lvv/lvv.h"
+#include <type_traits>
 #include<scc/simple>
 
 using namespace std;
@@ -31,37 +32,29 @@ struct has_const_iterator {
 };
 
 
-/////////////////////////////////////////////////////////////////////////  IS_CONTAINER
-
-	template <typename T>
-struct is_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
-	template <typename U>
-	static char test(
-		U* u,
-		typename U::const_iterator b = ((U*)0)->begin(),
-		typename U::const_iterator e = ((U*)0)->end()
-	);
-	template <typename U> static long test(...);
-
-	enum { value = sizeof test<T>(0) == 1 };
-};
-
-template<typename T, size_t N>	struct is_container<T[N]> 	: std::true_type { };
-template<size_t N>		struct is_container<char[N]>	: std::false_type { };
-template<>			struct is_container<std::basic_string<char>> : std::false_type { };
 
 /////////////////////////////////////////////////////////////////////////
-/* Brokern
-	template<class T>
+
+/* does not work with T[N] */
+	template<typename T>
 struct is_iterator {
-	static T makeT();
-	typedef void * twoptrs[2];  // sizeof(twoptrs) > sizeof(void *)
-	static twoptrs & test(...); // Common case
-	template<class R> static typename R::iterator_category * test(R); // Iterator
-	template<class R> static void * test(R *); // Pointer
-	static const bool value = sizeof(test(makeT())) == sizeof(void *); 
+	//static T(&)[N] makeT();
+	typedef void * twoptrs[2];						// sizeof(twoptrs) > sizeof(void *)
+				static twoptrs &			test(...);		// Common case
+	template<typename  U>	static typename U::iterator_category*	test(U);	// Iterator
+	template<typename  U>	static void *				test(U*);	// Pointer
+	//template<typename  U>	static void *				test(U(&)[N]);	// C-array
+
+	static const bool value = sizeof(test(T())) == sizeof(void *);
+	//static const bool value = sizeof(test(makeT())) == sizeof(void *);
+	//static const bool value = sizeof(test(T(&)[N])) == sizeof(void *);
 };
-*/
+
+template <typename T>	constexpr bool		is_it(T** x)	{return true;}
+template <typename T>	constexpr bool		is_it(T* x)	{return false;}
+template <typename T, size_t N>	constexpr bool  is_it(T (*x)[N] )	{return true;}
+
+
 ////////////////////////////////////////////////////////////////////////
 
 struct out_t {};
@@ -70,15 +63,14 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	cout << left;  cout.width(25);
-	__ endl, "type",  "is_Ct\t", "h_CI", "is_P", endl; 
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tis_Ct\t h_CI\t is_Pr\t is_It\n";
 
-	#define for_T(name) cout.width(25);  _ name; \
-		outln ("\t") \
-		<<  is_container<T>::value\
-		<<  has_const_iterator<T>::value\
-		<<  is_printable<T>::value\
-		<<  is_iterator<T>::value\
+	#define for_T(name)  __ setw(25) << name \
+		<<  "\t  " << is_container<T>::value\
+		<<  "\t  " << has_const_iterator<T>::value\
+		<<  "\t  " << is_printable<T>::value\
+		/*<<  "\t  " << is_iterator<T>::value*/\
+		<<  "\t  " << is_it((T*)nullptr)\
 	;
 
 	{ typedef vector<int>  T;
@@ -86,6 +78,9 @@ int main() {
 
 	{ typedef vector<int>::iterator  T;
 	for_T(   "vector<int>::iterator"); }
+
+	{ typedef deque<int>::iterator  T;
+	for_T(   "deque<int>::iterator"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }
@@ -127,8 +122,9 @@ int main() {
 		<< is_sink<int>::value
 		<< is_sink<ostream>::value
 		<< is_sink<out_t>::value
+		<< endl
 		;
 }
 
 
-	
+
