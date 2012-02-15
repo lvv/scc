@@ -33,27 +33,6 @@ struct has_const_iterator {
 
 
 
-/////////////////////////////////////////////////////////////////////////
-
-/* does not work with T[N] */
-	template<typename T>
-struct is_iterator {
-	//static T(&)[N] makeT();
-	typedef void * twoptrs[2];						// sizeof(twoptrs) > sizeof(void *)
-				static twoptrs &			test(...);		// Common case
-	template<typename  U>	static typename U::iterator_category*	test(U);	// Iterator
-	template<typename  U>	static void *				test(U*);	// Pointer
-	//template<typename  U>	static void *				test(U(&)[N]);	// C-array
-
-	static const bool value = sizeof(test(T())) == sizeof(void *);
-	//static const bool value = sizeof(test(makeT())) == sizeof(void *);
-	//static const bool value = sizeof(test(T(&)[N])) == sizeof(void *);
-};
-
-template <typename T>	constexpr bool		is_it(T** x)	{return true;}
-template <typename T>	constexpr bool		is_it(T* x)	{return false;}
-template <typename T, size_t N>	constexpr bool  is_it(T (*x)[N] )	{return true;}
-
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -69,8 +48,7 @@ int main() {
 		<<  "\t  " << is_container<T>::value\
 		<<  "\t  " << has_const_iterator<T>::value\
 		<<  "\t  " << is_printable<T>::value\
-		/*<<  "\t  " << is_iterator<T>::value*/\
-		<<  "\t  " << is_it((T*)nullptr)\
+		<<  "\t  " << is_iterator<T>::value\
 	;
 
 	{ typedef vector<int>  T;

@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <array>
 
-///// IS_CONTAINER
+//////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
 
 	template <typename T>
 struct is_container {
@@ -29,8 +29,20 @@ struct is_container {
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
 
-/////  IS STRING
+//////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
+
+//////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
+
+	template<typename T>
+struct is_iterator {
+					static char				test (...);	// anything else
+	template<typename  U>		static typename U::iterator_category*	test (U*);	// Iterator
+	template<typename  U>		static void *				test (U**);	// Pointer
+	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
+
+	static const bool value = sizeof(test((T*)nullptr)) == sizeof(void *);
+};
 
 #endif
