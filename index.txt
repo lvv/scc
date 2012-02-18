@@ -241,9 +241,9 @@ C << x			//  C.push_back(x)
 x >> C			//  C.push_front(x)
 C >> x			//  x = C.back(x);   C.pop_back();
 x << C			//  x = C.front(x);  C.pop_front();
-C1 << C2		//  for(auto x: C2)  C1.push_back(x);
-C1 >> C2		//  for(auto x: C1)  C2.push_back(x);
-C1 <= C2		//  C1.clear();  for(auto x: C2)  C1.push_back(x); 
+C1 << C2		//  copy(C2.begin(), C2.end(), back_inserter(C1));
+C1 >> C2		//  copy(C1.begin(), C1.end(), back_inserter(C2)); 
+C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
 ----------------------------------------------------------------
 
 
