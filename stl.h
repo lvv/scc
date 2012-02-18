@@ -6,6 +6,7 @@
 #include <string>
 #include <cstring>
 #include <deque>
+#include <tuple>
 
 #include "meta.h"
 
