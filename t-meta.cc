@@ -43,7 +43,7 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tis_Ct\t h_CI\t is_Pr\t is_It\n";
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCntnr\t h_CI\t Ptr\t Iter\t Stack\t Queue";
 
 	#define for_T(name)  __ setw(25) << name \
 		<<  "\t  " << is_container<T>::value\
@@ -51,6 +51,7 @@ int main() {
 		<<  "\t  " << is_printable<T>::value\
 		<<  "\t  " << is_iterator<T>::value\
 		<<  "\t  " << is_stack<T>::value\
+		<<  "\t  " << is_queue<T>::value\
 	;
 
 	{ typedef vector<int>  T;
@@ -76,6 +77,9 @@ int main() {
 
 	{ typedef tuple<string,int>  T;
 	for_T(   "tuple<string,int>"); }
+
+	{ typedef queue<int>  T;
+	for_T(   "queue<int>"); }
 
 	{ typedef stack<int>  T;
 	for_T(   "stack<int>"); }

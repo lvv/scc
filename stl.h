@@ -86,7 +86,40 @@ operator++      (Ct& C, int)    { return C.top(); };
 operator!      (Ct& C)    { return C.size(); };
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
+/////////////////////////////////////////////////////////////////////////////////////////////////////  QUEUE
+
+//  Queue << x
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, Ct&>::type&
+operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
+
+//  --Queue
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, Ct&>::type&
+operator--      (Ct& C)    { C.pop();   return C; };
+
+//  x << Queue
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop();   return x; };
+
+//  Queue++
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+operator++      (Ct& C, int)    { return C.back(); };
+
+//  ++Queue
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+operator++      (Ct& C)    { return C.front(); };
+
+//  !Queue
+	template<typename Ct>
+	typename std::enable_if <is_queue<Ct>::value, size_t>::type
+operator!      (Ct& C)    { return C.size(); };
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>

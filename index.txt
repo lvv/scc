@@ -231,10 +231,6 @@ Full list of container operators:
 !C			//  C.size()
 ++C			//  C.front()
 C++			//  C.back()
-++Pair			//  Pair.first
-Pair++			//  Pair.second
-++Tuple			//  get\<0>(Tuple)
-Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
 --C			//  C.pop_front()
 C--			//  C.pop_back()
 C << x			//  C.push_back(x)
@@ -245,10 +241,23 @@ C1 << C2		//  copy(C2.begin(), C2.end(), back_inserter(C1));
 C1 >> C2		//  copy(C1.begin(), C1.end(), back_inserter(C2)); 
 C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
 
-Stack << x		//  Stack.push(x)
-Stack ++ 		//  Stack.top(x)
-Stack >> x		//  x = Stack.top(x);  Stack.pop()
-Stack -- 		//  Stack.pop(x)
+++Pair			//  Pair.first
+Pair++			//  Pair.second
+++Tuple			//  get\<0>(Tuple)
+Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
+
+			// STACK
+S << x			//  S.push(x)
+S ++ 			//  S.top(x)
+S >> x			//  x = S.top(x);  S.pop()
+S -- 			//  S.pop(x)
+
+			// QUEUE
+Q << x			//  Q.push(x)
+Q ++ 			//  Q.back(x)
+++ Q 			//  Q.front(x)
+x << Q			//  x = Q.front(x);  Q.pop()
+-- Q 			//  Q.pop(x)
 ----------------------------------------------------------------
 
 

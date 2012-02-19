@@ -44,8 +44,31 @@ struct is_stack {
 
 		template <
 			typename U,
-			typename POP = decltype (((U*)0)->pop()),
-			typename TOP = decltype (((U*)0)->top())
+			//typename PUSH	= decltype (((U*)0)->push(XXX)),
+			typename POP	= decltype (((U*)0)->pop()),
+			typename TOP	= decltype (((U*)0)->top())
+		>
+		static char
+	test(U* u);
+
+		template <typename U>
+		static long
+	test(...);
+
+	enum { value = sizeof test<T>(0) == 1 };
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////  IS_QUEUE
+	template <typename T>
+struct is_queue {
+
+		template <
+			typename U,
+			typename POP	= decltype (((U*)0)->pop()),
+			//typename PUSH	= decltype (((U*)0)->push(XXX)),
+			typename FRONT	= decltype (((U*)0)->front()),
+			typename BACK	= decltype (((U*)0)->back())
 		>
 		static char
 	test(U* u);
