@@ -3,13 +3,13 @@
 #include <string>
 	using namespace std;
 
-template<typename T> 	void  print(T v)		{ cout << "    unknoun:  "	<< v << endl;}
-template<> 		void  print(int v)		{ cout << "        int:  "	<< v << endl;}
-template<> 		void  print(double v)		{ cout << "     double:  "	<< v << endl;}
-template<typename T> 	void  print(T v[])		{ cout << "        T[]:  "	;  for(int i=0; i<3; i++) cout << v[i] << " ";  cout << " ..." << endl;}
-template<> 		void  print(int v[])		{ cout << "      int[]:  "	;  for(int i=0; i<3; i++) cout << v[i] << " ";  cout << " ..." << endl;}
-template<> 		void  print(const char* v)	{ cout << "const char*:  "	<< v << endl;}
-template<typename T> 	void  print(basic_string<T> v)	{ cout << "     string:  "	<< v << endl;}
+template<typename T>	void  print(T v)		{ cout << "    unknoun:  "	<< v << endl;}
+template<>		void  print(int v)		{ cout << "        int:  "	<< v << endl;}
+template<>		void  print(double v)		{ cout << "     double:  "	<< v << endl;}
+template<typename T>	void  print(T v[])		{ cout << "        T[]:  "	;  for(int i=0; i<3; i++) cout << v[i] << " ";  cout << " ..." << endl;}
+template<>		void  print(int v[])		{ cout << "      int[]:  "	;  for(int i=0; i<3; i++) cout << v[i] << " ";  cout << " ..." << endl;}
+template<>		void  print(const char* v)	{ cout << "const char*:  "	<< v << endl;}
+template<typename T>	void  print(basic_string<T> v)	{ cout << "     string:  "	<< v << endl;}
 
 
 int main() {
