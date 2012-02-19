@@ -36,6 +36,18 @@ operator++      (Ct& C) { return C.front(); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
 
+
+//  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct&>::type
+operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);   return C; };
+
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value, Ct>::type&
+operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE // PAIR
+
 template<typename U, typename V>   U&     operator++   (std::pair<U,V>& P)      { return P.first;  };
 template<typename U, typename V>   V&     operator++   (std::pair<U,V>& P, int) { return P.second; };
 
@@ -48,15 +60,9 @@ operator++	(typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::t
 	typename std::tuple_element<0, std::tuple<Types...> >::type&
 operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 
-
-//  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct&>::type
-operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);   return C; };
-
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type&
-operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
+	template <class... Types>
+	constexpr size_t
+operator!	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
 

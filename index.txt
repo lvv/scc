@@ -243,8 +243,10 @@ C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
 
 ++Pair			//  Pair.first
 Pair++			//  Pair.second
+
 ++Tuple			//  get\<0>(Tuple)
 Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
+!Tuple			//  tuple_size<decltype(Tuple) >::value
 
 			// STACK
 S << x			//  S.push(x)

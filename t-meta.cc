@@ -81,6 +81,9 @@ int main() {
 	{ typedef queue<int>  T;
 	for_T(   "queue<int>"); }
 
+	{ typedef priority_queue<int>  T;
+	for_T(   "priority_queue<int>"); }
+
 	{ typedef stack<int>  T;
 	for_T(   "stack<int>"); }
 

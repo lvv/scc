@@ -91,6 +91,7 @@
 	using	std::bitset;
 	using	std::stack;
 	using	std::queue;
+	using	std::priority_queue;
 
 	// algo
 	using	std::swap;
@@ -197,6 +198,7 @@
 	using	std::tuple;			// C++11
 	using	std::get;			// C++11
 	using	std::make_tuple;		// C++11
+	using	std::tuple_size;		// C++11
 	using	std::make_shared;		// C++11
 	using	std::iota;			// C++11
 	using	std::begin;			// C++11
