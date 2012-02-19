@@ -89,6 +89,8 @@
 	using	std::ostream_iterator;
 	using	std::istream_iterator;
 	using	std::bitset;
+	using	std::stack;
+	using	std::queue;
 
 	// algo
 	using	std::swap;

@@ -244,6 +244,11 @@ x << C			//  x = C.front(x);  C.pop_front();
 C1 << C2		//  copy(C2.begin(), C2.end(), back_inserter(C1));
 C1 >> C2		//  copy(C1.begin(), C1.end(), back_inserter(C2)); 
 C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
+
+Stack << x		//  Stack.push(x)
+Stack ++ 		//  Stack.top(x)
+Stack >> x		//  x = Stack.top(x);  Stack.pop()
+Stack -- 		//  Stack.pop(x)
 ----------------------------------------------------------------
 
 

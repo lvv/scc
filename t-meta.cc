@@ -50,6 +50,7 @@ int main() {
 		<<  "\t  " << has_const_iterator<T>::value\
 		<<  "\t  " << is_printable<T>::value\
 		<<  "\t  " << is_iterator<T>::value\
+		<<  "\t  " << is_stack<T>::value\
 	;
 
 	{ typedef vector<int>  T;
@@ -75,6 +76,9 @@ int main() {
 
 	{ typedef tuple<string,int>  T;
 	for_T(   "tuple<string,int>"); }
+
+	{ typedef stack<int>  T;
+	for_T(   "stack<int>"); }
 
 	{ typedef string  T;
 	for_T(   "string"); }

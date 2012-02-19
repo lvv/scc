@@ -3,6 +3,8 @@
 
 #include <type_traits>
 #include <array>
+#include <stack>
+#include <queue>
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
 
@@ -35,6 +37,26 @@ template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::tru
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
+
+//////////////////////////////////////////////////////////////////////////////////////  IS_STACK
+	template <typename T>
+struct is_stack {
+
+		template <
+			typename U,
+			typename POP = decltype (((U*)0)->pop()),
+			typename TOP = decltype (((U*)0)->top())
+		>
+		static char
+	test(U* u);
+
+		template <typename U>
+		static long
+	test(...);
+
+	enum { value = sizeof test<T>(0) == 1 };
+};
+
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
 // iterator_reference<T>::type operator*(void) const;

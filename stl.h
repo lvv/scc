@@ -49,7 +49,6 @@ operator++	(typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::t
 operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 
 
-
 //  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
@@ -59,6 +58,35 @@ operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);  
 	typename std::enable_if <is_container<Ct>::value, Ct>::type&
 operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
+
+//  Stack << x
+	template<typename Ct>
+	typename std::enable_if <is_stack<Ct>::value, Ct&>::type&
+operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
+
+//  Stack--
+	template<typename Ct>
+	typename std::enable_if <is_stack<Ct>::value, Ct&>::type&
+operator--      (Ct& C, int)    { C.pop();   return C; };
+
+//  Stack >> x
+	template<typename Ct>
+	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
+operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.top();  C.pop();   return x; };
+
+//  Stack++
+	template<typename Ct>
+	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
+operator++      (Ct& C, int)    { return C.top(); };
+
+//  !Stack
+	template<typename Ct>
+	typename std::enable_if <is_stack<Ct>::value, size_t>::type
+operator!      (Ct& C)    { return C.size(); };
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
