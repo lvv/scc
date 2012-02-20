@@ -74,7 +74,7 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x); 
 			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value
 		, Ct1
 	>::type &
-operator >>      (const Ct1& C1, Ct2& C2)    { for(auto x: C1) C2.push_back(x);   return  C2; };
+operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(), std::front_inserter(C2));};
 
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}

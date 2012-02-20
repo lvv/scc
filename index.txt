@@ -14,7 +14,7 @@ scc 2+2
 If expression is not terminated with semicolon, it is sent to `std::cout`.
 Same for last expression in multi-statement snippet.
 If snippet have bash special characters,  it must be in single or double
-quotes. If expression starts with minus, end-of-options indicator "--" must be used:
+quotes. If expression starts with minus, end-of-options indicator `--` must be used:
 
 ----------------------------------------------------------------------------
 scc '"hello world"'
@@ -92,42 +92,34 @@ oi = V;
 oi = S;
 -------------------------------------------------------------------
 
-Container Printing
+Containers Printing
 ~~~~~~~~~~~~~~~~~~
 
-Any STL container can be also printed withou `oi`.  You can just send it to `std::cout`.
+Any STL container can be also printed without `oi`.  You can just send it to `std::cout`.
 
 In comments is equivalent code:
 
 --------------------------------------------------------------------
-vint V{1,2,3}; 			//  vector<int> V{1,2,3};
-__ V; 				//  cout << "{"; 
-				//  for(auto it=V.begin(); it!=V.end()-1; it++)
-				//       cout << *it << ", ";  if(!V.empty()) cout << V.back(); 
-				//  cout << "}\n";
-				//  prints: {1, 2, 3}
-
-array<int,3>  A{1,2,3}
-__ A;				//  {1,2,3}
-
-int  C[]={1,2,3}
-__ C; 				//  {1,2,3}
-
-tuple<int,int>  T{1,2};           
-__ T;				//  ⟨1, 2⟩
-
-map<int,int>  M{{1,1},{2,2}};
-__ M;				//  {⟨1,1⟩, ⟨2,2⟩} 
-
-vector<vint>  VV{{1,1},{2,2}}; 
-__ VV;				//  {{1, 1}, {2, 2}}
+vint            C {1,2,3};        __ C;	   //  vector<int> C{1,2,3};
+ 					   //  cout << "{"; 
+					   //  for(auto it=C.begin(); it!=C.end()-1; it++)
+					   //       cout << *it << ", ";
+					   //  if(!C.empty()) cout << C.back(); 
+					   //  cout << "}\n";
+					   //  prints: {1, 2, 3}
+					
+int             C[] {1,2,3};       __ C;   //  {1,2,3} 
+array<int,3>    C {1,2,3};         __ C;   //  {1,2,3}
+tuple<int,int>  C {1,2};           __ C;   //  ⟨1, 2⟩ 
+map<int,int>    C {{1,1},{2,2}};   __ C;   //  {⟨1,1⟩, ⟨2,2⟩} 
+vector<vint>	C {{1,1},{2,2}};   __ C;   //  {{1, 1}, {2, 2}}
 -------------------------------------------------------------------
 
 
 Object IN
 ~~~~~~~~~
 
-Pre-defined object `in` can be used in initialiser expression. When a value
+Pre-defined object `in` can be used as initialiser. When a value
 is read from `in`, it reads from `std::cin`. 
 
 --------------------------------------------------------------------
@@ -139,7 +131,8 @@ WARNING: Object `in` does not check for EOF. With scalar objects use only in
 context where you can ignore or do not expect EOF.
 
 
-If a container have non-zero length,  we can use `std::cin`:
+If a container have non-zero length,  we can directly input from `std::cin`
+without object `in`:
 
 --------------------------------------------------------------------
 vint V(10);		//  vector<int> V(10);
@@ -238,7 +231,7 @@ x >> C			//  C.push_front(x)
 C >> x			//  x = C.back(x);   C.pop_back();
 x << C			//  x = C.front(x);  C.pop_front();
 C1 << C2		//  copy(C2.begin(), C2.end(), back_inserter(C1));
-C1 >> C2		//  copy(C1.begin(), C1.end(), back_inserter(C2)); 
+C1 >> C2		//  copy(C1.rbegin(), C1.rend(), front_inserter(C2)); 
 C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
 
 ++Pair			//  Pair.first
@@ -481,6 +474,12 @@ If you need to use it with older GCC (4.1 was supported) - use v0.1.
 
 ////////////////
 
+BENCHMARKS
+	A Benchmark for Reading Flat Files Into Memory for Awk, Python, Perl, Java, and Ruby (steve.80cols.com)
+		http://www.reddit.com/r/programming/comments/pub98/a_benchmark_for_reading_flat_files_into_memory/
+		v2 --  http://steve.80cols.com/flat_file_bakeoff.html
+		v1 -- http://steve.80cols.com/reading_flat_files_into_memory_benchmark.html
+		https://github.com/lorca/flat_file_benchmark/watchers
 GNU AWK
 	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
 

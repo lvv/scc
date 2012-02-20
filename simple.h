@@ -246,8 +246,24 @@ struct in_t {
 
 	// input a POD type
 	// usage:   echo 1   | scc 'int N(in);  N'
-	template<typename T>	operator T()		{ T t;   cin >> t;   return t; }
+	template<typename T>
+	operator T()		{ T t;   return t; };
 
+	/*
+	template<
+		typename T,
+		long N =   1*std::is_arithmetic<T>::value
+			+ 10*     is_container<T>::value
+	>
+	operator T<1>()		{ T t;   cin >> t;   return t; }
+
+	template<
+		typename T,
+		long N =   1*std::is_arithmetic<T>::value, int>::value
+			+ 10*     is_constainer<T>::value, int>::value
+	>
+	operator T<10>()	{ T t;   cin >> t;   return t; }
+	*/
 
 	// input  any std::sequance-containter<inputable>
 	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
@@ -255,11 +271,18 @@ struct in_t {
 		size_t n;
 		in_t& operator() (long N) { n=N;  return *this; }
 
-		template<typename T, template<typename T, typename C> class C >
+	/*	template<typename T, template<typename T, typename C> class C >
 	operator C<T,std::allocator<T> >()        {
 		C<T,std::allocator<T> > c(n);
 		cin >> c;
 		return c;
+	}*/
+
+		template<typename Ct, typename X = typename std::enable_if<is_container<Ct>::value, int>::type>
+	operator Ct()        {
+		Ct  C(n);
+		cin >> C;
+		return C;
 	}
 
 
@@ -274,7 +297,7 @@ struct in_t {
 	*/
 };
 
-in_t in;
+static in_t in;
 
 
 
