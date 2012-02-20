@@ -9,7 +9,7 @@ fi
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f     .scc ]  && .     .scc
 
-CXXFLAGS+=" -std=gnu++11 "
+CXXFLAGS+=" -std=gnu++11 -Wno-unused-function "
 
 
 SCC_HOME=$(dirname $(readlink -f $0))

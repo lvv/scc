@@ -317,7 +317,8 @@ struct buf_t {
 			const char	*bod, *eod;	// data in buffer
 			const char	*path;
 			int		fd;		// file
-			char		**&argv, **argv_e;
+			char		**&argv;
+			char		**argv_e;
 
 
 	bool  next_file()   {
@@ -338,7 +339,7 @@ struct buf_t {
 
 
 	buf_t		(char**&argv, char**argv_e)
-		: good_file(true),  argv(argv),  argv_e(argv_e), fd(-1)
+		: good_file(true), fd(-1),  argv(argv),  argv_e(argv_e)
 	{
 		if (argv <  argv_e)  {
 			next_file();
@@ -399,7 +400,6 @@ struct buf_t {
 					assert(eob-bob > 2*data_size); // FIXME: replace assert with realloc
 
 					memcpy(const_cast<char*>(bob), const_cast<char*>(bod), data_size);
-					size_t diff = bod-bob;
 					bod = F.a.b = bob;
 					eod = p = bob + data_size;
 				}
@@ -433,9 +433,9 @@ struct buf_t {
 		const char *bof = F.a.b;
 
 		do {
-			while( bof < F.a.e   &&   PAD_tab[*bof]  )  bof++;		// skip padding
+			while( bof < F.a.e   &&   PAD_tab[size_t(*bof)]  )  bof++;		// skip padding
 			sep = eof = search(bof, F.a.e, FS.b, FS.e);			//
-			while( bof < (eof-1)  &&   PAD_tab[*(eof-1)]  )  eof--;		// eat  padding begore FS
+			while( bof < (eof-1)  &&   PAD_tab[size_t(*(eof-1))]  )  eof--;		// eat  padding begore FS
 			F.push_back(fld(bof,eof));
 			bof = sep + FS.size();
 		}  while (bof < F.a.e);

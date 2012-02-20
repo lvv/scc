@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 
 	// PAD_tab
 	for (const char *p = PAD.b;  p!=PAD.e;  p++)
-		PAD_tab[*p] = 1;
+		PAD_tab[size_t(*p)] = 1;
 
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
