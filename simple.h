@@ -284,44 +284,6 @@ struct in_t {
 		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(cin.bad()) break;  A[i]=t;}
 	}
 
-	/*
-	template<
-		typename T,
-		long N =   1*std::is_arithmetic<T>::value, int>::value
-			+ 10*     is_constainer<T>::value, int>::value
-	>
-	operator T<10>()	{ T t;   cin >> t;   return t; }
-	*/
-
-	// input  any std::sequance-containter<inputable>
-	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
-
-	/*
-		template<T>
-	input()        {
-		C<T,std::allocator<T> > c(n);
-		cin >> c;
-		return c;
-	}
-
-		template<typename Ct, typename X = typename std::enable_if<is_container<Ct>::value, int>::type>
-	operator Ct()        {
-		Ct  C(n);
-		cin >> C;
-		return C;
-	}
-	*/
-
-
-	/*  STD::SET  - does not work
-		template<typename T>
-	operator std::set<T,std::allocator<T> >()        {
-		std::set<T,std::allocator<T> > str;
-		T elem;
-		while(n-- && cin) { cin >> elem;  str.insert(elem); } ;
-		return str;
-	}
-	*/
 };
 
 static in_t in;
@@ -339,12 +301,13 @@ operator>>      (istream& is, Ct& C)    {
 		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
 			if(!(is>>*it)) break;
 	}  else  {
-		typename Ct::value_type c;  
+		typename Ct::value_type c;
 		while(is>>c)  C.push_back(c);
 	}
 	return is;
 };
 
+// C-array
 		template<typename T, size_t N>
 		std::istream&
 operator>>      (istream& is, T(&A)[N])    {
@@ -357,7 +320,40 @@ operator>>      (istream& is, T(&A)[N])    {
 };
 
 
+// PAIR
+		template<typename T, typename U>
+		std::istream&
+operator>>      (istream& is, std::pair<T,U>& p) {
+	is >> p.first >>  p.second;
+	return is;
+};
 
+
+// TUPLE
+
+			template< int RI, typename... TT>
+	struct	input_tuple_elem  {
+		input_tuple_elem (istream& is, std::tuple<TT...>& tup)  {
+			const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
+			const size_t  i = tsize - RI;
+			is >>  std::get<i>(tup);
+			input_tuple_elem<RI-1, TT...>(is, tup);
+		};
+	};
+
+			template<typename... TT>
+	struct	input_tuple_elem <0, TT...> {
+		input_tuple_elem (istream& is, std::tuple<TT...>& tup)  {};
+	};
+
+
+		template<typename... TT>
+		std::istream&
+operator>>      (istream& is, std::tuple<TT...>& tup) {
+	const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
+	input_tuple_elem<tsize, TT...>(is, tup);
+	return is;
+};
 
 
 #endif	// LVV_SIMPLE_H
