@@ -240,23 +240,51 @@ int gcd(long a, long b) {
 // IN   -- read cin when `in` value is accessed.
 //   used as:	int i(in);
 
+	// usage:   echo 1   | scc 'int N(in);  N'
+
 
 struct in_t {
 	in_t (): n(0) {};
 
-	// input a POD type
-	// usage:   echo 1   | scc 'int N(in);  N'
-	template<typename T>
-	operator T()		{ T t;   return t; };
+		// set container size
+		size_t n;
+	in_t& operator() (long N) { n=N;  return *this; }
+
+
+		template<typename T>		// primary
+	operator T() {
+		T x;
+		input<T>(x); 
+		n = 0;
+		return x;
+	};
+
+
+		template<typename T>		// pod-like
+		typename std::enable_if<
+			//std::is_arithmetic<T>::value || is_string<T>::value,
+			std::is_arithmetic<T>::value,
+			void
+		>::type
+	input(T& x)	{ cin >> x; }
+
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value, void>::type
+	input(Ct& C)	{
+		typename Ct::value_type t;
+		if (n>0) C.resize(n);
+		if (!C.empty())		for (typename Ct::value_type&x : C)  { std::cin >> t;   if(!cin || n-- <= 0)  break;  x=t;}
+		else			{ C.clear();  while  (std::cin >> t, cin)  C.push_back(t);}
+	}
+
+		template<typename T, size_t N>
+		void
+	input(T(&A)[N])	{
+		T t;
+		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(cin.bad()) break;  A[i]=t;}
+	}
 
 	/*
-	template<
-		typename T,
-		long N =   1*std::is_arithmetic<T>::value
-			+ 10*     is_container<T>::value
-	>
-	operator T<1>()		{ T t;   cin >> t;   return t; }
-
 	template<
 		typename T,
 		long N =   1*std::is_arithmetic<T>::value, int>::value
@@ -268,15 +296,13 @@ struct in_t {
 	// input  any std::sequance-containter<inputable>
 	// usage:   echo a b c  | scc 'list<char> C = in(3); C'
 
-		size_t n;
-		in_t& operator() (long N) { n=N;  return *this; }
-
-	/*	template<typename T, template<typename T, typename C> class C >
-	operator C<T,std::allocator<T> >()        {
+	/*
+		template<T>
+	input()        {
 		C<T,std::allocator<T> > c(n);
 		cin >> c;
 		return c;
-	}*/
+	}
 
 		template<typename Ct, typename X = typename std::enable_if<is_container<Ct>::value, int>::type>
 	operator Ct()        {
@@ -284,6 +310,7 @@ struct in_t {
 		cin >> C;
 		return C;
 	}
+	*/
 
 
 	/*  STD::SET  - does not work
@@ -305,18 +332,29 @@ static in_t in;
 // Container must have non-zero size()
 // Used as:   vector<int> V(3);   cin >> V;
 
-	template<typename T, template<typename T, typename Ct=std::allocator<T> > class Ct >
-	std::istream&
-operator>>      (istream& is, Ct<T>& C)    {
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value, std::istream& >::type
+operator>>      (istream& is, Ct& C)    {
 	if (C.size() > 0)  {
-		for(typename Ct<T>::iterator it=C.begin();  it!=C.end();  it++)
+		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
 			if(!(is>>*it)) break;
 	}  else  {
-		T c;   while(is>>c)  C.push_back(c);
+		typename Ct::value_type c;  
+		while(is>>c)  C.push_back(c);
 	}
 	return is;
 };
 
+		template<typename T, size_t N>
+		std::istream&
+operator>>      (istream& is, T(&A)[N])    {
+	T t;
+	for(size_t i=0;  i<N  &&  cin;  i++)  {
+		if(!(is>>t)) break;
+		A[i] = t;
+	}
+	return is;
+};
 
 
 

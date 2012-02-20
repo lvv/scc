@@ -1,0 +1,5 @@
+echo 1 2 | scc 'vint x(2); cin >> x; x'
+echo 1 2 | scc 'vint x = in; x'
+echo 1 2 | scc 'vint x = in(2); x'
+echo 1 2 | scc 'int A[2]; cin >> A; A'
+
