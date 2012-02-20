@@ -33,7 +33,7 @@ echo "ABC"  |  scc 'char c;  while (cin.get(c))  cout << (char)tolower(c);'
 abc
 ----------------------------------------------------------------------------
 
-Snippet is evaluated in environ where all STL includes are included and almost
+Snippet is evaluated in environment where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
 If you need only plain +++C++ +++ REPL, that is about all you need to know.  You can
@@ -69,14 +69,14 @@ pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor.
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
-copy these to `cout`.  With standard library:
+copy these to `std::cout`.  With standard library:
 
 ------------------------------------------------------------------
 copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
 -------------------------------------------------------------------
 
-Include `print.h` defines `oi` object, which similarly to `std::cout`, can work with any type and
+Include `print.h` defines `oi` object, which is similarly to `std::cout`, can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -85,7 +85,7 @@ copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
 Assigning a container to `oi` is equivalent to doing
-`std::copy`, so above example we could also written as:
+`std::copy`, so above example we could have also written as:
 
 -------------------------------------------------------------------
 oi = V;
@@ -120,7 +120,7 @@ Object IN
 ~~~~~~~~~
 
 Pre-defined object `in` can be used as initialiser. When a value
-is read from `in`, it reads from `std::cin`. 
+is read from `in`, it is acquired from `std::cin`. 
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
@@ -241,13 +241,13 @@ Pair++			//  Pair.second
 Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
 !Tuple			//  tuple_size<decltype(Tuple) >::value
 
-			// STACK
+			//  STACK
 S << x			//  S.push(x)
 S ++ 			//  S.top(x)
 S >> x			//  x = S.top(x);  S.pop()
 S -- 			//  S.pop(x)
 
-			// QUEUE
+			//  QUEUE
 Q << x			//  Q.push(x)
 Q ++ 			//  Q.back(x)
 ++ Q 			//  Q.front(x)
@@ -259,7 +259,7 @@ x << Q			//  x = Q.front(x);  Q.pop()
 Shortcuts and predeclared vars
 -------------------------------
 
-SCC also uses typedefs and macros to cut verboisty:
+Shortcuts are typedefs and macros to cut verbosity. For example:
 
 ------------------------------------------------------
 str	-->   std::string  
@@ -267,7 +267,7 @@ vint	-->   std::vector<int>
 WRL	-->   while(read_line())      
 ------------------------------------------------------
 
-Several variables were pre-defined:
+Some variables are pre-defined:
 
 * `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
 * `x`, `y`, `z` --  `double`, initialized to 0
@@ -280,7 +280,7 @@ So, in last example we could've skipped
 definition `char c;`. 
 
 
-Examples. 
+Examples
 --------
 
 Square an array.  +++C++11 +++ is on by default:
@@ -290,7 +290,7 @@ scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'
 {1, 4, 9}								
 ----------------------------------------------------------------------------
 
-Calculate words frequencies from stdin. (`w` - is pre-defined `std::string`)
+Calculate words frequencies from `stdin`. (`w` - is pre-defined `std::string`)
 
 ----------------------------------------------------------------------------
 echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
@@ -327,7 +327,7 @@ Second alternative is to use options `-n` and `-p`.
 With `-n`, record is read, split into fields and snippet is evaluated for every
 record.  With `-p`, additionally all fields are printed after snippet was
 evaluated.  These are equivalent to PERL's and 
-are convenient when we do not have `begin-expr` and `end-expr`.
+are convenient when we do not have _begin-expr_ and _end-expr_.
 
 ----------------------------------------------------------------------------
 scc -n 'per-record-expr;'
@@ -389,7 +389,8 @@ echo -e 'aaa\nbbb'   |   scc -p NR
 2 bbb
 ----------------------------------------------------------------------------
 
-For every line: first `NR` is printed (notice that there is no semicolon), then $0.
+For every line: first `NR` is printed (notice that there is no semicolon),
+then `$0`.
 
 Now lets make comma separated fields out of colon separated.  Option `-o` sets `OFS`
 (output field separator), `-F` - set `FS`  Snippet is empty in this example.
@@ -442,13 +443,13 @@ Current alpha version is v0.2.1, use "latest" git tag for relatively stable
 version. SCC uses C+11 extensively and some GCC extensions, so currently it can
 work only with GCC-4.7 (pre release).  It might work with CLANG and
 MSVS, but this was not tested.  For stream ops, version v0.2.* is about x100 times faster than v0.1 and several
-times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in RS/FS are
+times faster than GAWK/MAWK.  Boost is not used in v0.2.  Regex in `RS`/`FS` are
 currently not supported (but were in v0.1) 
 
 +++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
-at the end of the line (even in comments).
+at the end of every line (even in comments).
 
-If you need to use it with older GCC (4.1 was supported) - use v0.1.
+If you need to use it with older GCC - use v0.1.
 
 
 
