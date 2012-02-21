@@ -6,6 +6,43 @@
 #include <stack>
 #include <queue>
 
+
+#define DEF_HAS_MEMBER(name,member)						\
+		template <typename T>						\
+	struct name {								\
+			template <						\
+				typename U,					\
+				typename M = typename U::member			\
+			>							\
+			static char						\
+		test(U* u);							\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 
+
+#define DEF_HAS_MEMBER_FUNC(name,func)						\
+		template <typename T>						\
+	struct name {								\
+			template <						\
+				typename U,					\
+				typename F = decltype (((U*)0)->func)		\
+			>							\
+			static char						\
+		test(U* u);							\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 
+
+DEF_HAS_MEMBER(has_iterator,iterator)
+
+DEF_HAS_MEMBER_FUNC(has_size,size())
+DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename T::value_type()))
+
+
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
 
 	template <typename T>

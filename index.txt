@@ -95,7 +95,8 @@ oi = S;
 Containers Printing
 ~~~~~~~~~~~~~~~~~~
 
-Any STL container can be also printed without `oi`.  You can just send it to `std::cout`.
+Any STL container can be also printed without `oi`.  You can just send it to
+`std::cout` or to bar-print.
 
 In comments is equivalent code:
 
