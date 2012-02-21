@@ -216,7 +216,7 @@ S++ = '!';		  //  S.back()  = '!';
 copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
-Note that all operators, do not create temp copy, they are modifying container itself.
+All operators do not create temp copy, they are modifying target container itself.
 Full list of container operators:
 
 ----------------------------------------------------------------
@@ -239,8 +239,9 @@ C1 <= C2		//  C1.clear();  copy(C2.begin(), C2.end(), back_inserter(C1));
 Pair++			//  Pair.second
 
 ++Tuple			//  get\<0>(Tuple)
-Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple) 	// last tuple element
+Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
 !Tuple			//  tuple_size<decltype(Tuple) >::value
+
 
 			//  STACK
 S << x			//  S.push(x)
@@ -249,12 +250,13 @@ S >> x			//  x = S.top(x);  S.pop()
 S -- 			//  S.pop(x)
 
 			//  QUEUE
+Q++ 			//  Q.back(x)
+++Q 			//  Q.front(x)
+--Q 			//  Q.pop(x)
 Q << x			//  Q.push(x)
-Q ++ 			//  Q.back(x)
-++ Q 			//  Q.front(x)
 x << Q			//  x = Q.front(x);  Q.pop()
--- Q 			//  Q.pop(x)
 ----------------------------------------------------------------
+
 
 
 Shortcuts and predeclared vars

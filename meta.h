@@ -12,6 +12,7 @@
 	struct name {								\
 			template <						\
 				typename U,					\
+				typename VT = typename U::value_type,		\
 				typename M = typename U::member			\
 			>							\
 			static char						\
@@ -22,11 +23,13 @@
 		enum { value = sizeof test<T>(0) == 1 };			\
 	}; 
 
+
 #define DEF_HAS_MEMBER_FUNC(name,func)						\
 		template <typename T>						\
 	struct name {								\
 			template <						\
 				typename U,					\
+				typename VT = typename U::value_type,		\
 				typename F = decltype (((U*)0)->func)		\
 			>							\
 			static char						\
@@ -37,10 +40,12 @@
 		enum { value = sizeof test<T>(0) == 1 };			\
 	}; 
 
+
 DEF_HAS_MEMBER(has_iterator,iterator)
 
-DEF_HAS_MEMBER_FUNC(has_size,size())
-DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename T::value_type()))
+DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
+DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
+DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
