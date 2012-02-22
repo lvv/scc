@@ -287,6 +287,18 @@ struct in_t {
 		while  (cin >> t,  cin && n--)   C.insert(t);
 	}
 
+	// MAP
+	/*
+			template<typename T, typename U>
+			std::istream&
+	operator>>      (istream& is, std::map<T,U>& p) {
+		T
+		is >> p.first >>  p.second;
+		return is;
+	};
+	*/
+
+
 	// C-ARRAY
 		template<typename T, size_t N>
 		void
@@ -375,21 +387,26 @@ operator>>      (istream& is, std::tuple<TT...>& tup) {
 	return is;
 };
 
-/*
-// ASSOC-CONTAINER
+
+// SET
 
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_key_type<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
-	if (C.size() > 0)  {
-		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
-			if(!(is>>*it)) break;
-	}  else  {
-		typename Ct::value_type c;
-		while(is>>c)  C.insert(c);
-	}
+	typename Ct::value_type c;
+	while(is>>c)  C.insert(c);
 	return is;
 };
-*/
+
+// MAP
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_key_type<Ct>::value, std::istream& >::type
+operator>>      (istream& is, Ct& C)    {
+	typename Ct::key_type	  k;
+	typename Ct::mapped_type  m;
+	while(is >> k >> m)  C[k] = m;
+	return is;
+};
+
 
 #endif	// LVV_SIMPLE_H

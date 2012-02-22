@@ -42,6 +42,7 @@
 
 
 DEF_HAS_MEMBER(has_iterator,iterator)
+DEF_HAS_MEMBER(has_key_type,key_type)
 
 DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
