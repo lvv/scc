@@ -278,25 +278,27 @@ struct in_t {
 		else			{ C.clear();  while  (std::cin >> t, cin)  C.push_back(t);}
 	}
 
-	// ASSOC-CONT
+	// SET
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value,  void>::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  !has_mapped_type<Ct>::value,  void>::type
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		C.clear(); 
+		n = n ? n : -1;
 		while  (cin >> t,  cin && n--)   C.insert(t);
 	}
 
 	// MAP
-	/*
-			template<typename T, typename U>
-			std::istream&
-	operator>>      (istream& is, std::map<T,U>& p) {
-		T
-		is >> p.first >>  p.second;
-		return is;
-	};
-	*/
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  has_mapped_type<Ct>::value,  void>::type
+	input(Ct& C)	{
+		typename Ct::key_type	  k;
+		typename Ct::mapped_type  m;
+		C.clear(); 
+		n = n ? n : -1;
+		while(cin >> k >> m  && n--)  C[k] = m;
+	}
+
 
 
 	// C-ARRAY
@@ -386,18 +388,18 @@ operator>>      (istream& is, std::tuple<TT...>& tup) {
 
 
 // SET
-
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_key_type<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_mapped_type<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
 	return is;
 };
 
+
 // MAP
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_key_type<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_mapped_type<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
 	typename Ct::key_type	  k;
 	typename Ct::mapped_type  m;
