@@ -268,8 +268,9 @@ struct in_t {
 		>::type
 	input(T& x)	{ cin >> x; }
 
+	// SEQ-CONT
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value, void>::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value,  void>::type
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -277,6 +278,16 @@ struct in_t {
 		else			{ C.clear();  while  (std::cin >> t, cin)  C.push_back(t);}
 	}
 
+	// ASSOC-CONT
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value,  void>::type
+	input(Ct& C)	{
+		typename Ct::value_type t;
+		C.clear(); 
+		while  (cin >> t,  cin && n--)   C.insert(t);
+	}
+
+	// C-ARRAY
 		template<typename T, size_t N>
 		void
 	input(T(&A)[N])	{
