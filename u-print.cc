@@ -1,5 +1,5 @@
 
-#include  "scc/print.h"
+#include  "scc/io.h"
 
 #include <algorithm>
 #include <array>
@@ -26,5 +26,5 @@ using std::unordered_map;
 using std::unordered_set;
 
 int main() {
-	#include "u-print.h"
+	#include "u-io.h"
 }

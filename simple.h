@@ -10,7 +10,7 @@
 //#endif
 
 #include "scc/stl.h"
-#include "scc/print.h"
+#include "scc/io.h"
 //#include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C

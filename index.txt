@@ -76,7 +76,7 @@ copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<string>(cout, " "));
 -------------------------------------------------------------------
 
-Include `print.h` defines `oi` object, which is similarly to `std::cout`, can work with any type and
+Include `io.h` defines `oi` object, which is similarly to `std::cout`, can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -174,13 +174,13 @@ vint V = in(in);
 --------------------------------------------------------------------
 
 
-print.h standalone use
-~~~~~~~~~~~~~~~~~~~~~~
+io.h standalone use
+~~~~~~~~~~~~~~~~~~~
 
-File `print.h` can be used as standalone, independent include. 
+File `io.h` can be used as standalone, independent include. 
 
 --------------------------------------------
-#include <print.h>
+#include <io.h>
 int main() {
 	__ "hello world";
 }
