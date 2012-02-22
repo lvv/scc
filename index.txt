@@ -124,9 +124,12 @@ echo 1 2    | scc 'int             C[2];  cin >> C;   C'
 echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'
 echo 1 2 3 4| scc 'vector<vint>	   C;     cin >> C;   C'
 echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'
+echo 1 2 3 4| scc 'set<int>        C;     cin >> C;   C'
+echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'
 ----------------------------------------------------------------------
 
-//echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;  C'
+If a container have non-zero length, then the same number of elements will be
+read.  if container is empty then read will be till EOF.
 
 Object IN
 ~~~~~~~~~
@@ -142,47 +145,33 @@ float x = 1.1 + float(in);	//  float y;  cin >> y;   float x = 1.1 + y;
 WARNING: Object `in` does not check for EOF. With scalar objects use only in
 context where you can ignore or do not expect EOF.
 
-
-If a container have non-zero length,  we can directly input from `std::cin`
-without object `in`:
-
---------------------------------------------------------------------
-vint V(10);		//  vector<int> V(10);
-cin >> V;		//  for(size_t i=0; i<V.size(); i++)  cin >> V[i];
---------------------------------------------------------------------
-
-Object `in` can be used to input container too, but we need somehow to
-tell it how many elements needs to be read.
-
-If container have zero length, we tell object `in` how many object to read:
+To input a container:
 
 --------------------------------------------------------------------
 vint V = in(10);
+vint W = in;		// Till EOF.  Note:  we can not use:  vint W(in);
 --------------------------------------------------------------------
 
 Google CodeJam and FaceBook Hackercup  often have input format to input an
 array where first goes a number (N) followed by N elements of an array.  To
 read it, we can use:
 
---------------------------------------------------------------------
-int  N(in);		//  int N;  cin >> N;
-vint V = in(N);		//  vector<int> V(N);  for(int i=0; i<N; i++)  cin >> V[i];
---------------------------------------------------------------------
-
-Or even shorter:
+Here is example of C++ vs SCC input where we need to read a number and than
+corresponding number of container elements:
 
 --------------------------------------------------------------------
-vint V = in(in);	// 1st will be evaluated 'in' in parenthesis, 2nd -  'in.operator()()'
+int N; 
+cin >> N;
+vector<int> V(N); 
+for(int i=0; i<N; i++) 
+	cin >> V[i];
 --------------------------------------------------------------------
 
-If container have zero length (is empty) and we didn't specified how many
-elements to read, container is filled up until EOF. 
+In SCC: 
 
 --------------------------------------------------------------------
-echo 1 2 3 | scc 'vint V = in;  V' 	// Note:  we can not use:  vint V(in);
-{1,2,3} 
+vint V = in(in);
 --------------------------------------------------------------------
-
 
 
 print.h standalone use
