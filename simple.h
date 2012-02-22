@@ -1,9 +1,9 @@
 #ifndef  LVV_SIMPLE_H
 #define  LVV_SIMPLE_H
 
-#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
-	#error "SCC/simple.h does not support GCC earlier than 4.7"
-#endif
+//#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
+//	#error "SCC/simple.h does not support GCC earlier than 4.7"
+//#endif
 
 //#if	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) )
 //	#define  MODERN_GCC	1
@@ -289,13 +289,10 @@ struct in_t {
 static in_t in;
 
 
-
-// Input any std::sequance-containter<printable>
-// Container must have non-zero size()
-// Used as:   vector<int> V(3);   cin >> V;
+// SEQ-CONTAINER
 
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
 	if (C.size() > 0)  {
 		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
@@ -307,7 +304,7 @@ operator>>      (istream& is, Ct& C)    {
 	return is;
 };
 
-// C-array
+// C-ARRAY
 		template<typename T, size_t N>
 		std::istream&
 operator>>      (istream& is, T(&A)[N])    {
@@ -319,6 +316,18 @@ operator>>      (istream& is, T(&A)[N])    {
 	return is;
 };
 
+
+// STD::ARRAY
+		template<typename T, size_t N>
+		std::istream&
+operator>>      (istream& is, std::array<T,N>& A) {
+	T t;
+	for (size_t i=0;  i<N;  i++)  {
+		is >> t; if (!is) break;
+		A[i] = t;
+	}
+	return is;
+};
 
 // PAIR
 		template<typename T, typename U>
@@ -355,5 +364,21 @@ operator>>      (istream& is, std::tuple<TT...>& tup) {
 	return is;
 };
 
+/*
+// ASSOC-CONTAINER
+
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value, std::istream& >::type
+operator>>      (istream& is, Ct& C)    {
+	if (C.size() > 0)  {
+		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
+			if(!(is>>*it)) break;
+	}  else  {
+		typename Ct::value_type c;
+		while(is>>c)  C.insert(c);
+	}
+	return is;
+};
+*/
 
 #endif	// LVV_SIMPLE_H

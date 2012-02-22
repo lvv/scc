@@ -1,7 +1,17 @@
+
+set -o errexit
+set -v
+
 echo 1 2 | scc 'vint x(2); cin >> x; x'
 echo 1 2 | scc 'vint x = in; x'
 echo 1 2 | scc 'vint x = in(2); x'
 echo 1 2 | scc 'int A[2]; cin >> A; A'
 echo 1 2.2 | scc 'pair<int,float> p; cin >> p; p'
 echo 1 2 3 | scc 'tuple<int,int,int> t; cin >> t; t'
+echo 1 2    | scc 'vint            C;     cin >> C;   C'
+echo 1 2    | scc 'int             C[2];  cin >> C;   C'
+echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'
+echo 1 2 3 4| scc 'vector<vint>	   C;     cin >> C;   C'
+echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'
+echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'
 

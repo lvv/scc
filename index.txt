@@ -47,7 +47,7 @@ Simple IO
 Bar-print
 ~~~~~~~~~
 
-Instead of C++ `std::cout` printing, SCC uses so called **bar-print**.
+Instead of `std::cout` printing, in SCC you can use so called **bar-print**.
 
 //http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
 
@@ -69,11 +69,11 @@ pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor.
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
-copy these to `std::cout`.  With standard library:
+to print these.  With `std::ostream_iterator`:
 
 ------------------------------------------------------------------
 copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
-copy(S.begin(), S.end(), ostream_iterator<int>(cout, " "));
+copy(S.begin(), S.end(), ostream_iterator<string>(cout, " "));
 -------------------------------------------------------------------
 
 Include `print.h` defines `oi` object, which is similarly to `std::cout`, can work with any type and
@@ -92,8 +92,8 @@ oi = V;
 oi = S;
 -------------------------------------------------------------------
 
-Containers Printing
-~~~~~~~~~~~~~~~~~~
+STL Containers input/output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Any STL container can be also printed without `oi`.  You can just send it to
 `std::cout` or to bar-print.
@@ -112,10 +112,21 @@ vint            C {1,2,3};        __ C;	   //  vector<int> C{1,2,3};
 int             C[] {1,2,3};       __ C;   //  {1,2,3} 
 array<int,3>    C {1,2,3};         __ C;   //  {1,2,3}
 tuple<int,int>  C {1,2};           __ C;   //  ⟨1, 2⟩ 
-map<int,int>    C {{1,1},{2,2}};   __ C;   //  {⟨1,1⟩, ⟨2,2⟩} 
-vector<vint>	C {{1,1},{2,2}};   __ C;   //  {{1, 1}, {2, 2}}
+map<int,int>    C {{1,2},{3,4}};   __ C;   //  {⟨1,2⟩, ⟨3,4⟩} 
+vector<vint>	C {{1,2},{3,4}};   __ C;   //  {{1, 2}, {3, 4}}
 -------------------------------------------------------------------
 
+Same for input:
+
+----------------------------------------------------------------------
+echo 1 2    | scc 'vint            C;     cin >> C;   C'
+echo 1 2    | scc 'int             C[2];  cin >> C;   C'
+echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'
+echo 1 2 3 4| scc 'vector<vint>	   C;     cin >> C;   C'
+echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'
+----------------------------------------------------------------------
+
+//echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;  C'
 
 Object IN
 ~~~~~~~~~
@@ -189,34 +200,40 @@ int main() {
 Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
 
 
-Simple STL
-----------
+STL Operators
+--------------
 
-This is for those who likes terse C-style code.
-Below is string manipulation example.   Given `Thello world?` string, it
-transforms it and prints -  `" H e l l o   w o r l d ! "`:
+This is for those who abhor cobol-like +++ C++ +++, and prefer terse C-style code.
+Below is string manipulation example.   Given `Thello?` string, it
+transforms it and prints -  `" H e l l o ! "`:
 
 ------------------------------------------------------
-dchar  S;		  //  deque<char>  S;   
-
-S <= "Thello world?";	  //  const char cS[]="Thello world?";
-			  //  for (int i; i<(sizeof cS); i++) 
-			  //       S.push_back(cS[i])
-
---S;			  //  S.pop_front();
-S--;			  //  S.pop_back();	// '\0'
- 
-++S = 'H';		  //  S.front() = 'H';
-S++ = '!';		  //  S.back()  = '!';
-
-'"' >> S << '"' << '\n';  //  S.push_front('"');
-			  //  S.push_back('"');
-			  //  S.push_back('\n');
-					
-copy(+S, -S, oi);	  //  copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
+deque<char>  S;   
+for(auto c : "Thello?")  S.push_back(c);
+S.pop_front();
+S.pop_back();	// '\0'
+S.front() = 'H';
+S.back()  = '!';
+S.push_front('"');
+S.push_back('"');
+S.push_back('\n');
+copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
-All operators do not create temp copy, they are modifying target container itself.
+In SCC:
+
+------------------------------------------------------
+dchar  S;   S <= "Thello?";	
+--S--;			
+++S = 'H';   S++ = '!';		
+'"' >> S << '"' << '\n';
+oi = S;
+------------------------------------------------------
+
+If we count not-white-space charater in above examples, SCC code is more than
+3x times shorter.
+
+Container operators do not create temp copy, they are modifying target container itself.
 Full list of container operators:
 
 ----------------------------------------------------------------
@@ -265,9 +282,13 @@ Shortcuts and predeclared vars
 Shortcuts are typedefs and macros to cut verbosity. For example:
 
 ------------------------------------------------------
-str	-->   std::string  
-vint	-->   std::vector<int>  
 WRL	-->   while(read_line())      
+str	-->   std::string  
+lint	-->   std::list<int>  
+vint	-->   std::vector<int>  
+dint	-->   std::vector<int>  
+dfloat	-->   std::vector<float>  
+...
 ------------------------------------------------------
 
 Some variables are pre-defined:
@@ -279,9 +300,6 @@ Some variables are pre-defined:
 
 You don't need to remember these, you can
 re-define these to what ever you want. 
-So, in last example we could've skipped
-definition `char c;`. 
-
 
 Examples
 --------
