@@ -317,13 +317,10 @@ static in_t in;
 		template<typename Ct>
 		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
-	if (C.size() > 0)  {
-		for(typename Ct::iterator it=C.begin();  it!=C.end();  it++)
-			if(!(is>>*it)) break;
-	}  else  {
-		typename Ct::value_type c;
-		while(is>>c)  C.push_back(c);
-	}
+	int n = C.size() ? C.size() : -1;
+	C.clear(); 
+	typename Ct::value_type c;
+	while(is>>c && n--)  C.push_back(c);
 	return is;
 };
 
