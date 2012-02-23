@@ -81,7 +81,7 @@ template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::tru
 template<typename T>	struct  is_string		: std::false_type {};
 template<>		struct  is_string <std::string>	: std::true_type  {};
 
-template<typename T>	struct  is_ioable		: std::false_type {};
+template<typename T>	struct  is_ioable		: std::is_arithmetic<T> {};
 template<>		struct  is_ioable <std::string>	: std::true_type  {};
 template<>		struct  is_ioable <char(&)[]>	: std::true_type  {};
 template<>		struct  is_ioable <char*>	: std::true_type  {};

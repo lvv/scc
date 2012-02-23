@@ -68,7 +68,7 @@ pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor.
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
-to print these.  With `std::ostream_iterator`:
+to print these.  In plain +++ C++ +++, with `std::ostream_iterator`:
 
 ------------------------------------------------------------------
 copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
@@ -83,8 +83,15 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
-Assigning a container to `oi` is equivalent to doing
-`std::copy`, so above example can be also written as:
+Same using container operators (more about this later): 
+
+-------------------------------------------------------------------
+copy(+V, -V, oi);
+copy(+S, -S, oi);
+-------------------------------------------------------------------
+
+Also assigning a container to `oi` is equivalent to doing
+`std::copy`, so still shorter:
 
 -------------------------------------------------------------------
 oi = V;
@@ -168,7 +175,7 @@ vint V = in(10);
 vint W = in;		// Till EOF.  Note:  we can not use:  vint W(in);
 --------------------------------------------------------------------
 
-Here is example of C++ vs SCC input where we need to read a number and than
+Here is example of +++ C++ +++ vs SCC input where we need to read a number and than
 corresponding number of container elements:
 
 --------------------------------------------------------------------
@@ -201,7 +208,7 @@ int main() {
 Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 
 
-STL Operators
+STL Containers Operators
 --------------
 
 This is for those who abhor cobol-like +++ C++ +++, and prefer terse C-style code.
@@ -231,7 +238,7 @@ dchar  S;   S <= "Thello?";
 oi = S;
 ------------------------------------------------------
 
-If we count not-white-space charater in above examples, SCC code is more than
+If we count not-white-space character in above examples, SCC code is more than
 3x times shorter.
 
 Container operators do not create temp copy, they are modifying target container itself.
@@ -263,9 +270,9 @@ Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
 
 			//  STACK
 S << x			//  S.push(x)
-S ++ 			//  S.top(x)
+S++ 			//  S.top(x)
 S >> x			//  x = S.top(x);  S.pop()
-S -- 			//  S.pop(x)
+S-- 			//  S.pop(x)
 
 			//  QUEUE
 Q++ 			//  Q.back(x)
@@ -287,8 +294,8 @@ WRL	-->   while(read_line())
 str	-->   std::string  
 lint	-->   std::list<int>  
 vint	-->   std::vector<int>  
-dint	-->   std::vector<int>  
-dfloat	-->   std::vector<float>  
+dint	-->   std::deque<int>  
+dfloat	-->   std::deque<float>  
 ...
 ------------------------------------------------------
 
@@ -298,6 +305,7 @@ Some variables are pre-defined:
 * `x`, `y`, `z` --  `double`, initialized to 0
 * `s`, `w` -- `std::string`
 * `c` -- `char`
+* `p` -- `char*`
 
 You don't need to remember these, you can
 re-define these to what ever you want. 

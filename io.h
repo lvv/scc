@@ -122,6 +122,7 @@ template<>			struct  is_not_string_container <std::basic_string<char>>	: std::fa
 // std::CONTAINTER<printable> or C-Array
 	template<typename Ct >
 	typename std::enable_if <is_not_string_container<Ct>::value, std::ostream&>::type
+	//typename std::enable_if <is_container<Ct>::value  &&  !is_ioable<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
@@ -237,14 +238,14 @@ struct in_t {
 		template<typename T>		// pod-like
 		typename std::enable_if<
 			//std::is_arithmetic<T>::value || is_string<T>::value,
-			std::is_arithmetic<T>::value,
+			is_ioable<T>::value,
 			void
 		>::type
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value,  void>::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value,  void>::type
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -275,13 +276,19 @@ struct in_t {
 
 
 
+	// TODO 
 	// C-ARRAY
+	/* not working
 		template<typename T, size_t N>
 		void
 	input(T(&A)[N])	{
 		T t;
 		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(!std::cin) break;  A[i]=t;}
 	}
+	*/
+	// STD::ARRAY
+	// STD::PAIR
+	// STD::TUPLE
 
 };
 
@@ -302,7 +309,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 // C-ARRAY
 		template<typename T, size_t N>
-		std::istream&
+		typename std::enable_if<!std::is_same<T,char>::value,  std::istream&>::type
 operator>>      (std::istream& is, T(&A)[N])    {
 	T t;
 	for(size_t i=0;  i<N  &&  std::cin;  i++)  {
