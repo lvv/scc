@@ -38,8 +38,8 @@ scc  'vint A{1,2,3};  oi=A;   str S("ABC");  oi=S;  _ endl;';  echo 1 2 3 A B C
 : ---------------------------------------------------------  SEPERATORS
 echo  -n 11,,-,22--111,,222 |  RS=-- ORS="(NL) " scc -p -i,, -o:   '';  echo -e "\n11:-,22(NL) 111:222(NL)"
 
-#)
 exit 0
+#)
 #echo ---------------------------------------------------------  REGEX
 #echo "echo -e \"1 -\n2\n3 none\n4 abc\"   | scc -p 'F(1)=RR(F(1),R(\"^(none|-)?$\"),"n/a");'"
 #      echo -e  "1 -\n2\n3 none\n4 abc"    | scc -p 'F(1)=RR(F(1),R( "^(none|-)?$" ),"n/a");'  &&

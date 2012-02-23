@@ -38,12 +38,13 @@ operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begi
 	typename std::enable_if<is_string<S>::value, std::regex>::type
 operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 
-
+/*
 	//#define		R		std::regex
 	#define		RM		std::regex_match
 	//#define	RS		std::regex_search
 	#define		RR		std::regex_replace
 	// usage: scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'
+*/
 
 
 #endif	// LVV_REGEX_H

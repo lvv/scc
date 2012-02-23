@@ -1,6 +1,6 @@
 
-#ifndef  LVV_PRINT_H
-#define  LVV_PRINT_H
+#ifndef  SCC_IO_H
+#define  SCC_IO_H
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
 #include <type_traits>
 #include <iterator>
@@ -85,8 +85,8 @@ struct  outln : out  {
 
 
 // NOP, but scc's print-last will send endl
-std::ostream& operator<<      (ostream& os,  ostream& ) {return os; };
-std::ostream& operator<<      (ostream& os, const out&) {return os; };
+std::ostream& operator<<      (ostream& os, const  ostream& )		{return os; };
+std::ostream& operator<<      (ostream& os, const out&)			{return os; };
 
 // NOP, but scc' print-last will send endl
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
@@ -210,6 +210,177 @@ namespace oi_space {
 
 static oi_space::oi_t  oi;
 
+		// NOP 
+		// gcc error: void*
+// std::ostream& operator<<      (ostream& os, oi_space::oi_t&)	{return os; };
 
-#endif	// LVV_PRINT_H
+///////////////////////////////////////////////////////////////////////////////  INPUT
+
+
+struct in_t {
+	in_t (): n(0) {};
+
+		// set container size
+		size_t n;
+	in_t& operator() (long N) { n=N;  return *this; }
+
+
+		template<typename T>		// primary
+	operator T() {
+		T x;
+		input<T>(x); 
+		n = 0;
+		return x;
+	};
+
+
+		template<typename T>		// pod-like
+		typename std::enable_if<
+			//std::is_arithmetic<T>::value || is_string<T>::value,
+			std::is_arithmetic<T>::value,
+			void
+		>::type
+	input(T& x)	{ std::cin >> x; }
+
+	// SEQ-CONT
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value,  void>::type
+	input(Ct& C)	{
+		typename Ct::value_type t;
+		if (n>0) C.resize(n);
+		if (!C.empty())		for (typename Ct::value_type&x : C)  { std::cin >> t;   if(!std::cin || n-- <= 0)  break;  x=t;}
+		else			{ C.clear();  while  (std::cin >> t, std::cin)  C.push_back(t);}
+	}
+
+	// SET
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  !has_mapped_type<Ct>::value,  void>::type
+	input(Ct& C)	{
+		typename Ct::value_type t;
+		C.clear(); 
+		n = n ? n : -1;
+		while  (std::cin >> t,  std::cin && n--)   C.insert(t);
+	}
+
+	// MAP
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  has_mapped_type<Ct>::value,  void>::type
+	input(Ct& C)	{
+		typename Ct::key_type	  k;
+		typename Ct::mapped_type  m;
+		C.clear(); 
+		n = n ? n : -1;
+		while(std::cin >> k >> m  && n--)  C[k] = m;
+	}
+
+
+
+	// C-ARRAY
+		template<typename T, size_t N>
+		void
+	input(T(&A)[N])	{
+		T t;
+		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(!std::cin) break;  A[i]=t;}
+	}
+
+};
+
+static in_t in;
+
+
+// SEQ-CONTAINER
+
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value, std::istream& >::type
+operator>>      (std::istream& is, Ct& C)    {
+	int n = C.size() ? C.size() : -1;
+	C.clear(); 
+	typename Ct::value_type c;
+	while(is>>c && n--)  C.push_back(c);
+	return is;
+};
+
+// C-ARRAY
+		template<typename T, size_t N>
+		std::istream&
+operator>>      (std::istream& is, T(&A)[N])    {
+	T t;
+	for(size_t i=0;  i<N  &&  std::cin;  i++)  {
+		if(!(is>>t)) break;
+		A[i] = t;
+	}
+	return is;
+};
+
+
+// STD::ARRAY
+		template<typename T, size_t N>
+		std::istream&
+operator>>      (std::istream& is, std::array<T,N>& A) {
+	T t;
+	for (size_t i=0;  i<N;  i++)  {
+		is >> t; if (!is) break;
+		A[i] = t;
+	}
+	return is;
+};
+
+// PAIR
+		template<typename T, typename U>
+		std::istream&
+operator>>      (std::istream& is, std::pair<T,U>& p) {
+	is >> p.first >>  p.second;
+	return is;
+};
+
+
+// TUPLE
+
+			template< int RI, typename... TT>
+	struct	input_tuple_elem  {
+		input_tuple_elem (std::istream& is, std::tuple<TT...>& tup)  {
+			const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
+			const size_t  i = tsize - RI;
+			is >>  std::get<i>(tup);
+			input_tuple_elem<RI-1, TT...>(is, tup);
+		};
+	};
+
+			template<typename... TT>
+	struct	input_tuple_elem <0, TT...> {
+		input_tuple_elem (std::istream& is, std::tuple<TT...>& tup)  {};
+	};
+
+
+		template<typename... TT>
+		std::istream&
+operator>>      (std::istream& is, std::tuple<TT...>& tup) {
+	const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
+	input_tuple_elem<tsize, TT...>(is, tup);
+	return is;
+};
+
+
+// SET
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_mapped_type<Ct>::value, std::istream& >::type
+operator>>      (std::istream& is, Ct& C)    {
+	typename Ct::value_type c;
+	while(is>>c)  C.insert(c);
+	return is;
+};
+
+
+// MAP
+		template<typename Ct>
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_mapped_type<Ct>::value, std::istream& >::type
+operator>>      (std::istream& is, Ct& C)    {
+	typename Ct::key_type	  k;
+	typename Ct::mapped_type  m;
+	while(is >> k >> m)  C[k] = m;
+	return is;
+};
+
+
+#endif	// SCC_IO_H
 

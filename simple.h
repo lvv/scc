@@ -11,7 +11,7 @@
 
 #include "scc/stl.h"
 #include "scc/io.h"
-//#include "scc/regex.h"
+#include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C
 //#include <cstdlib>
@@ -211,22 +211,75 @@
 	using	std::weak_ptr;
 
 
-///////////////////////////////////////////////////////////////////// LINE INPUT
-//	http://www.parashift.com/c++-faq-lite/input-output.html#faq-15.2
-//
-	// counting locale -- http://stackoverflow.com/questions/2066126/counting-the-number-of-characters-that-are-output/2067723#2067723
+
+///////////////////////////////////////////////////////////////////// SHORTCUTS
+
+///// types
+typedef		const	int			cint;
+typedef		std::vector<int>		vint;
+typedef		std::vector<unsigned int>	vuint;
+typedef		std::vector<long>		vlong;
+typedef		std::vector<unsigned long>	vulong;
+typedef		std::vector<char>		vchar;
+typedef		std::vector<float>		vfloat;
+typedef		std::vector<double>		vdouble;
+
+typedef		std::deque<int>			dint;
+typedef		std::deque<int>			dlong;
+typedef		std::deque<unsigned int>	duint;
+typedef		std::deque<float>		dfloat;
+typedef		std::deque<double>		ddouble;
+typedef		std::deque<char>		dchar;
+
+typedef		std::list<int>			lint;
+typedef		std::list<unsigned int>		luint;
+typedef		std::list<long>			llong;
+typedef		std::list<unsigned long>	lulong;
+typedef		std::list<char>			lchar;
+typedef		std::list<float>		lfloat;
+typedef		std::list<double>		ldouble;
+
+typedef		std::string			str;
+typedef		std::vector<std::string>	vstr;
+typedef		std::deque<std::string>		dstr;
+typedef		std::list<std::string>		lstr;
+
+///// utils
+#define		MT		std::make_tuple
+#define		MP		std::make_pair
+
+#define		GL(x)		std::getline(cin,x)
+#define		NL		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
 
 
-///////////////////////////////////////////////////////////////////// UTILS
+///////////////////////////////////////////////////////////////////// LOOPS
 
 
-// Greatest Common divisor
-int gcd(long a, long b) {
-	if (b==0)	return a;
-	else		return gcd(b,a%b);
-}
+#define		FOR(i,i0,N)	for (long i = (i0), max_##i=(N);   i < max_##i;   i++)
+#define		ROF(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
+#define		REP(N)		for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++)
 
-#define countof(array) (sizeof (array) / sizeof(array[0]))
+#define		iFOR(N)		FOR(i,0,N)
+#define		jFOR(N)		FOR(j,0,N)
+#define		kFOR(N)		FOR(k,0,N)
+#define		tFOR(N)		FOR(t,0,N)
+#define		nFOR(N)		FOR(m,0,N)
+#define		mFOR(N)		FOR(m,0,N)
+
+#define		ALL(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
+#define		LLA(IT, C)	for (auto IT=end(C)-1;  IT >= begin(C);   IT--)
+#define		itALL(C)	ALL(it,C)
+#define		pALL(C)		ALL(p,C)
+#define		qALL(C)		ALL(q,C)
+#define		pLLA(C)		LLA(p,C)
+#define		iALL(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
+#define		jALL(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
+#define		kALL(C)		for (long k=0;  k<(long)(end(C)-begin(C));   k++)
+#define		lALL(C)		for (long l=0;  l<(long)(end(C)-begin(C));   l++)
+#define		mALL(C)		for (long m=0;  m<(long)(end(C)-begin(C));   m++)
+#define		nALL(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
+#define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
+#define		xALL(C)		for (auto x:C)
 
 
 
@@ -235,177 +288,4 @@ int gcd(long a, long b) {
 
 
 
-///////////////////////////////////////////////////////////////////////////////  INPUT
-
-// IN   -- read cin when `in` value is accessed.
-//   used as:	int i(in);
-
-	// usage:   echo 1   | scc 'int N(in);  N'
-
-
-struct in_t {
-	in_t (): n(0) {};
-
-		// set container size
-		size_t n;
-	in_t& operator() (long N) { n=N;  return *this; }
-
-
-		template<typename T>		// primary
-	operator T() {
-		T x;
-		input<T>(x); 
-		n = 0;
-		return x;
-	};
-
-
-		template<typename T>		// pod-like
-		typename std::enable_if<
-			//std::is_arithmetic<T>::value || is_string<T>::value,
-			std::is_arithmetic<T>::value,
-			void
-		>::type
-	input(T& x)	{ cin >> x; }
-
-	// SEQ-CONT
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value,  void>::type
-	input(Ct& C)	{
-		typename Ct::value_type t;
-		if (n>0) C.resize(n);
-		if (!C.empty())		for (typename Ct::value_type&x : C)  { std::cin >> t;   if(!cin || n-- <= 0)  break;  x=t;}
-		else			{ C.clear();  while  (std::cin >> t, cin)  C.push_back(t);}
-	}
-
-	// SET
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  !has_mapped_type<Ct>::value,  void>::type
-	input(Ct& C)	{
-		typename Ct::value_type t;
-		C.clear(); 
-		n = n ? n : -1;
-		while  (cin >> t,  cin && n--)   C.insert(t);
-	}
-
-	// MAP
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  has_mapped_type<Ct>::value,  void>::type
-	input(Ct& C)	{
-		typename Ct::key_type	  k;
-		typename Ct::mapped_type  m;
-		C.clear(); 
-		n = n ? n : -1;
-		while(cin >> k >> m  && n--)  C[k] = m;
-	}
-
-
-
-	// C-ARRAY
-		template<typename T, size_t N>
-		void
-	input(T(&A)[N])	{
-		T t;
-		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(cin.bad()) break;  A[i]=t;}
-	}
-
-};
-
-static in_t in;
-
-
-// SEQ-CONTAINER
-
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value, std::istream& >::type
-operator>>      (istream& is, Ct& C)    {
-	int n = C.size() ? C.size() : -1;
-	C.clear(); 
-	typename Ct::value_type c;
-	while(is>>c && n--)  C.push_back(c);
-	return is;
-};
-
-// C-ARRAY
-		template<typename T, size_t N>
-		std::istream&
-operator>>      (istream& is, T(&A)[N])    {
-	T t;
-	for(size_t i=0;  i<N  &&  cin;  i++)  {
-		if(!(is>>t)) break;
-		A[i] = t;
-	}
-	return is;
-};
-
-
-// STD::ARRAY
-		template<typename T, size_t N>
-		std::istream&
-operator>>      (istream& is, std::array<T,N>& A) {
-	T t;
-	for (size_t i=0;  i<N;  i++)  {
-		is >> t; if (!is) break;
-		A[i] = t;
-	}
-	return is;
-};
-
-// PAIR
-		template<typename T, typename U>
-		std::istream&
-operator>>      (istream& is, std::pair<T,U>& p) {
-	is >> p.first >>  p.second;
-	return is;
-};
-
-
-// TUPLE
-
-			template< int RI, typename... TT>
-	struct	input_tuple_elem  {
-		input_tuple_elem (istream& is, std::tuple<TT...>& tup)  {
-			const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
-			const size_t  i = tsize - RI;
-			is >>  std::get<i>(tup);
-			input_tuple_elem<RI-1, TT...>(is, tup);
-		};
-	};
-
-			template<typename... TT>
-	struct	input_tuple_elem <0, TT...> {
-		input_tuple_elem (istream& is, std::tuple<TT...>& tup)  {};
-	};
-
-
-		template<typename... TT>
-		std::istream&
-operator>>      (istream& is, std::tuple<TT...>& tup) {
-	const size_t  tsize = std::tuple_size<std::tuple<TT...>>::value;
-	input_tuple_elem<tsize, TT...>(is, tup);
-	return is;
-};
-
-
-// SET
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_mapped_type<Ct>::value, std::istream& >::type
-operator>>      (istream& is, Ct& C)    {
-	typename Ct::value_type c;
-	while(is>>c)  C.insert(c);
-	return is;
-};
-
-
-// MAP
-		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_mapped_type<Ct>::value, std::istream& >::type
-operator>>      (istream& is, Ct& C)    {
-	typename Ct::key_type	  k;
-	typename Ct::mapped_type  m;
-	while(is >> k >> m)  C[k] = m;
-	return is;
-};
-
-
-#endif	// LVV_SIMPLE_H
+#endif	// SCC_SIMPLE_H
