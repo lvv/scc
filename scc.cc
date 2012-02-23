@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
 
 	std::string s __attribute__((unused));
 	std::string w __attribute__((unused));
+	char  c       __attribute__((unused));
 	char *p       __attribute__((unused)) = nullptr;
 
 	char	**first_file_argv = argv+2;

@@ -12,7 +12,6 @@ scc 2+2
 ----------------------------------------------------------------------------
 
 If expression is not terminated with semicolon, it is sent to `std::cout`.
-Same for last expression in multi-statement snippet.
 If snippet have bash special characters,  it must be in single or double
 quotes. If expression starts with minus, end-of-options indicator `--` must be used:
 
@@ -29,7 +28,7 @@ scc 'double x=0.5;  sin(x)'
 scc 'bitset\<64>(unsigned(-1))'
 0000000000000000000000000000000011111111111111111111111111111111
 
-echo "ABC"  |  scc 'char c;  while (cin.get(c))  cout << (char)tolower(c);'
+echo "ABC"  |  scc 'char c;  while (cin>>c)  cout << (char)tolower(c);'
 abc
 ----------------------------------------------------------------------------
 
@@ -85,7 +84,7 @@ copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
 Assigning a container to `oi` is equivalent to doing
-`std::copy`, so above example we could have also written as:
+`std::copy`, so above example can be also written as:
 
 -------------------------------------------------------------------
 oi = V;
@@ -96,7 +95,7 @@ STL Containers input / output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Any STL container can be also printed without `oi`.  You can just send it to
-`std::cout` or to bar-print.
+`std::cout` or bar-print it.
 
 In comments is equivalent code:
 
@@ -119,17 +118,34 @@ vector<vint>	C {{1,2},{3,4}};   __ C;   //  {{1, 2}, {3, 4}}
 Same for input:
 
 ----------------------------------------------------------------------
-echo 1 2    | scc 'vint            C;     cin >> C;   C'
-echo 1 2    | scc 'int             C[2];  cin >> C;   C'
-echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'
-echo 1 2 3 4| scc 'vector<vint>	   C;     cin >> C;   C'
-echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'
-echo 1 2 3 4| scc 'set<int>        C;     cin >> C;   C'
-echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'
+echo 1 2    | scc 'vint            C;     cin >> C;   C'	//  {1,2}
+echo 1 2    | scc 'int             C[2];  cin >> C;   C'	//  {1,2}
+echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1, 2⟩
+echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'	//  {1,2}
+echo 1 2    | scc 'set<int>        C;     cin >> C;   C'	//  {1,2}
+echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'	//  {⟨1,2⟩, ⟨3,4⟩}
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+echo 1 2    | scc 'vint            C = in;            C'	//  {1, 2}
+echo 1 2 3 4| scc 'vint            C = in(2);         C'	//  {1, 2}
+echo 1 2 3 4| scc 'set<int>        C = in;            C'	//  {1, 2, 3, 4}
+echo 1 2 3 4| scc 'set<int>        C = in(2);         C'	//  {1, 2}
+echo 1 2 3 4| scc 'set<int>        C;     cin >> C;   C'	//  {1, 2, 3, 4}
+echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'	//  {⟨1,2⟩, ⟨3,4⟩}
+echo 1 2 3 4| scc 'map<int,int>    C = in(1);         C'	//  {⟨1,2⟩}
+echo 1 2 3 4| scc 'map<int,int>    C = in;            C'	//  {⟨1,2⟩, ⟨3,4⟩}
+----------------------------------------------------------------------
+
+//////////////
+echo 1 2    | scc 'int             C[2];  cin >> C;   C'	//  {1, 2}
+echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'	//  {1, 2}
+echo 1 2.2  | scc 'pair<int,float> p;     cin >> p;   p'	//  ⟨1,2.2⟩
+echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1, 2⟩
+////////////
+
 If a container have non-zero length, then the same number of elements will be
-read.  if container is empty then read will be till EOF.
+read.  if container is empty then input will be EOF terminated.
 
 Object IN
 ~~~~~~~~~
@@ -170,7 +186,7 @@ vint V = in(in);
 --------------------------------------------------------------------
 
 
-io.h standalone use
+IO.H  standalone use
 ~~~~~~~~~~~~~~~~~~~
 
 File `io.h` can be used as standalone, independent include. 
