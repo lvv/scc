@@ -1,6 +1,9 @@
+
+set -o errexit
+set -v
+
 scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'
 scc 'auto P = tuple<int,float>{1,3.3};  __ P, ++P, P++;'
-scc 'vint S{1,2,3}, T;  S>>T; T'
 scc 'dint v{1,2,3}, w{4,5};  v >> w'
 scc 'array<int,3> a; rng|a = 10; a'
 scc 'int a[3];  rng|a = 10; a'
@@ -10,4 +13,4 @@ scc 'stack<int> s; s << 1 << 2 << 3;  int x;  s >> x; _ x, s++; __ "", !s--;'
 scc 'queue<int> q; q << 1 << 2 << 3;  int x;  x << q;  __ x, ++q, q++;   __ !--q;'
 scc 'auto T = MT(1,2,3);  __ ++T, T++, !T;'
 scc 'dint d{1,2};   3 >> d;   d'
-scc 'map<int,int> m;   m<<MT{1,2};  m'
+scc 'map<int,int> m;   m<<MP(1,2);  m'

@@ -65,8 +65,6 @@ while getopts npf:vBi:F:o:x:OgHt opt;  do
 	esac
 done
 
-[[ $is_stream && $gcc_ver_num < 44   ]]   &&   { echo "scc error: stream ops not supported for older gcc"; exit 1; }
-
 # shift out snippet arg
 [[ -z $snippet_file ]]  &&  shift $((OPTIND-1))
 

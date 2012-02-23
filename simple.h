@@ -317,7 +317,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value, std::istream& >::type
 operator>>      (istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 

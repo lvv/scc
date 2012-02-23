@@ -1,3 +1,7 @@
+
+set -o errexit
+set -v
+
 scc '
 	{ __ (strr("abc") == "a.."_R);  }
 	{ __ (strr("abc") ==  ~str("a.*"));	}

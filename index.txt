@@ -92,8 +92,8 @@ oi = V;
 oi = S;
 -------------------------------------------------------------------
 
-STL Containers input/output
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+STL Containers input / output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Any STL container can be also printed without `oi`.  You can just send it to
 `std::cout` or to bar-print.
@@ -152,10 +152,6 @@ vint V = in(10);
 vint W = in;		// Till EOF.  Note:  we can not use:  vint W(in);
 --------------------------------------------------------------------
 
-Google CodeJam and FaceBook Hackercup  often have input format to input an
-array where first goes a number (N) followed by N elements of an array.  To
-read it, we can use:
-
 Here is example of C++ vs SCC input where we need to read a number and than
 corresponding number of container elements:
 
@@ -186,7 +182,7 @@ int main() {
 }
 -------------------------------------------
 
-Files `simple.h`, `cj.h` and `stl.h` can also be used independently.
+Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 
 
 STL Operators

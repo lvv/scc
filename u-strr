@@ -1,4 +1,8 @@
-set -x
+
+set -o errexit
+set -v
+
+scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'
 
 scc '
 	//{ strr f("abc");  fld f2 (f);	__ f2; }

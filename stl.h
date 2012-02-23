@@ -47,7 +47,7 @@ operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);  
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.insert(x);   return C; };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type&
+	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type
 operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
 
 
@@ -77,7 +77,7 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x); 
 		is_container<Ct1>::value  
 			&&  is_container<Ct2>::value  
 			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value 
-			//&&  has_push_front<Ct2>::value	<------------  error
+			&&  has_push_front<Ct2>::value
 		, Ct2
 	>::type &
 operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(), std::front_inserter(C2));  return C2; };

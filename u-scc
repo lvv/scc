@@ -1,33 +1,45 @@
 #!/bin/sh
 
-time (
+
+
+#time (
 
 echo =====================================================================================================
 
-echo ---------------------------------------------------------	PRINTER
-echo "scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs=\"Cs\"; str s=\"STR\"; strr sr(\"SR\"); fld f(\"FLD\");  __ vi,ca,ar,cs,s,sr,f;'"
-      scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR"; strr sr("SR"); fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;'   || exit 1
-echo "{1} {1} {1} CS STR SR FLD"
+set -o errexit
+set -v
+
+: ---------------------------------------------------------	PRINTER
+scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR"; strr sr("SR"); fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;' ; echo  "{1} {1} {1} CS STR SR FLD"
+
+: ---------------------------------------------------------     PARSER
+echo -n '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!'  scc -F:  -p ; echo -e "\n11:12!21:22!31:32:33:!"
+
+: ---------------------------------------------------------	PRINTER
+scc 'int A[2] = {1,2}; A'; echo "{1, 2}"
+
+: ---------------------------------------------------------  FIELD
+echo -en '\n1 2\n11 22\n'    | ORS=' / ' scc -p '$1=9;' ;  echo -e "\n9 / 9 2 / 9 22"
+
+: ---------------------------------------------------------
+echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m';   echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
+
+: ---------------------------------------------------------	STREAM
+command df | scc 'WRL n+=$3;  n'
+command df | awk '{n+=$3;};  END{print n}'
+
+: ---------------------------------------------------------  OI
+scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;"; echo 1 2 a b ⟨11,22⟩
+
+: ---------------------------------------------------------  OI
+scc  'vint A{1,2,3};  oi=A;   str S("ABC");  oi=S;  _ endl;';  echo 1 2 3 A B C
 
 
-echo ---------------------------------------------------------  PARSER
+: ---------------------------------------------------------  SEPERATORS
+echo  -n 11,,-,22--111,,222 |  RS=-- ORS="(NL) " scc -p -i,, -o:   '';  echo -e "\n11:-,22(NL) 111:222(NL)"
 
-echo "echo -n '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!'  scc -F:  -p"
-echo       -n '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!'  scc -F:  -p ; echo
-echo '11:12!21:22!31:32:33:!'
-
-
-echo ---------------------------------------------------------	PRINTER
-echo "echo \"scc 'int A[2] = {1,2}; A'\""
-      scc 'int A[2] = {1,2}; A'  || exit 1
-echo -e "{1, 2}"
-
-
-echo ---------------------------------------------------------  FIELD
-echo "echo -en '\n1 2\n11 22\n'    | scc -p '\$1=9;'"
-      echo -en '\n1 2\n11 22\n'    | scc -p '$1=9;'   || exit 1
-echo -e '\n9\n9 2\n9 22'
-
+#)
+exit 0
 #echo ---------------------------------------------------------  REGEX
 #echo "echo -e \"1 -\n2\n3 none\n4 abc\"   | scc -p 'F(1)=RR(F(1),R(\"^(none|-)?$\"),"n/a");'"
 #      echo -e  "1 -\n2\n3 none\n4 abc"    | scc -p 'F(1)=RR(F(1),R( "^(none|-)?$" ),"n/a");'  &&
@@ -47,17 +59,7 @@ echo -e '\n9\n9 2\n9 22'
 #echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
 #echo -e "\nAA\nBB"
 
-echo ---------------------------------------------------------
-echo "echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'"
-      echo aaa bbb aaa | scc 'str w;  map<str,int> m;  while(cin>>w) m[w]++;  m'  || exit 1
-echo "{⟨aaa,2⟩, ⟨bbb,1⟩}"
-
-echo ---------------------------------------------------------	STREAM
-echo   "df | scc 'WRL n+=$3;  n'"
-command df | scc 'WRL n+=$3;  n'  || exit 1
-command df | awk '{n+=$3;};  END{print n}'
-
-#echo ---------------------------------------------------------
+# ---------------------------------------------------------
 #scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'   &&
 #echo -e "\n*aa* *bb*"
 
@@ -69,22 +71,3 @@ command df | awk '{n+=$3;};  END{print n}'
 #echo 1:2:3 |  scc  -i:  -o '","'  -p
 #echo 1 2 3 |  scc  -I '"(\\S+)(\\s+|$)"' -o '","'  -p
 
-echo ---------------------------------------------------------  OI
-echo "scc \"*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  cout << endl;\""
-scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;" || exit 1
-echo 1 2 a b ⟨11,22⟩
-
-echo ---------------------------------------------------------  OI
-echo 'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(+S, -S, oi); cout<<endl;'
-scc  'vint A{1,2,3}; copy(-A, +A, oi); str S("ABC"); copy(+S, -S, oi); cout<<endl;' || exit 1
-echo 1 2 3 A B C
-
-
-echo ---------------------------------------------------------  SEPERATORS
-echo echo '-n 11,,-,22--111,,222 |  RS=-- ORS="(NL) " scc -p -i,, -o:   '
-echo  -n 11,,-,22--111,,222 |  RS=-- ORS="(NL) " scc -p -i,, -o:   '' || exit 1; echo
-echo '11:-,22(NL) 111:222(NL)'
-
-echo =====================================================================================================
-
-)
