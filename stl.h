@@ -255,7 +255,7 @@ range(const char* p) { return range_t<const char*>(p,p+std::strlen(p)); };
 
 template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
 
-struct rng_t {} rng;
+static  __attribute__((unused)) struct rng_t {} rng;
 
 
 	template<typename Ct>
@@ -272,6 +272,21 @@ operator | (Ct& C, rng_t r) { return range(std::begin(C), std::end(C)); };
 		range_t<typename container_iterator<Ct>::type>
 	>::type
 operator | (rng_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
+
+
+/*
+static  __attribute__((unused)) struct iot_t {} iot;
+
+	template<typename Ct>
+	typename std::enable_if<
+		is_container<Ct>::value,
+		range_t<typename container_iterator<Ct>::type>
+	>::type
+operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
+*/
+
+template<typename T>	struct  is_range		: std::false_type {};
+template<typename T>	struct  is_range<range_t<T>>	: std::true_type  {};
 
 
 #endif	// LVV_STL_H

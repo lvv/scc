@@ -235,12 +235,9 @@ struct in_t {
 	};
 
 
-		template<typename T>		// pod-like
-		typename std::enable_if<
-			//std::is_arithmetic<T>::value || is_string<T>::value,
-			is_ioable<T>::value,
-			void
-		>::type
+	// PRIMARY (directly inputable)
+		template<typename T>	
+		typename std::enable_if< is_ioable<T>::value, void >::type
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
