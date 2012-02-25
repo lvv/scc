@@ -52,6 +52,7 @@ int main() {
 		<<  "\t  " << is_iterator<T>::value\
 		<<  "\t  " << is_stack<T>::value\
 		<<  "\t  " << is_queue<T>::value\
+		<<  "\t  " << is_ioable<T>::value\
 	;
 
 	{ typedef vector<int>  T;
@@ -98,6 +99,9 @@ int main() {
 
 	{ typedef char	T[5];
 	for_T(   "char[5]"); }
+
+	{ typedef const char	T[5];
+	for_T(   "const char[5]"); }
 
 	{ typedef const char*  T;
 	for_T(   "const char*");  }
