@@ -2,6 +2,9 @@
 #include <scc.h>
 #include <cj.h>
 #include <matrix.h>
+#ifdef  scc_BENCHMARK
+	#include <lvv/timer.h>
+#endif
 
 void  print_line() {
 	if (!F.empty()) cout  << F[0];
@@ -35,6 +38,7 @@ int main(int argc, char** argv) {
 	std::string w __attribute__((unused));
 	char  c       __attribute__((unused));
 	char *p       __attribute__((unused)) = nullptr;
+	vint v9       __attribute__((unused)) {1,2,3,4,5,6,7,8,9,};
 
 	char	**first_file_argv = argv+2;
 	buf = new buf_t(first_file_argv, argv+argc);	// stdio
@@ -76,7 +80,11 @@ int main(int argc, char** argv) {
 	// PAD_tab
 	for (const char *p = PAD.b;  p!=PAD.e;  p++)
 		PAD_tab[size_t(*p)] = 1;
-
+ 
+	// BENCHMARK
+	#ifdef  scc_BENCHMARK
+		lvv::timer_t timer  __attribute__((unused)) (true);
+	#endif
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
 		if (is_header) {

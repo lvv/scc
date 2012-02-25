@@ -125,6 +125,7 @@ operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 	constexpr size_t
 operator!	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
 
 //  Stack << x

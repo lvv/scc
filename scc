@@ -43,7 +43,7 @@ usage_exit() {
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBi:F:o:x:OgHt opt;  do
+while getopts npf:vBi:F:o:x:OgHtb opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
@@ -60,7 +60,8 @@ while getopts npf:vBi:F:o:x:OgHt opt;  do
 		O) 	CXXFLAGS+="-O3 -march=native";;
 		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check";;
 		H)	CXXFLAGS+=" -Dscc_HEADER "; ;;
-		t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
+		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
+		b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native";;
 		?) 	usage_exit;;
 	esac
 done

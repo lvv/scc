@@ -104,7 +104,8 @@ STL Containers input / output
 Any STL container can be also printed without `oi`.  You can just send it to
 `std::cout` or bar-print it.
 
-In comments is equivalent code:
+In below example `__ C;` can  replaced with `cout << C;`. Equivalent code and
+output is shown in comments:
 
 --------------------------------------------------------------------
 vint            C {1,2,3};        __ C;	   //  vector<int> C{1,2,3};
@@ -141,7 +142,7 @@ echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1, 2⟩
 ////////////
 
 If a container have non-zero length, then the same number of elements will be
-read.  if container is empty then input will be EOF terminated.
+read.  if container is empty then input will be EOF-terminated.
 
 Object IN
 ~~~~~~~~~
@@ -154,7 +155,7 @@ int i(in);			//  int i;  cin >> i;
 float x = 1.1 + float(in);	//  float y;  cin >> y;   float x = 1.1 + y;
 --------------------------------------------------------------
 
-WARNING: Object `in` does not check for EOF. With scalar objects use only in
+WARNING: Object `in` does not check for EOF. Use only in
 context where you can ignore or do not expect EOF.
 
 To input a container:
@@ -202,7 +203,7 @@ STL Containers Operators
 
 This is for those who prefer terse C-pointer-style code.
 Below is string manipulation example.   Given `Thello?` string, it
-transforms it and prints -  `" H e l l o ! "`:
+transforms it and prints -  `" H e l l o ! "`.  In +++C++ +++:  
 
 ------------------------------------------------------
 deque<char>  S;   
@@ -217,18 +218,18 @@ S.push_back('\n');
 copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
-In SCC:
+In SCC (not-white-space character count is more than 3x times shorter):
 
 ------------------------------------------------------
-dchar  S;   S <= "Thello?";	
+dchar  S;  
+S <= "Thello?";	
 --S--;			
-++S = 'H';   S++ = '!';		
+++S = 'H';  
+S++ = '!';		
 '"' >> S << '"' << '\n';
 oi = S;
 ------------------------------------------------------
 
-If we count not-white-space character in above examples, SCC code is more than
-3x times shorter.
 
 Container operators do not create temp copy, they are modifying target container itself.
 Full list of container operators:

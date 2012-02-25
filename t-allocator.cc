@@ -23,6 +23,13 @@ int main()  {
 	__ flush;
 	__ m, flush;
 
+
+	__ "\nSTRING";
+	typedef 	std::basic_string<char, std::char_traits<char>, ALLOC<char> > nd_str;
+	nd_str  s="abc", ss="xyz"; 
+	__ flush;
+	__ s+ss, flush;
+
 	__ "\n AT EXIT", flush;
 
 	atexit( []{ delete[]  nd_allocator<char>::data; });

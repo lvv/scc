@@ -1,13 +1,5 @@
-#ifndef  LVV_SIMPLE_H
-#define  LVV_SIMPLE_H
-
-//#if __GNUC__ < 4  ||  (__GNUC__ == 4 && (__GNUC_MINOR__ < 7 ) )
-//	#error "SCC/simple.h does not support GCC earlier than 4.7"
-//#endif
-
-//#if	defined(__GXX_EXPERIMENTAL_CXX0X__) && (  __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 4 ) ) )
-//	#define  MODERN_GCC	1
-//#endif
+#ifndef  SCC_SIMPLE_H
+#define  SCC_SIMPLE_H
 
 #include "scc/stl.h"
 #include "scc/io.h"
