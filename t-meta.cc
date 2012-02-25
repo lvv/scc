@@ -3,7 +3,8 @@
 //#include"lvv/lvv.h"
 #include <type_traits>
 #include <typeinfo>
-#include<scc/simple>
+#include<scc/simple.h>
+#include<scc/allocator.h>
 
 using namespace std;
 
@@ -43,7 +44,7 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCntnr\t h_CI\t Ptr\t Iter\t Stack\t Queue";
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCntnr\t h_CI\t Ptr\t Iter\t Stack\t Queue\t Ioable";
 
 	#define for_T(name)  __ setw(25) << name \
 		<<  "\t  " << is_container<T>::value\
@@ -90,6 +91,9 @@ int main() {
 
 	{ typedef string  T;
 	for_T(   "string"); }
+
+	{ typedef std::basic_string<char, std::char_traits<char>, nd_allocator<char>> T;
+	for_T(   "basic_string<T,....>"); }
 
 	{ typedef string::iterator  T;
 	for_T(   "string::iterator"); }

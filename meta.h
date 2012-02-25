@@ -83,7 +83,7 @@ template<>		struct  is_string <std::string>	: std::true_type  {};
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
 template<typename T>	struct  is_ioable 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
-template<>		struct  is_ioable <std::string>	: std::true_type  {};
+template<typename T,typename CT,typename AL>	struct  is_ioable <std::basic_string<T,CT,AL>>	: std::true_type  {};
 template<size_t N>	struct  is_ioable <char[N]>	: std::true_type  {};
 template<size_t N>	struct  is_ioable <const char[N]>: std::true_type  {};
 template<>		struct  is_ioable <char*>	: std::true_type  {};
