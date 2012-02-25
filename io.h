@@ -97,32 +97,10 @@ operator<<      (ostream& os, const IT&) { return os; };
 #define		_    out()   <<
 #define		__   outln() <<
 
-/////////////////////////////////////////////////////////////////////  IS_CONTAINER
-
-	template <typename T>
-struct is_not_string_container {	// from http://stackoverflow.com/questions/4347921/sfinae-compiler-troubles
-	template <typename U>
-	static char test(
-		U* u,
-		typename U::const_iterator b = ((U*)0)->begin(),
-		typename U::const_iterator e = ((U*)0)->end()
-	);
-	template <typename U> static long test(...);
-
-	enum { value = sizeof test<T>(0) == 1 };
-};
-
-template<typename T, size_t N>	struct  is_not_string_container <T[N]>				: std::true_type  {};
-template<typename T, size_t N>	struct  is_not_string_container <std::array<T,N>>		: std::true_type  {};
-template<size_t N>		struct  is_not_string_container <char[N]>			: std::false_type {};
-template<>			struct  is_not_string_container <std::basic_string<char>>	: std::false_type {};
-
-
 
 // std::CONTAINTER<printable> or C-Array
 	template<typename Ct >
-	typename std::enable_if <is_not_string_container<Ct>::value, std::ostream&>::type
-	//typename std::enable_if <is_container<Ct>::value  &&  !is_ioable<Ct>::value, std::ostream&>::type
+	typename std::enable_if <is_container<Ct>::value  &&  !is_ioable<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);

@@ -446,11 +446,8 @@ struct buf_t {
 
 
 // traits
-template<>	struct  is_not_string_container <strr>	: std::false_type {};	// we have strr own printer
-template<>	struct  is_not_string_container <fld>	: std::false_type {};
 template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 template<>	struct  is_string    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
-
 
 
 #endif // SCC
