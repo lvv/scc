@@ -75,7 +75,6 @@ template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			t
 
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
-//template<>			struct	is_container<const char*>	: std::true_type { };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<typename T>	struct  is_string		: std::false_type {};

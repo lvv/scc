@@ -83,7 +83,7 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
-Same using container operators (more about this later): 
+Same using container operators (more about these later): 
 
 -------------------------------------------------------------------
 copy(+V, -V, oi);
@@ -104,7 +104,7 @@ STL Containers input / output
 Any STL container can be also printed without `oi`.  You can just send it to
 `std::cout` or bar-print it.
 
-In below example `__ C;` can  replaced with `cout << C;`. Equivalent code and
+In below example `__ C;` can be replaced with `cout << C;`. Equivalent code and
 output is shown in comments:
 
 --------------------------------------------------------------------
@@ -128,7 +128,7 @@ Same for input:
 ----------------------------------------------------------------------
 echo 1 2    | scc 'vint            C;     cin >> C;   C'	//  {1,2}
 echo 1 2    | scc 'int             C[2];  cin >> C;   C'	//  {1,2}
-echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1, 2⟩
+echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1,2⟩
 echo 1 2    | scc 'array<int,2>    C;     cin >> C;   C'	//  {1,2}
 echo 1 2    | scc 'set<int>        C;     cin >> C;   C'	//  {1,2}
 echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'	//  {⟨1,2⟩, ⟨3,4⟩}
@@ -141,14 +141,14 @@ echo 1 2.2  | scc 'pair<int,float> p;     cin >> p;   p'	//  ⟨1,2.2⟩
 echo 1 2    | scc 'tuple<int,int>  C;     cin >> C;   C'	//  ⟨1, 2⟩
 ////////////
 
-If a container have non-zero length, then the same number of elements will be
-read.  if container is empty then input will be EOF-terminated.
+If a container have non-zero length, then the corresponding number of elements will be
+read.  If container is empty then input will be EOF-terminated.
 
 Object IN
 ~~~~~~~~~
 
-Pre-defined object `in` can be used as initialiser. When a value
-is read from `in`, it is acquired from `std::cin`. 
+Pre-defined object `in` can be used as value in expression which is read from
+`std::cin`.
 
 --------------------------------------------------------------------
 int i(in);			//  int i;  cin >> i;	
@@ -207,7 +207,7 @@ transforms it and prints -  `" H e l l o ! "`.  In +++C++ +++:
 
 ------------------------------------------------------
 deque<char>  S;   
-for(auto c : "Thello?")  S.push_back(c);
+for(char c : "Thello?")  S.push_back(c);
 S.pop_front();
 S.pop_back();	// '\0'
 S.front() = 'H';
@@ -218,7 +218,7 @@ S.push_back('\n');
 copy(S.begin(), S.end(), ostream_iterator<char>(cout, " "));
 ------------------------------------------------------
 
-In SCC (not-white-space character count is more than 3x times shorter):
+Equivalent in SCC:
 
 ------------------------------------------------------
 dchar  S;  
@@ -230,8 +230,6 @@ S++ = '!';
 oi = S;
 ------------------------------------------------------
 
-
-Container operators do not create temp copy, they are modifying target container itself.
 Full list of container operators:
 
 ----------------------------------------------------------------
@@ -501,6 +499,10 @@ BENCHMARKS
 		v2 --  http://steve.80cols.com/flat_file_bakeoff.html
 		v1 -- http://steve.80cols.com/reading_flat_files_into_memory_benchmark.html
 		https://github.com/lorca/flat_file_benchmark/watchers
+
+STL
+	map adapter: https://github.com/krig/k11/blob/master/src/tests/iter.cpp
+
 GNU AWK
 	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
 
@@ -554,6 +556,7 @@ ENCODING
 		
 	Take a look on Boost.Locale it is a part of it
 DB
+	http://tildeslash.com/libzdb/#
 	SQL parser in spriti -- http://boost-spirit.com/repository/applications/spirit_sql.zip
 	SQL connectors -- http://www.reddit.com/r/cpp/comments/mrbc5/how_to_connect_to_an_sql_database/
 	http://soci.sourceforge.net/
