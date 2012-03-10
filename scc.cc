@@ -37,8 +37,8 @@ int main(int argc, char** argv) {
 	std::string s __attribute__((unused));
 	std::string w __attribute__((unused));
 	char  c       __attribute__((unused));
-	char *p       __attribute__((unused)) = nullptr;
-	vint v9       __attribute__((unused)) {1,2,3,4,5,6,7,8,9,};
+	char *p, *q   __attribute__((unused)) = nullptr;
+	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9};
 
 	char	**first_file_argv = argv+2;
 	buf = new buf_t(first_file_argv, argv+argc);	// stdio

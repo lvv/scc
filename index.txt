@@ -480,7 +480,6 @@ If you need to use it with older GCC - use v0.1.
 * httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
 * httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
 * httpx://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
-* httpx://www.topcoder.com/stat?c=problem_solution&cr=152347&rd=4709&pm=1889[ZorbaTHut TopCoder submission]
 * httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial[+++C++11 +++ regex tutorial. Part-1 ]/
 * httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial-part-2[+++C++11 +++  regex tutorial. Part-2]/
 * httpx://en.wikipedia.org/wiki/Delimiter[Delimiter]
@@ -517,6 +516,9 @@ REGEX
 	http://swtch.com/~rsc/regexp/
 	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 FORMATS
+	ALL
+		http://dev.umpirsky.com/list-of-all-countries-in-all-languages-and-all-data-formats/
+
 	JSON
 		json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
 		http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
