@@ -100,7 +100,6 @@ fi
 #####################################################################################  GENERATE SRC
 
 
-echo "scc args ($#):"  "$@"
 ${CXX-g++} $CXXFLAGS $src -o $prg $LIBS || exit 1
 	
 if  [[ $execute == 1 ]]  ; then 

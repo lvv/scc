@@ -5,6 +5,7 @@
 #include <typeinfo>
 #include<scc/simple.h>
 #include<scc/allocator.h>
+#include<scc/scc.h>
 
 using namespace std;
 
@@ -92,6 +93,9 @@ int main() {
 	{ typedef string  T;
 	for_T(   "string"); }
 
+	{ typedef fld  T;
+	for_T(   "fld"); }
+
 	{ typedef std::basic_string<char, std::char_traits<char>, nd_allocator<char>> T;
 	for_T(   "basic_string<T,....>"); }
 
@@ -123,6 +127,3 @@ int main() {
 		<< endl
 		;
 }
-
-
-

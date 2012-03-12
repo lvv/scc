@@ -29,7 +29,7 @@
 			false;
 		#endif
 
-	static bool  is_print_last = false;
+	static bool  __attribute__((unused)) is_print_last = false;
 
 	const static bool  is_p =
 		#ifdef scc_P
@@ -65,13 +65,13 @@ struct strr {         ///////////////////////////////////////////////////////  S
  };
 
 
-		ostream&
- operator<<      (ostream& os, const strr f) {
-	assert(f.size()==0  || (f.b && f.e));
-	const char *p = f.b;
-	while (p!=f.e)   os << *p++;
-	return os;
- };
+template<>		struct  is_ioable <strr>: std::true_type  {};
+
+	std::ostream&
+operator<<      (ostream& os, const strr& sr) {
+	os.write(sr.b, sr.size());
+        return os;
+};
 
 
 
@@ -199,6 +199,7 @@ struct	fld : strr {
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 
 
+template<>		struct  is_ioable <fld>	: std::true_type  {};
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>
