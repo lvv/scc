@@ -40,9 +40,14 @@ int main(int argc, char** argv) {
 	char *p, *q   __attribute__((unused)) = nullptr;
 	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9};
 
-	char	**first_file_argv = argv+2;
-	buf = new buf_t(first_file_argv, argv+argc);	// stdio
 
+	char	**first_file_argv = argv+1;
+						/*iFOR(argc)	__ "\t= ", i, argv[i];
+								__ "\t=  1st file: ",  (argc>1 ? *first_file_argv : "stdin") , endl;
+						*/
+
+	buf = new buf_t(first_file_argv, argv+argc);	// stdio
+	// cin.sync_with_stdio(false);
 
 	////////  READ ENV
 
