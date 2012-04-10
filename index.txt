@@ -47,9 +47,6 @@ Bar-print
 ~~~~~~~~~
 
 Instead of `std::cout` printing, in SCC you can use so called **bar-print**.
-
-//http://volnitsky.com/project/scc/#_simplified_printing[bar-print]
-
 Below are bar-print statements with equivalent code in comments:
 
 ---------------------------------------------------------------
@@ -68,14 +65,14 @@ pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor.
 
 Let say we have `vector<int> V;` and `set<string> S;` and we want
-to print these.  In plain +++ C++ +++, with `std::ostream_iterator`:
+to print these.  With `std::ostream_iterator`:
 
 ------------------------------------------------------------------
 copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<string>(cout, " "));
 -------------------------------------------------------------------
 
-Include `io.h` defines `oi` object, which is similarly to `std::cout`, can work with any type and
+Include `io.h` defines `oi` object - SCC replacement for `ostream_iterator`, which can work with any type and
 is pre-defined.  With `oi`, above example will be:
 
 -------------------------------------------------------------------
@@ -260,7 +257,7 @@ Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
 S << x			//  S.push(x)
 S++ 			//  S.top(x)
 S >> x			//  x = S.top(x);  S.pop()
-S-- 			//  S.pop(x)
+S-- 			//  S.pop()
 
 			//  QUEUE
 Q++ 			//  Q.back(x)
@@ -295,7 +292,8 @@ Some variables are pre-defined:
 * `c` -- `char`
 * `p` -- `char*`
 
-You don't need to remember these, you can
+You don't need to remember these. Predefined variables are defined in external
+to snippet scope, so you can
 re-define these to what ever you want. 
 
 Examples
@@ -443,7 +441,8 @@ echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2 == "(none|-)"_R)  $2="n/a";'
 
 
 C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std::regex_match()`.
-Unfortunately GCC's LIBSTDC++ not yet have working `std::regex_replace` and `std::regex_search` and we have to use `if`.
+Unfortunately GCC's LIBSTDC++ not yet C++11 complaint.  Algorithms
+`std::regex_replace` and `std::regex_search` are broken and we have to use `if`.
 
 
 
@@ -459,8 +458,8 @@ echo "PATH+=:$PWD/scc/" >> ~/.profile
 
 Current alpha version is v0.3, use "latest" git tag for relatively stable
 version. SCC uses C+11 extensively and some GCC extensions, so currently it can
-work only with GCC-4.7 (pre release).  It might work with CLANG and
-MSVS, but this was not tested.  For stream ops, cureent version is about x100 times faster than v0.1 and several
+work only with GCC-4.7.   It might work with CLANG and
+MSVS, but this was not tested.  For stream ops, current version is about x100 times faster than v0.1 and several
 times faster than GAWK/MAWK.  Boost is not used after v0.2.  Regex in `RS`/`FS` are
 currently not supported (but were in v0.1) 
 
