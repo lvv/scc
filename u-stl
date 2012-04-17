@@ -19,5 +19,5 @@ scc 'v9%33'
 scc 'v9%3'
 scc 'v9|22=33; v9'
 scc 'v9|3=33;  v9'
-scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
+#scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
 

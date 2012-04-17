@@ -115,11 +115,6 @@ operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear(); 
 operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.begin(), C.end(), x); };
 
 
-//  Ct1 / Ct2   ---  search() --> it
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
-operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
-
 //  Ct % x   ---  find() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
@@ -143,6 +138,8 @@ operator |       (Ct& C, const typename Ct::value_type& x)    {
 	}
 	return *it;
 };
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
@@ -326,6 +323,23 @@ operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 
 template<typename T>	struct  is_range		: std::false_type {};
 template<typename T>	struct  is_range<range_t<T>>	: std::true_type  {};
+
+//  SEARCH 
+
+//  Ct1 | Ct2   ---  search() --> range	   
+/*
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  range_t&>::type
+operator |       (Ct& C1, const Ct& C2)    { 
+	auto it = search(C1.begin(), C1.end(), C2.begin(), C2.end());
+	return  range_t(it, advance(it, distance(C2.end(), C2.begin())));
+};
+
+//  Ct1 / Ct2   ---  search() --> it
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+*/
 
 
 #endif	// LVV_STL_H
