@@ -115,10 +115,22 @@ operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear(); 
 operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.begin(), C.end(), x); };
 
 
+//  Ct1 / Ct2   ---  search() --> it
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+
 //  Ct % x   ---  find() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
 operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.end() != find(C.begin(), C.end(), x); };
+
+
+//  Ct1 % Ct2   ---  search() --> bool	
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  bool>::type
+operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+
 
 //  Ct | x   ---  find() --> *it	   usage: scc 'v9|3=33; v9'
 	template<typename Ct>
