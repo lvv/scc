@@ -10,7 +10,7 @@
 
 #include "meta.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////  MEMEBERS ALIASES
+/////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
 //  +Ct / -Ct   ---   end() /begin()
 	template<typename Ct >
@@ -106,6 +106,14 @@ operator <=      (Ct1& C1, const Ct2& C2)    { C1.clear(); for(auto x: C2) C1.pu
 	template<typename Ct, size_t N>
 	typename std::enable_if < is_container<Ct>::value , Ct >::type &
 operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear();  for(auto x: A) C.push_back(x);   return  C; };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////  SEARCH
+
+//  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.begin(), C.end(), x); };
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
 

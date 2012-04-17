@@ -37,10 +37,20 @@ struct nd_allocator : std::allocator<T> {
 		static char		*data;
 		static char		*b;		// free begin
 		static char		*e;		// end of data buffer;
-	 nd_allocator() :   std::allocator<T>() {};
+		static int		ref_cnt;
+	 nd_allocator() :   std::allocator<T>()  {
+		if(!ref_cnt)  {
+			data	= new char[capacity];
+			b	= data;
+			e	= data + capacity;
+		};
+		++ref_cnt;
+	 }
+
 	 template<typename U>
-	 nd_allocator(const nd_allocator<U>& other)  {}
-	~nd_allocator()  {};					//  TODO: atexit() - delete[]  data; ;
+	 nd_allocator(const nd_allocator<U>& other)  { ref_cnt++; };
+	 
+	~nd_allocator()  { --ref_cnt;  if (!ref_cnt)  delete [] data; };
 
 		typename std::allocator<T>::pointer
 	allocate(typename std::allocator<T>::size_type n, typename std::allocator<void>::const_pointer = 0) {
@@ -55,15 +65,15 @@ struct nd_allocator : std::allocator<T> {
 	deallocate(typename std::allocator<T>::pointer p, typename std::allocator<T>::size_type n) {
 		//::operator delete(p);
 		//assert (false);
-							//__ "\t nd: -" << n;
+						//__ "\t nd: -" << n;
 	}
 
 	template<typename U> struct rebind { typedef nd_allocator<U> other; };
 };
 
-template<typename T> char* nd_allocator<T>::data = new char[capacity];
-template<typename T> char* nd_allocator<T>::b    = nd_allocator<char>::data;
-template<typename T> char* nd_allocator<T>::e    = nd_allocator<char>::data + capacity;
-
+template<typename T> char*	nd_allocator<T>::data		= nullptr;
+template<typename T> char*	nd_allocator<T>::b		= nullptr;
+template<typename T> char*	nd_allocator<T>::e		= nullptr;
+template<typename T> int	nd_allocator<T>::ref_cnt	= 0;
 
 #endif

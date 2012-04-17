@@ -14,3 +14,4 @@ scc 'queue<int> q; q << 1 << 2 << 3;  int x;  x << q;  __ x, ++q, q++;   __ !--q
 scc 'auto T = MT(1,2,3);  __ ++T, T++, !T;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
+scc 'copy(v9/2, v9/5,oi)'
