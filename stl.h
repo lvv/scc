@@ -118,7 +118,20 @@ operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.b
 //  Ct % x   ---  find() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (Ct& C, const typename Ct::value_type& x)    {  return C.end() != find(C.begin(), C.end(), x); };
+operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.end() != find(C.begin(), C.end(), x); };
+
+//  Ct | x   ---  find() --> *it	   usage: scc 'v9|3=33; v9'
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  typename Ct::value_type&>::type
+operator |       (Ct& C, const typename Ct::value_type& x)    { 
+	auto it = find(C.begin(), C.end(), x);
+	if (it == C.end()) {
+		C.push_back(typename Ct::value_type());
+		return C.back();
+	}
+	return *it;
+};
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
 
