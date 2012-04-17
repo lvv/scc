@@ -115,6 +115,11 @@ operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear(); 
 operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.begin(), C.end(), x); };
 
 
+//  Ct % x   ---  find() --> bool	
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  bool>::type
+operator %       (Ct& C, const typename Ct::value_type& x)    {  return C.end() != find(C.begin(), C.end(), x); };
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
 
 template<typename U, typename V>   U&     operator++   (std::pair<U,V>& P)      { return P.first;  };
