@@ -13,10 +13,14 @@
 ///////////////////////////////////////////////////////////////////// UTILS
 
 
-// Greatest Common divisor
-int gcd(long a, long b) {
-	if (b==0)	return a;
-	else		return gcd(b,a%b);
+
+	template<typename T>
+T gcd(T a, T b) {
+    if (a < 0) a = -a;
+    if (b < 0) b = -b;
+    if (a == 0) return b;
+    if (a > b) return gcd(b, a);
+    return gcd(b % a, a);
 }
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
