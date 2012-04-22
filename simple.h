@@ -2,6 +2,7 @@
 #define  SCC_SIMPLE_H
 
 #include "scc/stl.h"
+#include "scc/range.h"
 #include "scc/io.h"
 #include "scc/regex.h"
 
