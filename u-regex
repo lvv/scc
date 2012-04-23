@@ -5,4 +5,5 @@ set -v
 scc '
 	{ __ (strr("abc") == "a.."_R);  }
 	{ __ (strr("abc") ==  ~str("a.*"));	}
+	{ if(range(v9)) __ v9;  v9.clear(); if(!range(v9)) __ "empty"; }
 '

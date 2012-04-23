@@ -35,6 +35,7 @@ struct  range_t {
 
 
 	/* to bool conversion --
+	*/
 	 
 			struct PointerConversion { int valid; };
 			typedef int PointerConversion::* datamemptr;
@@ -42,7 +43,6 @@ struct  range_t {
 	operator datamemptr  () const {
 		return  (b_ != e_) ? &PointerConversion::valid : 0;
 	};
-	*/
 
 };
 
@@ -67,6 +67,8 @@ struct  range_t<const char*> {
 	iterator	end()		{ return e_; };
 	const_iterator	begin() const	{ return b_; };
 	const_iterator	end()   const	{ return e_; };
+
+	ssize_t		size()   const	{ return std::distance(b_, e_); };
 
 	//range_t& operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
 };
@@ -128,6 +130,12 @@ template<typename T>	struct  is_range<range_t<T>>	: std::true_type  {};
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
 
+
+/*//  ~Range  --- size()
+	template<typename Rn>
+	typename std::enable_if <is_range<Rn>::value, ssize_t>::type
+operator~      (const Rn& R) { return R.size(); };
+*/
 
 
 //  Ct1 | Ct2   ---  search() --> range	   

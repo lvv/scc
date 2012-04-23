@@ -232,7 +232,7 @@ Full list of container operators:
 ----------------------------------------------------------------
 +C			//  C.begin()
 -C			//  C.end()
-!C			//  C.size()
+~C			//  C.size()
 ++C			//  C.front()
 C++			//  C.back()
 --C			//  C.pop_front()

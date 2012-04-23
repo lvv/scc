@@ -21,10 +21,10 @@ operator+      (Ct& C) { return begin(C); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
 operator-      (Ct& C) { return  end(C); };
 
-//  !Ct  --- size()
+//  ~Ct  --- size()
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, ssize_t>::type
-operator!      (const Ct& C) { return C.size(); };
+operator~      (const Ct& C) { return C.size(); };
 
 //  if (Ct)  --- if (!Ct.empty())
 
@@ -224,6 +224,20 @@ operator++      (Ct& C)    { return C.front(); };
 operator!      (Ct& C)    { return C.size(); };
 
 
+namespace x {  // eXperimental
 
+template<typename T>
+struct vector : std::vector<T> {
+	/* to bool conversion --
+	*/
+			struct PointerConversion { int valid; };
+			typedef int PointerConversion::* datamemptr;
+
+	operator datamemptr  () const {
+		return  this->empty() ? &PointerConversion::valid : 0;
+	};
+};
+
+} // x namespace
 
 #endif	// LVV_STL_H
