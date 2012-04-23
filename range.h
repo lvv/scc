@@ -131,13 +131,6 @@ template<typename T>	struct  is_range<range_t<T>>	: std::true_type  {};
 ////////////////////////////////////////////////////////////////  RANGE OPS
 
 
-/*//  ~Range  --- size()
-	template<typename Rn>
-	typename std::enable_if <is_range<Rn>::value, ssize_t>::type
-operator~      (const Rn& R) { return R.size(); };
-*/
-
-
 //  Ct1 | Ct2   ---  search() --> range	   
 /*
 	template<typename Ct>

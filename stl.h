@@ -87,13 +87,13 @@ operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(),
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
-operator--      (Ct& C)         { typename Ct::value_type x = C.front();   C.pop_front();   return  std::move(x); };
+	typename std::enable_if <is_container<Ct>::value, Ct>::type &&
+operator--      (Ct& C)         { C.pop_front();   return  C; };
 
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::value_type>::type &&
-operator--      (Ct& C, int)    { typename Ct::value_type x = C.back();    C.pop_back();    return  std::move(x); };
+	typename std::enable_if <is_container<Ct>::value, Ct>::type &&
+operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
 // Ct1 <= Ct2
@@ -160,7 +160,7 @@ operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 
 	template <class... Types>
 	constexpr size_t
-operator!	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
+operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
