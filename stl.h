@@ -23,7 +23,7 @@ operator-      (Ct& C) { return  end(C); };
 
 //  ~Ct  --- size()
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, ssize_t>::type
+	typename std::enable_if <has_size<Ct>::value, size_t>::type
 operator~      (const Ct& C) { return C.size(); };
 
 //  if (Ct)  --- if (!Ct.empty())
