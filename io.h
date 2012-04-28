@@ -2,6 +2,8 @@
 #ifndef  SCC_IO_H
 #define  SCC_IO_H
 ////////////////////////////////////////////////////////////////////  OUT, OUTLN
+//#include <x86_64-pc-linux-gnu/bits/stdc++.h>
+
 #include <type_traits>
 #include <iterator>
 

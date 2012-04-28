@@ -1,8 +1,8 @@
 #ifndef  LVV_REGEX_H
 #define  LVV_REGEX_H
 
+#include "scc/meta.h"
 #include <regex>
-#include <scc/meta.h>
 	using std::regex;
 
 	using std::match_results;

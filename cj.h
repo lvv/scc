@@ -3,12 +3,12 @@
 #define  LVV_CODEJAM_H
 
 #ifndef LVV_SIMPLE_H
-#include <scc/simple.h>
+#include "scc/simple.h"
 #endif
 
-#ifndef LVV_MATRIX_H
-#include <scc/matrix.h>
-#endif
+//#ifndef LVV_MATRIX_H
+//#include "scc/matrix.h"
+//#endif
 
 ///////////////////////////////////////////////////////////////////// UTILS
 

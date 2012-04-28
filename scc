@@ -10,6 +10,8 @@ fi
 [ -f     .scc ]  && .     .scc
 
 CXXFLAGS+=" -std=gnu++11 -Wno-unused-function "
+O_FLAGS="-O3 -march=native"
+g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check"
 
 
 SCC_HOME=$(dirname $(readlink -f $0))
@@ -35,15 +37,18 @@ usage_exit() {
 		-O 		- optimized compile
 		-g 		- debug compile
 		-H 		- read header 
+		-r 		- regenerate GCH (gcc precompiled headers) 
 	"
 	exit 0
 }
 
 ####################################################################################### OPTIONS 
+gch_dir=.gch
+
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBi:F:o:x:OgHtb opt;  do
+while getopts npf:vBi:F:o:x:OgHtbr opt;  do
 	case $opt in
 		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
@@ -57,14 +62,25 @@ while getopts npf:vBi:F:o:x:OgHtb opt;  do
 						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
 						  else  CXXFLAGS+=" -Dscc_OFS=\"$OPTARG\" ";  fi;; 
-		O) 	CXXFLAGS+="-O3 -march=native";;
-		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check";;
+		O) 	CXXFLAGS+="-O3 -march=native"; gch_dir=.gch/O;;
+		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check"; gch_dir=.gch/g;;
 		H)	CXXFLAGS+=" -Dscc_HEADER "; ;;
 		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native";;
+		r)
+			set -x 
+			mkdir -p .gch/O
+			mkdir -p .gch/g
+			g++ $CXXFLAGS $O_FLAGS cj.h -o .gch/O/cj.h.gch  
+			g++ $CXXFLAGS $g_FLAGS cj.h -o .gch/g/cj.h.gch
+			g++ $CXXFLAGS          cj.h -o .gch/cj.h.gch
+			exit 0
+			;;
 		?) 	usage_exit;;
 	esac
 done
+
+[[ -d $gch_dir ]] && CXXFLAGS=" -include $SCC_HOME/$gch_dir/cj.h  -Winvalid-pch  $CXXFLAGS "
 
 # shift out snippet arg
 #[[ -z $snippet_file ]]  &&  shift $((OPTIND-1))

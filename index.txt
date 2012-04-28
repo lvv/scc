@@ -451,16 +451,16 @@ Install
 
 -----------------------------------------
 git clone http://github.com/lvv/scc
+cd scc
+./scc -r
 echo "PATH+=:$PWD/scc/" >> ~/.profile
 . ~/.profile
 ---------------------------------------
 
-Current alpha version is v0.3, use "latest" git tag for relatively stable
-version. SCC uses C+11 extensively and some GCC extensions, so currently it can
-work only with GCC-4.7.   It might work with CLANG and
-MSVS, but this was not tested.  For stream ops, current version is about x100 times faster than v0.1 and several
-times faster than GAWK/MAWK.  Boost is not used after v0.2.  Regex in `RS`/`FS` are
-currently not supported (but were in v0.1) 
+This project is in alpha stage. Use "latest" git tag for relatively stable
+version. SCC uses C+11 extensively and some GCC extensions, so currently it
+can work only with GCC-4.7.   It might work with CLANG and MSVS, but this was
+not tested.  Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
 +++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
 at the end of every line (even in comments).

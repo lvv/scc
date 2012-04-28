@@ -1,8 +1,8 @@
 #ifndef  LVV_SCC_H
 #define  LVV_SCC_H
 
-	#include "scc/allocator.h"
 	#include "scc/simple.h"
+	#include "scc/allocator.h"
 
 
 	// BUF

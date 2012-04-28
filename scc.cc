@@ -1,9 +1,9 @@
-#include <simple.h>
-#include <scc.h>
-#include <cj.h>
-#include <matrix.h>
+#include "cj.h"
+#include "scc.h"
+
+//#include "matrix.h"
 #ifdef  scc_BENCHMARK
-	#include <lvv/timer.h>
+	#include "lvv/timer.h"
 #endif
 
 void  print_line() {

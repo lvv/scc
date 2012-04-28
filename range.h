@@ -1,14 +1,16 @@
 #ifndef  LVV_RANGE_H
 #define  LVV_RANGE_H
 
+/*
 #include <stddef.h>
 #include <iterator>
 #include <string>
 #include <cstring>
 #include <deque>
 #include <tuple>
+*/
 
-#include "meta.h"
+#include "scc/meta.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////  RANGE
 
@@ -61,7 +63,7 @@ struct  range_t<const char*> {
 	iterator b_, e_;
 	range_t(iterator b, iterator e)  : b_(b), e_(e) {};
 
-	range_t(const char* p)  : b_(p), e_(p+std::strlen(p)) {};
+	range_t(const char* p)  : b_(p) { while(*p) p++;  e_=p;};
 
 	iterator	begin()		{ return b_; };
 	iterator	end()		{ return e_; };
@@ -90,7 +92,7 @@ operator / (I b, I e) { return range_t<I>(b,e); };
 range(Ct& C) { return range_t<typename Ct::iterator>(begin(C),end(C)); };
 
 	range_t<const char*>
-range(const char* p) { return range_t<const char*>(p,p+std::strlen(p)); };
+range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp,p); };
 
 
 template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
