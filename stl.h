@@ -26,6 +26,7 @@ operator-      (Ct& C) { return  end(C); };
 	typename std::enable_if <has_size<Ct>::value, size_t>::type
 operator~      (const Ct& C) { return C.size(); };
 
+
 //  if (Ct)  --- if (!Ct.empty())
 
 
@@ -87,12 +88,12 @@ operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(),
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type &&
+	typename std::enable_if <is_container<Ct>::value, Ct>::type &
 operator--      (Ct& C)         { C.pop_front();   return  C; };
 
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type &&
+	typename std::enable_if <is_container<Ct>::value, Ct>::type &
 operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
@@ -185,10 +186,12 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.top();  C.pop(); 
 	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
 operator++      (Ct& C, int)    { return C.top(); };
 
+/*
 //  !Stack
 	template<typename Ct>
 	typename std::enable_if <is_stack<Ct>::value, size_t>::type
 operator!      (Ct& C)    { return C.size(); };
+*/
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  QUEUE
@@ -226,10 +229,11 @@ operator!      (Ct& C)    { return C.size(); };
 
 namespace x {  // eXperimental
 
+// waiting for implementation of Inherited Ctor-s -- http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2540.htm
 template<typename T>
 struct vector : std::vector<T> {
-	/* to bool conversion --
-	*/
+
+	/* to bool conversion -- */
 			struct PointerConversion { int valid; };
 			typedef int PointerConversion::* datamemptr;
 

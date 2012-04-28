@@ -5,12 +5,17 @@ set -v
 scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'
 scc 'auto P = tuple<int,float>{1,3.3};  __ P, ++P, P++;'
 scc 'dint v{1,2,3}, w{4,5};  v >> w'
-scc 'stack<int> s; s << 1 << 2 << 3;  int x;  s >> x; _ x, s++; __ "", ~s--;'
-scc 'queue<int> q; q << 1 << 2 << 3;  int x;  x << q;  __ x, ++q, q++;   __ ~--q;'
-scc 'auto T = MT(1,2,3);  __ ++T, T++, ~T;'
+scc 'stack<int> s; s << 1 << 2 << 3;  int x;  s >> x;  _ x, s++; __ "", ~s--;'
+scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
+scc 'auto T = MT(1,2,3);  __ ++T, T++, T;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
 scc 'copy(v9/2, v9/5, oi)'
+
+# SIZE
+scc 'stack<int> sk;  sk<<1<<2;  set<int> st;  st<<1<<2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
+
+# FIND
 scc 'v9 % 33'
 scc 'v9 % 3'
 scc 'v9|22=33; v9'

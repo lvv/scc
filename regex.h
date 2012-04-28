@@ -32,11 +32,12 @@ operator == (const char  *p,  const std::regex &e)	{ return std::regex_match(p,e
 	typename std::enable_if<is_string<S>::value, bool>::type
 operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begin(), s.end(), e); };
 
-
+/*
 	// convert to regex operator
 	template<typename S>
 	typename std::enable_if<is_string<S>::value, std::regex>::type
 operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
+*/
 
 /*
 	//#define		R		std::regex
