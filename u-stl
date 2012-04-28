@@ -13,7 +13,7 @@ scc 'map<int,int> m;   m<<MP(1,2);  m'
 
 # SIZE
 scc 'stack<int> sk;  sk<<1<<2;  set<int> st;  st<<1<<2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
-scc '__ v9, ((!!v9) ? "not empty" : "empty");   __ v0, ((!!v0) ? "not empty " : "empty");' 
+scc '__ v9, ((!!v9) ? "-- not empty" : "-- empty");   __ v0, ((!!v0) ? "-- not empty " : "-- empty");' 
 
 # FIND
 scc 'v9 % 33'

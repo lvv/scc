@@ -45,6 +45,16 @@ operator++      (Ct& C) { return C.front(); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
 
+// Ct1 << T[N]
+	template<typename Ct1, /*typename T,*/ size_t N>
+	typename std::enable_if <
+		is_container<Ct1>::value  
+			&&   has_push_back<Ct1>::value
+			/*&&  std::is_assignable<typename Ct1::value_type, T>::value*/, 
+	Ct1 >::type &
+
+operator <<      (Ct1& C, const typename Ct1::value_type (&A)[N])    {  for(auto x: A) C.push_back(x);   return  C; };
+
 
 //  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
@@ -74,11 +84,10 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
-			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value
+			&&  std::is_assignable<typename Ct1::value_type, typename Ct2::value_type>::value
 		, Ct1
 	>::type &
 operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x);   return  C1; };
-
 
 // Ct1 >> Ct2
 	template<typename Ct1, typename Ct2>

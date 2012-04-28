@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 /////////////////////////////////////////////////////////////////////////  IS_PRINTABLE
 
 	template<class T> T& lvalue_of_type();
@@ -26,6 +27,7 @@ struct is_printable {
 
 /////////////////////////////////////////////////////////////////////////
 
+
 	template<typename T>
 struct has_const_iterator {
 	template<typename C>  static char  test (typename C::const_iterator*);
@@ -33,6 +35,7 @@ struct has_const_iterator {
 	static const bool value = sizeof(test<T>(0)) == 1;
 	typedef T type;
 };
+
 
 
 
@@ -45,7 +48,7 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCntnr\t h_CI\t Ptr\t Iter\t Stack\t Queue\t Ioable";
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCt\t h_cIter\t Ptr\t Iter\t Stack\t Queue\t Ioable";
 
 	#define for_T(name)  __ setw(25) << name \
 		<<  "\t  " << is_container<T>::value\

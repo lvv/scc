@@ -60,7 +60,7 @@ OI - Generic ostream_iterator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Standard library includes `std::ostream_iterator`. Unlike `std::cout` it
-accept only one specific type (specified at construction time) and it is not
+accepts only one specific type (specified at construction time) and it is not
 pre-defined object.   So to use it with STL algorithms, you need
 call its quite verbose constructor.
 
@@ -173,7 +173,7 @@ for(int i=0; i<N; i++)
 	cin >> V[i];
 --------------------------------------------------------------------
 
-In SCC: 
+With object `in`:
 
 --------------------------------------------------------------------
 vint V = in(in);
@@ -233,6 +233,7 @@ Full list of container operators:
 +C			//  C.begin()
 -C			//  C.end()
 ~C			//  C.size()
+!C			//  C.empty()
 ++C			//  C.front()
 C++			//  C.back()
 --C			//  C.pop_front()
@@ -250,7 +251,7 @@ Pair++			//  Pair.second
 
 ++Tuple			//  get\<0>(Tuple)
 Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
-!Tuple			//  tuple_size<decltype(Tuple) >::value
+~Tuple			//  tuple_size<decltype(Tuple) >::value
 
 
 			//  STACK
