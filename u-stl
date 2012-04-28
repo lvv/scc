@@ -10,14 +10,15 @@ scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
 scc 'auto T = MT(1,2,3);  __ ++T, T++, T;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
-scc 'copy(v9/2, v9/5, oi)'
 
 # SIZE
 scc 'stack<int> sk;  sk<<1<<2;  set<int> st;  st<<1<<2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
+scc '__ v9, ((!!v9) ? "not empty" : "empty");   __ v0, ((!!v0) ? "not empty " : "empty");' 
 
 # FIND
 scc 'v9 % 33'
 scc 'v9 % 3'
 scc 'v9|22=33; v9'
 scc 'v9|3=33;  v9'
+scc 'copy(v9/2, v9/5, oi)'
 #scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'

@@ -442,7 +442,8 @@ echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2 == "(none|-)"_R)  $2="n/a";'
 
 C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std::regex_match()`.
 Unfortunately GCC's LIBSTDC++ not yet C++11 complaint.  Algorithms
-`std::regex_replace` and `std::regex_search` are broken and we have to use `if`.
+`std::regex_replace` and `std::regex_search` are not implemented yet in
+LIBSTDC++  and we have to use `if`.
 
 
 

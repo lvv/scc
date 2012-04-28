@@ -27,7 +27,13 @@ operator-      (Ct& C) { return  end(C); };
 operator~      (const Ct& C) { return C.size(); };
 
 
-//  if (Ct)  --- if (!Ct.empty())
+
+//  if(!Ct)  --- (!Ct.empty())
+//  if(Ct)   --- not implemented,  use  !!Ct instead
+	template<typename Ct>
+	typename std::enable_if <has_empty<Ct>::value, bool>::type
+operator!      (const Ct& C) { return C.empty(); };
+
 
 
 //  ++T / T++  ---  front()/back()/.first/.second
@@ -185,13 +191,6 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.top();  C.pop(); 
 	template<typename Ct>
 	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
 operator++      (Ct& C, int)    { return C.top(); };
-
-/*
-//  !Stack
-	template<typename Ct>
-	typename std::enable_if <is_stack<Ct>::value, size_t>::type
-operator!      (Ct& C)    { return C.size(); };
-*/
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  QUEUE
