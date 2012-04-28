@@ -1,9 +1,8 @@
 #ifndef  LVV_SCC_H
 #define  LVV_SCC_H
 
-	#include "allocator.h"
-
-	#include <cassert>
+	#include "scc/allocator.h"
+	#include "scc/simple.h"
 
 
 	// BUF
@@ -56,7 +55,7 @@ struct strr {         ///////////////////////////////////////////////////////  S
 	// MEMBERS
 	size_t		size()		const { return e-b; };
 	size_t		empty()		const { return e-b == 0; };
-	bool		operator==(strr sr) const { return equal(b, e, sr.b); };
+	bool		operator==(strr sr) const { return std::equal(b, e, sr.b); };
 
 	typedef		const char*		iterator;
 	typedef		const char* const	const_iterator;
@@ -68,7 +67,7 @@ struct strr {         ///////////////////////////////////////////////////////  S
 template<>		struct  is_ioable <strr>: std::true_type  {};
 
 	std::ostream&
-operator<<      (ostream& os, const strr& sr) {
+operator<<      (std::ostream& os, const strr& sr) {
 	os.write(sr.b, sr.size());
         return os;
 };
@@ -103,18 +102,18 @@ struct	fld : strr {
 
 	// CONVERT FROM T
 	fld(const char*   s)			: strr(s)	{};
-	fld(const string& s)	{ assign (s.begin(), s.end()); };
+	fld(const std::string& s)	{ assign (s.begin(), s.end()); };
 	fld(int           i)	{*this = (long)i;};
 	fld(long          i)	{*this = (long)i;};
 	fld(double        i)	{*this = (double)i;};
 
 	// CONVERT TO T
-	template<typename T> T convert_to()    const { istringstream is;  T x;  is.str(string(this->b, this->e));  is >> x;  return x; }
+	template<typename T> T convert_to()    const { std::istringstream is;  T x;  is.str(std::string(this->b, this->e));  is >> x;  return x; }
 
 	template<typename T> explicit	operator  T()      const {  return  convert_to<T>(); }
 	/* non-explicit, default */	operator  double() const {  return  convert_to<double>(); }
 
-					operator  string() const {  return  string(this->b, this->e); }
+					operator  std::string() const {  return  string(this->b, this->e); }
 
 
 

@@ -2,6 +2,7 @@
 #define  LVV_REGEX_H
 
 #include <regex>
+#include <scc/meta.h>
 	using std::regex;
 
 	using std::match_results;

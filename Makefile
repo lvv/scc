@@ -21,10 +21,26 @@ index.txt:
 ###########################################################  Precompiled Headers
 # http://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html#manual.intro.using.headers.pre 
 # TR http://gcc.gnu.org/onlinedocs/gcc/Precompiled-Headers.html
-ALL_INC=/usr/lib64/gcc/x86_64-pc-linux-gnu/4.7.0-alpha20120114/include/g++-v4/x86_64-pc-linux-gnu/bits/stdc++.h
+ALL_INC=$(wildcard /usr/lib64/gcc/x86_64-pc-linux-gnu/4.7.0-*/include/g++-v4/x86_64-pc-linux-gnu/bits/stdc++.h)
+
+
+H =  $(wildcard *.h)
+#GCH = $(H:.h=.h.gch) stdc++.h.gch
+GCH = stdc++.h.gch cj.h.gch io.h.gch matrix.h.gch meta.h.gch range.h.gch regex.h.gch scc.h.gch simple.h.gch stl.h.gch
+
+
 
 stdc++.h.gch:
-	g++ -Winvalid-pch -x c++-header -g -O2 -o $@  $(ALL_INC)
+	#g++ -Winvalid-pch -x c++-header -g -O2 -o $@  $(ALL_INC)
+	g++  -std=gnu++11 -x c++-header -o $@  $(ALL_INC)
+
+%.h.gch:  %.h
+	g++  -std=gnu++11 -I . -I .. -x c++-header -o $@  $<
+	
+gch: ${GCH}
+echo:
+	: H:  ${H}
+	: GCH:  ${GCH}
 
 ###########################################################
 
