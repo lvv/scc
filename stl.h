@@ -45,17 +45,6 @@ operator++      (Ct& C) { return C.front(); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
 
-// Ct1 << T[N]
-	template<typename Ct1, /*typename T,*/ size_t N>
-	typename std::enable_if <
-		is_container<Ct1>::value  
-			&&   has_push_back<Ct1>::value
-			/*&&  std::is_assignable<typename Ct1::value_type, T>::value*/, 
-	Ct1 >::type &
-
-operator <<      (Ct1& C, const typename Ct1::value_type (&A)[N])    {  for(auto x: A) C.push_back(x);   return  C; };
-
-
 //  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct&>::type
@@ -66,8 +55,8 @@ operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);  
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.insert(x);   return C; };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type
-operator>>      (typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
+	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type &
+operator>>      (const typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
@@ -84,10 +73,30 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
-			&&  std::is_assignable<typename Ct1::value_type, typename Ct2::value_type>::value
+			&&  std::is_convertible<typename Ct1::value_type, typename Ct2::value_type>::value
 		, Ct1
 	>::type &
 operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x);   return  C1; };
+
+// Ct1 << T[N]
+	template<typename Ct1, /*typename T,*/ size_t N>
+	typename std::enable_if <
+		is_container<Ct1>::value  
+			&&   has_push_back<Ct1>::value
+			/*&&  std::is_convertible<typename Ct1::value_type, T>::value*/, 
+	Ct1 >::type &
+operator <<      (Ct1& C, const typename Ct1::value_type (&A)[N])    {  for(auto x: A) C.push_back(x);   return  C; };
+
+
+// Ct1 << const char[N]
+	template<typename Ct1, size_t N>
+	typename std::enable_if <
+		is_container<Ct1>::value  
+			&&   has_push_back<Ct1>::value
+			&&  std::is_convertible<typename Ct1::value_type, char>::value, 
+	Ct1 >::type &
+operator <<      (Ct1& C, const char (&A)[N])    {  auto p=A;  while(*p)  C.push_back(*p++);   return  C; };
+
 
 // Ct1 >> Ct2
 	template<typename Ct1, typename Ct2>
@@ -95,9 +104,8 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x); 
 		is_container<Ct1>::value  
 			&&  is_container<Ct2>::value  
 			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value 
-			&&  has_push_front<Ct2>::value
-		, Ct2
-	>::type &
+			&&  has_push_front<Ct2>::value,
+	 Ct2 >::type &
 operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(), std::front_inserter(C2));  return C2; };
 
 
@@ -112,18 +120,6 @@ operator--      (Ct& C)         { C.pop_front();   return  C; };
 operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
-// Ct1 <= Ct2
-	template<typename Ct1, typename Ct2>
-	typename std::enable_if <
-		is_container<Ct1>::value   &&  is_container<Ct2>::value
-			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value
-		, Ct1
-	>::type &
-operator <=      (Ct1& C1, const Ct2& C2)    { C1.clear(); for(auto x: C2) C1.push_back(x);   return  C1; };
-
-	template<typename Ct, size_t N>
-	typename std::enable_if < is_container<Ct>::value , Ct >::type &
-operator <=      (Ct& C, const typename Ct::value_type (&A)[N])    { C.clear();  for(auto x: A) C.push_back(x);   return  C; };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  SEARCH
 
