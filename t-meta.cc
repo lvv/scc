@@ -1,12 +1,10 @@
-//#include<iostream>
-//#include<type_traits>
-//#include"lvv/lvv.h"
+
+#include "scc/simple.h"
+#include "scc/allocator.h"
+#include "scc/scc.h"
+
 #include <type_traits>
 #include <typeinfo>
-#include<scc/simple.h>
-#include<scc/allocator.h>
-#include<scc/scc.h>
-
 using namespace std;
 
 
@@ -48,7 +46,7 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCt\t h_cIter\t Ptr\t Iter\t Stack\t Queue\t Ioable";
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCt\t h_cIt\t Ptr\t Iter\t Stack\t Queue\t Ioable";
 
 	#define for_T(name)  __ setw(25) << name \
 		<<  "\t  " << is_container<T>::value\

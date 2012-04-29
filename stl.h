@@ -229,8 +229,16 @@ operator++      (Ct& C)    { return C.front(); };
 //  !Queue
 	template<typename Ct>
 	typename std::enable_if <is_queue<Ct>::value, size_t>::type
-operator!      (Ct& C)    { return C.size(); };
+operator~      (Ct& C)    { return C.size(); };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////  ITERATOR
+
+//  It / x   ---  find() --> it	   usage: scc 'copy(+v9/2, +v9/5, oi),  does not work with pointers (C++ constrain)
+	template<typename It>
+	typename std::enable_if <is_iterator<It>::value,  It>::type
+operator /       (It i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return i; };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////  
 
 namespace x {  // eXperimental
 

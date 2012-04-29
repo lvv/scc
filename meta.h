@@ -1,8 +1,6 @@
 #ifndef  LVV_META_H
 #define  LVV_META_H
 
-//#include <x86_64-pc-linux-gnu/bits/stdc++.h>
-
 #include <type_traits>
 #include <array>
 #include <stack>
