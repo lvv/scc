@@ -63,6 +63,7 @@
 	using	std::flush;
 	using	std::setw;
 	using	std::dec;
+	using	std::setprecision;
 
 	// containers
 	using	std::vector;
