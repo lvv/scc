@@ -1,17 +1,10 @@
 // vim:set ft=asciidoc:
 SCC — Simple C++  
 ===============
+:compact-option: compact
 
 _SCC_ is _+++C++ +++_ snippets evaluator , with some _AWK_ features. +
 
-+++ <small> +++
-
-* Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
-//* License:  httpx://www.gnu.org/licenses/gpl-3.0.html[GPL3]
-* Requires:  +++ C++11 +++ compiler (tested with httpx://gcc.gnu.org/[GCC-4.7])
-
-
-+++ </small> +++
 
 
 See full docs at http://volnitsky.com/project/scc[]

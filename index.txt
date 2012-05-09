@@ -1,5 +1,12 @@
 include::/tmp/t.ad[]
 
++++ <small> +++
+
+* Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
+// * License:  httpx://en.wikipedia.org/wiki/Public_domain[Public Domain]
+* Requires:  +++ C++11 +++   compiler (tested with httpx://gcc.gnu.org/[GCC-4.7])
+
++++ </small> +++
 
 C++ REPL
 --------
@@ -266,6 +273,18 @@ x << Q			//  x = Q.front(x);  Q.pop()
 ----------------------------------------------------------------
 
 
+///////////////////////////////////////////////
+TODO
+Ct / x --> it		// find(+Ct, -Ct, x)
+Ct % x --> bool		// find(+Ct, -Ct, x) != -Ct
+Ct / Fn --> it
+Ct % Fn --> bool	// find(+Ct, -Ct, x) != -Ct
+Ct / Rg  --> Rg 	// search(+Ct, -Ct, +Rg, -Rg) 
+Ct - it 		// Ct.eraze(it);
+Ct - Rg			// Ct.erase(+Rg, -Rg)
+Rg *= x 		// for (auto it: Rg) *it = x
+Rg = Rg2 		// 
+////////////////////////////////////////////////
 
 Shortcuts and predeclared vars
 -------------------------------
@@ -516,6 +535,7 @@ REGEX
 FORMATS
 	ALL
 		http://dev.umpirsky.com/list-of-all-countries-in-all-languages-and-all-data-formats/
+		https://github.com/simonask/reflect
 
 	JSON
 		json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
@@ -570,4 +590,5 @@ DB
 	    * SOCI has been discussed in frame of the std::rdb mailing list and the workshop
 
 
-////////////////////
+vim: ft=asciidoc
+///////////////////////////////////

@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
+#include <algorithm>
 #include <iterator>
 #include <string>
 #include <deque>
@@ -16,11 +17,11 @@
 //  +Ct / -Ct   ---   end() /begin()
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator+      (Ct& C) { return begin(C); };
+operator+      (Ct& C) { return std::begin(C); };
 
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
-operator-      (Ct& C) { return  end(C); };
+operator-      (Ct& C) { return  std::end(C); };
 
 //  ~Ct  --- size()
 	template<typename Ct>
@@ -127,19 +128,19 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 //  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
-operator /       (Ct& C, const typename Ct::value_type& x)    {  return find(C.begin(), C.end(), x); };
+operator /       (Ct& C, const typename Ct::value_type& x)    {  return std::find(C.begin(), C.end(), x); };
 
 
 //  Ct % x   ---  find() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.end() != find(C.begin(), C.end(), x); };
+operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.end() != std::find(C.begin(), C.end(), x); };
 
 
 //  Ct1 % Ct2   ---  search() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 
 
 //  Ct | x   ---  find() --> *it	   usage: scc 'v9|3=33; v9'
