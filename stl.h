@@ -143,10 +143,10 @@ operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.
 operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 
 
-//  Ct | x   ---  find() --> *it	   usage: scc 'v9|3=33; v9'
+//  Ct /= x   ---  find() --> *it	   usage: scc 'v9 /= 3 = 33; v9'
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  typename Ct::value_type&>::type
-operator |       (Ct& C, const typename Ct::value_type& x)    { 
+operator /=       (Ct& C, const typename Ct::value_type& x)    { 
 	auto it = find(C.begin(), C.end(), x);
 	if (it == C.end()) {
 		C.push_back(typename Ct::value_type());

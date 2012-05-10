@@ -89,7 +89,7 @@ operator / (I b, I e) { return range_t<I>(b,e); };
 
 	template<typename Ct>
 	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator>>::type
-range(Ct& C) { return range_t<typename Ct::iterator>(begin(C),end(C)); };
+range(Ct& C) { return range_t<typename Ct::iterator>(std::begin(C), std::end(C)); };
 
 	range_t<const char*>
 range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp,p); };
