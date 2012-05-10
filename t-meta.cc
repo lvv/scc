@@ -46,13 +46,14 @@ template<typename S> struct is_sink{ const static bool value =  std::is_same<S,s
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCt\t h_cIt\t Ptr\t Iter\t Stack\t Queue\t Ioable";
+	__ endl <<   left <<   setw(25) <<   "TYPE" <<   "\tCt\t h_cIt\t Ptr\t It\t inIt\t Stack\t Queue\t Ioable";
 
 	#define for_T(name)  __ setw(25) << name \
 		<<  "\t  " << is_container<T>::value\
 		<<  "\t  " << has_const_iterator<T>::value\
 		<<  "\t  " << is_printable<T>::value\
 		<<  "\t  " << is_iterator<T>::value\
+		<<  "\t  " << is_input_iterator<T>::value\
 		<<  "\t  " << is_stack<T>::value\
 		<<  "\t  " << is_queue<T>::value\
 		<<  "\t  " << is_ioable<T>::value\
@@ -66,6 +67,12 @@ int main() {
 
 	{ typedef deque<int>::iterator  T;
 	for_T(   "deque<int>::iterator"); }
+
+	{ typedef std::ostream_iterator<int>   T;
+	for_T(   "ostream_iterator<int>::iterator"); }
+
+	{ typedef std::istream_iterator<int>   T;
+	for_T(   "istream_iterator<int>::iterator"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }

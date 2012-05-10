@@ -2,6 +2,7 @@
 #define  LVV_META_H
 
 #include <type_traits>
+#include <iterator>
 #include <array>
 #include <stack>
 #include <queue>
@@ -144,11 +145,36 @@ struct is_queue {
 	template<typename T>
 struct is_iterator {
 					static char				test (...);	// anything else
-	template<typename  U>		static typename U::iterator_category*	test (U*);	// Iterator
 	template<typename  U>		static void *				test (U**);	// Pointer
 	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
+	template<typename  U>		static typename U::iterator_category*	test (U*);	// Iterator
 
 	static const bool value = sizeof(test((T*)nullptr)) == sizeof(void *);
 };
+
+	template<typename T>
+struct is_input_iterator {
+					static char				test (...);	// anything else
+	template<typename  U>		static void *				test (U**);	// Pointer
+	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
+
+	template<typename  U>		static typename
+		std::enable_if<std::is_same<typename U::iterator_category, std::input_iterator_tag>::value, typename U::iterator_category*>::type
+										test (U*);	// Iterator
+
+	static const bool value = sizeof(test((T*)nullptr)) == sizeof(void *);
+};
+
+
+
+/*
+template<typename T> struct is_input_iterator:         is_iterator<T> { template<typename U>  static typename U::input_iterator*          test (U*); };
+template<typename T> struct is_output_iterator:        is_iterator<T> { template<typename U>  static typename U::output_iterator*         test (U*); };
+template<typename T> struct is_forward_iterator:       is_iterator<T> { template<typename U>  static typename U::forward_iterator*        test (U*); };
+template<typename T> struct is_bidirectional_iterator: is_iterator<T> { template<typename U>  static typename U::bidirectional_iterator*  test (U*); };
+template<typename T> struct is_random_access_iterator: is_iterator<T> { template<typename U>  static typename U::random_access_iterator*  test (U*); };
+*/
+
+
 
 #endif
