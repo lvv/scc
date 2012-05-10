@@ -11,6 +11,7 @@
 
 
 #include "meta.h"
+//#include "traits.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -125,16 +126,25 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  SEARCH
 
-//  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
+/*
+//  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+operator /       (Ct& C,  typename std::function<bool(typename Ct::value_type)> F)    {  return  std::find_if(C.begin(), C.end(), F); };
+*/
+
+
+//  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
+	template<typename Ct>
+	typename std::enable_if < is_container<Ct>::value , typename Ct::iterator >::type
 operator /       (Ct& C, const typename Ct::value_type& x)    {  return std::find(C.begin(), C.end(), x); };
+
 
 
 //  Ct % x   ---  find() --> bool	
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.end() != std::find(C.begin(), C.end(), x); };
+operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
 
 
 //  Ct1 % Ct2   ---  search() --> bool	
@@ -143,6 +153,7 @@ operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.
 operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 
 
+/*
 //  Ct /= x   ---  find() --> *it	   usage: scc 'v9 /= 3 = 33; v9'
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value,  typename Ct::value_type&>::type
@@ -154,6 +165,7 @@ operator /=       (Ct& C, const typename Ct::value_type& x)    {
 	}
 	return *it;
 };
+*/
 
 
 
@@ -234,10 +246,12 @@ operator~      (Ct& C)    { return C.size(); };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  ITERATOR
 
+
 //  It / x   ---  find() --> it	   usage: scc 'copy(+v9/2, +v9/5, oi),  does not work with pointers (C++ constrain)
 	template<typename It>
 	typename std::enable_if <is_iterator<It>::value,  It>::type
-operator /       (It i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return i; };
+operator/       (It i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return i; };
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  
 

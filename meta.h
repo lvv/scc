@@ -2,6 +2,7 @@
 #define  LVV_META_H
 
 #include <type_traits>
+#include <functional>
 #include <iterator>
 #include <array>
 #include <stack>
@@ -175,6 +176,26 @@ template<typename T> struct is_bidirectional_iterator: is_iterator<T> { template
 template<typename T> struct is_random_access_iterator: is_iterator<T> { template<typename U>  static typename U::random_access_iterator*  test (U*); };
 */
 
+////////////////////////////////////////////////////////////////////////////////////////  IS_FN
+
+template<typename T, typename... Args> struct is_fn : std::false_type {};
+
+template<typename T, typename... Args> struct is_fn<T(Args...)> : std::true_type {}; // normal function
+template<typename T, typename... Args> struct is_fn<T(*)(Args...)> : std::true_type {}; // normal function
+template<typename T, typename... Args> struct is_fn<T(&)(Args...)> : std::true_type {}; // normal function
+
+template<typename T, typename... Args> struct is_fn<T(Args......)> : std::true_type {}; // variadic function
+template<typename T, typename... Args> struct is_fn<T(*)(Args......)> : std::true_type {};
+template<typename T, typename... Args> struct is_fn<T(&)(Args......)> : std::true_type {};
+
+
+//template<typename T, typename... Args> struct is_fn<decltype([](Args...){})> : std::true_type {};
+
+template<typename T, typename... Args> struct is_fn<std::function<T(Args...)>> : std::true_type {};
+template<typename T, typename... Args> struct is_fn<std::function<T(*)(Args...)>> : std::true_type {};
+template<typename T, typename... Args> struct is_fn<std::function<T(&)(Args...)>> : std::true_type {};
+
+//template<typename MF, typename CLASS>  struct is_fn<MF CLASS::*> : is_fn<MF> {}; 
 
 
 #endif

@@ -64,7 +64,8 @@ struct strr {         ///////////////////////////////////////////////////////  S
  };
 
 
-template<>		struct  is_ioable <strr>: std::true_type  {};
+template<>		struct  is_ioable    <strr>:   std::true_type  {};
+template<>		struct  is_container <strr>:   std::false_type  {};
 
 	std::ostream&
 operator<<      (std::ostream& os, const strr& sr) {
@@ -198,7 +199,8 @@ struct	fld : strr {
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 
 
-template<>		struct  is_ioable <fld>	: std::true_type  {};
+template<>		struct  is_ioable <fld>	        : std::true_type  {};
+template<>		struct  is_container <fld>	: std::false_type  {};
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>

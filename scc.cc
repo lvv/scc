@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	char *p, *q   __attribute__((unused)) = nullptr;
 
 	// for testing
-	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  v0;
+	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
 	char c9[]     __attribute__((unused)) = "abcdefgh";
 	string s9       __attribute__((unused)) ("abcdefgh");
 
