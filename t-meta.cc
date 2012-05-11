@@ -159,6 +159,9 @@ cout << endl;
 	{ typedef std::function<decltype(lam)> T;
 	for_T(   "std::function<decltype(lam)>");  }
 
+	{ typedef std::negate<int>  T;
+	for_T(   "std::negate<int>");  }
+
 	{
 	//#define  T  [](){return true;}
 	//for_T(     "[](){return true;}"); 

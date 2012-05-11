@@ -133,6 +133,11 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 operator /       (Ct& C,  typename std::function<bool(typename Ct::value_type)> F)    {  return  std::find_if(C.begin(), C.end(), F); };
 */
 
+//  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
+	template<typename Ct>
+	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+operator /       (Ct& C,  typename std::function<bool(typename Ct::value_type)> F)    {  return  std::find_if(C.begin(), C.end(), F); };
+
 
 //  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
 	template<typename Ct>
