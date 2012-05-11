@@ -20,29 +20,51 @@
 			>							\
 			static char						\
 		test(U* u);							\
+										\
 			template <typename U>					\
 			static long						\
 		test(...);							\
+										\
 		enum { value = sizeof test<T>(0) == 1 };			\
 	}; 
 
 
-#define DEF_HAS_MEMBER_FUNC(name,func)						\
+#define DEF_HAS_MEMBER_FUNC(name,mf)						\
 		template <typename T>						\
 	struct name {								\
 			template <						\
 				typename U,					\
 				typename VT = typename U::value_type,		\
-				typename F = decltype (((U*)0)->func)		\
+				typename F = decltype (((U*)0)->mf)		\
 			>							\
 			static char						\
 		test(U* u);							\
+										\
 			template <typename U>					\
 			static long						\
 		test(...);							\
+										\
 		enum { value = sizeof test<T>(0) == 1 };			\
 	}; 
 
+
+		template <typename Fn, typename T>					\
+	struct is_functor_for {							\
+			template <						\
+				typename Fn_,					\
+				typename T_,					\
+				typename MF = decltype  (&Fn_::operator()), 		\
+				typename F  = bool (typename Fn_::*typename MF) (const typename VT&) 		\
+			>							\
+			static char						\
+		test(Fn_* f);							\
+										\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+										\
+		enum { value = sizeof test<Fn,T>(0) == 1 };			\
+	}; 
 
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
@@ -50,6 +72,7 @@ DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
+//DEF_HAS_MEMBER_FUNC(is_functor,operator()(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_size,size())
 DEF_HAS_MEMBER_FUNC(has_empty,empty())
 

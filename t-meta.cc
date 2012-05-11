@@ -61,6 +61,7 @@ int main() {
 		<<  "\t  " << std::is_pointer<T>::value\
 		<<  "\t  " << std::is_reference<T>::value\
 		<<  "\t  " << std::is_member_function_pointer<T>::value\
+		<<  "\t  " << is_functor<T>::value\
 		<<  "\t  " << is_fn<T>::value\
 	;
 
