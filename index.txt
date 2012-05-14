@@ -476,13 +476,18 @@ echo "PATH+=:$PWD/scc/" >> ~/.profile
 . ~/.profile
 ---------------------------------------
 
-This project is in alpha stage. Use "latest" git tag for relatively stable
-version. SCC uses C+11 extensively and some GCC extensions, so currently it
-can work only with GCC-4.7.   It might work with CLANG and MSVS, but this was
-not tested.  Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
+This project is in alpha stage. Version with "latest" git tag and documented features are more stable.
+SCC uses C+11 extensively and some GCC extensions, so currently it
+can work only with GCC-4.7 (or older).   Other compilers were not tested.
+Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
-+++ C++ +++ parser of semi-broken.  To make multi-line scripts, as workaround use semicolon
-at the end of every line (even in comments).
+Do not use GCC precompiled headers (generated with `scc -r`) if you are going to modify source. 
+Do disable these, run `rm -rf .gch`.
+
+
++++ C++ +++ parser of semi-broken.  It can incorrectly parse (to extract last
+expression) multi-line scripts or in expressions with lambdas. As
+workaround terminate every line with semicolon (even for comment-line).
 
 If you need to use it with older GCC - use v0.1.
 
@@ -506,6 +511,7 @@ If you need to use it with older GCC - use v0.1.
 * httpx://people.cs.uu.nl/piet/docs/nawk/nawk_23.html[Awk: Specifying how Fields are Separated]
 * httpx://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#status.iso.200x[LIBSTDC++ status +++C++11+++]
 * httpx://www.informit.com/guides/content.aspx?g=cplusplus&seqNum=286[Why I Hate Namespaces]
+* httpx://www.gotw.ca/publications/mill17.htm[Why Not Specialize Function Templates?]
 
 ////////////////
 
