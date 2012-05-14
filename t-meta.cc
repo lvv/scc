@@ -31,11 +31,12 @@ struct has_const_iterator {
 ///// func types
 
 
-bool f_t()                          {return true;};
-struct fo_t	{ bool operator()() {return true;}; };
-struct mfo_t	{ bool mf()         {return true;}; };
+bool   f(int )                         {return true;};
+struct fo_t	{ bool operator()(int) {return true;}; };
+struct mfo_t	{ bool mf(int)         {return true;}; };
 struct empty_t  {};
-auto lam = [](int x){return x==0;};
+auto lam = [](int x)->bool {return x==0;};
+typedef decltype(lam) lam_t;
 
 
 
@@ -45,28 +46,40 @@ auto lam = [](int x){return x==0;};
 
 int main() {
 
-	__ endl <<   left <<   setw(25) <<   "TYPE"
-	        <<   "\tCt\t h_cIt\t It\t inIt\t Stack\t Queue\t Ioable\t isF\t rmpF\t isPTR\t isREF\t isMFP";
+	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
+	cout <<  endl <<   left 
+		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is \n"
+		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PRED\n"
+		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICAT\n"
+		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   \n"
+		<< setw(26)<<""        <<   "                         able    P   Ref                     \n";
 
-	#define for_T(name)  __ setw(25) << name \
-		<<  "\t  " << is_container<T>::value\
-		<<  "\t  " << has_const_iterator<T>::value\
-		<<  "\t  " << is_iterator<T>::value\
-		<<  "\t  " << is_input_iterator<T>::value\
-		<<  "\t  " << is_stack<T>::value\
-		<<  "\t  " << is_queue<T>::value\
-		<<  "\t  " << is_ioable<T>::value\
-		<<  "\t  " << std::is_function<T>::value\
-		<<  "\t  " << std::is_function<remove_pointer<T>::type>::value\
-		<<  "\t  " << std::is_pointer<T>::value\
-		<<  "\t  " << std::is_reference<T>::value\
-		<<  "\t  " << std::is_member_function_pointer<T>::value\
-		<<  "\t  " << is_functor<T>::value\
-		<<  "\t  " << is_fn<T>::value\
+	#define for_T(name)  __ setw(26) << name \
+		<<   "  " << (is_container<T>::value                                   ? "+" : "\u2219")\
+		<<  "   " << (has_const_iterator<T>::value                             ? "+" : "\u2219")\
+		<<  "   " << (is_iterator<T>::value                                    ? "+" : "\u2219")\
+		<<  "   " << (is_input_iterator<T>::value                              ? "+" : "\u2219")	/* incorrect*/ \
+		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
+		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
+		<<  "   " << (is_ioable<T>::value                                      ? "+" : "\u2219")\
+		<<  "   " << (std::is_function<T>::value                               ? "+" : "\u2219")\
+		<<  "   " << (std::is_function<remove_pointer<T>::type>::value         ? "+" : "\u2219")\
+		<<  "   " << (std::is_function<remove_reference<T>::type>::value       ? "+" : "\u2219")\
+		<<  "   " << (std::is_pointer<T>::value                                ? "+" : "\u2219")\
+		<<  "   " << (std::is_reference<T>::value                              ? "+" : "\u2219")\
+		<<  "   " << (std::is_member_function_pointer<T>::value                ? "+" : "\u2219")\
+		<<  "   " << (is_fn<T>::value                                          ? "+" : "\u2219")\
+		<<  "   " << (is_predicate<T,int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_predicate<T,const int&>::value                               ? "+" : "\u2219")\
 	;
+
+		//<<  "   " << (is_predicate<T,int>::value && std::is_same<typename std::function<T>(0)::result_type, int>::value    ? "+" : "\u2219")
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
+
+	{ typedef set<int,std::greater<int>>  T;
+	for_T(   "set<int,greater<int>>"); }
 
 	{ typedef vector<int>::iterator  T;
 	for_T(   "vector<int>::iterator"); }
@@ -75,16 +88,13 @@ int main() {
 	for_T(   "deque<int>::iterator"); }
 
 	{ typedef std::ostream_iterator<int>   T;
-	for_T(   "ostream_iterator<int>::iterator"); }
+	for_T(   "ostream_it<int>::it"); }
 
 	{ typedef std::istream_iterator<int>   T;
-	for_T(   "istream_iterator<int>::iterator"); }
+	for_T(   "istream_it<int>::it"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }
-
-	{ typedef set<int,std::greater<int>>  T;
-	for_T(   "set<int,std::greater<int>>"); }
 
 	{ typedef map<string, int>  T;
 	for_T(   "map<string, int>"); }
@@ -137,16 +147,29 @@ int main() {
 cout << endl;
 	
 	{ typedef bool T();
-	for_T(   "bool(*)()");  }
+	for_T(   "bool T(int)");  }
 
 	{ typedef bool T();
-	for_T(   "bool(&)()");  }
+	for_T(   "bool T()");  }
 
-	{ typedef decltype(f_t) T;
-	for_T(   "f_t");  }
+	{ typedef bool (*T)();
+	for_T(   "bool (*T)()");  }
+
+	// errors
+	//{ typedef bool (&T)();
+	//for_T(   "bool (&T)()");  }
+
+	{ typedef decltype(f) T;
+	for_T(   "decltype(f)");  }
+
+	{ typedef decltype(::sin)  T;
+	for_T(   "decltype(::sin)");  }
 
 	{ typedef fo_t  T;
 	for_T(   "fo_t");  }
+
+	{ typedef std::function<bool(int)> T;
+	for_T(   "std::function<bool(int)>");  }
 
 	{ typedef std::function<bool()> T;
 	for_T(   "std::function<bool()>");  }
@@ -154,14 +177,25 @@ cout << endl;
 	{ typedef std::function<bool(*)()> T;
 	for_T(   "std::function<bool(*)()>");  }
 
-	{ typedef decltype(lam)  T;
-	for_T(   "lambda");  }
+	{ typedef lam_t  T;
+	for_T(   "lam_t");  }
 
-	{ typedef std::function<decltype(lam)> T;
-	for_T(   "std::function<decltype(lam)>");  }
+	{ typedef std::function<lam_t> T;
+	for_T(   "std::function<lam_t>");  }
 
 	{ typedef std::negate<int>  T;
 	for_T(   "std::negate<int>");  }
+
+	/*
+	{ typedef std::unary_negate<int>  T;
+	for_T(   "std::unary_negate<int>");  }
+
+	{ typedef std::binary_negate<int>  T;
+	for_T(   "std::binary_negate<int>");  }
+	*/
+
+	{ typedef std::less<int>  T;
+	for_T(   "std::less<int>");  }
 
 	{
 	//#define  T  [](){return true;}

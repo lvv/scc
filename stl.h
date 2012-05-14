@@ -145,26 +145,13 @@ void do_stuff(F f) {
 }
 ***************************************************************************/
 
-//  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-//
-			template<typename Ct, typename FCT>
-			typename Ct::iterator
-	op_div       (Ct& C,  FCT& fct, bool (FCT::*mf)(const typename Ct::value_type&) const)    { 
-		return  std::find_if(C.begin(), C.end(), (fct.*mf));
-	};
-
-
-		template<typename Ct, typename LAMB>
-		typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
-operator /       (Ct& C,  LAMB l)    { 
-	return  op_div<Ct,LAMB>(C, l, &LAMB::operator()) ;
- };
-
 
 //  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
-operator /       (Ct& C,  typename std::function<bool(typename Ct::value_type)> F)    {  return  std::find_if(C.begin(), C.end(), F); };
+	template<typename Ct, typename Pred>
+	typename std::enable_if <
+		is_container<Ct>::value && is_predicate<Pred, typename Ct::value_type>::value, 
+	typename Ct::iterator>::type
+operator /       (Ct& C,  Pred F)    {  return  std::find_if(C.begin(), C.end(), F); };
 
 
 //  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'

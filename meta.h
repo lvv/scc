@@ -48,23 +48,25 @@
 	}; 
 
 
-		template <typename Fn, typename T>					\
-	struct is_functor_for {							\
-			template <						\
-				typename Fn_,					\
-				typename T_,					\
-				typename MF = decltype  (&Fn_::operator()), 		\
-				typename F  = bool (typename Fn_::*typename MF) (const typename VT&) 		\
-			>							\
-			static char						\
-		test(Fn_* f);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<Fn,T>(0) == 1 };			\
-	}; 
+	template <typename L, typename T>				
+struct is_predicate {						
+		template <				
+			typename LL,			
+			typename TT,			
+			typename MF = decltype (&LL::operator()),
+			typename F  = bool (LL::*) (const TT&) const  // useless - does not work
+		>							
+		static void*						
+		//static typename std::enable_if<std::is_same<typename std::function<F>::result_type, bool>::value, void*>::type
+		//static typename std::enable_if<std::is_same<typename std::function<bool (LL::*) (const TT&) >::result_type, bool>::value, void*>::type
+	test(LL* f);						
+							
+		template <typename U,typename W>
+		static char		
+	test(...);		
+			
+	enum { value = sizeof test<L,T>(0) == sizeof(void*) };		
+};
 
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
@@ -72,7 +74,7 @@ DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
-//DEF_HAS_MEMBER_FUNC(is_functor,operator()(typename U::value_type()))
+//DEF_HAS_MEMBER_FUNC(is_functor,std::function<bool(const typename U::value_type&)>::type(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_size,size())
 DEF_HAS_MEMBER_FUNC(has_empty,empty())
 
@@ -203,18 +205,18 @@ template<typename T> struct is_random_access_iterator: is_iterator<T> { template
 
 template<typename T, typename... Args> struct is_fn : std::false_type {};
 
-template<typename T, typename... Args> struct is_fn<T(Args...)> : std::true_type {}; // normal function
+template<typename T, typename... Args> struct is_fn<T(Args...   )> : std::true_type {}; // normal function
 template<typename T, typename... Args> struct is_fn<T(*)(Args...)> : std::true_type {}; // normal function
 template<typename T, typename... Args> struct is_fn<T(&)(Args...)> : std::true_type {}; // normal function
 
-template<typename T, typename... Args> struct is_fn<T(Args......)> : std::true_type {}; // variadic function
+template<typename T, typename... Args> struct is_fn<T(Args......   )> : std::true_type {}; // variadic function
 template<typename T, typename... Args> struct is_fn<T(*)(Args......)> : std::true_type {};
 template<typename T, typename... Args> struct is_fn<T(&)(Args......)> : std::true_type {};
 
 
 //template<typename T, typename... Args> struct is_fn<decltype([](Args...){})> : std::true_type {};
 
-template<typename T, typename... Args> struct is_fn<std::function<T(Args...)>> : std::true_type {};
+template<typename T, typename... Args> struct is_fn<std::function<T(Args...   )>> : std::true_type {};
 template<typename T, typename... Args> struct is_fn<std::function<T(*)(Args...)>> : std::true_type {};
 template<typename T, typename... Args> struct is_fn<std::function<T(&)(Args...)>> : std::true_type {};
 

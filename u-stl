@@ -26,3 +26,6 @@ scc 'v9 % 3'
 #scc 'v9 /= 3  = 33;  v9'
 scc 'copy(v9/2, v9/5, oi)'
 #scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
+
+# LAMBDA
+scc '__ v9 / [](int i){return i==2;} - +v9;'
