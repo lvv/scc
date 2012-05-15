@@ -172,13 +172,13 @@ operator /       (Ct& C, const typename Ct::value_type& x)    {  return std::fin
 			template<typename Arg>
 			static
 			typename std::enable_if<std::is_same<T, Arg>::value, It>::type
-		div(Ct& C, const T& x) { return std::find(C.begin(), C.end(), x); };
+		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
 
 		// Ct / f
 			template<typename Arg>
 			static
 			typename std::enable_if <is_predicate<Arg, T>::value, It>::type
-		div(Ct& C, const Arg& pred) { return  std::find_if(C.begin(), C.end(), pred); };
+		div(Ct& C, const Arg& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
 	};
 
 //  Ct / T   ---  find..() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'

@@ -27,15 +27,34 @@ struct has_const_iterator {
 };
 
 
+		template<typename F, typename Arg>
+class is_callable {
+			template<typename>
+			static long
+	test(...);
+	
+				template<unsigned>
+		struct helper { typedef void* type; };
+	
+			template<typename U>
+			static
+			char
+	test(typename helper< sizeof(std::declval<U>()(std::declval<Arg>()), 0) >::type);
+
+	public:
+		static const bool value = (sizeof(test<F>(0)) == sizeof(char));
+};
+
+
 
 ///// func types
 
 
-bool   f(int )                         {return true;};
-struct fo_t	{ bool operator()(int) {return true;}; };
-struct mfo_t	{ bool mf(int)         {return true;}; };
+bool   f(int )                         { return true; };
+struct fo_t	{ bool operator()(int) { return true; }; };
+struct mfo_t	{ bool mf(int)         { return true; }; };
 struct empty_t  {};
-auto lam = [](int x)->bool {return x==0;};
+auto lam = [](int x)->bool { return x==0; };
 typedef decltype(lam) lam_t;
 
 
@@ -48,11 +67,11 @@ int main() {
 
 	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
 	cout <<  endl <<   left 
-		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is \n"
-		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PRED\n"
-		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICAT\n"
-		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   \n"
-		<< setw(26)<<""        <<   "                         able    P   Ref                     \n";
+		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is  is         \n"
+		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PREDPRED        \n"
+		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICATICAT is  is \n"
+		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   E   CALLCALL\n"
+		<< setw(26)<<""        <<   "                         able    P   Ref                      c&      c& \n";
 
 	#define for_T(name)  __ setw(26) << name \
 		<<   "  " << (is_container<T>::value                                   ? "+" : "\u2219")\
@@ -71,9 +90,17 @@ int main() {
 		<<  "   " << (is_fn<T>::value                                          ? "+" : "\u2219")\
 		<<  "   " << (is_predicate<T,int>::value                               ? "+" : "\u2219")\
 		<<  "   " << (is_predicate<T,const int&>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T,int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T,const int&>::value                               ? "+" : "\u2219")\
 	;
+	/*
+		<<  "   " << (is_Predicate<T,int>::value                               ? "+" : "\u2219")\
+		//<<  "   " << (Callable<T, int>::value                               ? "+" : "\u2219")\
+		//<<  "   " << (Callable<T, const int&>::value                               ? "+" : "\u2219")\
+		//<<  "   " << (Callable2<T, int>::value                               ? "+" : "\u2219")\
 
 		//<<  "   " << (is_predicate<T,int>::value && std::is_same<typename std::function<T>(0)::result_type, int>::value    ? "+" : "\u2219")
+	*/
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
@@ -146,14 +173,20 @@ int main() {
 
 cout << endl;
 	
-	{ typedef bool T();
+	{ typedef bool T(int);
 	for_T(   "bool T(int)");  }
+
+	{ typedef int* T(int);
+	for_T(   "int* T(int)");  }
+
+	{ typedef bool T(const int&);
+	for_T(   "bool T(const int&)");  }
 
 	{ typedef bool T();
 	for_T(   "bool T()");  }
 
-	{ typedef bool (*T)();
-	for_T(   "bool (*T)()");  }
+	{ typedef bool (*T)(int);
+	for_T(   "bool (*T)(int)");  }
 
 	// errors
 	//{ typedef bool (&T)();
@@ -198,7 +231,7 @@ cout << endl;
 	for_T(   "std::less<int>");  }
 
 	{
-	//#define  T  [](){return true;}
+	//#define  (T  [](){return true;})
 	//for_T(     "[](){return true;}"); 
 	}
 
