@@ -2,6 +2,11 @@
 set -o errexit
 set -v
 
+# LAMBDA
+scc '__ v9 / 3 - +v9;'
+scc '__ v9 / [](int i){return i==3;} - +v9;'
+
+
 scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'
 scc 'auto P = tuple<int,float>{1,3.3};  __ P, ++P, P++;'
 scc 'dint v{1,2,3}, w{4,5};  v >> w'
@@ -27,5 +32,3 @@ scc 'v9 % 3'
 scc 'copy(v9/2, v9/5, oi)'
 #scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
 
-# LAMBDA
-scc '__ v9 / [](int i){return i==2;} - +v9;'
