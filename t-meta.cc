@@ -27,42 +27,6 @@ struct has_const_iterator {
 };
 
 
-		template<typename F, typename Arg>
-class is_callable {
-			template<typename>
-			static long
-	test(...);
-	
-				template<unsigned>
-		struct helper { typedef void* type; };
-	
-			template<typename U>
-			static
-			char
-	test(typename helper< sizeof(std::declval<U>()(std::declval<Arg>()), 0) >::type);
-
-	public:
-		static const bool value = (sizeof(test<F>(0)) == sizeof(char));
-};
-
-
-		template<typename F, typename R, typename Arg>
-struct is_callable3 {
-		template<typename>   static char                                                     test(...);
-		template<typename U> static decltype(std::declval<U>()(std::declval<Arg>()))*        test(int);
-	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
-};
-
-		template<typename F, typename R, typename Arg>
-struct is_callable4 {
-		template<typename>   static char                                                     test(...);
-		template<typename U> static
-		typename std::enable_if<
-			std::is_same<decltype(std::declval<U>()(std::declval<Arg>())), R>::value,
-		void*>::type
-		test(int);
-	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
-};
 
 ///// func types
 
@@ -84,11 +48,11 @@ int main() {
 
 	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
 	cout <<  endl <<   left 
-		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is             \n"
-		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PRED            \n"
-		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICAT is  is  is \n"
-		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   CALL 3   4  \n"
-		<< setw(26)<<""        <<   "                         able    P   Ref                                 \n";
+		<< setw(26)<<""        <<   " is  has  is  is      is      is     \n"
+		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue   call    \n"
+		<< setw(26)<<""        <<   "     IT       IT  is      is  1   is \n"
+		<< setw(26)<<""        <<   "                 Stack    IO-    call\n"
+		<< setw(26)<<""        <<   "                         able     2  \n";
 
 	#define for_T(name)  __ setw(26) << name \
 		<<   "  " << (is_container<T>::value                                   ? "+" : "\u2219")\
@@ -98,17 +62,8 @@ int main() {
 		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_ioable<T>::value                                      ? "+" : "\u2219")\
-		<<  "   " << (std::is_function<T>::value                               ? "+" : "\u2219")\
-		<<  "   " << (std::is_function<remove_pointer<T>::type>::value         ? "+" : "\u2219")\
-		<<  "   " << (std::is_function<remove_reference<T>::type>::value       ? "+" : "\u2219")\
-		<<  "   " << (std::is_pointer<T>::value                                ? "+" : "\u2219")\
-		<<  "   " << (std::is_reference<T>::value                              ? "+" : "\u2219")\
-		<<  "   " << (std::is_member_function_pointer<T>::value                ? "+" : "\u2219")\
-		<<  "   " << (is_fn<T>::value                                          ? "+" : "\u2219")\
-		<<  "   " << (is_predicate<T,int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable<T,int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable3<T, bool, int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable4<T, bool, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable1<T, bool, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable2<T, bool, int, int>::value                               ? "+" : "\u2219")\
 	;
 	/*
 		<<  "   " << (std::is_same<std::function<T>::result_type,bool>::value ? "+" : "\u2219")\

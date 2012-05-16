@@ -202,26 +202,29 @@ template<typename T> struct is_bidirectional_iterator: is_iterator<T> { template
 template<typename T> struct is_random_access_iterator: is_iterator<T> { template<typename U>  static typename U::random_access_iterator*  test (U*); };
 */
 
-////////////////////////////////////////////////////////////////////////////////////////  IS_FN
+////////////////////////////////////////////////////////////////////////////////////////  IS_CALLABLE
+		template<typename F, typename R, typename Arg>
+struct is_callable1 {
+		template<typename>   static char
+	test(...);
+		template<typename U> static
+		typename std::enable_if<
+			std::is_same<decltype(std::declval<U>()(std::declval<Arg>())), R>::value,
+		void*>::type
+	test(int);
+	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
+};
 
-template<typename T, typename... Args> struct is_fn : std::false_type {};
-
-template<typename T, typename... Args> struct is_fn<T(Args...   )> : std::true_type {}; // normal function
-template<typename T, typename... Args> struct is_fn<T(*)(Args...)> : std::true_type {}; // normal function
-template<typename T, typename... Args> struct is_fn<T(&)(Args...)> : std::true_type {}; // normal function
-
-template<typename T, typename... Args> struct is_fn<T(Args......   )> : std::true_type {}; // variadic function
-template<typename T, typename... Args> struct is_fn<T(*)(Args......)> : std::true_type {};
-template<typename T, typename... Args> struct is_fn<T(&)(Args......)> : std::true_type {};
-
-
-//template<typename T, typename... Args> struct is_fn<decltype([](Args...){})> : std::true_type {};
-
-template<typename T, typename... Args> struct is_fn<std::function<T(Args...   )>> : std::true_type {};
-template<typename T, typename... Args> struct is_fn<std::function<T(*)(Args...)>> : std::true_type {};
-template<typename T, typename... Args> struct is_fn<std::function<T(&)(Args...)>> : std::true_type {};
-
-//template<typename MF, typename CLASS>  struct is_fn<MF CLASS::*> : is_fn<MF> {}; 
-
+		template<typename F, typename R, typename Arg1, typename Arg2>
+struct is_callable2 {
+		template<typename>   static char
+	test(...);
+		template<typename U> static
+		typename std::enable_if<
+			std::is_same<decltype(std::declval<U>()(std::declval<Arg1>(), std::declval<Arg2>())), R>::value,
+		void*>::type
+	test(int);
+	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
+};
 
 #endif
