@@ -62,8 +62,8 @@ int main() {
 		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_ioable<T>::value                                      ? "+" : "\u2219")\
-		<<  "   " << (is_callable1<T, bool, int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable2<T, bool, int, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T, bool, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T, bool, int, int>::value                               ? "+" : "\u2219")\
 	;
 
 

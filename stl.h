@@ -161,7 +161,6 @@ operator /       (Ct& C,  Pred F)    {  return  std::find_if(C.begin(), C.end(),
 	typename std::enable_if < is_container<Ct>::value , typename Ct::iterator >::type
 operator /       (Ct& C, const typename Ct::value_type& x)    {  return std::find(C.begin(), C.end(), x); };
 
-*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 	template<typename Ct>
@@ -188,6 +187,30 @@ operator /       (Ct& C, Arg x)    {  return  ct_op<Ct>::template div<Arg>(C, x)
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+	template<typename Ct>
+	struct ct_op  {
+				typedef  typename Ct::value_type  T;
+				typedef  typename Ct::iterator    It;
+		// Ct / x
+			template<typename Arg>
+			static
+			typename std::enable_if<std::is_same<T, Arg>::value, It>::type
+		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
+
+		// Ct / f
+			template<typename Arg>
+			static
+			typename std::enable_if <is_predicate<Arg, T>::value, It>::type
+		div(Ct& C, const Arg& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
+	};
+
+//  Ct / T   ---  find..() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
+	template<typename Ct, typename... Arg>
+	typename std::enable_if < is_container<Ct>::value , typename Ct::iterator >::type
+operator /       (Ct& C, Arg... x)    {  return  ct_op<Ct>::template div<Arg...>(C, x...); };
+
+*/
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
