@@ -65,15 +65,7 @@ int main() {
 		<<  "   " << (is_callable1<T, bool, int>::value                               ? "+" : "\u2219")\
 		<<  "   " << (is_callable2<T, bool, int, int>::value                               ? "+" : "\u2219")\
 	;
-	/*
-		<<  "   " << (std::is_same<std::function<T>::result_type,bool>::value ? "+" : "\u2219")\
-		<<  "   " << (is_Predicate<T,int>::value                               ? "+" : "\u2219")\
-		//<<  "   " << (Callable<T, int>::value                               ? "+" : "\u2219")\
-		//<<  "   " << (Callable<T, const int&>::value                               ? "+" : "\u2219")\
-		//<<  "   " << (Callable2<T, int>::value                               ? "+" : "\u2219")\
 
-		//<<  "   " << (is_predicate<T,int>::value && std::is_same<typename std::function<T>(0)::result_type, int>::value    ? "+" : "\u2219")
-	*/
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
@@ -161,9 +153,8 @@ cout << endl;
 	{ typedef bool (*T)(int);
 	for_T(   "bool (*T)(int)");  }
 
-	// errors -- TODO fix is_iterator
-	//{ typedef bool (&T)();
-	//for_T(   "bool (&T)()");  }
+	{ typedef bool (&T)();
+	for_T(   "bool (&T)()");  }
 
 	{ typedef decltype(f) T;
 	for_T(   "decltype(f)");  }

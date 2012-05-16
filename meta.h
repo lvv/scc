@@ -169,28 +169,29 @@ struct is_queue {
 // T operator++(int);
 
 	template<typename T>
-struct is_iterator {
+struct is_iterator { //: std::enable_if<std::is_same<T, decltype(std::declval<T>()++)>::value, std::true_type>::type {
 					static char				test (...);	// anything else
-	template<typename  U>		static void *				test (U**);	// Pointer
-	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
-	template<typename  U>		static typename U::iterator_category*	test (U*);	// Iterator
+	template<typename  U>		static void *				test (decltype(std::declval<U>()++)**);		// Pointer
+	template<typename  U, size_t N>	static void *				test (decltype(std::declval<U>()++)(*)[N]);	// C-array
+	template<typename  U>		static typename U::iterator_category*	test (U*);					// Iterator
 
-	static const bool value = sizeof(test((T*)nullptr)) == sizeof(void *);
+	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == sizeof(void *);
 };
+
 
 	template<typename T>
 struct is_input_iterator {
 					static char				test (...);	// anything else
-	template<typename  U>		static char				test (U&);	// 
-	template<typename  U>		static void *				test (U**);	// Pointer
-	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
+	template<typename  U>		static void *				test (decltype(std::declval<U>()++)**);	// Pointer
+	template<typename  U, size_t N>	static void *				test (decltype(std::declval<U>()++)(*)[N]);	// C-array
 
 	template<typename  U>		static typename
 		std::enable_if<std::is_same<typename U::iterator_category, std::input_iterator_tag>::value, typename U::iterator_category*>::type
 										test (U*);	// Iterator
 
-	static const bool value = sizeof(test((T*)nullptr)) == sizeof(void *);
+	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == sizeof(void *);
 };
+
 
 
 
@@ -212,6 +213,7 @@ struct is_callable1 {
 			std::is_same<decltype(std::declval<U>()(std::declval<Arg>())), R>::value,
 		void*>::type
 	test(int);
+	//static const bool value = (sizeof(test<std::decay<F>::type(0)) == sizeof(void*));
 	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
 };
 
