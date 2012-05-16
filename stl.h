@@ -125,102 +125,50 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////  SEARCH
-
-/*
-//  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
-operator /       (Ct& C,  typename std::function<bool(typename Ct::value_type)> F)    {  return  std::find_if(C.begin(), C.end(), F); };
-*/
-
-/************************************************************************
-		template<typename F,typename R,typename A1>
-	void do_stuff(F& f,R (F::*mf)(A1) const) {
-	    (f.*mf)(99);
-	}
-
-	template<typename F>
-void do_stuff(F f) {
-    do_stuff(f,&F::operator());
-}
-***************************************************************************/
-
-/*
-
-//  Ct / F(x)   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct, typename Pred>
-	typename std::enable_if <
-		is_container<Ct>::value && is_predicate<Pred, typename Ct::value_type>::value, 
-	typename Ct::iterator>::type
-operator /       (Ct& C,  Pred F)    {  return  std::find_if(C.begin(), C.end(), F); };
 
 
-//  Ct / x   ---  find() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct>
-	typename std::enable_if < is_container<Ct>::value , typename Ct::iterator >::type
-operator /       (Ct& C, const typename Ct::value_type& x)    {  return std::find(C.begin(), C.end(), x); };
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-	template<typename Ct>
-	struct ct_op  {
-				typedef  typename Ct::value_type  T;
-				typedef  typename Ct::iterator    It;
-		// Ct / x
-			template<typename Arg>
-			static
-			typename std::enable_if<std::is_same<T, Arg>::value, It>::type
-		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
-
-		// Ct / f
-			template<typename Arg>
-			static
-			typename std::enable_if <is_predicate<Arg, T>::value, It>::type
-		div(Ct& C, const Arg& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
-	};
-
-//  Ct / T   ---  find..() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct, typename Arg>
-	typename std::enable_if < is_container<Ct>::value , typename Ct::iterator >::type
-operator /       (Ct& C, Arg x)    {  return  ct_op<Ct>::template div<Arg>(C, x); };
-
-*/
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 	template<typename Ct>
 	struct ct_op  {
+
+		/////  DIV
 				typedef  typename Ct::value_type  T;
 				typedef  typename Ct::iterator    It;
-		// Ct / x
-			template<typename Divisor>  static
-			typename std::enable_if<std::is_same<T, Divisor>::value, It>::type
+		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
+			template<typename Second>  static
+			typename std::enable_if<std::is_same<T, Second>::value, It>::type
 		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
 
 		// Ct / f
 			template<typename F>  static
 			typename std::enable_if <is_callable<F, bool(T)>::value, It>::type
 		div(Ct& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
+
+		/////  MOD
+	
+		//  Ct % x   ---  find() --> bool	
+			template<typename Second>  static
+			typename std::enable_if<std::is_same<Second, T>::value, bool>::type
+		mod(const Ct& C, const T& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
+
+		//  Ct1 % Ct2   ---  search() --> bool	
+			template<typename Ct2>  static
+			typename std::enable_if <is_container<Ct2>::value  &&  std::is_convertible<T, typename Ct2::value_type,  bool>::type
+		mod(const Ct& C1, const Ct2& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+
 	};
 
-//  Ct / T   ---  find..() --> it	   usage: scc 'copy(v9/2, v9/5,oi)'
-	template<typename Ct, typename Divisor>
+//  Ct / T   ---  find..() -> it	 
+	template<typename Ct, typename Second>
 	typename std::enable_if <is_container<Ct>::value , typename Ct::iterator>::type
-operator /       (Ct& C, Divisor x)    {  return  ct_op<Ct>::template div<Divisor>(C, x); };
+operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>(C, x); };
 
+//  Ct % T   ---  find..() -> bool	 
+	template<typename Ct, typename Second>
+	typename std::enable_if <is_container<Ct>::value , bool>::type
+operator %       (const Ct& C, Second x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 //////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//  Ct % x   ---  find() --> bool	
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (const Ct& C, const typename Ct::value_type& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
-
-
-//  Ct1 % Ct2   ---  search() --> bool	
-	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  bool>::type
-operator %       (const Ct& C1, const Ct& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 
 
 /*
@@ -312,7 +260,7 @@ operator++      (Ct& C)    { return C.front(); };
 //  !Queue
 	template<typename Ct>
 	typename std::enable_if <is_queue<Ct>::value, size_t>::type
-operator~      (Ct& C)    { return C.size(); };
+operator~      (const Ct& C)    { return C.size(); };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  ITERATOR
 
