@@ -204,17 +204,18 @@ template<typename T> struct is_random_access_iterator: is_iterator<T> { template
 */
 
 ////////////////////////////////////////////////////////////////////////////////////////  IS_CALLABLE
-		template<typename F, typename R, typename... Arg>
-struct is_callable {
+template<typename F, typename Signature> struct is_callable;
+
+		template<typename F, typename R, typename... Args>
+struct is_callable<F, R(Args...)> {
 		template<typename>   static char
 	test(...);
 		template<typename U> static
 		typename std::enable_if<
-			std::is_same<decltype(std::declval<U>()(std::declval<Arg>()...)), R>::value,
+			std::is_same<decltype(std::declval<U>()(std::declval<Args>()...)), R>::value,
 			void*
 		>::type
 	test(int);
-	//static const bool value = (sizeof(test<std::decay<F>::type(0)) == sizeof(void*));
 	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
 };
 

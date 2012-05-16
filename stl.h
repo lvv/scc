@@ -199,7 +199,7 @@ operator /       (Ct& C, Arg x)    {  return  ct_op<Ct>::template div<Arg>(C, x)
 
 		// Ct / f
 			template<typename F>  static
-			typename std::enable_if <is_callable<F, bool, T>::value, It>::type
+			typename std::enable_if <is_callable<F, bool(T)>::value, It>::type
 		div(Ct& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
 	};
 
