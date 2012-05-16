@@ -46,6 +46,23 @@ class is_callable {
 };
 
 
+		template<typename F, typename R, typename Arg>
+struct is_callable3 {
+		template<typename>   static char                                                     test(...);
+		template<typename U> static decltype(std::declval<U>()(std::declval<Arg>()))*        test(int);
+	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
+};
+
+		template<typename F, typename R, typename Arg>
+struct is_callable4 {
+		template<typename>   static char                                                     test(...);
+		template<typename U> static
+		typename std::enable_if<
+			std::is_same<decltype(std::declval<U>()(std::declval<Arg>())), R>::value,
+		void*>::type
+		test(int);
+	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
+};
 
 ///// func types
 
@@ -67,11 +84,11 @@ int main() {
 
 	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
 	cout <<  endl <<   left 
-		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is  is         \n"
-		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PREDPRED        \n"
-		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICATICAT is  is \n"
-		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   E   CALLCALL\n"
-		<< setw(26)<<""        <<   "                         able    P   Ref                      c&      c& \n";
+		<< setw(26)<<""        <<   " is  has  is  is      is      is          is  is  is  is  is             \n"
+		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue    F  is  is  Ptr Ref  MF  FN PRED            \n"
+		<< setw(26)<<""        <<   "     IT       IT  is      is     F    F          Ptr     ICAT is  is  is \n"
+		<< setw(26)<<""        <<   "                 Stack    IO-    rm  rm                  E   CALL 3   4  \n"
+		<< setw(26)<<""        <<   "                         able    P   Ref                                 \n";
 
 	#define for_T(name)  __ setw(26) << name \
 		<<   "  " << (is_container<T>::value                                   ? "+" : "\u2219")\
@@ -89,11 +106,12 @@ int main() {
 		<<  "   " << (std::is_member_function_pointer<T>::value                ? "+" : "\u2219")\
 		<<  "   " << (is_fn<T>::value                                          ? "+" : "\u2219")\
 		<<  "   " << (is_predicate<T,int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_predicate<T,const int&>::value                               ? "+" : "\u2219")\
 		<<  "   " << (is_callable<T,int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable<T,const int&>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable3<T, bool, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable4<T, bool, int>::value                               ? "+" : "\u2219")\
 	;
 	/*
+		<<  "   " << (std::is_same<std::function<T>::result_type,bool>::value ? "+" : "\u2219")\
 		<<  "   " << (is_Predicate<T,int>::value                               ? "+" : "\u2219")\
 		//<<  "   " << (Callable<T, int>::value                               ? "+" : "\u2219")\
 		//<<  "   " << (Callable<T, const int&>::value                               ? "+" : "\u2219")\
@@ -188,7 +206,7 @@ cout << endl;
 	{ typedef bool (*T)(int);
 	for_T(   "bool (*T)(int)");  }
 
-	// errors
+	// errors -- TODO fix is_iterator
 	//{ typedef bool (&T)();
 	//for_T(   "bool (&T)()");  }
 
@@ -219,20 +237,8 @@ cout << endl;
 	{ typedef std::negate<int>  T;
 	for_T(   "std::negate<int>");  }
 
-	/*
-	{ typedef std::unary_negate<int>  T;
-	for_T(   "std::unary_negate<int>");  }
-
-	{ typedef std::binary_negate<int>  T;
-	for_T(   "std::binary_negate<int>");  }
-	*/
 
 	{ typedef std::less<int>  T;
 	for_T(   "std::less<int>");  }
-
-	{
-	//#define  (T  [](){return true;})
-	//for_T(     "[](){return true;}"); 
-	}
 
 }

@@ -181,6 +181,7 @@ struct is_iterator {
 	template<typename T>
 struct is_input_iterator {
 					static char				test (...);	// anything else
+	template<typename  U>		static char				test (U&);	// 
 	template<typename  U>		static void *				test (U**);	// Pointer
 	template<typename  U, size_t N>	static void *				test (U(*)[N]);	// C-array
 
