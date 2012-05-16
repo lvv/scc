@@ -206,6 +206,10 @@
 	using	std::auto_ptr;
 	using	std::weak_ptr;
 
+	// meta
+	using	std::function;
+	using	std::is_same;
+	using	std::enable_if;
 
 
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
