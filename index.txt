@@ -515,6 +515,16 @@ If you need to use it with older GCC - use v0.1.
 
 ////////////////
 
+RANGES
+	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3350.html
+HASH_MAP
+	http://msinilo.pl/blog/?p=170
+		fastest -- http://code.google.com/p/rdestl/
+		http://attractivechaos.wordpress.com/2008/08/28/comparison-of-hash-table-libraries/
+		http://attractivechaos.wordpress.com/2008/09/12/the-google-hash-table-library/
+		http://www.augustana.ca/~mohrj/courses/1999.fall/csc210/lecture_notes/hashing.html
+		http://svn.python.org/view/python/trunk/Objects/dictnotes.txt?view=markup&pathrev=53782
+
 BENCHMARKS
 	A Benchmark for Reading Flat Files Into Memory for Awk, Python, Perl, Java, and Ruby (steve.80cols.com)
 		http://www.reddit.com/r/programming/comments/pub98/a_benchmark_for_reading_flat_files_into_memory/

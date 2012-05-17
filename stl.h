@@ -9,9 +9,7 @@
 #include <deque>
 #include <tuple>
 
-
 #include "meta.h"
-//#include "traits.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -126,6 +124,15 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////  ENDZ()
+
+// like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
+
+template<typename Ct> 
+auto  endz(const Ct& C) -> decltype(std::end(C)) {return std::end(C);};
+
+template<size_t N> 
+const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0');};
 
 //////////////////////////////////////////////////////////////////////////////////////////////  Ct op T
 
@@ -164,7 +171,7 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
 			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_value_type<Ct2>::type>::value,  bool>::type
-		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), std::end(C2)); };
+		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 	};
 
 //  Ct / T   ---  find..() -> it	 
