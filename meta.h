@@ -10,13 +10,13 @@
 
 
 
-#define DEF_HAS_MEMBER(name,member)						\
+#define DEF_HAS_MEMBER(NAME,MEMBER)						\
 		template <typename T>						\
-	struct name {								\
+	struct NAME {								\
 			template <						\
 				typename U,					\
 				typename VT = typename U::value_type,		\
-				typename M = typename U::member			\
+				typename M = typename U::MEMBER			\
 			>							\
 			static char						\
 		test(U* u);							\
@@ -29,13 +29,13 @@
 	}; 
 
 
-#define DEF_HAS_MEMBER_FUNC(name,mf)						\
+#define DEF_HAS_MEMBER_FUNC(NAME,MF)						\
 		template <typename T>						\
-	struct name {								\
+	struct NAME {								\
 			template <						\
 				typename U,					\
 				typename VT = typename U::value_type,		\
-				typename F = decltype (((U*)0)->mf)		\
+				typename F = decltype (((U*)0)->MF)		\
 			>							\
 			static char						\
 		test(U* u);							\
@@ -48,25 +48,14 @@
 	}; 
 
 
-	template <typename L, typename T>				
-struct is_predicate {						
-		template <				
-			typename LL,			
-			typename TT,			
-			typename MF = decltype (&LL::operator()),
-			typename F  = bool (LL::*) (const TT&) const  // useless - does not work
-		>							
-		static void*						
-		//static typename std::enable_if<std::is_same<typename std::function<F>::result_type, bool>::value, void*>::type
-		//static typename std::enable_if<std::is_same<typename std::function<bool (LL::*) (const TT&) >::result_type, bool>::value, void*>::type
-	test(LL* f);						
-							
-		template <typename U,typename W>
-		static char		
-	test(...);		
-			
-	enum { value = sizeof test<L,T>(0) == sizeof(void*) };		
-};
+
+//////////////////////////////////////////////////////////////////////////////////////  VALUE_TYPE
+
+// only for Ct and T[N]
+template <typename Ct>		struct value_type		{ typedef	typename Ct::value_type	type; };
+template <typename T, size_t N>	struct value_type<T[N]>		{ typedef	T			type; };
+
+
 
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)

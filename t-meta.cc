@@ -39,7 +39,6 @@ auto lam = [](int x)->bool { return x==0; };
 typedef decltype(lam) lam_t;
 
 
-
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -66,6 +65,10 @@ int main() {
 		<<  "   " << (is_callable<T, bool, int, int>::value                               ? "+" : "\u2219")\
 	;
 
+		/*
+		<<  "   " << (std::is_same<int, typename value_type<T>::type>::value                               ? "+" : "\u2219")\
+
+		*/
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
