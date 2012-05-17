@@ -160,17 +160,11 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			typename std::enable_if <is_callable<F, bool(T)>::value, bool>::type
 		mod(const Ct& C, const F& pred)  { return  C.cend()  !=  std::find_if(C.cbegin(), C.cend(), pred); };
 
+		
 		//  Ct1 % Ct2   ---  search() --> bool	
-	//		template<typename Ct2>  static
-	//		typename std::enable_if <is_container<Ct2>::value  &&  std::is_convertible<T, typename Ct2::value_type>::value,  bool>::type
-	//	mod(const Ct& C1, const Ct2& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
-
-			/*
 			template<typename Ct2>  static
-			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename value_type<Ct2>::type>::value,  bool>::type
-		mod(const Ct& C1, const Ct2& C2)    {  return end(C1) != std::search(begin(C1), end(C1), begin(C2), end(C2)); };
-		*/
-
+			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_value_type<Ct2>::type>::value,  bool>::type
+		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), std::end(C2)); };
 	};
 
 //  Ct / T   ---  find..() -> it	 
