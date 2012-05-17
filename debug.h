@@ -1,3 +1,6 @@
+				#ifndef  LVV_DEBUG_H
+				#define  LVV_DEBUG_H
+
 #include <cxxabi.h>
 	template <typename T>
 const char* type2name() {
@@ -5,3 +8,4 @@ const char* type2name() {
 	int status;
 	return abi::__cxa_demangle(t_name, NULL, NULL, &status);
 }
+				#endif
