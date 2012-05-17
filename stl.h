@@ -161,9 +161,15 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 		mod(const Ct& C, const F& pred)  { return  C.cend()  !=  std::find_if(C.cbegin(), C.cend(), pred); };
 
 		//  Ct1 % Ct2   ---  search() --> bool	
+	//		template<typename Ct2>  static
+	//		typename std::enable_if <is_container<Ct2>::value  &&  std::is_convertible<T, typename Ct2::value_type>::value,  bool>::type
+	//	mod(const Ct& C1, const Ct2& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+
+			/*
 			template<typename Ct2>  static
-			typename std::enable_if <is_container<Ct2>::value  &&  std::is_convertible<T, typename Ct2::value_type>::value,  bool>::type
-		mod(const Ct& C1, const Ct2& C2)    {  return C1.end() != std::search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename value_type<Ct2>::type>::value,  bool>::type
+		mod(const Ct& C1, const Ct2& C2)    {  return end(C1) != std::search(begin(C1), end(C1), begin(C2), end(C2)); };
+		*/
 
 	};
 
@@ -175,7 +181,7 @@ operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>
 //  Ct % T   ---  find..() -> bool	 
 	template<typename Ct, typename Second>
 	typename std::enable_if <is_container<Ct>::value , bool>::type
-operator %       (const Ct& C, Second x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
+operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR

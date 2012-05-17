@@ -9,6 +9,22 @@
 #include <queue>
 
 
+		template <typename T>						
+	struct cl_value_type {								
+			template <typename U, typename VT = typename U::value_type>							
+			static VT						
+		test(U* u);							
+										
+			template <typename U>
+			static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type>::type
+		test(U* u);							
+
+			template <typename U>					
+			static void						
+		test(...);							
+										
+		typedef decltype(test<T>(0))  type;
+	}; 
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)						\
 		template <typename T>						\
@@ -49,15 +65,10 @@
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////  VALUE_TYPE
-
-// only for Ct and T[N]
-template <typename Ct>		struct value_type		{ typedef	typename Ct::value_type	type; };
-template <typename T, size_t N>	struct value_type<T[N]>		{ typedef	T			type; };
-
 
 
 DEF_HAS_MEMBER(has_iterator,iterator)
+DEF_HAS_MEMBER(has_value_type,value_type)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
 DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
@@ -67,6 +78,27 @@ DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_size,size())
 DEF_HAS_MEMBER_FUNC(has_empty,empty())
 
+//////////////////////////////////////////////////////////////////////////////////////  VALUE_TYPE
+
+// 
+/*
+template <typename Ct>		struct value_type	{
+		typedef	
+			typename std::conditional<
+				has_value_type<Ct>::value,
+				long, //typename Ct::value_type,
+				void
+			>::type
+			type;
+};
+template <typename T, size_t N>	struct value_type<T[N]>		{ typedef	T			type; };
+*/
+
+/*
+template <typename T, bool has_vt=false>		struct value_type	{ typedef void type; };
+template <typename Ct>		struct value_type<Ct, has_value_type<Ct>::value>	{ typedef typename Ct::value_type type; };
+template <typename T, size_t N>	struct value_type<T[N]>		{ typedef	T			type; };
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
 
