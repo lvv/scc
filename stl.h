@@ -10,6 +10,7 @@
 #include <tuple>
 
 #include "meta.h"
+#include "cpptype.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -27,7 +28,6 @@ operator-      (Ct& C) { return  std::end(C); };
 	template<typename Ct>
 	typename std::enable_if <has_size<Ct>::value, size_t>::type
 operator~      (const Ct& C) { return C.size(); };
-
 
 
 //  if(!Ct)  --- (!Ct.empty())
@@ -139,8 +139,8 @@ const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0'
 	template<typename Ct>
 	struct ct_op  {
 
-				typedef  typename Ct::value_type  T;
-				typedef  typename Ct::iterator    It;
+				typedef  typename cl_traits<Ct>::value_type  T;
+				typedef  typename cl_traits<Ct>::iterator    It;
 
 		/////  DIV
 
@@ -170,8 +170,32 @@ const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0'
 		
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
-			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_value_type<Ct2>::type>::value,  bool>::type
+			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>::type
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
+
+		////// MUL 
+
+			template<typename U>              static T*  ct_resizer(U&  D,  size_t n)  { D.resize(n); return 0; };
+			template<typename U,  size_t N>   static void            ct_resizer(U (&D)[N], size_t n)  {}; 
+
+		// Ct * f
+			template<typename F>  static
+			typename std::enable_if <is_callable<F, T(T)>::value, Ct>::type
+		mul(const Ct& C, F f)  {
+			Ct D;
+			size_t n = std::end(C)-std::begin(C);
+			ct_resizer(D, n);
+
+			std::transform(std::begin(C), endz(C), std::begin(D), f);
+
+			// c-string termination
+			if (endz(C) < std::end(C))
+				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+			//return  std::move(D);
+			return  D;
+		};
+
 	};
 
 //  Ct / T   ---  find..() -> it	 
@@ -183,6 +207,11 @@ operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>
 	template<typename Ct, typename Second>
 	typename std::enable_if <is_container<Ct>::value , bool>::type
 operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
+
+//  Ct * F   ---  transform(+C,-C,+D,F) -> D
+	template<typename Ct, typename Second>
+	typename std::enable_if <is_container<Ct>::value , Ct>::type
+operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR

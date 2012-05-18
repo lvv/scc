@@ -35,3 +35,7 @@ scc 'copy(v9/2, v9/5, oi)'
 # DIV
 scc '__ v9 / 3 - +v9;'
 scc '__ v9 / [](int i){return i==3;} - +v9;'
+
+# APPLY F
+scc '__ vint{-3,3} * abs,  str("Hello") * toupper<char>;'
+

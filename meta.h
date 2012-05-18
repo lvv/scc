@@ -10,20 +10,35 @@
 
 
 		template <typename T>						
-	struct cl_value_type {								
+	struct cl_traits {								
 			template <typename U, typename VT = typename U::value_type>							
 			static VT						
-		test(U* u);							
+		vt(U* u);							
 										
 			template <typename U>
 			static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type>::type
-		test(U* u);							
+		vt(U* u);							
 
 			template <typename U>					
 			static void						
-		test(...);							
+		vt(...);							
 										
-		typedef decltype(test<T>(0))  type;
+		typedef decltype(vt<T>(0))  value_type;
+
+
+			template <typename U, typename VT = typename U::value_type>							
+			static typename U::iterator
+		it(U* u);							
+										
+			template <typename U>
+			static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type*>::type
+		it(U* u);							
+
+			template <typename U>					
+			static void						
+		it(...);							
+
+		typedef decltype(it<T>(0))  iterator;
 	}; 
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)						\

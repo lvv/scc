@@ -184,7 +184,7 @@ struct	fld : strr {
 	double				operator- (const fld& s1, const fld& s2){  return  double(s1) - double(s2); }
 
 	// op*
-	template<typename T>	T	operator* (const fld& sr, T x)		{  return  T(sr) * x; }
+	//template<typename T>	T	operator* (const fld& sr, T x)		{  return  T(sr) * x; }
 	template<typename T>	T	operator* (T x, const fld& sr)		{  return  T(sr) * x; }
 	double				operator* (const fld& s1, const fld& s2){  return  double(s1) * double(s2); }
 

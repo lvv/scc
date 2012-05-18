@@ -2,7 +2,14 @@
 				#define  LVV_CPPTYPEG_H
 
 
-char	toupper(char c) { return ::toupper((int)c); }
+char	tu(char c) { return ::toupper((int)c); }
+
+
+//static struct  toupper_t { char operator()(char c) const { return ::toupper((int)c); }; } toupper;
+template<typename T>
+T	toupper(T c) { return ::toupper((int)c); }
+//char	toupper(char c) { return ::toupper((int)c); }
+
 char	tolower(char c) { return ::tolower((int)c); }
 
 bool	isalnum (char c) { return ::isalnum ((int)c); }
