@@ -252,17 +252,9 @@ struct in_t {
 	}
 
 
-
-	// TODO 
 	// C-ARRAY
-	/* not working
-		template<typename T, size_t N>
-		void
-	input(T(&A)[N])	{
-		T t;
-		for (size_t i=0;  i<N && n>0;  i++, n--)  { std::cin >> t;   if(!std::cin) break;  A[i]=t;}
-	}
-	*/
+	// impossible to return C-array 
+
 	// STD::ARRAY
 	// STD::PAIR
 	// STD::TUPLE
@@ -284,7 +276,8 @@ operator>>      (std::istream& is, Ct& C)    {
 	return is;
 };
 
-// C-ARRAY
+
+
 		template<typename T, size_t N>
 		typename std::enable_if<!std::is_same<T,char>::value,  std::istream&>::type
 operator>>      (std::istream& is, T(&A)[N])    {
@@ -295,6 +288,7 @@ operator>>      (std::istream& is, T(&A)[N])    {
 	}
 	return is;
 };
+
 
 
 // STD::ARRAY

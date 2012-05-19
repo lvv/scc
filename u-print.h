@@ -1,8 +1,8 @@
 { char				v = 97;				_ "char     :  ", v, ";    ";  cout << v << "\n"; }
 { const char*			v = "abc";			_ "c string :  ", v, ";    ";  cout << v << "\n"; }
 { string			v = "abc";			_ "str      :  ", v, ";    ";  cout << v << "\n"; }
-{ strr				v = "abc";			_ "strr     :  ", v, ";    ";  cout << v << "\n"; }
-{ fld				v = "abc";			_ "fld      :  ", v, ";    ";  cout << v << "\n"; }
+{ strr				v ("abc");			_ "strr     :  ", v, ";    ";  cout << v << "\n"; }
+{ fld				v ("abc");			_ "fld      :  ", v, ";    ";  cout << v << "\n"; }
 { std::array<int,3>		v {{1,2,3}};			_ "array    :  ", v, ";    ";  cout << v << "\n"; }
 { vector<int>			v {1,2,3};			_ "vint     :  ", v, ";    ";  cout << v << v << "\n"; }
 { deque<int>			v {1,2,3};			_ "vint     :  ", v, ";    ";  cout << v << v << "\n"; }

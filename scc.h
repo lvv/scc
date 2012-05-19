@@ -99,14 +99,15 @@ struct	fld : strr {
 
 	fld()					: strr()	{};
 	fld(const char* b, const char* e)	: strr(b, e)	{};
+	// FIXME -- DTOR
 
 
 	// CONVERT FROM T
-	fld(const char*   s)			: strr(s)	{};
-	fld(const std::string& s)	{ assign (s.begin(), s.end()); };
-	fld(int           i)	{*this = (long)i;};
-	fld(long          i)	{*this = (long)i;};
-	fld(double        i)	{*this = (double)i;};
+	explicit fld(const char*   s)			: strr(s)	{};
+	explicit fld(const std::string& s)	{ assign (s.begin(), s.end()); };
+	explicit fld(int           i)	{*this = (long)i;};
+	explicit fld(long          i)	{*this = (long)i;};
+	explicit fld(double        i)	{*this = (double)i;};
 
 	// CONVERT TO T
 	template<typename T> T convert_to()    const { std::istringstream is;  T x;  is.str(std::string(this->b, this->e));  is >> x;  return x; }
@@ -156,6 +157,8 @@ struct	fld : strr {
 
 	// op=
 	                        fld&	operator= (const fld& x)	{ assign(x.b, x.e); return *this; }
+
+	template<size_t N>      fld&	operator= (const char (&S)[N])	{ *this = fld(S); return *this; }
 	template<typename T>	fld&	operator= (const T& x)	{ ostringstream os; os << x;  string s = os.str(); assign(s.begin(), s.end()); return *this; }
 
 	// op+=

@@ -6,10 +6,8 @@ set -v
 
 echo abc    | scc 'str             C;     cin >> C;   C'
 echo abc    | scc 'char            C[9];  cin >> C;   C'
-echo abc    | scc 'char            C[9]; p=C; cin>>p; C'
 
 echo abc    | scc 'str             C = in;            C'
-echo abc    | scc 'char            C[9]; p=C; p=in;   C'
 
 echo 1 2    | scc 'vint            C = in;            C'
 echo 1 2 3 4| scc 'vint            C = in(2);         C'
