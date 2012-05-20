@@ -14,17 +14,17 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
-//  +Ct   ---   begin()
+//  +Ct   ---   begin(),  	(n/a for c-arrays)
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
 operator+      (Ct& C) { return std::begin(C); };
 
-//  -Ct   ---   end()
+//  -Ct   ---   end(),  	(n/a for c-arrays)
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
 operator-      (Ct& C) { return  std::end(C); };
 
-//  ~Ct  --- size()
+//  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
 	typename std::enable_if <has_size<Ct>::value, size_t>::type
 operator~      (const Ct& C) { return C.size(); };
