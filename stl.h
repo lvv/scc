@@ -75,19 +75,10 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
-			&&  std::is_convertible<typename Ct1::value_type, typename Ct2::value_type>::value
+			&&  std::is_convertible<typename Ct1::value_type, typename cl_traits<Ct2>::value_type>::value
 		, Ct1
 	>::type &
-operator <<      (Ct1& C1, const Ct2& C2)    { for(auto x: C2) C1.push_back(x);   return  C1; };
-
-// Ct1 << T[N]
-	template<typename Ct1, /*typename T,*/ size_t N>
-	typename std::enable_if <
-		is_container<Ct1>::value  
-			&&   has_push_back<Ct1>::value
-			/*&&  std::is_convertible<typename Ct1::value_type, T>::value*/, 
-	Ct1 >::type &
-operator <<      (Ct1& C, const typename Ct1::value_type (&A)[N])    {  for(auto x: A) C.push_back(x);   return  C; };
+operator <<      (Ct1& C1, const Ct2& C2)    { for(auto& x: C2) C1.push_back(x);   return  C1; };
 
 
 // Ct1 << const char[N]
