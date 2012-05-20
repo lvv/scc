@@ -12,6 +12,16 @@
 #include "meta.h"
 #include "cpptype.h"
 
+/////////////////////////////////////////////////////////////////////////////////////////////  ENDZ()
+
+// like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
+
+template<typename Ct> 
+auto  endz(const Ct& C) -> decltype(std::end(C)) {return std::end(C);};
+
+template<size_t N> 
+const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0');};
+
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
 //  +Ct   ---   begin(),  	(n/a for c-arrays)
@@ -71,24 +81,15 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_b
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
 
 
-// Ct1 << Ct2
+// Ct1 << Ct2	(works when Ct2 is c-array or c-string)
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
 			&&  std::is_convertible<typename Ct1::value_type, typename cl_traits<Ct2>::value_type>::value
 		, Ct1
 	>::type &
-operator <<      (Ct1& C1, const Ct2& C2)    { for(auto& x: C2) C1.push_back(x);   return  C1; };
+operator <<      (Ct1& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
 
-
-// Ct1 << const char[N]
-	template<typename Ct1, size_t N>
-	typename std::enable_if <
-		is_container<Ct1>::value  
-			&&   has_push_back<Ct1>::value
-			&&  std::is_convertible<typename Ct1::value_type, char>::value, 
-	Ct1 >::type &
-operator <<      (Ct1& C, const char (&A)[N])    {  auto p=A;  while(*p)  C.push_back(*p++);   return  C; };
 
 
 // Ct1 >> Ct2
@@ -97,6 +98,7 @@ operator <<      (Ct1& C, const char (&A)[N])    {  auto p=A;  while(*p)  C.push
 		is_container<Ct1>::value  
 			&&  is_container<Ct2>::value  
 			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value 
+			//&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename Ct2::value_type>::value 
 			&&  has_push_front<Ct2>::value,
 	 Ct2 >::type &
 operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(), std::front_inserter(C2));  return C2; };
@@ -114,16 +116,6 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 
 
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////  ENDZ()
-
-// like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
-
-template<typename Ct> 
-auto  endz(const Ct& C) -> decltype(std::end(C)) {return std::end(C);};
-
-template<size_t N> 
-const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0');};
 
 //////////////////////////////////////////////////////////////////////////////////////////////  Ct op T
 
