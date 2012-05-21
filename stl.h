@@ -81,7 +81,8 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_b
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
 
 
-// Ct1 << Ct2	(works when Ct2 is c-array or c-string)
+/*
+// Ct1 << Ct2	(works when Ct2 is c-array or c-string)  FIXME:  C1==C2, push_back iter invalidation
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
@@ -98,7 +99,17 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=e
 			, Ct1
 		>::type
 	operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
+*/
 
+	template<typename Ct1, typename Ct2>
+	typename std::enable_if <
+		is_container<Ct1>::value   &&  is_container<Ct2>::value
+		//	&&  std::is_convertible<typename std::decay<typename Ct1::value_type>::type, typename std::decay<typename cl_traits<Ct2>::value_type>::type>::value
+		//, decltype(std::forward<Ct1>(std::declval<Ct1>()))
+		, Ct1
+	>::type 
+//operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(std::forward<Ct2>(C2)); it!=endz(std::forward<Ct2>(C2)); ++it) C1.push_back(*it);   return  C1; };
+operator <<      (Ct1&& C1, Ct2 C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
 
 // Ct1 >> Ct2
 	template<typename Ct1, typename Ct2>

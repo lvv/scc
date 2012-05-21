@@ -14,7 +14,7 @@ scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
 
 # Ct1 << Ct2
-scc '_ (v23 << a23);  s="123";  _ (s << "ABC");  _ (str("left")<<"RIGHT");  __ (v23 << "abc");'
+scc '_ v23 << a23; _ v23;  s="123";  _ (s << "ABC");  _ (str("left")<<"RIGHT");  __ (v23 << "abc");'
 
 # SIZE
 scc 'stack<int> sk;  sk << 1<< 2;  set<int> st;  st << 1<< 2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
