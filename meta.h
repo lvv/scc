@@ -132,7 +132,7 @@ struct is_container {
 		static long
 	test(...);
 
-	enum { value = sizeof test<T>(0) == 1 };
+	enum { value = sizeof test<typename std::decay<T>::type>(0) == 1 };
 };
 
 
