@@ -96,8 +96,8 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=e
 			is_container<Ct1>::value   &&  is_container<Ct2>::value
 				&&  std::is_convertible<typename Ct1::value_type, typename cl_traits<Ct2>::value_type>::value
 			, Ct1
-		>::type &&
-	operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  std::move(C1); };
+		>::type
+	operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
 
 
 // Ct1 >> Ct2
