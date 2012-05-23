@@ -11,7 +11,7 @@ include::/tmp/t.ad[]
 C++ REPL
 --------
 
-Expression evaluated and printed:
+At bash prompt - expression evaluated and printed:
 
 ----------------------------------------------------------------------------
 scc 2+2								
@@ -35,7 +35,7 @@ scc "bitset\<8>('a')"
 scc 'double x=0.5;  sin(x)'						
 0.479426
 
-echo "ABC"  |  scc 'char c;  while (cin>>c)  cout << (char)tolower(c);'
+echo "ABC"  |  scc 'char c;  while (cin>>c)  cout << tolower(c);'
 abc
 ----------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ Snippet is evaluated in environment where all STL includes are included and almo
 all STL objects are imported into default namespace with `using std::...;`
 
 If you need only plain +++C++ +++ REPL, that is about all you need to know.  You can
-skip to link:#_install[Install] section now.  Sections that follow are about
+skip to link:#_install[install] section now.  Sections that follow are about
 SCC C++ extensions to alleviate +++C++ +++ verbosity and AWK like capabilities.
 
 
@@ -205,7 +205,7 @@ Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is for those who prefer terse C-pointer-style code.
+This is alternative terser interface to STL.
 Below is string manipulation example.   Given `Thello?` string, it
 transforms it and prints -  `" H e l l o ! "`.  In +++C++ +++:  
 
@@ -369,7 +369,7 @@ scc -n 'per-record-expr;'
 Fortunately,  GCC allows use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
-In SCC, `$` variables are of special string type `fld`, it is similar to `std::string` but it can be
+In SCC, line's fields are of special string type `fld`, it is similar to `std::string` but it can be
 used in arithmetic expressions - they can be implicitly converted to corresponding numeric type. And it
 can be assigned a numeric value. That is `fld` behave like AWK's vars.
 Numeric types are any of `int`, `float`, etc.
@@ -458,7 +458,7 @@ echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2 == "(none|-)"_R)  $2="n/a";'
 
 
 C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std::regex_match()`.
-Unfortunately GCC's LIBSTDC++ not yet C++11 complaint.  Algorithms
+Unfortunately GCC's LIBSTDC++ not yet +++ C++11 +++  compliant.  Algorithms
 `std::regex_replace` and `std::regex_search` are not implemented yet in
 LIBSTDC++  and we have to use `if`.
 

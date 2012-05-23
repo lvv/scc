@@ -53,8 +53,42 @@ struct cl_traits<T(&)[N]> {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)						\
-		template <typename T>						\
+		template <typename T>		/* NON-REF */			\
 	struct NAME {								\
+			template <						\
+				typename U,					\
+				typename VT = typename U::value_type,		\
+				typename M = typename U::MEMBER			\
+			>							\
+			static char						\
+		test(U* u);							\
+										\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+										\
+		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 									\
+										\
+		template <typename T>		/* REF */			\
+	struct NAME<T&> {							\
+			template <						\
+				typename U,					\
+				typename VT = typename U::value_type,		\
+				typename M = typename U::MEMBER			\
+			>							\
+			static char						\
+		test(U* u);							\
+										\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+										\
+		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 									\
+										\
+		template <typename T>		/* RV-REF */			\
+	struct NAME<T&&> {							\
 			template <						\
 				typename U,					\
 				typename VT = typename U::value_type,		\
@@ -87,8 +121,42 @@ struct cl_traits<T(&)[N]> {
 		test(...);							\
 										\
 		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 									\
+										\
+		template <typename T>						\
+	struct NAME<T&> {							\
+			template <						\
+				typename U,					\
+				typename VT = typename U::value_type,		\
+				typename F = decltype (((U*)0)->MF)		\
+			>							\
+			static char						\
+		test(U* u);							\
+										\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+										\
+		enum { value = sizeof test<T>(0) == 1 };			\
+	}; 									\
+										\
+										\
+		template <typename T>						\
+	struct NAME<T&&> {							\
+			template <						\
+				typename U,					\
+				typename VT = typename U::value_type,		\
+				typename F = decltype (((U*)0)->MF)		\
+			>							\
+			static char						\
+		test(U* u);							\
+										\
+			template <typename U>					\
+			static long						\
+		test(...);							\
+										\
+		enum { value = sizeof test<T>(0) == 1 };			\
 	}; 
-
 
 
 
@@ -222,7 +290,8 @@ struct is_input_iterator {
 
 
 
-/*
+/* TODO
+ 
 template<typename T> struct is_input_iterator:         is_iterator<T> { template<typename U>  static typename U::input_iterator*          test (U*); };
 template<typename T> struct is_output_iterator:        is_iterator<T> { template<typename U>  static typename U::output_iterator*         test (U*); };
 template<typename T> struct is_forward_iterator:       is_iterator<T> { template<typename U>  static typename U::forward_iterator*        test (U*); };

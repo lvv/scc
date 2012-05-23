@@ -2,8 +2,12 @@
 set -o errexit
 set -v
 
+# C1 >> C2 
+scc 'dchar s; s << "efg";  ("ABC" >> s)'
+scc '__ (vint{1,2} >> dint{3,4});'
+scc '__ ( d23 >> d9);'
 
-# Ct1 << Ct2
+# C1 << C2
 scc '__ (v23 << a23); '
 scc 's="123";  __ (s << "ABC");'
 scc '__ (str("left")<<"RIGHT");'

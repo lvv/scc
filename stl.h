@@ -87,48 +87,26 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 
 
 
-/*
-// Ct1 << Ct2	(works when Ct2 is c-array or c-string)  FIXME:  C1==C2, push_back iter invalidation
+// Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
-		is_container<Ct1>::value   &&  is_container<Ct2>::value
-			&&  std::is_convertible<typename Ct1::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct1
-	>::type &
-operator <<      (Ct1& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
-
-	// Ct1&&
-		template<typename Ct1, typename Ct2>
-		typename std::enable_if <
-			is_container<Ct1>::value   &&  is_container<Ct2>::value
-				&&  std::is_convertible<typename Ct1::value_type, typename cl_traits<Ct2>::value_type>::value
-			, Ct1
-		>::type
-	operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
-*/
-
-	template<typename Ct1, typename Ct2>
-	typename std::enable_if <
-		is_container<Ct1>::value   &&  is_container<Ct2>::value
-		//&&  std::is_convertible<typename std::decay<typename Ct1::value_type>::type, typename std::decay<typename cl_traits<Ct2>::value_type>::type>::value
-		&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		//, decltype(std::forward<Ct1>(std::declval<Ct1>()))
+		has_push_back<Ct1>::value
+			&&  is_container<Ct2>::value
+			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
 		, Ct1
 	>::type 
-//operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(std::forward<Ct2>(C2)); it!=endz(std::forward<Ct2>(C2)); ++it) C1.push_back(*it);   return  C1; };
 operator <<      (Ct1&& C1, Ct2&& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
 
 
-// Ct1 >> Ct2
+// Ct1 >> Ct2			// TODO:  C1 is c-string
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
-		is_container<Ct1>::value  
-			&&  is_container<Ct2>::value  
-			&&  std::is_same<typename Ct1::value_type, typename Ct2::value_type>::value 
-			//&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename Ct2::value_type>::value 
-			&&  has_push_front<Ct2>::value,
-	 Ct2 >::type &
-operator >>      (const Ct1& C1, Ct2& C2)    { std::copy(C1.rbegin(), C1.rend(), std::front_inserter(C2));  return C2; };
+		is_container<Ct1>::value
+			//&&  has_push_front<Ct2>::value 
+			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
+		 	, Ct2
+	 >::type&
+operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}

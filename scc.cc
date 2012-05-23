@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
 
 	// for testing
 	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
+	dint d9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  d0, d23{2,3};
 	int  a9[]     __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9};  int __attribute__((unused)) a23[]{2,3};
 	char c9[]     __attribute__((unused)) = "abcdefgh";
 	string s9     __attribute__((unused)) ("abcdefgh");
