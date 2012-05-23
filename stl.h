@@ -57,15 +57,20 @@ operator++      (Ct& C) { return C.front(); };
 	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
 operator++      (Ct& C, int) { return C.back(); };
 
-//  x >> Ct << x   ---  push_back/push_front replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
+
+//   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct&>::type
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);   return C; };
 
+
+//   Ct << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct&>::type
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.insert(x);   return C; };
 
+
+//  x >> Ct    ---  push_front replaement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type &
 operator>>      (const typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
@@ -79,6 +84,7 @@ operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_b
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value, Ct&>::type
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
+
 
 
 /*
@@ -104,12 +110,14 @@ operator <<      (Ct1& C1, const Ct2& C2)    { for(auto it=std::begin(C2); it!=e
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value   &&  is_container<Ct2>::value
-		//	&&  std::is_convertible<typename std::decay<typename Ct1::value_type>::type, typename std::decay<typename cl_traits<Ct2>::value_type>::type>::value
+		//&&  std::is_convertible<typename std::decay<typename Ct1::value_type>::type, typename std::decay<typename cl_traits<Ct2>::value_type>::type>::value
+		&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
 		//, decltype(std::forward<Ct1>(std::declval<Ct1>()))
 		, Ct1
 	>::type 
 //operator <<      (Ct1&& C1, const Ct2& C2)    { for(auto it=std::begin(std::forward<Ct2>(C2)); it!=endz(std::forward<Ct2>(C2)); ++it) C1.push_back(*it);   return  C1; };
-operator <<      (Ct1&& C1, Ct2 C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
+operator <<      (Ct1&& C1, Ct2&& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
+
 
 // Ct1 >> Ct2
 	template<typename Ct1, typename Ct2>

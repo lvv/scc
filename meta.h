@@ -11,32 +11,30 @@
 
 		template <typename T>						
 	struct cl_traits {								
-			template <typename U, typename VT = typename U::value_type>							
-			static VT						
-		vt(U* u);							
+
+				template <typename U, typename VT = typename U::value_type>							
+				static VT						
+			test(U* u);							
+
+
+				template <typename U>					
+				static void						
+			test(...);	
 										
-			template <typename U>
-			static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type>::type
-		vt(U* u);							
-
-			template <typename U>					
-			static void						
-		vt(...);							
-										
-		typedef decltype(vt<T>(0))  value_type;
+		typedef decltype(test<T>(0))  type;
 
 
-			template <typename U, typename VT = typename U::value_type>							
-			static typename U::iterator
-		it(U* u);							
-										
-			template <typename U>
-			static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type*>::type
-		it(U* u);							
+				template <typename U, typename VT = typename U::value_type>							
+				static typename U::iterator
+			it(U* u);							
+											
+				template <typename U>
+				static typename std::enable_if<std::is_array<U>::value, typename std::remove_extent<U>::type*>::type
+			it(U* u);							
 
-			template <typename U>					
-			static void						
-		it(...);							
+				template <typename U>					
+				static void						
+			it(...);							
 
 		typedef decltype(it<T>(0))  iterator;
 	}; 
@@ -132,7 +130,7 @@ struct is_container {
 		static long
 	test(...);
 
-	enum { value = sizeof test<typename std::decay<T>::type>(0) == 1 };
+	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
 };
 
 
@@ -140,6 +138,7 @@ template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterato
 template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			type; };
 
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_container <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING

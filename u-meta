@@ -1,0 +1,18 @@
+
+set -o errexit
+set -v
+
+scc 'type2name<cl_traits<vint>::value_type>()'
+scc 'type2name<cl_traits<const vint&>::value_type>()'
+scc 'type2name<cl_traits<vint&&>::value_type>()'
+
+scc 'type2name<cl_traits<int(&)[2]>::value_type>()'
+
+scc 'is_container<int*(*)(int)>::value'
+scc 'is_container<int>::value'
+scc 'is_container<vint>::value'
+scc 'is_container<int(&)[2]>::value'
+scc 'is_container<const vint&>::value'
+scc 'is_container<vint&&>::value'
+
+

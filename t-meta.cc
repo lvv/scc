@@ -61,14 +61,10 @@ int main() {
 		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_ioable<T>::value                                      ? "+" : "\u2219")\
-		<<  "   " << (is_callable<T, bool, int>::value                               ? "+" : "\u2219")\
-		<<  "   " << (is_callable<T, bool, int, int>::value                               ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T, bool(int)>::value                         ? "+" : "\u2219")\
+		<<  "   " << (is_callable<T, bool(int, int)>::value                    ? "+" : "\u2219")\
 	;
 
-		/*
-		<<  "   " << (std::is_same<int, typename value_type<T>::type>::value                               ? "+" : "\u2219")\
-
-		*/
 
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
@@ -79,6 +75,15 @@ int main() {
 	{ typedef vector<int>::iterator  T;
 	for_T(   "vector<int>::iterator"); }
 
+	/*
+	{ typedef vector<const int&>::iterator  T;
+	for_T(   "vector<const int&>::iterator"); }
+
+	{ typedef vector<int&&>::iterator  T;
+	for_T(   "vector<int&&>::iterator"); }
+	*/
+
+	
 	{ typedef deque<int>::iterator  T;
 	for_T(   "deque<int>::iterator"); }
 
