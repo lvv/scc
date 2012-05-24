@@ -95,7 +95,7 @@ operator<<      (typename cl_traits<Ct>::value_type&& x, Ct&& C)    { x = C.fron
 			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
 		, Ct1		// RVO: no coping for T& or T&&
 	>::type 
-operator <<      (Ct1&& C1, Ct2&& C2)    {
+operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
 	//for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)

@@ -11,84 +11,36 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
-/*
-
-#define  CL_TRAITS_BODY(REF)									\
-	 		template <typename U, typename VT = typename U::value_type>	\
-	 		static VT 							\
-		vt(U* u);								\
-											\
-			template <typename U>						\
-			static void							\
-		vt(...);								\
-											\
-	typedef decltype(vt<T>(0)) value_type ;						\
-											\
-			template <typename U, typename IT = typename U::iterator>	\
-			static IT 							\
-		it(U* u);								\
-											\
-			template <typename U>						\
-			static void							\
-		it(...);								\
-											\
-	typedef decltype(it<T>(0)) iterator;						\
-
-
-template <typename T>		struct cl_traits      { CL_TRAITS_BODY() };
-template <typename T>		struct cl_traits<T&>  { CL_TRAITS_BODY(&) };
-template <typename T>		struct cl_traits<T&&> { CL_TRAITS_BODY(&&) };
-*/
-
-#define  CL_TRAITS_BODY(REF)									\
-	 		template <typename U, typename VT = typename U::value_type>	\
-	 		static VT 							\
-		vt(U* u);								\
-											\
-			template <typename U>						\
-			static void							\
-		vt(...);								\
-											\
-	typedef decltype(vt<T>(0)) value_type ;						\
-											\
-			template <typename U, typename IT = typename U::iterator>	\
-			static IT 							\
-		it(U* u);								\
-											\
-			template <typename U>						\
-			static void							\
-		it(...);								\
-											\
-	typedef decltype(it<T>(0)) iterator;						\
 
 struct no_type{};
 
 template <typename T>		struct cl_traits      {
-		template <typename U, typename VT = typename U::value_type> static VT vt(U* u);
-		template <typename U> static no_type vt(...);
+		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
+		template <typename U>                                          static no_type  vt(...);
 	typedef decltype(vt<T>(0)) value_type ;
-		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
-		template <typename U> static no_type it(...);
+		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
+		template <typename U>                                          static no_type  it(...);
 	typedef decltype(it<T>(0)) iterator;
 };
 
 template <typename T>		struct cl_traits<T&>      {
-		template <typename U, typename VT = typename U::value_type&> static VT vt(U* u);
-		template <typename U> static no_type vt(...);
+		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
+		template <typename U>                                          static no_type  vt(...);
 	typedef decltype(vt<T>(0)) value_type ;
-		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
-		template <typename U> static no_type it(...);
+		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
+		template <typename U>                                          static no_type  it(...);
 	typedef decltype(it<T>(0)) iterator;
 };
 
 template <typename T>		struct cl_traits<T&&>      {
-		template <typename U, typename VT = typename U::value_type&&> static VT vt(U* u);
-		template <typename U> static no_type vt(...);
+		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
+		template <typename U>                                          static no_type  vt(...);
 	typedef decltype(vt<T>(0)) value_type ;
-		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
-		template <typename U> static no_type it(...);
+		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
+		template <typename U>                                          static no_type  it(...);
 	typedef decltype(it<T>(0)) iterator;
 };
+
 
 	template <typename T, size_t N>
 struct cl_traits<T[N]> {
@@ -98,11 +50,11 @@ struct cl_traits<T[N]> {
 
 	template <typename T, size_t N>
 struct cl_traits<T(&)[N]> {
-	typedef		T&	value_type;
+	typedef		T	value_type;
 	typedef		T*	iterator;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)						\
 		template <typename T>		/* NON-REF */			\

@@ -3,8 +3,12 @@ set -o errexit
 set -v
 
 scc '__ type2name<cl_traits<vint>::value_type>(),	ref2name<cl_traits<vint>::value_type>::name(); '
-scc '__ type2name<cl_traits<const vint&>::value_type>(),ref2name<cl_traits<vint&>::value_type>::name(); '
+scc '__ type2name<cl_traits<vint&>::value_type>(),ref2name<cl_traits<vint&>::value_type>::name(); '
 scc '__ type2name<cl_traits<vint&&>::value_type>(),	ref2name<cl_traits<vint&&>::value_type>::name(); '
+
+scc '__ type2name<cl_traits<const vint>::value_type>(),	ref2name<cl_traits<vint>::value_type>::name(); '
+scc '__ type2name<cl_traits<const vint&>::value_type>(),ref2name<cl_traits<vint&>::value_type>::name(); '
+scc '__ type2name<cl_traits<const vint&&>::value_type>(),	ref2name<cl_traits<vint&&>::value_type>::name(); '
 
 scc 'type2name<cl_traits<int(&)[2]>::value_type>()'
 
