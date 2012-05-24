@@ -78,12 +78,12 @@ operator>>      (const typename Ct::value_type x, Ct& C)    { C.push_front(x);  
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type&
-operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.back();   C.pop_back();    return C; };
+	typename std::enable_if <is_container<Ct>::value, Ct>::type
+operator>>      (Ct&& C, typename Ct::value_type& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct&>::type
-operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_front();  return C; };
+	typename std::enable_if <is_container<Ct>::value, Ct>::type
+operator<<      (typename Ct::value_type& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 
 

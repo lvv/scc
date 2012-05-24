@@ -25,6 +25,7 @@ scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
 scc 'auto T = MT(1,2,3);  __ ++T, T++, T;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
+scc 'int i;  _ (vint{1,2} >> i);  __ i;'
 
 # SIZE
 scc 'stack<int> sk;  sk << 1<< 2;  set<int> st;  st << 1<< 2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
