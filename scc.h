@@ -2,7 +2,7 @@
 #define  LVV_SCC_H
 
 	#include "scc/simple.h"
-	#include "scc/allocator.h"
+	//#include "scc/allocator.h"
 
 
 	// BUF

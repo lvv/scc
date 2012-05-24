@@ -469,7 +469,7 @@ Install
 -------
 
 -----------------------------------------
-git clone http://github.com/lvv/scc
+git clone http://github.com/lvv/scc scc
 cd scc
 ./scc -r
 echo "PATH+=:$PWD/scc/" >> ~/.profile
@@ -482,12 +482,12 @@ can work only with GCC-4.7 (or older).   Other compilers were not tested.
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
 Do not use GCC precompiled headers (generated with `scc -r`) if you are going to modify source. 
-Do disable these, run `rm -rf .gch`.
+Do disable precompiled headers, run `rm -rf .gch`.
 
-
-+++ C++ +++ parser of semi-broken.  It can incorrectly parse (to extract last
-expression) multi-line scripts or in expressions with lambdas. As
-workaround terminate every line with semicolon (even for comment-line).
++++ C++ +++ parser is semi-broken.  It sometimes incorrectly parse (to extract
+last expression) multi-line scripts or expressions with "{}". As workaround
+terminate every line with semicolon (even for comment-line) and do not use
+print-if-not-terminated-with-semicolon feature.
 
 If you need to use it with older GCC - use v0.1.
 

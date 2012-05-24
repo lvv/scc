@@ -1,4 +1,18 @@
 
+############################################################################################### make + install
+make:
+	echo "aready made"
+
+PREFIX=/usr/local
+install:
+	echo "not implemented - just use this (scc/) directory."
+#	mkdir -p  ${PREFIX}/bin/
+#	cp -v scc ${PREFIX}/bin/
+#	mkdir -p  ${PREFIX}/include/scc/
+#	cp -v *.h ${PREFIX}/include/scc/
+
+
+###############################################################################################
 ASCIIDOC_FILTERS ?= /usr/share/asciidoc/filters
 
 
