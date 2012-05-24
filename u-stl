@@ -12,8 +12,15 @@ scc '__ (v23 << a23); '
 scc 's="123";  __ (s << "ABC");'
 scc '__ (str("left")<<"RIGHT");'
 scc '__ (v23 << "abc");'
-
 #scc '_ (v23 << a23); _ v23;  s="123";  _ (s << "ABC");  _ (str("left")<<"RIGHT");  __ (v23 << "abc");'
+
+#  x << C >> y
+scc 'int i,j;  _ (i << d9          >> j);  __ i, j;'
+scc 'int i,j;  _ (i << dint{1,2,3} >> j);  __ i, j;'
+
+#  x >> C << y
+scc '__ ( 1 >> dint{2,3} << 4);'
+scc '__ ( 1 >> d23 << 4);'
 
 
 
@@ -25,7 +32,6 @@ scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
 scc 'auto T = MT(1,2,3);  __ ++T, T++, T;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
-scc 'int i;  _ (vint{1,2} >> i);  __ i;'
 
 # SIZE
 scc 'stack<int> sk;  sk << 1<< 2;  set<int> st;  st << 1<< 2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 
