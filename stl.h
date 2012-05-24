@@ -64,7 +64,7 @@ operator++      (Ct& C, int) { return C.back(); };
 operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.push_back(x);   return C; };
 
 
-//   Ct << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
+//   Set << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>::type
 operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.insert(x);   return std::forward<Ct>(C); };
@@ -84,6 +84,24 @@ operator>>      (Ct&& C, typename cl_traits<Ct>::value_type& x)    { x = C.back(
 	template<typename Ct>
 	typename std::enable_if <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>::type
 operator<<      (typename cl_traits<Ct>::value_type& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
+
+// Set << Ct 
+	template<typename Ct1, typename Ct2>
+	typename std::enable_if <
+		has_insert<Ct1>::value
+			&&  is_container<Ct2>::value
+			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
+		, Ct1		// RVO: no coping for T& or T&&
+	>::type 
+operator <<      (Ct1&& C1, const Ct2& C2)    {
+
+	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
+	//for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
+	
+	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
+		C1.insert(*it);  
+	return  std::forward<Ct1>(C1);
+};
 
 
 
