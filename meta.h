@@ -11,44 +11,96 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
+/*
 
-#define  CL_TRAITS_BODY									\
+#define  CL_TRAITS_BODY(REF)									\
 	 		template <typename U, typename VT = typename U::value_type>	\
-	 		static VT							\
+	 		static VT 							\
 		vt(U* u);								\
 											\
 			template <typename U>						\
 			static void							\
 		vt(...);								\
 											\
-	typedef decltype(vt<T>(0))  value_type;						\
+	typedef decltype(vt<T>(0)) value_type ;						\
 											\
 			template <typename U, typename IT = typename U::iterator>	\
-			static IT							\
+			static IT 							\
 		it(U* u);								\
 											\
 			template <typename U>						\
 			static void							\
 		it(...);								\
 											\
-	typedef decltype(it<T>(0))  iterator;						\
+	typedef decltype(it<T>(0)) iterator;						\
 
 
-template <typename T>		struct cl_traits      { CL_TRAITS_BODY };
-template <typename T>		struct cl_traits<T&>  { CL_TRAITS_BODY };
-template <typename T>		struct cl_traits<T&&> { CL_TRAITS_BODY };
+template <typename T>		struct cl_traits      { CL_TRAITS_BODY() };
+template <typename T>		struct cl_traits<T&>  { CL_TRAITS_BODY(&) };
+template <typename T>		struct cl_traits<T&&> { CL_TRAITS_BODY(&&) };
+*/
 
-	template <typename T, size_t N>						
-struct cl_traits<T[N]> {								
+#define  CL_TRAITS_BODY(REF)									\
+	 		template <typename U, typename VT = typename U::value_type>	\
+	 		static VT 							\
+		vt(U* u);								\
+											\
+			template <typename U>						\
+			static void							\
+		vt(...);								\
+											\
+	typedef decltype(vt<T>(0)) value_type ;						\
+											\
+			template <typename U, typename IT = typename U::iterator>	\
+			static IT 							\
+		it(U* u);								\
+											\
+			template <typename U>						\
+			static void							\
+		it(...);								\
+											\
+	typedef decltype(it<T>(0)) iterator;						\
+
+struct no_type{};
+
+template <typename T>		struct cl_traits      {
+		template <typename U, typename VT = typename U::value_type> static VT vt(U* u);
+		template <typename U> static no_type vt(...);
+	typedef decltype(vt<T>(0)) value_type ;
+		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
+		template <typename U> static no_type it(...);
+	typedef decltype(it<T>(0)) iterator;
+};
+
+template <typename T>		struct cl_traits<T&>      {
+		template <typename U, typename VT = typename U::value_type&> static VT vt(U* u);
+		template <typename U> static no_type vt(...);
+	typedef decltype(vt<T>(0)) value_type ;
+		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
+		template <typename U> static no_type it(...);
+	typedef decltype(it<T>(0)) iterator;
+};
+
+template <typename T>		struct cl_traits<T&&>      {
+		template <typename U, typename VT = typename U::value_type&&> static VT vt(U* u);
+		template <typename U> static no_type vt(...);
+	typedef decltype(vt<T>(0)) value_type ;
+		template <typename U, typename IT = typename U::iterator> static IT it(U* u);
+		template <typename U> static no_type it(...);
+	typedef decltype(it<T>(0)) iterator;
+};
+
+	template <typename T, size_t N>
+struct cl_traits<T[N]> {
 	typedef		T	value_type;
 	typedef		T*	iterator;
-}; 
+};
 
-	template <typename T, size_t N>						
-struct cl_traits<T(&)[N]> {								
-	typedef		T	value_type;
+	template <typename T, size_t N>
+struct cl_traits<T(&)[N]> {
+	typedef		T&	value_type;
 	typedef		T*	iterator;
-}; 
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -169,6 +221,8 @@ DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
 DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
 //DEF_HAS_MEMBER_FUNC(is_functor,std::function<bool(const typename U::value_type&)>::type(typename U::value_type()))
+DEF_HAS_MEMBER_FUNC(has_pop_back,pop_back())
+DEF_HAS_MEMBER_FUNC(has_pop_front,pop_front())
 DEF_HAS_MEMBER_FUNC(has_size,size())
 DEF_HAS_MEMBER_FUNC(has_empty,empty())
 

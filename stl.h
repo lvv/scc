@@ -66,24 +66,24 @@ operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push_back(x);  
 
 //   Ct << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct&>::type
-operator<<      (Ct& C, const typename Ct::value_type& x)    { C.insert(x);   return C; };
+	typename std::enable_if <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>::type
+operator<<      (Ct&& C, const typename cl_traits<Ct>::value_type&& x)    { C.insert(x);   return std::forward<Ct>(C); };
 
 
 //  x >> Ct    ---  push_front replaement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type &
-operator>>      (const typename Ct::value_type x, Ct& C)    { C.push_front(x);  return C; };
+	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type
+operator>>      (const typename cl_traits<Ct>::value_type x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };
 
 
-//  x << Ct >> x   ---  remove head / tail;   usage: scc 'llong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
+//  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type
-operator>>      (Ct&& C, typename Ct::value_type& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
+	typename std::enable_if <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>::type
+operator>>      (Ct&& C, typename cl_traits<Ct&&>::value_type x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type
-operator<<      (typename Ct::value_type& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
+	typename std::enable_if <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>::type
+operator<<      (typename cl_traits<Ct>::value_type&& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 
 
