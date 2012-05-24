@@ -23,4 +23,14 @@ struct  trace_obj {
 
 };
 
+
+namespace {
+template <typename T>	struct ref2name             { static const char* name() { return  "T"         ;}} ; 
+template <typename T>	struct ref2name <const T>   { static const char* name() { return  "const T"   ;}} ; 
+template <typename T>	struct ref2name <T&>        { static const char* name() { return  "T&"        ;}} ; 
+template <typename T>	struct ref2name <const T&>  { static const char* name() { return  "const T&"  ;}} ; 
+template <typename T>	struct ref2name <T&&>       { static const char* name() { return  "T&&"       ;}} ; 
+template <typename T>	struct ref2name <const T&&> { static const char* name() { return  "const T&&" ;}} ; 
+}
+
 				#endif

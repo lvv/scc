@@ -538,6 +538,9 @@ STL
 GNU AWK
 	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
 
+STR TO INT 
+	http://www.partow.net/programming/strtk/index.html
+
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
@@ -563,6 +566,7 @@ FORMATS
 
 	CSV
 		http://csvkit.readthedocs.org/en/latest/index.html
+		http://www.partow.net/programming/strtk/index.html
 	XML
 		xml parser in spirit
 			-- http://boost-spirit.com/repository/applications/xml.zip

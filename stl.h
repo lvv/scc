@@ -20,7 +20,7 @@ template<typename Ct>
 auto  endz(const Ct& C) -> decltype(std::end(C)) {return std::end(C);};
 
 template<size_t N> 
-const char* endz( const char (&array)[N] ) {return  std::find(array,array+N,'\0');};
+auto endz( const char (&array)[N] ) -> decltype(std::end(array)) {return  std::find(array,array+N,'\0');};
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -93,12 +93,16 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 		has_push_back<Ct1>::value
 			&&  is_container<Ct2>::value
 			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct1		// RVO: no coping for const T& or T&&
+		, Ct1		// RVO: no coping for T& or T&&
 	>::type 
-operator <<      (Ct1&& C1, Ct2&& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
+operator <<      (Ct1&& C1, Ct2&& C2)    {
+	for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
+		C1.push_back(*it);  
+	return  std::forward<Ct1>(C1);
+};
 
 
-// Ct1 >> Ct2			// TODO:  C1 is c-string
+// Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value
