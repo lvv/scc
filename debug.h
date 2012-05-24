@@ -3,11 +3,24 @@
 
 #include <cxxabi.h>
 
-// unit: 
+
 	template <typename T>
 const char* type2name() {
 	const char* t_name = typeid(T).name();
 	int status;
 	return abi::__cxa_demangle(t_name, NULL, NULL, &status);
 }
+
+#include <iostream>
+
+struct  trace_obj {
+	trace_obj()			{ std::cout << "ctor\n"; }
+	trace_obj(const trace_obj& o)	{ std::cout << "copy ctor\n"; }
+	trace_obj(trace_obj&& o)	{ std::cout << "move ctor\n"; }
+	~trace_obj()			{ std::cout << "dtor\n"; }
+	trace_obj&  operator=(const trace_obj& o)	{ std::cout << "copy assignment\n";  return *this; }
+	trace_obj&  operator=(trace_obj&& o)		{ std::cout << "move assignment\n";  return *this; }
+
+};
+
 				#endif

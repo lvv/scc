@@ -93,7 +93,7 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 		has_push_back<Ct1>::value
 			&&  is_container<Ct2>::value
 			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct1
+		, Ct1		// RVO: no coping for const T& or T&&
 	>::type 
 operator <<      (Ct1&& C1, Ct2&& C2)    { for(auto it=std::begin(C2); it!=endz(C2); ++it) C1.push_back(*it);   return  C1; };
 
@@ -102,10 +102,10 @@ operator <<      (Ct1&& C1, Ct2&& C2)    { for(auto it=std::begin(C2); it!=endz(
 	template<typename Ct1, typename Ct2>
 	typename std::enable_if <
 		is_container<Ct1>::value
-			//&&  has_push_front<Ct2>::value 
+			&&  has_push_front<Ct2>::value 
 			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		 	, Ct2
-	 >::type&
+		, Ct2
+	 >::type
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 
@@ -137,6 +137,7 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			typename std::enable_if<std::is_same<T, Second>::value, It>::type
 		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
 
+
 		// Ct / f
 			template<typename F>  static
 			typename std::enable_if <is_callable<F, bool(T)>::value, It>::type
@@ -150,6 +151,7 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			typename std::enable_if<std::is_same<Second, T>::value, bool>::type
 		mod(const Ct& C, const T& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
 
+
 		// Ct % f
 			template<typename F>  static
 			typename std::enable_if <is_callable<F, bool(T)>::value, bool>::type
@@ -161,10 +163,12 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>::type
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
+
 		////// MUL 
 
 			template<typename U>              static T*  ct_resizer(U&  D,  size_t n)  { D.resize(n); return 0; };
 			template<typename U,  size_t N>   static void            ct_resizer(U (&D)[N], size_t n)  {}; 
+
 
 		// Ct * f
 			template<typename F>  static
@@ -180,7 +184,6 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			if (endz(C) < std::end(C))
 				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
 
-			//return  std::move(D);
 			return  D;
 		};
 
