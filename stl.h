@@ -96,7 +96,11 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop_f
 		, Ct1		// RVO: no coping for T& or T&&
 	>::type 
 operator <<      (Ct1&& C1, Ct2&& C2)    {
-	for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
+
+	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
+	//for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
+	
+	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.push_back(*it);  
 	return  std::forward<Ct1>(C1);
 };
