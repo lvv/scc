@@ -26,31 +26,31 @@ auto endz( const char (&array)[N] ) -> decltype(std::end(array)) {return  std::f
 
 //  +Ct   ---   begin(),  	(n/a for c-arrays)
 	template<typename Ct >
-	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
+	eIF <is_container<Ct>::value, typename Ct::iterator>
 operator+      (Ct& C) { return std::begin(C); };
 
 //  -Ct   ---   end(),  	(n/a for c-arrays)
 	template<typename Ct >
-	typename std::enable_if <is_container<Ct>::value, typename Ct::iterator>::type
+	eIF <is_container<Ct>::value, typename Ct::iterator>
 operator-      (Ct& C) { return  std::end(C); };
 
 //  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
-	typename std::enable_if <has_size<Ct>::value, size_t>::type
+	eIF <has_size<Ct>::value, size_t>
 operator~      (const Ct& C) { return C.size(); };
 
 
 //  if(!Ct)  --- (!Ct.empty())
 //  if(Ct)   --- not implemented,  use  !!Ct instead
 	template<typename Ct>
-	typename std::enable_if <has_empty<Ct>::value, bool>::type
+	eIF <has_empty<Ct>::value, bool>
 operator!      (const Ct& C) { return C.empty(); };
 
 
 
 //  ++T / T++  ---  front()/back()/.first/.second
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
+	eIF <is_container<Ct>::value, typename Ct::reference>
 operator++      (Ct& C) { return C.front(); };
 
 	template<typename Ct>
@@ -60,44 +60,35 @@ operator++      (Ct& C, int) { return C.back(); };
 
 //   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct&>::type
+	eIF <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct>
 operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.push_back(x);   return C; };
 
 
 //   Set << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>::type
+	eIF <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>
 operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.insert(x);   return std::forward<Ct>(C); };
 
 
 //  x >> Ct    ---  push_front replaement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>::type
+	eIF <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>
 operator>>      (typename cl_traits<Ct>::value_type&& x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>::type
+	eIF <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>
 operator>>      (Ct&& C, typename cl_traits<Ct>::value_type& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>::type
+	eIF <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>
 operator<<      (typename cl_traits<Ct>::value_type& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	typename std::enable_if <
-		has_insert<Ct1>::value
-			&&  is_container<Ct2>::value
-			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct1		// RVO: no coping for T& or T&&
-	>::type 
+	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value, Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
-
-	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
-	//for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
-	
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
 	return  std::forward<Ct1>(C1);
@@ -107,12 +98,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
-	typename std::enable_if <
-		has_push_back<Ct1>::value
-			&&  is_container<Ct2>::value
-			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct1		// RVO: no coping for T& or T&&
-	>::type 
+	eIF <has_push_back<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,  Ct1>	// RVO: no coping for T& or T&&
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
@@ -126,12 +112,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
-	typename std::enable_if <
-		is_container<Ct1>::value
-			&&  has_push_front<Ct2>::value 
-			&&  std::is_convertible<typename cl_traits<Ct1>::value_type, typename cl_traits<Ct2>::value_type>::value
-		, Ct2
-	 >::type
+	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,  Ct2>
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 
@@ -183,7 +164,7 @@ operator--      (Ct& C, int)    { C.pop_back();    return  C; };
 			typename std::enable_if <is_callable<F, bool(T)>::value, bool>::type
 		mod(const Ct& C, const F& pred)  { return  C.cend()  !=  std::find_if(C.cbegin(), C.cend(), pred); };
 
-		
+			
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
 			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>::type

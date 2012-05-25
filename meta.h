@@ -17,42 +17,44 @@ struct no_type{};
 template <typename T>		struct cl_traits      {
 		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
 		template <typename U>                                          static no_type  vt(...);
-	typedef decltype(vt<T>(0)) value_type ;
+	typedef   decltype(vt<T>(0))   value_type ;
 		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
-	typedef decltype(it<T>(0)) iterator;
+	typedef   decltype(it<T>(0))   iterator;
 };
 
 template <typename T>		struct cl_traits<T&>      {
 		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
 		template <typename U>                                          static no_type  vt(...);
-	typedef decltype(vt<T>(0)) value_type ;
+	typedef   decltype(vt<T>(0))   value_type ;
 		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
-	typedef decltype(it<T>(0)) iterator;
+	typedef   decltype(it<T>(0))   iterator;
 };
 
 template <typename T>		struct cl_traits<T&&>      {
 		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
 		template <typename U>                                          static no_type  vt(...);
-	typedef decltype(vt<T>(0)) value_type ;
+	typedef   decltype(vt<T>(0))   value_type ;
 		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
-	typedef decltype(it<T>(0)) iterator;
+	typedef   decltype(it<T>(0))   iterator;
 };
 
 
-	template <typename T, size_t N>
-struct cl_traits<T[N]> {
-	typedef		T	value_type;
-	typedef		T*	iterator;
-};
+template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  value_type;   typedef  T*  iterator; };
+template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  value_type;   typedef  T*  iterator; };
 
-	template <typename T, size_t N>
-struct cl_traits<T(&)[N]> {
-	typedef		T	value_type;
-	typedef		T*	iterator;
-};
+
+template<typename Ct>   using cl_value_type     = typename cl_traits<Ct>::value_type;
+template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
+template<bool Cnd, typename T>           using  eIF                     = typename std::enable_if <Cnd,T>::type;
+template<typename Ct1, typename Ct2>     using  is_cl2cl_convertible    = std::is_convertible<cl_value_type<Ct1>, cl_value_type<Ct2>>;
+template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::is_convertible<xT, cl_value_type<Ct>>;
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
@@ -199,13 +201,13 @@ struct is_container {
 	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
 };
 
-
-template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
-template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			type; };
-
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
+
+
+template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
+template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			type; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<typename T>	struct  is_string		: std::false_type {};
