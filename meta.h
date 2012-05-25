@@ -239,7 +239,7 @@ struct is_stack {
 		static long
 	test(...);
 
-	enum { value = sizeof test<T>(0) == 1 };
+	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
 };
 
 

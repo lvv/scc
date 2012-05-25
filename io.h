@@ -100,7 +100,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 #define		__   outln() <<
 
 
-// std::CONTAINTER<printable> or C-Array
+// SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Ct >
 	typename std::enable_if <is_container<Ct>::value  &&  !is_ioable<Ct>::value, std::ostream&>::type
 operator<<      (ostream& os, const Ct& C) {
@@ -112,6 +112,22 @@ operator<<      (ostream& os, const Ct& C) {
 			os << ", ";
 		}
 	cout << "}";
+        return os;
+};
+
+
+// STACK
+	template<typename Ct >
+	eIF <is_stack<Ct>::value, std::ostream> &
+operator<<      (ostream& os, Ct C) {
+
+	Ct CC; 
+	while(!C.empty()) { auto x = C.top();  C.pop();  CC.push(x); }
+
+	cout << "[";
+		if    ( !CC.empty() )  { os << CC.top();  CC.pop(); }
+		while ( !CC.empty() )  { os << ", " << CC.top(); CC.pop(); }
+	cout << "]";
         return os;
 };
 

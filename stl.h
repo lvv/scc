@@ -87,7 +87,7 @@ operator<<      (typename cl_traits<Ct>::value_type& x, Ct&& C)    { x = C.front
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value, Ct1>
+	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,   Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
@@ -235,8 +235,8 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 //  Stack << x
 	template<typename Ct>
-	eIF <is_stack<Ct>::value, Ct> &
-operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
+	eIF <is_stack<Ct>::value, Ct>
+operator<<      (Ct&& C, cl_value_type<Ct>&& x)    { C.push(std::forward<cl_value_type<Ct>>(x));   return std::forward<Ct>(C); };
 
 //  Stack--
 	template<typename Ct>

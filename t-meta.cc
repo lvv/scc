@@ -87,6 +87,9 @@ int main() {
 	{ typedef deque<int>::iterator  T;
 	for_T(   "deque<int>::iterator"); }
 
+	{ typedef std::ostream  T;
+	for_T(   "ostream::it"); }
+
 	{ typedef std::ostream_iterator<int>   T;
 	for_T(   "ostream_it<int>::it"); }
 
