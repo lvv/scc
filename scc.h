@@ -49,7 +49,7 @@ struct strr {         ///////////////////////////////////////////////////////  S
 
 	// CTOR
 	strr()			: b(0), e(0)				{};
-	strr(const char*   s)	: b(s)					{  e = b + strlen(s); };
+	strr(const char*   s)	: b(s)					{  e = b;  while(*++e); };
 	strr(const char* b, const char* e):  b(b),  e(e)		{};
 
 	// MEMBERS

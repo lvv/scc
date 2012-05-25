@@ -96,6 +96,7 @@ int main(int argc, char** argv) {
 	#ifdef  scc_BENCHMARK
 		lvv::timer_t timer  __attribute__((unused)) (true);
 	#endif
+
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
 		if (is_header) {
@@ -119,7 +120,7 @@ int main(int argc, char** argv) {
 			#include "/tmp/snippet.h"
 			if (is_print_last)  cout << ORS;
 		}
-	;}
+	}
 
 	delete buf;
 }

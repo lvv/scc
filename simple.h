@@ -7,12 +7,16 @@
 #include "scc/regex.h"
 
 //////////////////////////////////////////////////////////////////// C
+
 //#include <cstdlib>
 //#include <cstddef>
-#include <cstring>
+//#include <cstring>
+extern "C"  void *memcpy(void *dest, const void *src, size_t n);
+
 //#include <cctype>
 #include <cmath>
 #include <cassert>
+
 
 
 
@@ -206,8 +210,19 @@
 	using	std::auto_ptr;
 	using	std::weak_ptr;
 
-	// meta
+	// function
 	using	std::function;
+	using	std::bind;
+	using	std::less;
+	using	std::greater;
+	using	std::equal;
+	using	std::placeholders::_1;
+	using	std::placeholders::_2;
+	using	std::placeholders::_3;
+	using	std::placeholders::_4;
+	using	std::placeholders::_5;
+
+	// meta
 	using	std::is_same;
 	using	std::enable_if;
 

@@ -531,6 +531,8 @@ BENCHMARKS
 		v2 --  http://steve.80cols.com/flat_file_bakeoff.html
 		v1 -- http://steve.80cols.com/reading_flat_files_into_memory_benchmark.html
 		https://github.com/lorca/flat_file_benchmark/watchers
+PARSING C++
+	http://www.codesynthesis.com/~boris/blog/2010/05/03/parsing-cxx-with-gcc-plugin-part-1/
 
 STL
 	map adapter: https://github.com/krig/k11/blob/master/src/tests/iter.cpp

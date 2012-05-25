@@ -1,15 +1,9 @@
 				#ifndef  LVV_CPPTYPE_H
 				#define  LVV_CPPTYPEG_H
 
+				namespace cpp {
 
-char	tu(char c) { return ::toupper((int)c); }
-
-
-//static struct  toupper_t { char operator()(char c) const { return ::toupper((int)c); }; } toupper;
-template<typename T>
-T	toupper(T c) { return ::toupper((int)c); }
-//char	toupper(char c) { return ::toupper((int)c); }
-
+char	toupper(char c) { return ::toupper((int)c); }
 char	tolower(char c) { return ::tolower((int)c); }
 
 bool	isalnum (char c) { return ::isalnum ((int)c); }
@@ -24,4 +18,5 @@ bool	isspace (char c) { return ::isspace ((int)c); }
 bool	isupper (char c) { return ::isupper ((int)c); }
 bool	isxdigit(char c) { return ::isxdigit((int)c); }
 
+				}
 				#endif
