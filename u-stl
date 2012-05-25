@@ -40,6 +40,7 @@ scc 'stack<int> s; s << 1 << 2 << 3;  int x;  s >> x;  _ x, s++; __ "", ~s--;'
 scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
 scc 'dint d{1,2};   3 >> d;   d'
 scc 'map<int,int> m;   m<<MP(1,2);  m'
+scc -- '__(-- dint{0,1,2,3,4,5} -- -- );'
 
 # SIZE
 scc 'stack<int> sk;  sk << 1<< 2;  set<int> st;  st << 1<< 2;  __ ~vint{1,2}, ~MT(1,2), ~sk, ~st;' 

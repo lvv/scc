@@ -24,15 +24,15 @@ auto endz( const char (&array)[N] ) -> decltype(std::end(array)) {return  std::f
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
-//  +Ct   ---   begin(),  	(n/a for c-arrays)
+//  +Ct   ---   begin(),  	
 	template<typename Ct >
 	eIF <is_container<Ct>::value, typename Ct::iterator>
 operator+      (Ct& C) { return std::begin(C); };
 
-//  -Ct   ---   end(),  	(n/a for c-arrays)
+//  -Ct   ---   end(),  	(n/a for c-arrays, use std::end or endz)
 	template<typename Ct >
 	eIF <is_container<Ct>::value, typename Ct::iterator>
-operator-      (Ct& C) { return  std::end(C); };
+operator-      (Ct& C) { return  endz(C); };
 
 //  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
@@ -48,13 +48,13 @@ operator!      (const Ct& C) { return C.empty(); };
 
 
 
-//  ++T / T++  ---  front()/back()/.first/.second
+//  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 	template<typename Ct>
 	eIF <is_container<Ct>::value, typename Ct::reference>
 operator++      (Ct& C) { return C.front(); };
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, typename Ct::reference>::type
+	eIF <is_container<Ct>::value, typename Ct::reference>
 operator++      (Ct& C, int) { return C.back(); };
 
 
@@ -118,13 +118,13 @@ operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- !
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type &
-operator--      (Ct& C)         { C.pop_front();   return  C; };
+	eIF <is_container<Ct>::value, Ct>
+operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C); };
 
 
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value, Ct>::type &
-operator--      (Ct& C, int)    { C.pop_back();    return  C; };
+	eIF <is_container<Ct>::value, Ct>
+operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
 
