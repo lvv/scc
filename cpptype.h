@@ -2,7 +2,6 @@
 				#define  LVV_CPPTYPEG_H
 
 				namespace cpp {
-
 char	toupper(char c) { return ::toupper((int)c); }
 char	tolower(char c) { return ::tolower((int)c); }
 

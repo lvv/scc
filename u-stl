@@ -61,5 +61,5 @@ scc '__ v9 / 3 - +v9;'
 scc '__ v9 / [](int i){return i==3;} - +v9;'
 
 # APPLY F
-scc '__ vint{-3,3} * abs,  str("Hello") * function<char(char)>(toupper), vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
-
+scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
+scc ' __  *(s9 / islower);'

@@ -22,6 +22,9 @@ static bool  next_file()  { return  buf->next_file(); };
 
 
 int main(int argc, char** argv) {
+
+
+	// pre-declared vars
 	long i __attribute__((unused)) = 0;
 	long j __attribute__((unused)) = 0;
 	long k __attribute__((unused)) = 0;
@@ -39,18 +42,15 @@ int main(int argc, char** argv) {
 	char  c       __attribute__((unused));
 	char *p, *q   __attribute__((unused)) = nullptr;
 
-	// for testing
-	vint v9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
-	dint d9       __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9},  d0, d23{2,3};
-	int  a9[]     __attribute__((unused)) {0,1,2,3,4,5,6,7,8,9};  int __attribute__((unused)) a23[]{2,3};
-	char c9[]     __attribute__((unused)) = "abcdefgh";
-	string s9     __attribute__((unused)) ("abcdefgh");
+	// debug vars
+	vint    __attribute__((unused)) v9      {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
+	dint    __attribute__((unused)) d9      {0,1,2,3,4,5,6,7,8,9},  d0, d23{2,3};
+	int     __attribute__((unused)) a9[]    {0,1,2,3,4,5,6,7,8,9},  a23[]{2,3};
+	char    __attribute__((unused)) c9[]     = "abcdefgh",  c23[]="bc",  c1='a';
+	string  __attribute__((unused)) s9        ("abcdefgh"), s23  ("bc");
 
 
 	char	**first_file_argv = argv+1;
-						/*iFOR(argc)	__ "\t= ", i, argv[i];
-								__ "\t=  1st file: ",  (argc>1 ? *first_file_argv : "stdin") , endl;
-						*/
 
 	buf = new buf_t(first_file_argv, argv+argc);	// stdio
 	// cin.sync_with_stdio(false);
@@ -98,6 +98,25 @@ int main(int argc, char** argv) {
 	#endif
 
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
+
+		///////// <cctype> funcs have bad  C-ish signatures, unsuable with stl-op, we hide them with good function objects
+		std::function<char(char)> toupper(::toupper);
+		std::function<char(char)> tolower(::tolower);
+
+		std::function<bool(char)> isalnum (::isalnum );
+		std::function<bool(char)> isalpha (::isalpha );
+		std::function<bool(char)> iscntrl (::iscntrl );
+		std::function<bool(char)> isdigit (::isdigit );
+		std::function<bool(char)> isgraph (::isgraph );
+		std::function<bool(char)> islower (::islower );
+		std::function<bool(char)> isprint (::isprint );
+		std::function<bool(char)> ispunct (::ispunct );
+		std::function<bool(char)> isspace (::isspace );
+		std::function<bool(char)> isupper (::isupper );
+		std::function<bool(char)> isxdigit(::isxdigit);
+
+
+		///////////////////////////////////////////////////////////
 
 		if (is_header) {
 			read_line();
