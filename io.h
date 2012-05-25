@@ -122,7 +122,7 @@ operator<<      (ostream& os, const Ct& C) {
 operator<<      (ostream& os, Ct C) {
 
 	Ct CC; 
-	while(!C.empty()) { auto x = C.top();  C.pop();  CC.push(x); }
+	while(!C.empty()) { auto x = C.top();  C.pop();  CC.push(std::move(x)); }
 
 	cout << "[";
 		if    ( !CC.empty() )  { os << CC.top();  CC.pop(); }

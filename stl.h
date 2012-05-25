@@ -234,9 +234,9 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 /////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
 
 //  Stack << x
-	template<typename Ct>
-	eIF <is_stack<Ct>::value, Ct>
-operator<<      (Ct&& C, cl_value_type<Ct>&& x)    { C.push(std::forward<cl_value_type<Ct>>(x));   return std::forward<Ct>(C); };
+	template<typename Ct, typename Xt>
+	eIF <is_stack<Ct>::value  &&  is_x2cl_convertible<Ct,Xt>::value,  Ct>
+operator<<      (Ct&& C, Xt&& x)    { C.push(std::forward<Xt>(x));   return std::forward<Ct>(C); };
 
 //  Stack--
 	template<typename Ct>
@@ -244,9 +244,14 @@ operator<<      (Ct&& C, cl_value_type<Ct>&& x)    { C.push(std::forward<cl_valu
 operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 
 //  Stack >> x
-	template<typename Ct>
-	eIF <is_stack<Ct>::value, typename Ct::value_type> &
-operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.top();  C.pop();   return x; };
+//	scc 'int i=10; (stack<int>() << 1 << 2 << 3) >> i;  i'
+//	3
+//	scc 'int i=10; stack<int> st; st << 1 << 2 << 3;  st >> i; __ st, i;'
+//	[1, 2] 3
+
+	template<typename Ct, typename Xt>
+	eIF <is_stack<Ct>::value  &&  is_x2cl_convertible<Ct,Xt>::value, Ct>
+operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Ct>(C); };
 
 //  Stack++
 	template<typename Ct>

@@ -52,6 +52,7 @@ template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterat
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T>           using  eIF                     = typename std::enable_if <Cnd,T>::type;
 template<typename Ct1, typename Ct2>     using  is_cl2cl_convertible    = std::is_convertible<cl_value_type<Ct1>, cl_value_type<Ct2>>;
+//template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::is_convertible<std::remove_reference<xT>::type, std::remove_recl_value_type<Ct>>;
 template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::is_convertible<xT, cl_value_type<Ct>>;
 
 
