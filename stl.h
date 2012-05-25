@@ -141,13 +141,13 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
 			template<typename Second>  static
-			typename std::enable_if<std::is_same<T, Second>::value, It>::type
+			eIF <std::is_same<T, Second>::value, It>
 		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
 
 
 		// Ct / f
 			template<typename F>  static
-			typename std::enable_if <is_callable<F, bool(T)>::value, It>::type
+			eIF <is_callable<F, bool(T)>::value, It>
 		div(Ct& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
 
 
@@ -155,19 +155,19 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 	
 		//  Ct % x   ---  find() --> bool	
 			template<typename Second>  static
-			typename std::enable_if<std::is_same<Second, T>::value, bool>::type
+			eIF<std::is_same<Second, T>::value, bool>
 		mod(const Ct& C, const T& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
 
 
 		// Ct % f
 			template<typename F>  static
-			typename std::enable_if <is_callable<F, bool(T)>::value, bool>::type
+			eIF <is_callable<F, bool(T)>::value, bool>
 		mod(const Ct& C, const F& pred)  { return  C.cend()  !=  std::find_if(C.cbegin(), C.cend(), pred); };
 
 			
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
-			typename std::enable_if <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>::type
+			eIF <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
 
@@ -179,7 +179,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 		// Ct * f
 			template<typename F>  static
-			typename std::enable_if <is_callable<F, T(T)>::value, Ct>::type
+			eIF <is_callable<F, T(T)>::value, Ct>
 		mul(const Ct& C, F f)  {
 			Ct D;
 			size_t n = std::end(C)-std::begin(C);
@@ -198,17 +198,17 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 //  Ct / T   ---  find..() -> it	 
 	template<typename Ct, typename Second>
-	typename std::enable_if <is_container<Ct>::value , typename Ct::iterator>::type
+	eIF <is_container<Ct>::value , typename Ct::iterator>
 operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>(C, x); };
 
 //  Ct % T   ---  find..() -> bool	 
 	template<typename Ct, typename Second>
-	typename std::enable_if <is_container<Ct>::value , bool>::type
+	eIF <is_container<Ct>::value , bool>
 operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D
 	template<typename Ct, typename Second>
-	typename std::enable_if <is_container<Ct>::value , Ct>::type
+	eIF <is_container<Ct>::value , Ct>
 operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
 
 
@@ -235,22 +235,22 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 //  Stack << x
 	template<typename Ct>
-	typename std::enable_if <is_stack<Ct>::value, Ct&>::type&
+	eIF <is_stack<Ct>::value, Ct> &
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
 
 //  Stack--
 	template<typename Ct>
-	typename std::enable_if <is_stack<Ct>::value, Ct&>::type&
+	eIF <is_stack<Ct>::value, Ct> &
 operator--      (Ct& C, int)    { C.pop();   return C; };
 
 //  Stack >> x
 	template<typename Ct>
-	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
+	eIF <is_stack<Ct>::value, typename Ct::value_type> &
 operator>>      (Ct& C, typename Ct::value_type& x)    { x = C.top();  C.pop();   return x; };
 
 //  Stack++
 	template<typename Ct>
-	typename std::enable_if <is_stack<Ct>::value, typename Ct::value_type&>::type&
+ 	eIF <is_stack<Ct>::value, typename Ct::value_type> &
 operator++      (Ct& C, int)    { return C.top(); };
 
 
@@ -258,40 +258,41 @@ operator++      (Ct& C, int)    { return C.top(); };
 
 //  Queue << x
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, Ct&>::type&
+	eIF <is_queue<Ct>::value, Ct> &
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
 
 //  --Queue
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, Ct&>::type&
+	eIF <is_queue<Ct>::value, Ct> &
 operator--      (Ct& C)    { C.pop();   return C; };
 
 //  x << Queue
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+	eIF <is_queue<Ct>::value, typename Ct::value_type> &
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop();   return x; };
 
 //  Queue++
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+	eIF <is_queue<Ct>::value, typename Ct::value_type> &
 operator++      (Ct& C, int)    { return C.back(); };
 
 //  ++Queue
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, typename Ct::value_type&>::type&
+	eIF <is_queue<Ct>::value, typename Ct::value_type> &
 operator++      (Ct& C)    { return C.front(); };
 
 //  !Queue
 	template<typename Ct>
-	typename std::enable_if <is_queue<Ct>::value, size_t>::type
+	eIF <is_queue<Ct>::value, size_t>
 operator~      (const Ct& C)    { return C.size(); };
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  ITERATOR
 
 
 //  It / x   ---  find() --> it	   usage: scc 'copy(+v9/2, +v9/5, oi),  does not work with pointers (C++ constrain)
 	template<typename It>
-	typename std::enable_if <is_iterator<It>::value,  It>::type
+	eIF <is_iterator<It>::value,  It>
 operator/       (It i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return i; };
 
 
