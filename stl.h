@@ -240,8 +240,8 @@ operator<<      (Ct&& C, cl_value_type<Ct>&& x)    { C.push(std::forward<cl_valu
 
 //  Stack--
 	template<typename Ct>
-	eIF <is_stack<Ct>::value, Ct> &
-operator--      (Ct& C, int)    { C.pop();   return C; };
+	eIF <is_stack<Ct>::value, Ct>
+operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 
 //  Stack >> x
 	template<typename Ct>
