@@ -125,8 +125,19 @@ operator<<      (ostream& os, Ct C) {
 	while(!C.empty()) { auto x = C.top();  C.pop();  CC.push(std::move(x)); }
 
 	cout << "[";
-		if    ( !CC.empty() )  { os << CC.top();  CC.pop(); }
-		while ( !CC.empty() )  { os << ", " << CC.top(); CC.pop(); }
+		if    ( !CC.empty() )  { os         << CC.top();  CC.pop(); }
+		while ( !CC.empty() )  { os << ", " << CC.top();  CC.pop(); }
+	cout << "]";
+        return os;
+};
+
+// QUEUE
+	template<typename Ct >
+	eIF <is_queue<Ct>::value, std::ostream> &
+operator<<      (ostream& os, Ct C) {
+	cout << "[";
+		if    ( !C.empty() )  { os         << C.front();  C.pop(); }
+		while ( !C.empty() )  { os << ", " << C.front();  C.pop(); }
 	cout << "]";
         return os;
 };
