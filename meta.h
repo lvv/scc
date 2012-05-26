@@ -163,6 +163,7 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 
 
 DEF_HAS_MEMBER(has_iterator,iterator)
+DEF_HAS_MEMBER(has_iterator_category,iterator_category)
 DEF_HAS_MEMBER(has_value_type,value_type)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
@@ -281,8 +282,9 @@ struct is_iterator { //: std::enable_if<std::is_same<T, decltype(std::declval<T>
 	template<typename T>
 struct is_iterator {
 	static const bool value =
-		std::is_pointer<T>::value  
-		&&   ! std::is_function<typename std::remove_pointer<T>::type>::value; 
+		has_iterator_category<T>::value  ||
+		(std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value)
+	; 
 };
 
 
