@@ -272,14 +272,23 @@ struct is_queue {
 // T & operator++(void);
 // T operator++(int);
 
+/*
 	template<typename T>
 struct is_iterator { //: std::enable_if<std::is_same<T, decltype(std::declval<T>()++)>::value, std::true_type>::type {
 					static char				test (...);	// anything else
-	template<typename  U>		static void *				test (decltype(std::declval<U>()++)**);		// Pointer
-	template<typename  U, size_t N>	static void *				test (decltype(std::declval<U>()++)(*)[N]);	// C-array
+	template<typename  U>		static void *				test (decltype((*std::declval<U>)()++)**);	// Pointer
+	//template<typename  U, size_t N>	static void *			test (decltype(std::declval<U>()++)(*)[N]);	// C-array
+	//template<typename  U>		static void*				test (U**);					// Pointer
 	template<typename  U>		static typename U::iterator_category*	test (U*);					// Iterator
 
 	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == sizeof(void *);
+};
+*/
+	template<typename T>
+struct is_iterator {
+	static const bool value =
+		std::is_pointer<T>::value  
+		&&   ! std::is_function<typename std::remove_pointer<T>::type>::value; 
 };
 
 

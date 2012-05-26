@@ -95,6 +95,8 @@ range(Ct& C) { return range_t<typename Ct::iterator>(std::begin(C), std::end(C))
 	range_t<const char*>
 range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp,p); };
 
+	range_t<char*>
+range(char* p) { auto pp=p; while (*p) ++p; return range_t<char*>(pp,p); };
 
 template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
 
@@ -107,6 +109,10 @@ static  __attribute__((unused)) struct range_converter_t {} rng;
 		range_t<typename container_iterator<Ct>::type>
 	>::type
 operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
+
+	template<typename T, size_t N>
+	range_t<T*>
+operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::end(C)); };
 
 
 	template<typename Ct>

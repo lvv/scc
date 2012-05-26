@@ -91,10 +91,10 @@ int main() {
 	for_T(   "ostream::it"); }
 
 	{ typedef std::ostream_iterator<int>   T;
-	for_T(   "ostream_it<int>::it"); }
+	for_T(        "ostream_it<int>::it"); }
 
 	{ typedef std::istream_iterator<int>   T;
-	for_T(   "istream_it<int>::it"); }
+	for_T(        "istream_it<int>::it"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }
