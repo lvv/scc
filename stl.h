@@ -244,7 +244,7 @@ operator<<      (Ct&& C, Xt&& x)    { C.push(std::forward<Xt>(x));   return std:
 operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 
 //  Stack >> x
-//	scc 'int i=10; (stack<int>() << 1 << 2 << 3) >> i;  i'
+//	scc 'int i=10; (stack<int>() << 1 << 2) >> i;  i'
 //	3
 //	scc 'int i=10; stack<int> st; st << 1 << 2 << 3;  st >> i; __ st, i;'
 //	[1, 2] 3
@@ -253,10 +253,18 @@ operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 	eIF <is_stack<Ct>::value  &&  is_x2cl_convertible<Ct,Xt>::value, Ct>
 operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Ct>(C); };
 
+
 //  Stack++
+//	scc ' __ (stack<int>() << 1 << 2 << 3)++;'
+//	3
+//	scc 'stack<int> st; st << 1 << 2 << 3; st++'
+//	3
+
 	template<typename Ct>
- 	eIF <is_stack<Ct>::value, typename Ct::value_type> &
-operator++      (Ct& C, int)    { return C.top(); };
+ 	//eIF <is_stack<Ct>::value, typename Ct::value_type>
+ 	eIF <is_stack<Ct>::value, cl_value_type<Ct>>
+operator++      (Ct&& C, int)    { return C.top(); };
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  QUEUE

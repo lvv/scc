@@ -475,15 +475,16 @@ cd scc
 ./scc -r
 echo "PATH+=:$PWD/scc/" >> ~/.profile
 . ~/.profile
+scc '"SCC is installed"'
 ---------------------------------------
 
-This project is in alpha stage. Version with "latest" git tag and documented features are more stable.
+This project is in alpha stage. Version with "latest" git tag (if any) and documented features are more stable.
 SCC uses C+11 extensively and some GCC extensions, so currently it
-can work only with GCC-4.7 (or older).   Other compilers were not tested.
+can work only with GCC-4.7 (or later).   Other compilers were not tested.
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
-Do not use GCC precompiled headers (generated with `scc -r`) if you are going to modify source. 
-Do disable precompiled headers, run `rm -rf .gch`.
+You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with `scc -r`
+Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
 
 +++ C++ +++ parser is semi-broken.  It sometimes incorrectly parse (to extract
 last expression) multi-line scripts or expressions with "{}". As workaround
