@@ -519,6 +519,7 @@ If you need to use it with older GCC - use v0.1.
 
 RANGES
 	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3350.html
+
 HASH_MAP
 	http://msinilo.pl/blog/?p=170
 		fastest -- http://code.google.com/p/rdestl/

@@ -32,7 +32,7 @@ operator+      (Ct& C) { return std::begin(C); };
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end or endz)
 	template<typename Ct >
 	eIF <is_container<Ct>::value, typename Ct::iterator>
-operator-      (Ct& C) { return  endz(C); };
+operator-      (Ct& C) { return  std::end(C); };
 
 //  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
@@ -45,7 +45,6 @@ operator~      (const Ct& C) { return C.size(); };
 	template<typename Ct>
 	eIF <has_empty<Ct>::value, bool>
 operator!      (const Ct& C) { return C.empty(); };
-
 
 
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
@@ -284,6 +283,7 @@ operator--      (Ct& C)    { C.pop();   return C; };
 	eIF <is_queue<Ct>::value, typename Ct::value_type> &
 operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop();   return x; };
 
+
 //  Queue++
 	template<typename Ct>
 	eIF <is_queue<Ct>::value, typename Ct::value_type> &
@@ -306,7 +306,7 @@ operator~      (const Ct& C)    { return C.size(); };
 //  It / x   ---  find() --> it	   usage: scc 'copy(+v9/2, +v9/5, oi),  does not work with pointers (C++ constrain)
 	template<typename It>
 	eIF <is_iterator<It>::value,  It>
-operator/       (It i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return i; };
+operator/       (It&& i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return std::forward<It>(i); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  

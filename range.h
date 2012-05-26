@@ -50,9 +50,9 @@ struct  range_t {
 };
 
 	template<>
-struct  range_t<const char*> {
+struct  range_t<char*> {
 
-		typedef		const char*							I;
+		typedef		char*							I;
 
 		typedef		I							iterator;
 		typedef		I							const_iterator;
@@ -64,7 +64,7 @@ struct  range_t<const char*> {
 	iterator b_, e_;
 	range_t(iterator b, iterator e)  : b_(b), e_(e) {};
 
-	range_t(const char* p)  : b_(p) { while(*p) p++;  e_=p;};
+	range_t(char* p)  : b_(p) { while(*p) p++;  e_=p;};
 
 	iterator	begin()		{ return b_; };
 	iterator	end()		{ return e_; };
@@ -85,8 +85,8 @@ range(I b, I e) { return range_t<I>(b,e); };
 
 
 	template<typename I>
-	typename std::enable_if<is_iterator<I>::value, range_t<I>>::type
-operator / (I b, I e) { return range_t<I>(b,e); };
+	eIF<is_iterator<I>::value, range_t<I>>
+operator, (I b, I e)  { return range_t<I>(b,e); };
 
 	template<typename Ct>
 	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator>>::type
