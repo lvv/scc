@@ -64,7 +64,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME {								\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename M = typename U::MEMBER			\
 			>							\
 			static char						\
@@ -81,7 +80,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME<T&> {							\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename M = typename U::MEMBER			\
 			>							\
 			static char						\
@@ -98,7 +96,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME<T&&> {							\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename M = typename U::MEMBER			\
 			>							\
 			static char						\
@@ -117,7 +114,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME {								\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename F = decltype (((U*)0)->MF)		\
 			>							\
 			static char						\
@@ -134,7 +130,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME<T&> {							\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename F = decltype (((U*)0)->MF)		\
 			>							\
 			static char						\
@@ -152,7 +147,6 @@ template<typename Ct, typename xT>       using  is_x2cl_convertible     = std::i
 	struct NAME<T&&> {							\
 			template <						\
 				typename U,					\
-				typename VT = typename U::value_type,		\
 				typename F = decltype (((U*)0)->MF)		\
 			>							\
 			static char						\
