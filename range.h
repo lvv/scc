@@ -77,7 +77,7 @@ struct  range_t<char*> {
 };
 
 
-////////////////////////////////////////////////////////////////  TO RANGE CONVERTERS
+////////////////////////////////////////////////////////////////  RANGE() -- makes range
 
 	template<typename I>
 	typename std::enable_if<is_iterator<I>::value, range_t<I>>::type
@@ -92,6 +92,10 @@ operator, (I b, I e)  { return range_t<I>(b,e); };
 	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator>>::type
 range(Ct& C) { return range_t<typename Ct::iterator>(std::begin(C), std::end(C)); };
 
+	template<typename T,  size_t N>
+	range_t<T*>
+range(T (&C)[N])  { return range_t<T*>(std::begin(C), std::end(C)); };
+
 	range_t<const char*>
 range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp,p); };
 
@@ -102,6 +106,7 @@ template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
 
 static  __attribute__((unused)) struct range_converter_t {} rng;
 
+/////////////////////////////////////////////////////////////////// RNG -- range proxy
 
 	template<typename Ct>
 	typename std::enable_if<
