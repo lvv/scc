@@ -24,7 +24,11 @@ struct  range_t {
 		typedef		typename std::iterator_traits<I>::pointer		pointer ;
 		typedef		typename std::iterator_traits<I>::reference		reference ;
 	iterator b_, e_;
+
+	// CTOR
+	range_t()  : b_(0), e_(0) {};
 	range_t(iterator b, iterator e)  : b_(b), e_(e) {};
+
 
 	//template<typename Ct>
 	//range_t( typename std::enable_if<std::is_same<I, typename Ct::iterator>::value, Ct>::type&  C)  : b_(begin(C)), e_(end(C)) {};
@@ -49,6 +53,7 @@ struct  range_t {
 
 };
 
+/*
 	template<>
 struct  range_t<char*> {
 
@@ -64,7 +69,7 @@ struct  range_t<char*> {
 	iterator b_, e_;
 	range_t(iterator b, iterator e)  : b_(b), e_(e) {};
 
-	range_t(char* p)  : b_(p) { while(*p) p++;  e_=p;};
+	range_t(      char* p)  : b_(p) { while(*p) p++;  e_=p;};
 
 	iterator	begin()		{ return b_; };
 	iterator	end()		{ return e_; };
@@ -75,7 +80,13 @@ struct  range_t<char*> {
 
 	//range_t& operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
 };
+*/
 
+
+////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
+	template<typename I>
+	eIF<is_iterator<I>::value, range_t<I>>
+operator, (I b, I e)  { return range_t<I>(b,e); };
 
 ////////////////////////////////////////////////////////////////  RANGE() -- makes range
 
@@ -84,23 +95,21 @@ struct  range_t<char*> {
 range(I b, I e) { return range_t<I>(b,e); };
 
 
-	template<typename I>
-	eIF<is_iterator<I>::value, range_t<I>>
-operator, (I b, I e)  { return range_t<I>(b,e); };
-
 	template<typename Ct>
-	typename std::enable_if<is_container<Ct>::value, range_t<typename Ct::iterator>>::type
-range(Ct& C) { return range_t<typename Ct::iterator>(std::begin(C), std::end(C)); };
+	eIF<is_container<Ct>::value, range_t<cl_iterator<Ct>>>
+range(Ct& C) { return range_t<cl_iterator<Ct>>(std::begin(C), std::end(C)); };
 
-	template<typename T,  size_t N>
-	range_t<T*>
-range(T (&C)[N])  { return range_t<T*>(std::begin(C), std::end(C)); };
+template<typename T   ,  size_t N> range_t<T   *> range(T    (&C)[N])  { return range_t<T   *>(std::begin(C), std::end(C)); };
+template<                size_t N> range_t<char*> range(char (&C)[N])  { return range_t<char*>(std::begin(C), endz    (C)); };
+template<                size_t N> range_t<const char*> range(const char (&C)[N])  { return range_t<const char*>(std::begin(C), endz    (C)); };
 
+/*** we can either a pointer of an array
 	range_t<const char*>
 range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp,p); };
 
 	range_t<char*>
 range(char* p) { auto pp=p; while (*p) ++p; return range_t<char*>(pp,p); };
+*/
 
 template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
 
