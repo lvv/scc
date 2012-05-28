@@ -172,7 +172,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 		////// MUL 
 
-			template<typename U>              static eIF< has_resize<U>::value,void>  ct_resizer(U& D,      size_t n)  { D.resize(n);  return 0; };
+			template<typename U>              static eIF< has_resize<U>::value,void>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
 			template<typename U>              static eIF<!has_resize<U>::value,void>  ct_resizer(U& D,      size_t n)  {};
 			template<typename U,  size_t N>   static void                             ct_resizer(U (&D)[N], size_t n)  {}; 
 
