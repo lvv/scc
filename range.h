@@ -15,6 +15,8 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  RANGE
 
+	struct range_tag{};
+
 	template<typename I>
 struct  range_t {
 		typedef		      I							iterator;
@@ -53,34 +55,6 @@ struct  range_t {
 
 };
 
-/*
-	template<>
-struct  range_t<char*> {
-
-		typedef		char*							I;
-
-		typedef		I							iterator;
-		typedef		I							const_iterator;
-		typedef		typename std::iterator_traits<I>::value_type		value_type;
-		typedef		typename std::iterator_traits<I>::difference_type	difference_type ;
-		typedef		typename std::iterator_traits<I>::pointer		pointer ;
-		typedef		typename std::iterator_traits<I>::reference		reference ;
-
-	iterator b_, e_;
-	range_t(iterator b, iterator e)  : b_(b), e_(e) {};
-
-	range_t(      char* p)  : b_(p) { while(*p) p++;  e_=p;};
-
-	iterator	begin()		{ return b_; };
-	iterator	end()		{ return e_; };
-	const_iterator	begin() const	{ return b_; };
-	const_iterator	end()   const	{ return e_; };
-
-	ssize_t		size()   const	{ return std::distance(b_, e_); };
-
-	//range_t& operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
-};
-*/
 
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor

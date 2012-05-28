@@ -175,6 +175,7 @@ DEF_HAS_MEMBER_FUNC(has_pop_back,pop_back())
 DEF_HAS_MEMBER_FUNC(has_pop_front,pop_front())
 DEF_HAS_MEMBER_FUNC(has_size,size())
 DEF_HAS_MEMBER_FUNC(has_empty,empty())
+DEF_HAS_MEMBER_FUNC(has_resize,resize(size_t()))
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
