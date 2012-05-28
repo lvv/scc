@@ -54,6 +54,9 @@ template<bool Cnd, typename T=void>     using  eIF                     = typenam
 template<typename Ct1, typename Ct2>	using  is_cl2cl_convertible    = std::is_convertible<cl_value_type<Ct1>, cl_value_type<Ct2>>;
 //template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<std::remove_reference<xT>::type, std::remove_recl_value_type<Ct>>;
 template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<xT, cl_value_type<Ct>>;
+//template<typename It, typename Ct>	using  is_it2cl_convertible    
+	//= std::is_convertible<typename iterator_traits<It>::value_type,   cl_value_type<Ct>>;
+//	= std::is_convertible<typename iterator_traits<It>::value_type,   cl_value_type<Ct>>;
 
 
 
