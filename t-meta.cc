@@ -66,35 +66,12 @@ int main() {
 	;
 
 
+cout << "CONTAINER ---------------------------------------------------------------------\n";
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
 
 	{ typedef set<int,std::greater<int>>  T;
 	for_T(   "set<int,greater<int>>"); }
-
-	{ typedef vector<int>::iterator  T;
-	for_T(   "vector<int>::iterator"); }
-
-	/*
-	{ typedef vector<const int&>::iterator  T;
-	for_T(   "vector<const int&>::iterator"); }
-
-	{ typedef vector<int&&>::iterator  T;
-	for_T(   "vector<int&&>::iterator"); }
-	*/
-
-	
-	{ typedef deque<int>::iterator  T;
-	for_T(   "deque<int>::iterator"); }
-
-	{ typedef std::ostream  T;
-	for_T(   "ostream::it"); }
-
-	{ typedef std::ostream_iterator<int>   T;
-	for_T(        "ostream_it<int>::it"); }
-
-	{ typedef std::istream_iterator<int>   T;
-	for_T(        "istream_it<int>::it"); }
 
 	{ typedef set<int>  T;
 	for_T(   "set<int>"); }
@@ -117,6 +94,35 @@ int main() {
 	{ typedef stack<int>  T;
 	for_T(   "stack<int>"); }
 
+cout << "ITERATOR ---------------------------------------------------------------------\n";
+	{ typedef vector<int>::iterator  T;
+	for_T(   "vector<int>::iterator"); }
+
+	{ typedef deque<int>::iterator  T;
+	for_T(   "deque<int>::iterator"); }
+
+	{ typedef std::ostream  T;
+	for_T(   "ostream::it"); }
+
+	{ typedef std::ostream_iterator<int>   T;
+	for_T(        "ostream_it<int>::it"); }
+
+	{ typedef std::istream_iterator<int>   T;
+	for_T(        "istream_it<int>::it"); }
+
+	{ typedef string::iterator  T;
+	for_T(   "string::iterator"); }
+
+	/*
+	{ typedef vector<const int&>::iterator  T;
+	for_T(   "vector<const int&>::iterator"); }
+
+	{ typedef vector<int&&>::iterator  T;
+	for_T(   "vector<int&&>::iterator"); }
+	*/
+
+	
+cout << "STRING ---------------------------------------------------------------------\n";
 	{ typedef string  T;
 	for_T(   "string"); }
 
@@ -125,9 +131,6 @@ int main() {
 
 	{ typedef std::basic_string<char, std::char_traits<char>, nd_allocator<char>> T;
 	for_T(   "basic_string<T,....>"); }
-
-	{ typedef string::iterator  T;
-	for_T(   "string::iterator"); }
 
 	{ typedef int	T[5];
 	for_T(   "int[5]"); }
@@ -147,7 +150,7 @@ int main() {
 	{ struct T {int a;}; 
 	for_T(   "struct");  }
 
-cout << endl;
+cout << "FUNCTION ---------------------------------------------------------------------\n";
 	
 	{ typedef bool T(int);
 	for_T(   "bool T(int)");  }

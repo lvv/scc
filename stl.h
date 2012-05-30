@@ -309,9 +309,10 @@ operator~      (const Ct& C)    { return C.size(); };
 	eIF <is_iterator<It>::value,  It>
 operator/       (It&& i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return std::forward<It>(i); };
 
-/*	template<typename It, typename Ct>
+/*
+	template<typename It, typename Ct>
 	eIF <is_iterator<It>::value,  It>
-operator/       (It&& i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return std::forward<It>(i); };
+operator <<       (It&& it, Ct&& C)    {};
 */
 
 
