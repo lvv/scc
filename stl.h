@@ -49,8 +49,8 @@ operator!      (const Ct& C) { return C.empty(); };
 
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 	template<typename Ct>
-	eIF <is_container<Ct>::value, typename Ct::reference>
-operator++      (Ct& C) { return C.front(); };
+	eIF <is_container<Ct>::value, cl_reference<Ct&&>>
+operator++      (Ct&& C) { return std::forward<cl_reference<Ct&&>>(C.front()); };
 
 	template<typename Ct>
 	eIF <is_container<Ct>::value, typename Ct::reference>
@@ -177,7 +177,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			template<typename U,  size_t N>   static void                        ct_resizer(U (&D)[N], size_t n)  {}; 
 
 
-		// Ct * f
+		// Ct * f  (temporary demo, should really return  collection, not a container)
 			template<typename F>  static
 			eIF <is_callable<F, T(T)>::value, Ct>
 		mul(const Ct& C, F f)  {

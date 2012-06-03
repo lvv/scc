@@ -29,9 +29,9 @@ template <typename T>	struct ref2name <const T&&> { static constexpr const char*
 #define printT(T)  std::cout << ref2name<T>::value << "  \t---   \t"  <<  type2name<T>()  <<  std::endl;
 #define printToV(V)  printT(decltype(V));
 
-//////
+////// Template Type Dumper
 
-template<typename> void template_type_dumper();
+template<typename> void ttd();
 
 //////  TRACE_OBJ
 
