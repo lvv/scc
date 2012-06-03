@@ -26,8 +26,8 @@ template <typename T>	struct ref2name <const T&&> { static constexpr const char*
 
 //////  printT
 
-//#define printT(T)  std::cout << ref2name<T>::value  <<  std::endl;
 #define printT(T)  std::cout << ref2name<T>::value << "  \t---   \t"  <<  type2name<T>()  <<  std::endl;
+#define printToV(V)  printT(decltype(V));
 
 //////
 
