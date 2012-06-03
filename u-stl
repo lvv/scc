@@ -53,7 +53,7 @@ scc '__ v9 % [](int i){return i==3;}, v9 % [](int i){return i==30;};'
 scc '__ s9 % "bc",  s9 % "n/a"'
 
 #scc 'v9 /= 22 = 33; v9'
-#scc 'v9 /= 3  = 33;  v9'
+#scc 'v9 /= 3  = 33; v9'
 scc 'copy(v9/2, v9/5, oi)'
 #scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
 
@@ -63,4 +63,4 @@ scc '__ v9 / [](int i){return i==3;} - +v9;'
 
 # Ct * F
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
-scc 's="Hello";  __  *(s9 / islower);'
+scc 's="Hello";  __  *(s / islower);'

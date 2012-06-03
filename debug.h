@@ -1,6 +1,8 @@
 				#ifndef  LVV_DEBUG_H
 				#define  LVV_DEBUG_H
 
+//////  TYPE2NAME
+
 #include <cxxabi.h>
 
 
@@ -10,6 +12,22 @@ const char* type2name() {
 	int status;
 	return abi::__cxa_demangle(t_name, NULL, NULL, &status);
 }
+
+//////  REF2NAME
+
+template <typename T>	struct ref2name             { static constexpr const char* value =  "T"         ;} ; 
+template <typename T>	struct ref2name <const T>   { static constexpr const char* value =  "const T"   ;} ; 
+template <typename T>	struct ref2name <      T&>  { static constexpr const char* value =  "T&"        ;} ; 
+template <typename T>	struct ref2name <const T&>  { static constexpr const char* value =  "const T&"  ;} ; 
+template <typename T>	struct ref2name <      T&&> { static constexpr const char* value =  "T&&"       ;} ; 
+template <typename T>	struct ref2name <const T&&> { static constexpr const char* value =  "const T&&" ;} ; 
+
+
+//////
+
+template<typename> void template_type_dumper();
+
+//////  TRACE_OBJ
 
 #include <iostream>
 
@@ -23,15 +41,6 @@ struct  trace_obj {
 
 };
 
-
-template<typename> void template_type_dumper();
-
-template <typename T>	struct ref2name             { static const char* name() { return  "T"         ;}} ; 
-template <typename T>	struct ref2name <const T>   { static const char* name() { return  "const T"   ;}} ; 
-template <typename T>	struct ref2name <T&>        { static const char* name() { return  "T&"        ;}} ; 
-template <typename T>	struct ref2name <const T&>  { static const char* name() { return  "const T&"  ;}} ; 
-template <typename T>	struct ref2name <T&&>       { static const char* name() { return  "T&&"       ;}} ; 
-template <typename T>	struct ref2name <const T&&> { static const char* name() { return  "const T&&" ;}} ; 
 
 
 				#endif

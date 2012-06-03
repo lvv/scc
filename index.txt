@@ -540,6 +540,7 @@ BENCHMARKS
 		https://github.com/lorca/flat_file_benchmark/watchers
 PARSING C++
 	http://www.codesynthesis.com/~boris/blog/2010/05/03/parsing-cxx-with-gcc-plugin-part-1/
+	http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang/
 
 STL
 	map adapter: https://github.com/krig/k11/blob/master/src/tests/iter.cpp
