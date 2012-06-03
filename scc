@@ -80,7 +80,8 @@ while getopts npf:vBi:F:o:x:OgHtbr opt;  do
 	esac
 done
 
-[[ -d $gch_dir ]] && CXXFLAGS=" -include $SCC_HOME/$gch_dir/cj.h  -Winvalid-pch  $CXXFLAGS "
+[[ -d $gch_dir ]] && CXXFLAGS=" -include $SCC_HOME/$gch_dir/cj.h    -Winvalid-pch  $CXXFLAGS "
+[[ -f .scc.h   ]] && CXXFLAGS+=" -include $PWD/.scc.h  "
 
 # shift out snippet arg
 #[[ -z $snippet_file ]]  &&  shift $((OPTIND-1))
