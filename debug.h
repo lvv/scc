@@ -1,9 +1,11 @@
 				#ifndef  LVV_DEBUG_H
 				#define  LVV_DEBUG_H
 
+	#include <iostream>
+
 //////  TYPE2NAME
 
-#include <cxxabi.h>
+	#include <cxxabi.h>
 
 
 	template <typename T>
@@ -22,6 +24,10 @@ template <typename T>	struct ref2name <const T&>  { static constexpr const char*
 template <typename T>	struct ref2name <      T&&> { static constexpr const char* value =  "T&&"       ;} ; 
 template <typename T>	struct ref2name <const T&&> { static constexpr const char* value =  "const T&&" ;} ; 
 
+//////  printT
+
+//#define printT(T)  std::cout << ref2name<T>::value  <<  std::endl;
+#define printT(T)  std::cout << ref2name<T>::value << "  \t---   \t"  <<  type2name<T>()  <<  std::endl;
 
 //////
 
@@ -29,7 +35,6 @@ template<typename> void template_type_dumper();
 
 //////  TRACE_OBJ
 
-#include <iostream>
 
 struct  trace_obj {
 	trace_obj()			{ std::cout << "ctor\n"; }
