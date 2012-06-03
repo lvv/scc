@@ -35,15 +35,24 @@ template<typename> void template_type_dumper();
 
 //////  TRACE_OBJ
 
+		template <typename T>
+	struct counter {
+		static int    created,   alive;
+		counter()  {++created; ++alive; }
+		~counter() {           --alive; }
+	};
+	template <typename T> int counter<T>::created (0);
+	template <typename T> int counter<T>::alive   (0);
 
-struct  trace_obj {
-	trace_obj()			{ std::cout << "ctor\n"; }
-	trace_obj(const trace_obj& o)	{ std::cout << "copy ctor\n"; }
-	trace_obj(trace_obj&& o)	{ std::cout << "move ctor\n"; }
-	~trace_obj()			{ std::cout << "dtor\n"; }
-	trace_obj&  operator=(const trace_obj& o)	{ std::cout << "copy assignment\n";  return *this; }
-	trace_obj&  operator=(trace_obj&& o)		{ std::cout << "move assignment\n";  return *this; }
 
+struct  to : counter<to> {
+	to() 			: id(this->created)	{ std::cout << "ctor ()    *"  << id << std::endl; }
+	to(const to& o)	: id(this->created)	{ std::cout << "ctor (cT&)  "  << id << "(" << o.id << ")"<< std::endl; }
+	to(to&& o)	: id(this->created) 	{ std::cout << "ctor (T&&)  "  << id << "(" << o.id << ")"<< std::endl; }
+	~to()							{ std::cout << "dtor       ~"  << id                  << std::endl; }
+	to&  operator=(const to& o)			{ std::cout << "= cp        "  << id << " = " << o.id << std::endl;  return *this; }
+	to&  operator=(to&& o)				{ std::cout << "= mv        "  << id << " = " << o.id << std::endl;  return *this; }
+	int id = 0;
 };
 
 
