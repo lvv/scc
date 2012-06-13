@@ -59,13 +59,12 @@ template <typename T>		struct cl_traits<T&>      {
 		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
 		template <typename U>                                          static no_type  vt(...);
 	typedef   decltype(vt<T>(0))   value_type ;
-	typedef   decltype(vt<T>(0))&  reference ;
 		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
 		template <typename U, typename RF = typename U::reference>     static RF&       rf(U* u);
 		template <typename U>                                          static no_type  rf(...);
-	//typedef   decltype(rf<T>(0))  reference ;
+	typedef   decltype(rf<T>(0))  reference ;
 };
 
 template <typename T>		struct cl_traits<T&&>      {
