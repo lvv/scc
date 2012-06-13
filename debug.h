@@ -19,10 +19,18 @@ const char* type2name() {
 
 template <typename T>	struct ref2name             { static constexpr const char* value =  "T"         ;} ; 
 template <typename T>	struct ref2name <const T>   { static constexpr const char* value =  "const T"   ;} ; 
+template <typename T>	struct ref2name <volatile T>   { static constexpr const char* value =  "volatile T"   ;} ; 
+template <typename T>	struct ref2name <volatile const T>   { static constexpr const char* value =  "volatile const T"   ;} ; 
+
 template <typename T>	struct ref2name <      T&>  { static constexpr const char* value =  "T&"        ;} ; 
 template <typename T>	struct ref2name <const T&>  { static constexpr const char* value =  "const T&"  ;} ; 
+template <typename T>	struct ref2name <volatile T&>  { static constexpr const char* value =  "volatile T&"  ;} ; 
+template <typename T>	struct ref2name <volatile const  T&>  { static constexpr const char* value =  "volatile const  T&"  ;} ; 
+
 template <typename T>	struct ref2name <      T&&> { static constexpr const char* value =  "T&&"       ;} ; 
 template <typename T>	struct ref2name <const T&&> { static constexpr const char* value =  "const T&&" ;} ; 
+template <typename T>	struct ref2name <volatile T&&> { static constexpr const char* value =  "volatile T&&" ;} ; 
+template <typename T>	struct ref2name <volatile const T&&> { static constexpr const char* value =  "volatile const T&&" ;} ; 
 
 //////  printT
 
