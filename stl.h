@@ -48,9 +48,14 @@ operator!      (const Ct& C) { return C.empty(); };
 
 
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
+
 	template<typename Ct>
-	eIF <is_container<Ct>::value, cl_reference<Ct&&>>
-operator++      (Ct&& C) { return std::forward<cl_reference<Ct&&>>(C.front()); };
+	eIF <is_container<Ct>::value, typename Ct::reference>
+operator++      (Ct& C) { return C.front(); };
+//	template<typename Ct>
+//	eIF <is_container<Ct>::value, cl_reference<Ct&&>>
+//operator++      (Ct&& C) { return std::forward<cl_reference<Ct&&>>(C.front()); };
+
 
 	template<typename Ct>
 	eIF <is_container<Ct>::value, typename Ct::reference>

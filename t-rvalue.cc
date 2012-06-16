@@ -51,18 +51,21 @@ cout << "----------------------------------------------------------  NOP - VECTO
 	DO_NOP_V_VT(vint::value_type&)
 	DO_NOP_V_VT(const vint::value_type&)
 
-cout << "----------------------------------------------------------  NOP - VECTOR CL_TRAITS<>::VALUE TYPE\n";
-#define DO_NOP_V_VT(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_NOP_V_VT(cl_value_type<const vint>)
-	DO_NOP_V_VT(cl_value_type<volatile vint>)
-	DO_NOP_V_VT(cl_value_type<const volatile vint>)
-	DO_NOP_V_VT(cl_value_type<vint>&&)
-	DO_NOP_V_VT(cl_value_type<const vint>&&)
-	DO_NOP_V_VT(cl_value_type<vint>&)
-	DO_NOP_V_VT(cl_value_type<const vint>&)
+
+cout << "----------------------------------------------------------  CL_VALUE_TYPE\n";
+#define DO_CL_VALUE_TYPE(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
+	DO_CL_VALUE_TYPE(cl_value_type<vint>)
+	DO_CL_VALUE_TYPE(cl_value_type<const vint>)
+	DO_CL_VALUE_TYPE(cl_value_type<volatile vint>)
+	DO_CL_VALUE_TYPE(cl_value_type<const volatile vint>)
+	DO_CL_VALUE_TYPE(cl_value_type<vint>&&)
+	DO_CL_VALUE_TYPE(cl_value_type<const vint>&&)
+	DO_CL_VALUE_TYPE(cl_value_type<vint>&)
+	DO_CL_VALUE_TYPE(cl_value_type<const vint>&)
 
 cout << "----------------------------------------------------------  FORWARD_CL_ELEM\n";
 #define DO_FWD_CL_ELEM(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
+	DO_FWD_CL_ELEM(forward_cl_elem<vint>)
 	DO_FWD_CL_ELEM(forward_cl_elem<const vint>)
 	DO_FWD_CL_ELEM(forward_cl_elem<volatile vint>)
 	DO_FWD_CL_ELEM(forward_cl_elem<const volatile vint>)

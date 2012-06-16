@@ -14,22 +14,41 @@
 
 struct no_type{};
 
-template<class To, class From> struct copy_rcv                    	  { typedef To type; };
-template<class To, class From> struct copy_rcv<To, From const   > 	  { typedef typename copy_rcv<To, From>::type const           type; };
-template<class To, class From> struct copy_rcv<To, From volatile> 	  { typedef typename copy_rcv<To, From>::type volatile        type; };
-template<class To, class From> struct copy_rcv<To, From const volatile>   { typedef typename copy_rcv<To, From>::type const volatile  type; };
+template<class From, class To> struct copy_rcv			           { typedef To type; };
+template<class From, class To> struct copy_rcv<From const            , To> { typedef typename copy_rcv<From, To> ::type const           type; };
+template<class From, class To> struct copy_rcv<From volatile         , To> { typedef typename copy_rcv<From, To> ::type volatile        type; };
+template<class From, class To> struct copy_rcv<From const volatile   , To> { typedef typename copy_rcv<From, To> ::type const volatile  type; };
+template<class From, class To> struct copy_rcv<From &                , To> { typedef typename copy_rcv<From, To> ::type&                type; };
+template<class From, class To> struct copy_rcv<From const&           , To> { typedef typename copy_rcv<From, To> ::type const&          type; };
+template<class From, class To> struct copy_rcv<From volatile&        , To> { typedef typename copy_rcv<From, To> ::type volatile&       type; };
+template<class From, class To> struct copy_rcv<From const volatile&  , To> { typedef typename copy_rcv<From, To> ::type const volatile& type; };
+template<class From, class To> struct copy_rcv<From &&               , To> { typedef typename copy_rcv<From, To> ::type&&               type; };
+template<class From, class To> struct copy_rcv<From const&&          , To> { typedef typename copy_rcv<From, To> ::type const&&         type; };
+template<class From, class To> struct copy_rcv<From volatile&&       , To> { typedef typename copy_rcv<From, To> ::type volatile&&      type; };
+template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
-template<class To, class From> struct copy_rcv<To, From &        > 	  { typedef typename copy_rcv<To, From>::type&                type; };
-template<class To, class From> struct copy_rcv<To, From const&  > 	  { typedef typename copy_rcv<To, From>::type const&          type; };
-template<class To, class From> struct copy_rcv<To, From volatile&>	  { typedef typename copy_rcv<To, From>::type volatile&       type; };
-template<class To, class From> struct copy_rcv<To, From const volatile&>  { typedef typename copy_rcv<To, From>::type const volatile& type; };
+template <typename T>		struct cl_traits      {
+		//template <typename U, typename VT = typename std::remove_reference<U>::type::value_type>    static VT       vt(U* u);
+		template <
+			typename U,
+			typename VT = typename std::remove_reference<U>::type::value_type
+		>   
+			//static typename copy_rcv<T,VT>::type       vt(typename std::remove_reference<U>::type* u);
+			static                       VT              vt(typename std::remove_reference<U>::type* u);
+		template <typename U>                                          static no_type  vt(...);
+	typedef   decltype(vt<T>(0))   value_type ;
 
-template<class To, class From> struct copy_rcv<To, From &&        > 	  { typedef typename copy_rcv<To, From>::type&&               type; };
-template<class To, class From> struct copy_rcv<To, From const&&  > 	  { typedef typename copy_rcv<To, From>::type const&&         type; };
-template<class To, class From> struct copy_rcv<To, From volatile&&>	  { typedef typename copy_rcv<To, From>::type volatile&&      type; };
-template<class To, class From> struct copy_rcv<To, From const volatile&&> { typedef typename copy_rcv<To, From>::type const volatile&& type; };
+		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
+		template <typename U>                                          static no_type  it(...);
+	typedef   decltype(it<T>(0))   iterator;
+		//template <typename U, typename RF = typename U::reference>     static typename copy_rcv<T,RF>::type       rf(U* u);
+		template <typename U, typename RF = typename U::reference>     static RF       rf(U* u);
+		template <typename U>                                          static no_type  rf(...);
+	typedef     decltype(rf<T>(0))     reference ;
+};
 
 
+/*
 template <typename T>		struct Ncl_traits      {
 		template <typename U, typename VT = typename std::remove_reference<U>::type::value_type>    static VT       vt(U* u);
 		template <typename U>                                          static no_type  vt(...);
@@ -77,6 +96,7 @@ template <typename T>		struct cl_traits<T&&>      {
 	typedef   decltype(it<T>(0))     iterator;
 };
 
+*/
 
 template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
 template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
@@ -99,106 +119,22 @@ template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_conv
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
-#define DEF_HAS_MEMBER(NAME,MEMBER)						\
-		template <typename T>		/* NON-REF */			\
-	struct NAME {								\
-			template <						\
-				typename U,					\
-				typename M = typename U::MEMBER			\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
-	}; 									\
-										\
-		template <typename T>		/* REF */			\
-	struct NAME<T&> {							\
-			template <						\
-				typename U,					\
-				typename M = typename U::MEMBER			\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
-	}; 									\
-										\
-		template <typename T>		/* RV-REF */			\
-	struct NAME<T&&> {							\
-			template <						\
-				typename U,					\
-				typename M = typename U::MEMBER			\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
+#define DEF_HAS_MEMBER(NAME,MEMBER)												\
+		template <typename T>												\
+	struct NAME {														\
+		template <typename U,  typename M = typename U::MEMBER>		static char	test(U* u);			\
+		template <typename U>						static long	test(...);			\
+		enum { value = sizeof test<typename std::remove_cv<typename std::remove_reference<T>::type>::type>(0) == 1 };	\
 	}; 
 
 
-#define DEF_HAS_MEMBER_FUNC(NAME,MF)						\
-		template <typename T>						\
-	struct NAME {								\
-			template <						\
-				typename U,					\
-				typename F = decltype (((U*)0)->MF)		\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
-	}; 									\
-										\
-		template <typename T>						\
-	struct NAME<T&> {							\
-			template <						\
-				typename U,					\
-				typename F = decltype (((U*)0)->MF)		\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
-	}; 									\
-										\
-										\
-		template <typename T>						\
-	struct NAME<T&&> {							\
-			template <						\
-				typename U,					\
-				typename F = decltype (((U*)0)->MF)		\
-			>							\
-			static char						\
-		test(U* u);							\
-										\
-			template <typename U>					\
-			static long						\
-		test(...);							\
-										\
-		enum { value = sizeof test<T>(0) == 1 };			\
+#define DEF_HAS_MEMBER_FUNC(NAME,MF)												\
+		template <typename T>												\
+	struct NAME {														\
+		template <typename U,  typename F = decltype (((U*)0)->MF)>	static char	test(U* u);			\
+		template <typename U>						static long	test(...);			\
+		enum { value = sizeof test<typename std::remove_cv<typename std::remove_reference<T>::type>::type>(0) == 1 };	\
 	}; 
-
 
 
 
