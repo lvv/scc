@@ -8,9 +8,7 @@
 #include <stack>
 #include <queue>
 
-
-////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
-
+////////////////////////////////////////////////////////////////////////////////////////  META META
 
 struct no_type{};
 
@@ -26,6 +24,11 @@ template<class From, class To> struct copy_rcv<From &&               , To> { typ
 template<class From, class To> struct copy_rcv<From const&&          , To> { typedef typename copy_rcv<From, To> ::type const&&         type; };
 template<class From, class To> struct copy_rcv<From volatile&&       , To> { typedef typename copy_rcv<From, To> ::type volatile&&      type; };
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
+
+template<typename Ct>   using rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
+
+////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
+
 
 template <typename T>		struct cl_traits      {
 		//template <typename U, typename VT = typename std::remove_reference<U>::type::value_type>    static VT       vt(U* u);
@@ -48,56 +51,6 @@ template <typename T>		struct cl_traits      {
 };
 
 
-/*
-template <typename T>		struct Ncl_traits      {
-		template <typename U, typename VT = typename std::remove_reference<U>::type::value_type>    static VT       vt(U* u);
-		template <typename U>                                          static no_type  vt(...);
-	typedef   decltype(vt<T>(0))   value_type ;
-		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
-		template <typename U>                                          static no_type  it(...);
-	typedef   decltype(it<T>(0))   iterator;
-		template <typename U, typename RF = typename U::reference>     static RF       rf(U* u);
-		template <typename U>                                          static no_type  rf(...);
-	typedef   decltype(rf<T>(0))   reference ;
-};
-
-
-template <typename T>		struct cl_traits      {
-		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
-		template <typename U>                                          static no_type  vt(...);
-	typedef   decltype(vt<T>(0))   value_type ;
-		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
-		template <typename U>                                          static no_type  it(...);
-	typedef   decltype(it<T>(0))   iterator;
-		template <typename U, typename RF = typename U::reference>     static RF       rf(U* u);
-		template <typename U>                                          static no_type  rf(...);
-	typedef   decltype(rf<T>(0))   reference ;
-};
-
-template <typename T>		struct cl_traits<T&>      {
-		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
-		template <typename U>                                          static no_type  vt(...);
-	typedef   decltype(vt<T>(0))   value_type ;
-		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
-		template <typename U>                                          static no_type  it(...);
-	typedef   decltype(it<T>(0))   iterator;
-		template <typename U, typename RF = typename U::reference>     static RF&       rf(U* u);
-		template <typename U>                                          static no_type  rf(...);
-	typedef   decltype(rf<T>(0))  reference ;
-};
-
-template <typename T>		struct cl_traits<T&&>      {
-		template <typename U, typename VT = typename U::value_type>    static VT       vt(U* u);
-		template <typename U>                                          static no_type  vt(...);
-	typedef   decltype(vt<T>(0))     value_type ;
-	typedef   decltype(vt<T>(0))&&   reference ;
-		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
-		template <typename U>                                          static no_type  it(...);
-	typedef   decltype(it<T>(0))     iterator;
-};
-
-*/
-
 template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
 template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
 
@@ -119,21 +72,21 @@ template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_conv
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
-#define DEF_HAS_MEMBER(NAME,MEMBER)												\
-		template <typename T>												\
-	struct NAME {														\
-		template <typename U,  typename M = typename U::MEMBER>		static char	test(U* u);			\
-		template <typename U>						static long	test(...);			\
-		enum { value = sizeof test<typename std::remove_cv<typename std::remove_reference<T>::type>::type>(0) == 1 };	\
+#define DEF_HAS_MEMBER(NAME,MEMBER)										\
+		template <typename T>										\
+	struct NAME {												\
+		template <typename U,  typename M = typename U::MEMBER>		static char	test(U* u);	\
+		template <typename U>						static long	test(...);	\
+		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
 	}; 
 
 
-#define DEF_HAS_MEMBER_FUNC(NAME,MF)												\
-		template <typename T>												\
-	struct NAME {														\
-		template <typename U,  typename F = decltype (((U*)0)->MF)>	static char	test(U* u);			\
-		template <typename U>						static long	test(...);			\
-		enum { value = sizeof test<typename std::remove_cv<typename std::remove_reference<T>::type>::type>(0) == 1 };	\
+#define DEF_HAS_METHOD(NAME,METHOD)										\
+		template <typename T>										\
+	struct NAME {												\
+		template <typename U,  typename F = decltype (((U*)0)->METHOD)>	static char	test(U* u);	\
+		template <typename U>						static long	test(...);	\
+		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
 	}; 
 
 
@@ -143,15 +96,15 @@ DEF_HAS_MEMBER(has_iterator_category,iterator_category)
 DEF_HAS_MEMBER(has_value_type,value_type)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
-DEF_HAS_MEMBER_FUNC(has_push_front,push_front(typename U::value_type()))
-DEF_HAS_MEMBER_FUNC(has_push_back,push_back(typename U::value_type()))
-DEF_HAS_MEMBER_FUNC(has_insert,insert(typename U::value_type()))
-//DEF_HAS_MEMBER_FUNC(is_functor,std::function<bool(const typename U::value_type&)>::type(typename U::value_type()))
-DEF_HAS_MEMBER_FUNC(has_pop_back,pop_back())
-DEF_HAS_MEMBER_FUNC(has_pop_front,pop_front())
-DEF_HAS_MEMBER_FUNC(has_size,size())
-DEF_HAS_MEMBER_FUNC(has_empty,empty())
-DEF_HAS_MEMBER_FUNC(has_resize,resize(size_t()))
+DEF_HAS_METHOD(has_push_front,push_front(typename U::value_type()))
+DEF_HAS_METHOD(has_push_back,push_back(typename U::value_type()))
+DEF_HAS_METHOD(has_insert,insert(typename U::value_type()))
+//DEF_HAS_METHOD(is_functor,std::function<bool(const typename U::value_type&)>::type(typename U::value_type()))
+DEF_HAS_METHOD(has_pop_back,pop_back())
+DEF_HAS_METHOD(has_pop_front,pop_front())
+DEF_HAS_METHOD(has_size,size())
+DEF_HAS_METHOD(has_empty,empty())
+DEF_HAS_METHOD(has_resize,resize(size_t()))
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
@@ -171,7 +124,7 @@ struct is_container {
 		static long
 	test(...);
 
-	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
+	enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
