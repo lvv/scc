@@ -23,13 +23,15 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
 //  +Ct   ---   begin(),  	
+
 	template<typename Ct >
-	eIF <is_container<Ct>::value, typename Ct::iterator>
+	eIF <is_container<Ct>::value,  cl_iterator<Ct>>&&
+//operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(std::forward<Ct>(C))); };
 operator+      (Ct& C) { return std::begin(C); };
 
 	/*template<typename Ct >
-	eIF <is_container<Ct>::value, typename Ct::iterator>&&
-operator+      (Ct&& C) { return std::forward<forward_cl_elem<Ct>>(std::begin(std::forward<Ct>(C))); };*/
+	eIF <is_container<Ct>::value, typename Ct::iterator>
+operator+      (Ct& C) { return std::begin(C); };*/
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end or endz)
 	template<typename Ct >

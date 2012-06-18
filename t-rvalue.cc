@@ -12,7 +12,7 @@ using namespace std;
 
 
 template<typename Cl>
-using  forward_cl_elem  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
+using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
 
 int main() {
@@ -65,14 +65,14 @@ cout << "----------------------------------------------------------  CL_VALUE_TY
 
 cout << "----------------------------------------------------------  FORWARD_CL_ELEM\n";
 #define DO_FWD_CL_ELEM(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_FWD_CL_ELEM(forward_cl_elem<vint>)
-	DO_FWD_CL_ELEM(forward_cl_elem<const vint>)
-	DO_FWD_CL_ELEM(forward_cl_elem<volatile vint>)
-	DO_FWD_CL_ELEM(forward_cl_elem<const volatile vint>)
-	DO_FWD_CL_ELEM(forward_cl_elem<vint>&&)
-	DO_FWD_CL_ELEM(forward_cl_elem<const vint>&&)
-	DO_FWD_CL_ELEM(forward_cl_elem<vint>&)
-	DO_FWD_CL_ELEM(forward_cl_elem<const vint>&)
+	DO_FWD_CL_ELEM(cl_elem_fwd<vint>)
+	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>)
+	DO_FWD_CL_ELEM(cl_elem_fwd<volatile vint>)
+	DO_FWD_CL_ELEM(cl_elem_fwd<const volatile vint>)
+	DO_FWD_CL_ELEM(cl_elem_fwd<vint>&&)
+	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>&&)
+	DO_FWD_CL_ELEM(cl_elem_fwd<vint>&)
+	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>&)
 
 cout << "----------------------------------------------------------  DECL\n";
 #define DO_DECL(type)	 { typedef decltype((std::declval<type>()))  T;  for_T(LVV_STR(type));  }

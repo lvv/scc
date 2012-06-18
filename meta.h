@@ -32,20 +32,15 @@ template<typename Ct>   using  rm_qualifier     = typename std::remove_cv<typena
 
 
 template <typename T>		struct cl_traits      {
-		//template <typename U, typename VT = typename std::remove_reference<U>::type::value_type>    static VT       vt(U* u);
-		template <
-			typename U,
-			typename VT = typename std::remove_reference<U>::type::value_type
-		>   
-			//static typename copy_rcv<T,VT>::type       vt(typename std::remove_reference<U>::type* u);
-			static                       VT              vt(typename std::remove_reference<U>::type* u);
-		template <typename U>                                          static no_type  vt(...);
+		template < typename U, typename VT = typename std::remove_reference<U>::type::value_type >  
+						static VT	vt(typename std::remove_reference<U>::type* u);
+		template <typename U>           static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
 
-		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
+		template <typename U, typename IT = typename std::remove_reference<U>::type::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
-		//template <typename U, typename RF = typename U::reference>     static typename copy_rcv<T,RF>::type       rf(U* u);
+
 		template <typename U, typename RF = typename U::reference>     static RF       rf(U* u);
 		template <typename U>                                          static no_type  rf(...);
 	typedef     decltype(rf<T>(0))     reference ;
@@ -70,7 +65,7 @@ template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_conv
 //	= std::is_convertible<typename iterator_traits<It>::value_type,   cl_elem_type<Ct>>;
 
 
-template<typename Cl>	using  forward_cl_elem  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
+template<typename Cl>	using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
