@@ -124,7 +124,7 @@ struct is_container {
 		static long
 	test(...);
 
-	enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };
+	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
 template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };

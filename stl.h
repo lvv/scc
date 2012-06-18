@@ -16,11 +16,9 @@
 
 // like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
-template<typename Ct> 
-auto  endz(const Ct& C) -> decltype(std::end(C)) {return std::end(C);};
-
-template<size_t N> auto endz( const char (&array)[N] ) -> decltype(std::end(array)) {return  std::find(array,array+N,'\0');};
-template<size_t N> auto endz(       char (&array)[N] ) -> decltype(std::end(array)) {return  std::find(array,array+N,'\0');};
+template<typename Ct>	auto  endz(const Ct& C)              -> decltype(std::end(C))     { return  std::end(C); };
+template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
+template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
