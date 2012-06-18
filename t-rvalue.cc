@@ -12,7 +12,7 @@ using namespace std;
 
 
 template<typename Cl>
-using  forward_cl_elem  =  typename  copy_rcv<Cl&&, cl_value_type<Cl>>::type;
+using  forward_cl_elem  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
 
 int main() {
@@ -41,7 +41,7 @@ cout << "----------------------------------------------------------  NOP\n";
 	DO_NOP(int&)
 	DO_NOP(const int&)
 
-cout << "----------------------------------------------------------  NOP - VECTOR VALUE TYPE\n";
+cout << "----------------------------------------------------------  Ct::value_type\n";
 #define DO_NOP_V_VT(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
 	DO_NOP_V_VT(const vint::value_type)
 	DO_NOP_V_VT(volatile vint::value_type)
@@ -54,14 +54,14 @@ cout << "----------------------------------------------------------  NOP - VECTO
 
 cout << "----------------------------------------------------------  CL_VALUE_TYPE\n";
 #define DO_CL_VALUE_TYPE(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_CL_VALUE_TYPE(cl_value_type<vint>)
-	DO_CL_VALUE_TYPE(cl_value_type<const vint>)
-	DO_CL_VALUE_TYPE(cl_value_type<volatile vint>)
-	DO_CL_VALUE_TYPE(cl_value_type<const volatile vint>)
-	DO_CL_VALUE_TYPE(cl_value_type<vint>&&)
-	DO_CL_VALUE_TYPE(cl_value_type<const vint>&&)
-	DO_CL_VALUE_TYPE(cl_value_type<vint>&)
-	DO_CL_VALUE_TYPE(cl_value_type<const vint>&)
+	DO_CL_VALUE_TYPE(cl_elem_type<vint>)
+	DO_CL_VALUE_TYPE(cl_elem_type<const vint>)
+	DO_CL_VALUE_TYPE(cl_elem_type<volatile vint>)
+	DO_CL_VALUE_TYPE(cl_elem_type<const volatile vint>)
+	DO_CL_VALUE_TYPE(cl_elem_type<vint>&&)
+	DO_CL_VALUE_TYPE(cl_elem_type<const vint>&&)
+	DO_CL_VALUE_TYPE(cl_elem_type<vint>&)
+	DO_CL_VALUE_TYPE(cl_elem_type<const vint>&)
 
 cout << "----------------------------------------------------------  FORWARD_CL_ELEM\n";
 #define DO_FWD_CL_ELEM(type)	 { typedef type  T;  for_T(LVV_STR(type));  }

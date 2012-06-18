@@ -25,7 +25,8 @@ template<class From, class To> struct copy_rcv<From const&&          , To> { typ
 template<class From, class To> struct copy_rcv<From volatile&&       , To> { typedef typename copy_rcv<From, To> ::type volatile&&      type; };
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
-template<typename Ct>   using rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
+template<typename Ct>   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
@@ -39,7 +40,7 @@ template <typename T>		struct cl_traits      {
 			//static typename copy_rcv<T,VT>::type       vt(typename std::remove_reference<U>::type* u);
 			static                       VT              vt(typename std::remove_reference<U>::type* u);
 		template <typename U>                                          static no_type  vt(...);
-	typedef   decltype(vt<T>(0))   value_type ;
+	typedef   decltype(vt<T>(0))   elem_type ;
 
 		template <typename U, typename IT = typename U::iterator>      static IT       it(U* u);
 		template <typename U>                                          static no_type  it(...);
@@ -51,24 +52,25 @@ template <typename T>		struct cl_traits      {
 };
 
 
-template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
-template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  value_type;   typedef  T*  iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;   typedef  T&  reference;  };
 
 
-template<typename Ct>   using cl_value_type     = typename cl_traits<Ct>::value_type;
+template<typename Ct>   using cl_elem_type     = typename cl_traits<Ct>::elem_type;
 template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
 template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::reference;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                     = typename std::enable_if <Cnd,T>::type;
-template<typename Ct1, typename Ct2>	using  is_cl2cl_convertible    = std::is_convertible<cl_value_type<Ct1>, cl_value_type<Ct2>>;
+template<typename Ct1, typename Ct2>	using  is_cl2cl_convertible    = std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>;
 //template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<std::remove_reference<xT>::type, std::remove_recl_value_type<Ct>>;
-template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<xT, cl_value_type<Ct>>;
+template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<xT, cl_elem_type<Ct>>;
 //template<typename It, typename Ct>	using  is_it2cl_convertible    
-	//= std::is_convertible<typename iterator_traits<It>::value_type,   cl_value_type<Ct>>;
-//	= std::is_convertible<typename iterator_traits<It>::value_type,   cl_value_type<Ct>>;
+	//= std::is_convertible<typename iterator_traits<It>::value_type,   cl_elem_type<Ct>>;
+//	= std::is_convertible<typename iterator_traits<It>::value_type,   cl_elem_type<Ct>>;
 
 
+template<typename Cl>	using  forward_cl_elem  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 

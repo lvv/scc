@@ -27,6 +27,10 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 	eIF <is_container<Ct>::value, typename Ct::iterator>
 operator+      (Ct& C) { return std::begin(C); };
 
+	/*template<typename Ct >
+	eIF <is_container<Ct>::value, typename Ct::iterator>&&
+operator+      (Ct&& C) { return std::forward<forward_cl_elem<Ct>>(std::begin(std::forward<Ct>(C))); };*/
+
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end or endz)
 	template<typename Ct >
 	eIF <is_container<Ct>::value, typename Ct::iterator>
@@ -63,29 +67,29 @@ operator++      (Ct& C, int) { return C.back(); };
 //   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct>
-operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.push_back(x);   return C; };
+operator<<      (Ct&& C, cl_elem_type<Ct>&& x)    { C.push_back(x);   return C; };
 
 
 //   Set << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>
-operator<<      (Ct&& C, typename cl_traits<Ct>::value_type&& x)    { C.insert(x);   return std::forward<Ct>(C); };
+operator<<      (Ct&& C, cl_elem_type<Ct>&& x)    { C.insert(x);   return std::forward<Ct>(C); };
 
 
 //  x >> Ct    ---  push_front replaement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>
-operator>>      (typename cl_traits<Ct>::value_type&& x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };
+operator>>      (cl_elem_type<Ct>&& x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>
-operator>>      (Ct&& C, typename cl_traits<Ct>::value_type& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
+operator>>      (Ct&& C, cl_elem_type<Ct>& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>
-operator<<      (typename cl_traits<Ct>::value_type& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
+operator<<      (cl_elem_type<Ct>& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
@@ -136,7 +140,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 	template<typename Ct>
 	struct ct_op  {
 
-				typedef  typename cl_traits<Ct>::value_type  T;
+				typedef  cl_elem_type<Ct>  			T;
 				typedef  typename cl_traits<Ct>::iterator    It;
 
 		/////  DIV
@@ -169,7 +173,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
-			eIF <is_container<Ct2>::value  &&  std::is_same<T, typename cl_traits<Ct2>::value_type>::value,  bool>
+			eIF <is_container<Ct2>::value  &&  std::is_same<T, cl_elem_type<Ct2>>::value,  bool>
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
 
@@ -264,8 +268,7 @@ operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forwa
 //	3
 
 	template<typename Ct>
- 	//eIF <is_stack<Ct>::value, typename Ct::value_type>
- 	eIF <is_stack<Ct>::value, cl_value_type<Ct>>
+ 	eIF <is_stack<Ct>::value, cl_elem_type<Ct>>
 operator++      (Ct&& C, int)    { return C.top(); };
 
 

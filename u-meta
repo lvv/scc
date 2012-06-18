@@ -2,18 +2,18 @@
 set -o errexit
 set -v
 
-###  CL_VALUE_TYPE
-scc 'type2name<cl_traits<vint>         ::value_type>()'
-scc 'type2name<cl_traits<vint&>        ::value_type>()'
-scc 'type2name<cl_traits<vint&&>       ::value_type>()'
+###  CL_ELEM_TYPE
+scc 'type2name<cl_elem_type<vint>         >()'
+scc 'type2name<cl_elem_type<vint&>        >()'
+scc 'type2name<cl_elem_type<vint&&>       >()'
 
-scc 'type2name<cl_traits<const vint>   ::value_type>()'
-scc 'type2name<cl_traits<const vint&>  ::value_type>()'
-scc 'type2name<cl_traits<const vint&&> ::value_type>()'
+scc 'type2name<cl_elem_type<const vint>   >()'
+scc 'type2name<cl_elem_type<const vint&>  >()'
+scc 'type2name<cl_elem_type<const vint&&> >()'
 
-scc 'type2name<cl_traits<int(&)[2]>    ::value_type>()'
-scc 'type2name<cl_traits<int*(*)(int)> ::value_type>()'
-scc 'type2name<cl_traits<int>          ::value_type>()'
+scc 'type2name<cl_elem_type<int(&)[2]>    >()'
+scc 'type2name<cl_elem_type<int*(*)(int)> >()'
+scc 'type2name<cl_elem_type<int>          >()'
 
 
 ###  IS_CONTAINER
