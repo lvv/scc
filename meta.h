@@ -25,20 +25,21 @@ template<class From, class To> struct copy_rcv<From const&&          , To> { typ
 template<class From, class To> struct copy_rcv<From volatile&&       , To> { typedef typename copy_rcv<From, To> ::type volatile&&      type; };
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
+// shortcuts
 template<typename Ct>   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
+template<typename Ct>   using  rm_ref           = typename std::remove_reference<Ct>::type;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
 
 template <typename T>		struct cl_traits      {
-		template < typename U, typename VT = typename std::remove_reference<U>::type::value_type >  
-						static VT	vt(typename std::remove_reference<U>::type* u);
-		template <typename U>           static no_type	vt(...);
+		template < typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
+		template <typename U>						static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
 
-		template <typename U, typename IT = typename std::remove_reference<U>::type::iterator>      static IT       it(U* u);
-		template <typename U>                                          static no_type  it(...);
+		template <typename U, typename IT = typename rm_ref<U>::iterator>	static IT       it(rm_ref<U>* u);
+		template <typename U>							static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
 
 		template <typename U, typename RF = typename U::reference>     static RF       rf(U* u);

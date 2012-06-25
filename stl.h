@@ -24,10 +24,9 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 //  +Ct   ---   begin(),  	
 
-	template<typename Ct >
-	eIF <is_container<Ct>::value,  cl_iterator<Ct>>&&
-//operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(std::forward<Ct>(C))); };
-operator+      (Ct& C) { return std::begin(C); };
+	template<typename Ct>
+	eIF <is_container<Ct>::value,  cl_iterator<Ct>&&>
+operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(std::forward<Ct>(C))); };
 
 	/*template<typename Ct >
 	eIF <is_container<Ct>::value, typename Ct::iterator>
