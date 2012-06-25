@@ -51,27 +51,21 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value, typename Ct::reference>
-operator++      (Ct& C) { return C.front(); };
+	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 
-/*	template<typename Ct>
-	eIF <is_container<Ct>::value, cl_reference<Ct>>
-//operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
-//operator++      (Ct&& C) { return C.front(); };
-*/
-
+	template<typename Ct>
+	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 /*	 	Ct	string	A	c-str
 *	+Ct	+	+	-	-
 *	-Ct	+	+	-	-
 *	~Ct	+	+	-	-
 *	!Ct	+	+	-	-
+*	++Ct	+	+	-	-
+*	Ct++	+	+	-	-
 */
-
-
-	template<typename Ct>
-	eIF <is_container<Ct>::value, typename Ct::reference>
-operator++      (Ct& C, int) { return C.back(); };
 
 
 //   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
