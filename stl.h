@@ -22,20 +22,18 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
-//  +Ct   ---   begin(),  	
+//  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value,  cl_iterator<Ct>&&>
-operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(std::forward<Ct>(C))); };
+	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
+operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(C)); };
 
-	/*template<typename Ct >
-	eIF <is_container<Ct>::value, typename Ct::iterator>
-operator+      (Ct& C) { return std::begin(C); };*/
 
-//  -Ct   ---   end(),  	(n/a for c-arrays, use std::end or endz)
+//  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Ct >
-	eIF <is_container<Ct>::value, typename Ct::iterator>
-operator-      (Ct& C) { return  std::end(C); };
+	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
+operator-      (Ct&& C) { return  std::forward<cl_iterator<Ct>>(std::end(C)); };
+
 
 //  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
@@ -55,9 +53,20 @@ operator!      (const Ct& C) { return C.empty(); };
 	template<typename Ct>
 	eIF <is_container<Ct>::value, typename Ct::reference>
 operator++      (Ct& C) { return C.front(); };
-//	template<typename Ct>
-//	eIF <is_container<Ct>::value, cl_reference<Ct&&>>
-//operator++      (Ct&& C) { return std::forward<cl_reference<Ct&&>>(C.front()); };
+
+/*	template<typename Ct>
+	eIF <is_container<Ct>::value, cl_reference<Ct>>
+//operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
+//operator++      (Ct&& C) { return C.front(); };
+*/
+
+
+/*	 	Ct	string	A	c-str
+*	+Ct	+	+	-	-
+*	-Ct	+	+	-	-
+*	~Ct	+	+	-	-
+*	!Ct	+	+	-	-
+*/
 
 
 	template<typename Ct>
