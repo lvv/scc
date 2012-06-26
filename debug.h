@@ -56,10 +56,10 @@ template<typename> void ttd();
 struct  to : counter<to> {
 	to() 			: id(this->created)	{ std::cout << "ctor ()    *"  << id << std::endl; }
 	to(const to& o)		: id(this->created)	{ std::cout << "ctor (cT&)  "  << id << "(" << o.id << ")"<< std::endl; }
-	to(to&& o)		: id(this->created) 	{ std::cout << "ctor (T&&)  "  << id << "(" << o.id << ")"<< std::endl; }
-	~to()						{ std::cout << "dtor       ~"  << id                  << std::endl; }
+	to(to&& o)		: id(this->created) 	{ std::cout << "ctor (T&&)  "  << id << "(" << o.id << ")"<< std::endl; o.id = -o.id; }
+	~to()						{ std::cout << "dtor       ~"  << id                      << std::endl; }
 	to&  operator=(const to& o)			{ std::cout << "= cp        "  << id << " = " << o.id << std::endl;  return *this; }
-	to&  operator=(to&& o)				{ std::cout << "= mv        "  << id << " = " << o.id << std::endl;  return *this; }
+	to&  operator=(to&& o)				{ std::cout << "= mv        "  << id << " = " << o.id << std::endl;   o.id = -o.id;  return *this; }
 	int id = 0;
 };
 

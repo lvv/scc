@@ -58,34 +58,31 @@ operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
-/*	 	Ct	string	A	c-str
-*	+Ct	+	+	-	-
-*	-Ct	+	+	-	-
-*	~Ct	+	+	-	-
-*	!Ct	+	+	-	-
-*	++Ct	+	+	-	-
-*	Ct++	+	+	-	-
+/*	 		Ct	string	A	c-str
+*	-------------+-------------------------------
+*	+Ct		+	+	-	-
+*	-Ct		+	+	-	-
+*	~Ct		+	+	-	-
+*	!Ct		+	+	-	-
+*	++Ct		+	+	-	-
+*	Ct++		+	+	-	-
+*	Ct << x		+	+	-	-
 */
 
 
-//   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
- 	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct&>
-operator<<      (Ct& C, const cl_elem_type<Ct>& x)    { C.push_back(x);   return C; };
-/*
+//   Ct << x   ---  push_back()  replacement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct, typename T>
-	eIF <is_container<Ct>::value   &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value  &&   has_push_back<Ct>::value,    Ct&&>
+	eIF <is_elem_of<T, Ct>::value   &&   has_push_back<Ct>::value,    Ct&&>
 operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<cl_elem_type<Ct>>(x));   return std::forward<Ct>(C); };
-*/
 
 
-//   Set << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
+//   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>
 operator<<      (Ct&& C, cl_elem_type<Ct>&& x)    { C.insert(x);   return std::forward<Ct>(C); };
 
 
-//  x >> Ct    ---  push_front replaement;   usage: scc 'vint V;  1 >> V'   prints: {1}
+//  x >> Ct    ---  push_front replacement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>
 operator>>      (cl_elem_type<Ct>&& x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };

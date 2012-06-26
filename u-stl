@@ -17,6 +17,7 @@ scc '__ (v23 << "abc");'
 #  x << C >> y
 scc 'int i,j;  _ (i << d9          >> j);  __ i, j;'
 scc 'int i,j;  _ (i << dint{1,2,3} >> j);  __ i, j;'
+scc 'int i=200; v0 << 100 << i;  __ v0, (vint() << 100 << i);'
 
 #  x >> C << y
 scc '__ ( 1 >> dint{2,3} << 4);'

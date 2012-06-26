@@ -26,8 +26,8 @@ template<class From, class To> struct copy_rcv<From volatile&&       , To> { typ
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
 // shortcuts
-template<typename Ct>   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
-template<typename Ct>   using  rm_ref           = typename std::remove_reference<Ct>::type;
+template<typename Ct>   	   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
+template<typename Ct>   	   using  rm_ref           = typename std::remove_reference<Ct>::type;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
@@ -55,6 +55,8 @@ template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_ty
 template<typename Ct>   using cl_elem_type      = typename cl_traits<Ct>::elem_type;
 template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
 template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::reference;
+
+template<typename T, typename Ct>  using  is_elem_of       = std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>> >;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                     = typename std::enable_if <Cnd,T>::type;
