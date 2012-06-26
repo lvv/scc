@@ -58,6 +58,19 @@ operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
+
+//   Ct << x   ---  push_back()  replacement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
+	template<typename Ct, typename T>
+	eIF <is_elem_of<T, Ct>::value  &&   has_push_back<Ct>::value,    Ct&&>
+operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<T>(x));   return std::forward<Ct>(C); };
+
+
+//   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
+	template<typename Ct, typename T>
+	eIF <is_elem_of<T, Ct>::value   &&   has_insert<Ct>::value,    Ct&&>
+operator<<      (Ct&& C, T&& x)    { C.insert(std::forward<T>(x));   return std::forward<Ct>(C); };
+
+
 /*	 		Ct	string	A	c-str
 *	-------------+-------------------------------
 *	+Ct		+	+	-	-
@@ -70,28 +83,16 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 */
 
 
-//   Ct << x   ---  push_back()  replacement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>::value   &&   has_push_back<Ct>::value,    Ct&&>
-operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<cl_elem_type<Ct>>(x));   return std::forward<Ct>(C); };
-
-
-//   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_insert<Ct>::value,   Ct>
-operator<<      (Ct&& C, cl_elem_type<Ct>&& x)    { C.insert(x);   return std::forward<Ct>(C); };
-
-
 //  x >> Ct    ---  push_front replacement;   usage: scc 'vint V;  1 >> V'   prints: {1}
-	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_push_front<Ct>::value,   Ct>
-operator>>      (cl_elem_type<Ct>&& x, Ct&& C)    { C.push_front(x);  return std::forward<Ct>(C); };
+	template<typename Ct, typename T>
+	eIF <is_elem_of<T, Ct>::value  &&   has_push_front<Ct>::value,    Ct&&>
+operator>>      (T&& x, Ct&& C)    { C.push_front(std::forward<T>(x));   return std::forward<Ct>(C); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>
-operator>>      (Ct&& C, cl_elem_type<Ct>& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
+operator>>      (Ct&& C, cl_elem_type<Ct>&& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 	template<typename Ct>
 	eIF <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>

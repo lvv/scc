@@ -538,6 +538,9 @@ BENCHMARKS
 		v2 --  http://steve.80cols.com/flat_file_bakeoff.html
 		v1 -- http://steve.80cols.com/reading_flat_files_into_memory_benchmark.html
 		https://github.com/lorca/flat_file_benchmark/watchers
+
+	read/fread/mmpa -- http://lemire.me/blog/archives/2012/06/26/which-is-fastest-read-fread-ifstream-or-mmap/
+
 PARSING C++
 	http://www.codesynthesis.com/~boris/blog/2010/05/03/parsing-cxx-with-gcc-plugin-part-1/
 	http://eli.thegreenplace.net/2011/07/03/parsing-c-in-python-with-clang/

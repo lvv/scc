@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 	int     __attribute__((unused)) a9[]    {0,1,2,3,4,5,6,7,8,9},  a23[]{2,3};
 	char          __attribute__((unused))  c9[100]     = "abcdefgh",   c23[]="bc",   c1='a',  c0='\0';
 	const char    __attribute__((unused)) cc9[]        = "abcdefgh",  cc23[]="bc",  cc1='a', cc0='\0';
-	string        __attribute__((unused))  s9           ("abcdefgh"),  s23  ("bc"),  s1="a";
+	string        __attribute__((unused))  s9           ("abcdefgh"),  s0, s23  ("bc"),  s1="a";
 
 
 	char	**first_file_argv = argv+1;

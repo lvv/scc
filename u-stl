@@ -22,10 +22,11 @@ scc 'int i=200; v0 << 100 << i;  __ v0, (vint() << 100 << i);'
 #  x >> C << y
 scc '__ ( 1 >> dint{2,3} << 4);'
 scc '__ ( 1 >> d23 << 4);'
+scc 'int i=1; dint dk; i >> (2 >>  dk);  __ dk, (i >> (2 >> dint()));'
 
 # Set << x 
-scc '__ (set<int>{} << 1 << 2 << 2);'
-scc '__ (set<int>{} << 1 << 2 << 2);'
+scc 'int i=200; set<int> st; st << 100 << i;  __ st, (set<int>() << 100 << i);'
+
 
 # Set << Ct 
 scc 'set<char> st;  st << "11221133"'
@@ -40,7 +41,7 @@ scc 'stack<int> s; s << 1 << 2 << 3;  int x;  s >> x;  _ x, s++; __ "", ~s--;'
 
 scc 'deque<int> c{1,2,3};      _ ++c; _ c++; _ c--; __ --c;'
 scc 'dint d{1,2};   3 >> d;   d'
-scc 'map<int,int> m;   m<<MP(1,2);  m'
+#scc 'map<int,int> m;   m<<MP(1,2);  m'
 scc -- '__(-- dint{0,1,2,3,4,5} -- -- );'
 
 # SIZE
