@@ -69,9 +69,14 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 
 
 //   Ct << x   ---  push_back()  replaement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct>
-operator<<      (Ct&& C, cl_elem_type<Ct>&& x)    { C.push_back(x);   return C; };
+ 	template<typename Ct>
+	eIF <is_container<Ct>::value   &&   has_push_back<Ct>::value,   Ct&>
+operator<<      (Ct& C, const cl_elem_type<Ct>& x)    { C.push_back(x);   return C; };
+/*
+	template<typename Ct, typename T>
+	eIF <is_container<Ct>::value   &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value  &&   has_push_back<Ct>::value,    Ct&&>
+operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<cl_elem_type<Ct>>(x));   return std::forward<Ct>(C); };
+*/
 
 
 //   Set << x   ---  insert()  replaement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
