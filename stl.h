@@ -99,16 +99,6 @@ operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std
 	eIF <is_elem_of<T,Ct>::value   &&   has_pop_front<Ct>::value, Ct&&>
 operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
-// Set << Ct 
-	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,   Ct1>
-operator <<      (Ct1&& C1, const Ct2& C2)    {
-	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
-		C1.insert(*it);  
-	return  std::forward<Ct1>(C1);
-};
-
-
 
 // Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
@@ -122,6 +112,18 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 		C1.push_back(*it);  
 	return  std::forward<Ct1>(C1);
 };
+
+
+// Set << Ct 
+	template<typename Ct1, typename Ct2>
+	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,   Ct1>
+operator <<      (Ct1&& C1, const Ct2& C2)    {
+	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
+		C1.insert(*it);  
+	return  std::forward<Ct1>(C1);
+};
+
+
 
 
 // Ct1 >> Ct2			// TOFIX:  self-assigment
