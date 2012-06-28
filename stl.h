@@ -90,13 +90,14 @@ operator>>      (T&& x, Ct&& C)    { C.push_front(std::forward<T>(x));   return 
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
-	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_pop_back<Ct>::value, Ct>
-operator>>      (Ct&& C, cl_elem_type<Ct>&& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
+	template<typename Ct, typename T>
+	eIF <is_elem_of<T, Ct>::value  &&   has_pop_back<Ct>::value,    Ct&&>
+operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
-	template<typename Ct>
-	eIF <is_container<Ct>::value   &&   has_pop_front<Ct>::value, Ct>
-operator<<      (cl_elem_type<Ct>& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
+
+	template<typename Ct, typename T>
+	eIF <is_elem_of<T,Ct>::value   &&   has_pop_front<Ct>::value, Ct&&>
+operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
