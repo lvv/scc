@@ -249,7 +249,7 @@ struct in_t {
 
 	// SEQ-CONT
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value,  void>::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value,  void>::type
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -259,7 +259,7 @@ struct in_t {
 
 	// SET
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  !has_mapped_type<Ct>::value,  void>::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>::type
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		C.clear(); 
@@ -269,7 +269,7 @@ struct in_t {
 
 	// MAP
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value  &&  has_mapped_type<Ct>::value,  void>::type
+		eIF<is_container<Ct>::value  &&  has_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::key_type	  k;
 		typename Ct::mapped_type  m;
@@ -294,7 +294,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>::value  &&  !is_ioable<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value, std::istream& >::type
 operator>>      (std::istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
@@ -368,7 +368,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && !has_mapped_type<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >::type
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
@@ -378,7 +378,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 // MAP
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>::value && has_mapped_type<Ct>::value, std::istream& >::type
+		typename std::enable_if<is_container<Ct>::value  &&  has_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >::type
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::key_type	  k;
 	typename Ct::mapped_type  m;

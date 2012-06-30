@@ -37,14 +37,14 @@ operator-      (Ct&& C) { return  std::forward<cl_iterator<Ct>>(std::end(C)); };
 
 //  ~Ct  --- size()		(n/a for c-arrays)
 	template<typename Ct>
-	eIF <has_size<Ct>::value, size_t>
+	eIF <has_size<Ct>(), size_t>
 operator~      (const Ct& C) { return C.size(); };
 
 
 //  if(!Ct)  --- (!Ct.empty())
 //  if(Ct)   --- not implemented,  use  !!Ct instead
 	template<typename Ct>
-	eIF <has_empty<Ct>::value, bool>
+	eIF <has_empty<Ct>(), bool>
 operator!      (const Ct& C) { return C.empty(); };
 
 
@@ -61,13 +61,13 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 
 //   Ct << x   ---  push_back()  replacement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>::value  &&   has_push_back<Ct>::value,    Ct&&>
+	eIF <is_elem_of<T, Ct>()  &&   has_push_back<Ct>(),    Ct&&>
 operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<T>(x));   return std::forward<Ct>(C); };
 
 
 //   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>::value   &&   has_insert<Ct>::value,    Ct&&>
+	eIF <is_elem_of<T, Ct>()   &&   has_insert<Ct>(),    Ct&&>
 operator<<      (Ct&& C, T&& x)    { C.insert(std::forward<T>(x));   return std::forward<Ct>(C); };
 
 
@@ -85,24 +85,24 @@ operator<<      (Ct&& C, T&& x)    { C.insert(std::forward<T>(x));   return std:
 
 //  x >> Ct    ---  push_front replacement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>::value  &&   has_push_front<Ct>::value,    Ct&&>
+	eIF <is_elem_of<T, Ct>()  &&   has_push_front<Ct>(),    Ct&&>
 operator>>      (T&& x, Ct&& C)    { C.push_front(std::forward<T>(x));   return std::forward<Ct>(C); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>::value  &&   has_pop_back<Ct>::value,    Ct&&>
+	eIF <is_elem_of<T, Ct>()  &&   has_pop_back<Ct>(),    Ct&&>
 operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T,Ct>::value   &&   has_pop_front<Ct>::value, Ct&&>
+	eIF <is_elem_of<T,Ct>()   &&   has_pop_front<Ct>(), Ct&&>
 operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
 
 
 // Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
-	eIF <has_push_back<Ct1>::value   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,  Ct1>	// RVO: no coping for T& or T&&
+	eIF <has_push_back<Ct1>()   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>(),  Ct1>	// RVO: no coping for T& or T&&
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
@@ -116,7 +116,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,   Ct1>
+	eIF <has_insert<Ct1>()   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
@@ -128,7 +128,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
-	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,  Ct2>
+	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct2>
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 
@@ -189,9 +189,9 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 		////// MUL 
 
-			template<typename U>              static eIF< has_resize<U>::value>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
-			template<typename U>              static eIF<!has_resize<U>::value>  ct_resizer(U& D,      size_t n)  {};
-			template<typename U,  size_t N>   static void                        ct_resizer(U (&D)[N], size_t n)  {}; 
+			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
+			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
+			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
 
 
 		// Ct * f  (temporary demo, should really return  collection, not a container)
@@ -252,7 +252,7 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 //  Stack << x
 	template<typename Ct, typename Xt>
-	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>::value,  Ct>
+	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>(),  Ct>
 operator<<      (Ct&& C, Xt&& x)    { C.push(std::forward<Xt>(x));   return std::forward<Ct>(C); };
 
 //  Stack--
@@ -267,7 +267,7 @@ operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 //	[1, 2] 3
 
 	template<typename Ct, typename Xt>
-	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>::value, Ct>
+	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>(),  Ct>
 operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Ct>(C); };
 
 

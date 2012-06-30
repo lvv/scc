@@ -59,12 +59,11 @@ template<typename Ct>   using cl_elem_type      = typename cl_traits<Ct>::elem_t
 template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
 template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::reference;
 
-template<typename T, typename Ct>  using  is_elem_of       = std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>> >;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                     = typename std::enable_if <Cnd,T>::type;
-template<typename Ct1, typename Ct2>	using  have_same_elem          = std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>;
-//template<typename Ct, typename xT>	using  is_elem_of     = std::is_convertible<xT, cl_elem_type<Ct>>;
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
+template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>::value; }
 
 template<typename Cl>	using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
@@ -72,20 +71,22 @@ template<typename Cl>	using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_ty
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
 		template <typename T>										\
-	struct NAME {												\
+	struct NAME##_t {											\
 		template <typename U,  typename M = typename U::MEMBER>		static char	test(U* u);	\
 		template <typename U>						static long	test(...);	\
 		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
-	}; 
+	}; 													\
+	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
 
 
 #define DEF_HAS_METHOD(NAME,METHOD)										\
 		template <typename T>										\
-	struct NAME {												\
+	struct NAME##_t {											\
 		template <typename U,  typename F = decltype (((U*)0)->METHOD)>	static char	test(U* u);	\
 		template <typename U>						static long	test(...);	\
 		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
-	}; 
+	}; 													\
+	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
 
 
 
@@ -210,7 +211,7 @@ struct is_iterator { //: std::enable_if<std::is_same<T, decltype(std::declval<T>
 	template<typename T>
 struct is_iterator {
 	static const bool value =
-		has_iterator_category<T>::value  ||
+		has_iterator_category<T>()  ||
 		(std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value)
 	; 
 };
