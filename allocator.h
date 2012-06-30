@@ -1,3 +1,5 @@
+// TR http://www2.research.att.com/~bs/C++0xFAQ.html#scoped-allocator
+
 #ifndef LVV_ALLOCATOR_H
 #define LVV_ALLOCATOR_H
 

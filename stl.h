@@ -102,7 +102,7 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 // Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
-	eIF <has_push_back<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,  Ct1>	// RVO: no coping for T& or T&&
+	eIF <has_push_back<Ct1>::value   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,  Ct1>	// RVO: no coping for T& or T&&
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
@@ -116,7 +116,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,   Ct1>
+	eIF <has_insert<Ct1>::value   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,   Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
@@ -128,7 +128,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
-	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>::value   &&  is_cl2cl_convertible<Ct1,Ct2>::value,  Ct2>
+	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>::value   &&  have_same_elem<Ct1,Ct2>::value,  Ct2>
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 

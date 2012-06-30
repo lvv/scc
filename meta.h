@@ -8,6 +8,9 @@
 #include <stack>
 #include <queue>
 
+// TODO
+// 	SFNIE with NOEXCEPT  --- http://nonchalantlytyped.net/blog/2012/06/27/yet-another-sfinae/
+
 ////////////////////////////////////////////////////////////////////////////////////////  META META
 
 struct no_type{};
@@ -60,13 +63,8 @@ template<typename T, typename Ct>  using  is_elem_of       = std::is_same<rm_ref
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                     = typename std::enable_if <Cnd,T>::type;
-template<typename Ct1, typename Ct2>	using  is_cl2cl_convertible    = std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>;
-//template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<std::remove_reference<xT>::type, std::remove_recl_value_type<Ct>>;
+template<typename Ct1, typename Ct2>	using  have_same_elem          = std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>;
 template<typename Ct, typename xT>	using  is_x2cl_convertible     = std::is_convertible<xT, cl_elem_type<Ct>>;
-//template<typename It, typename Ct>	using  is_it2cl_convertible    
-	//= std::is_convertible<typename iterator_traits<It>::value_type,   cl_elem_type<Ct>>;
-//	= std::is_convertible<typename iterator_traits<It>::value_type,   cl_elem_type<Ct>>;
-
 
 template<typename Cl>	using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
