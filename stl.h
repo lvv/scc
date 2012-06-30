@@ -252,7 +252,7 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 //  Stack << x
 	template<typename Ct, typename Xt>
-	eIF <is_stack<Ct>::value  &&  is_x2cl_convertible<Ct,Xt>::value,  Ct>
+	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>::value,  Ct>
 operator<<      (Ct&& C, Xt&& x)    { C.push(std::forward<Xt>(x));   return std::forward<Ct>(C); };
 
 //  Stack--
@@ -267,7 +267,7 @@ operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 //	[1, 2] 3
 
 	template<typename Ct, typename Xt>
-	eIF <is_stack<Ct>::value  &&  is_x2cl_convertible<Ct,Xt>::value, Ct>
+	eIF <is_stack<Ct>::value  &&  is_elem_of<Xt,Ct>::value, Ct>
 operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Ct>(C); };
 
 
