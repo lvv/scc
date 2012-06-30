@@ -102,7 +102,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 
 // SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Ct >
-	typename std::enable_if <is_container<Ct>()  &&  !is_ioable<Ct>::value, std::ostream&>::type
+	eIF<is_container<Ct>()  &&  !is_ioable<Ct>::value, std::ostream&>
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
@@ -207,8 +207,8 @@ namespace oi_space {
 	struct	oi_t  : std::ostream_iterator<oi_any_t> {
 		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
 
-		template<typename Ct >
-		typename std::enable_if <is_container<Ct>(),  void>::type
+			template<typename Ct >
+			eIF<is_container<Ct>(),  void>
 		operator=(const Ct& C)  {
 			copy(C.begin(),  C.end(),  *this);
 		}
@@ -244,12 +244,12 @@ struct in_t {
 
 	// PRIMARY (directly inputable)
 		template<typename T>	
-		typename std::enable_if< is_ioable<T>::value, void >::type
+		eIF< is_ioable<T>::value, void >
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value,  void>::type
+		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value,  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -259,7 +259,7 @@ struct in_t {
 
 	// SET
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>()  &&  has_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>::type
+		eIF<is_container<Ct>()  &&  has_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		C.clear(); 
@@ -294,7 +294,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value, std::istream& >::type
+		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value, std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
@@ -306,7 +306,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 
 		template<typename T, size_t N>
-		typename std::enable_if<!std::is_same<T,char>::value,  std::istream&>::type
+		eIF<!std::is_same<T,char>::value,  std::istream&>
 operator>>      (std::istream& is, T(&A)[N])    {
 	T t;
 	for(size_t i=0;  i<N  &&  std::cin;  i++)  {
@@ -368,7 +368,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>()  &&  has_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >::type
+		eIF<is_container<Ct>()  &&  has_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
@@ -378,7 +378,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 // MAP
 		template<typename Ct>
-		typename std::enable_if<is_container<Ct>()  &&  has_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >::type
+		eIF<is_container<Ct>()  &&  has_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::key_type	  k;
 	typename Ct::mapped_type  m;
