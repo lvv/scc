@@ -70,7 +70,7 @@ range(I b, I e) { return range_t<I>(b,e); };
 
 
 	template<typename Ct>
-	eIF<is_container<Ct>::value, range_t<cl_iterator<Ct>>>
+	eIF<is_container<Ct>(), range_t<cl_iterator<Ct>>>
 range(Ct& C) { return range_t<cl_iterator<Ct>>(std::begin(C), std::end(C)); };
 
 template<typename T   ,  size_t N> range_t<T   *> range(T    (&C)[N])  { return range_t<T   *>(std::begin(C), std::end(C)); };
@@ -85,7 +85,7 @@ range(const char* p) { auto pp=p; while (*p) ++p; return range_t<const char*>(pp
 range(char* p) { auto pp=p; while (*p) ++p; return range_t<char*>(pp,p); };
 */
 
-template<typename I>	struct  is_container <range_t<I>>	: std::true_type { };
+template<typename I>	struct  is_container_t <range_t<I>>	: std::true_type { };
 
 static  __attribute__((unused)) struct range_converter_t {} rng;
 
@@ -93,7 +93,7 @@ static  __attribute__((unused)) struct range_converter_t {} rng;
 
 	template<typename Ct>
 	typename std::enable_if<
-		is_container<Ct>::value,
+		is_container<Ct>(),
 		range_t<typename container_iterator<Ct>::type>
 	>::type
 operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
@@ -105,7 +105,7 @@ operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::e
 
 	template<typename Ct>
 	typename std::enable_if<
-		is_container<Ct>::value,
+		is_container<Ct>(),
 		range_t<typename container_iterator<Ct>::type>
 	>::type
 operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
@@ -116,7 +116,7 @@ static  __attribute__((unused)) struct iot_t {} iot;
 
 	template<typename Ct>
 	typename std::enable_if<
-		is_container<Ct>::value,
+		is_container<Ct>(),
 		range_t<typename container_iterator<Ct>::type>
 	>::type
 operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
@@ -131,7 +131,7 @@ template<typename T>	struct  is_range<range_t<T>>	: std::true_type  {};
 //  Ct1 | Ct2   ---  search() --> range	   
 /*
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  range_t&>::type
+	typename std::enable_if <is_container<Ct>(),  range_t&>::type
 operator |       (Ct& C1, const Ct& C2)    { 
 	auto it = search(C1.begin(), C1.end(), C2.begin(), C2.end());
 	return  range_t(it, advance(it, distance(C2.end(), C2.begin())));
@@ -139,7 +139,7 @@ operator |       (Ct& C1, const Ct& C2)    {
 
 //  Ct1 / Ct2   ---  search() --> it
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>::value,  typename Ct::iterator>::type
+	typename std::enable_if <is_container<Ct>(),  typename Ct::iterator>::type
 operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 */
 

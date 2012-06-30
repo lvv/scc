@@ -65,7 +65,7 @@ struct strr {         ///////////////////////////////////////////////////////  S
 
 
 template<>		struct  is_ioable    <strr>:   std::true_type  {};
-template<>		struct  is_container <strr>:   std::false_type  {};
+template<>		struct  is_container_t <strr>:   std::false_type  {};
 
 	std::ostream&
 operator<<      (std::ostream& os, const strr& sr) {
@@ -203,7 +203,7 @@ struct	fld : strr {
 
 
 template<>		struct  is_ioable <fld>	        : std::true_type  {};
-template<>		struct  is_container <fld>	: std::false_type  {};
+template<>		struct  is_container_t <fld>	: std::false_type  {};
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>

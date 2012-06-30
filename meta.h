@@ -64,6 +64,7 @@ template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::refere
 template<bool Cnd, typename T=void>     using  eIF                     = typename std::enable_if <Cnd,T>::type;
 template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
 template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>::value; }
+//template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem(/*Ct1* ct1=0, Ct2* ct2=0*/)    { return  std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>::value; }
 
 template<typename Cl>	using  cl_elem_fwd  =  typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 
@@ -109,7 +110,7 @@ DEF_HAS_METHOD(has_resize,resize(size_t()))
 //////////////////////////////////////////////////////////////////////////////////////// IS_CONTAINER
 
 	template <typename T>
-struct is_container {
+struct is_container_t {
 
 		template <
 			typename U,
@@ -126,9 +127,11 @@ struct is_container {
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_container <T[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_container <T(&)[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_container <std::array<T,N>>	: std::true_type { };
+template<typename T, size_t N>	struct  is_container_t <T[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_container_t <T(&)[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_container_t <std::array<T,N>>	: std::true_type { };
+
+template<typename Ct>     constexpr bool   is_container()        { return  is_container_t<Ct>::value; };
 
 
 template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
@@ -153,7 +156,6 @@ struct is_stack {
 
 		template <
 			typename U,
-			//typename PUSH	= decltype (((U*)0)->push(XXX)),
 			typename POP	= decltype (((U*)0)->pop()),
 			typename TOP	= decltype (((U*)0)->top())
 		>
@@ -175,7 +177,6 @@ struct is_queue {
 		template <
 			typename U,
 			typename POP	= decltype (((U*)0)->pop()),
-			//typename PUSH	= decltype (((U*)0)->push(XXX)),
 			typename FRONT	= decltype (((U*)0)->front()),
 			typename BACK	= decltype (((U*)0)->back())
 		>

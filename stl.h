@@ -25,13 +25,13 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
 operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(C)); };
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Ct >
-	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
 operator-      (Ct&& C) { return  std::forward<cl_iterator<Ct>>(std::end(C)); };
 
 
@@ -51,11 +51,11 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 
@@ -102,7 +102,7 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 // Ct1 << Ct2
 	template<typename Ct1, typename Ct2>
-	eIF <has_push_back<Ct1>()   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>(),  Ct1>	// RVO: no coping for T& or T&&
+	eIF <has_push_back<Ct1>()   &&  is_container<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct1>	// RVO: no coping for T& or T&&
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
@@ -116,7 +116,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>()   &&  is_container<Ct2>::value   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
+	eIF <has_insert<Ct1>()   &&  is_container<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
@@ -128,18 +128,18 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
-	eIF <is_container<Ct1>::value   &&  has_push_front<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct2>
+	eIF <is_container<Ct1>()   &&  has_push_front<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct2>
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
 
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	eIF <is_container<Ct>::value, Ct>
+	eIF <is_container<Ct>(), Ct>
 operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C); };
 
 
 	template<typename Ct>
-	eIF <is_container<Ct>::value, Ct>
+	eIF <is_container<Ct>(), Ct>
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
@@ -183,7 +183,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			
 		//  Ct1 % Ct2   ---  search() --> bool	
 			template<typename Ct2>  static
-			eIF <is_container<Ct2>::value  &&  std::is_same<T, cl_elem_type<Ct2>>::value,  bool>
+			eIF <is_container<Ct2>()  &&  std::is_same<T, cl_elem_type<Ct2>>::value,  bool>
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
 
@@ -215,17 +215,17 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 //  Ct / T   ---  find..() -> it	 
 	template<typename Ct, typename Second>
-	eIF <is_container<Ct>::value , typename Ct::iterator>
+	eIF <is_container<Ct>() , typename Ct::iterator>
 operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>(C, x); };
 
 //  Ct % T   ---  find..() -> bool	 
 	template<typename Ct, typename Second>
-	eIF <is_container<Ct>::value , bool>
+	eIF <is_container<Ct>() , bool>
 operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D
 	template<typename Ct, typename Second>
-	eIF <is_container<Ct>::value , Ct>
+	eIF <is_container<Ct>() , Ct>
 operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
 
 
