@@ -59,13 +59,13 @@ struct  range_t {
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
 	template<typename I>
-	eIF<is_iterator<I>::value, range_t<I>>
+	eIF<is_iterator<I>(), range_t<I>>
 operator, (I b, I e)  { return range_t<I>(b,e); };
 
 ////////////////////////////////////////////////////////////////  RANGE() -- makes range
 
 	template<typename I>
-	typename std::enable_if<is_iterator<I>::value, range_t<I>>::type
+	eIF<is_iterator<I>(), range_t<I>>
 range(I b, I e) { return range_t<I>(b,e); };
 
 
@@ -92,10 +92,10 @@ static  __attribute__((unused)) struct range_converter_t {} rng;
 /////////////////////////////////////////////////////////////////// RNG -- range proxy
 
 	template<typename Ct>
-	typename std::enable_if<
+	eIF<
 		is_container<Ct>(),
 		range_t<typename container_iterator<Ct>::type>
-	>::type
+	>
 operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
 
 	template<typename T, size_t N>
@@ -104,10 +104,10 @@ operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::e
 
 
 	template<typename Ct>
-	typename std::enable_if<
+	eIF<
 		is_container<Ct>(),
 		range_t<typename container_iterator<Ct>::type>
-	>::type
+	>
 operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
 
 

@@ -102,7 +102,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 
 // SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Ct >
-	eIF<is_container<Ct>()  &&  !is_ioable<Ct>::value, std::ostream&>
+	eIF<is_container<Ct>()  &&  !is_ioable_t<Ct>::value, std::ostream&>
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
@@ -118,7 +118,7 @@ operator<<      (ostream& os, const Ct& C) {
 
 // STACK
 	template<typename Ct >
-	eIF <is_stack<Ct>::value, std::ostream> &
+	eIF <is_stack<Ct>(), std::ostream> &
 operator<<      (ostream& os, Ct C) {
 
 	Ct CC; 
@@ -133,7 +133,7 @@ operator<<      (ostream& os, Ct C) {
 
 // QUEUE
 	template<typename Ct >
-	eIF <is_queue<Ct>::value, std::ostream> &
+	eIF <is_queue<Ct>(), std::ostream> &
 operator<<      (ostream& os, Ct C) {
 	cout << "[";
 		if    ( !C.empty() )  { os         << C.front();  C.pop(); }
@@ -244,12 +244,12 @@ struct in_t {
 
 	// PRIMARY (directly inputable)
 		template<typename T>	
-		eIF< is_ioable<T>::value, void >
+		eIF< is_ioable_t<T>::value, void >
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value,  void>
+		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value,  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -294,7 +294,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>::value, std::istream& >
+		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value, std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 

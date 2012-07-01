@@ -64,7 +64,7 @@ struct strr {         ///////////////////////////////////////////////////////  S
  };
 
 
-template<>		struct  is_ioable    <strr>:   std::true_type  {};
+template<>		struct  is_ioable_t    <strr>:   std::true_type  {};
 template<>		struct  is_container_t <strr>:   std::false_type  {};
 
 	std::ostream&
@@ -202,7 +202,7 @@ struct	fld : strr {
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 
 
-template<>		struct  is_ioable <fld>	        : std::true_type  {};
+template<>		struct  is_ioable_t <fld>	        : std::true_type  {};
 template<>		struct  is_container_t <fld>	: std::false_type  {};
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
@@ -451,8 +451,8 @@ struct buf_t {
 
 
 // traits
-template<>	struct  is_string    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
-template<>	struct  is_string    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
+template<>	struct  is_string_t    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
+template<>	struct  is_string_t    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
 
 
 #endif // SCC

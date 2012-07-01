@@ -54,13 +54,13 @@ int main() {
 		<< setw(26)<<""        <<   "                         able     2  \n";
 
 	#define for_T(name)  __ setw(26) << name \
-		<<   "  " << (is_container<T>::value                                   ? "+" : "\u2219")\
-		<<  "   " << (has_const_iterator<T>::value                             ? "+" : "\u2219")\
+		<<   "  " << (is_container<T>()                                   ? "+" : "\u2219")\
+		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
 		<<  "   " << (is_iterator<T>::value                                    ? "+" : "\u2219")\
 		<<  "   " << (is_input_iterator<T>::value                              ? "+" : "\u2219")	/* incorrect*/ \
-		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
-		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
-		<<  "   " << (is_ioable<T>::value                                      ? "+" : "\u2219")\
+		<<  "   " << (is_stack<T>()                                       ? "+" : "\u2219")\
+		<<  "   " << (is_queue<T>()                                       ? "+" : "\u2219")\
+		<<  "   " << (is_ioable_t<T>::value                                      ? "+" : "\u2219")\
 		<<  "   " << (is_callable<T, bool(int)>::value                         ? "+" : "\u2219")\
 		<<  "   " << (is_callable<T, bool(int, int)>::value                    ? "+" : "\u2219")\
 	;
