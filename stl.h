@@ -211,12 +211,44 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			return  D;
 		};
 
-		//  append(Ct2)   --> Ct1
-			template<typename Ct2>  static
-			eIF <is_appendable<Ct1>()  &&  have_same_elem<Ct1,Ct2>,  bool>
-		append(Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
+		//  append(Ct2)   --> Ct1
+			eIF <is_elem_of<T,Ct>(),  Ct&>
+		append(Ct& C1, const T& x)            {  append_elem(C1, x, std::integral_constant<bool,has_push_back<Ct>>::type);   return C1; };
+
+			template<typename Ct2>  static
+			eIF <have_same_elem<Ct,Ct2>(),  Ct&>
+		append(Ct& C1, const Ct2& C2)         {  for (auto &x: C2)  append_elem(C1, x);   return C1; };
+
+			template<typename X>  static
+			//eIF <!has_push_back<Ct>(), Ct>
+			typename std::enable_if <!has_push_back<Ct>(), Ct&&>::type
+		append_elem(Ct& C1, const X& x)    {  C1.push     (x);   return C1; };
+		
+			template<typename X> static
+			eIF <has_push_back<Ct>(),  Ct&>
+		append_elem(Ct& C1, const X& x)    {  C1.push_back(x);   return C1; };
+
+		/*
+			template<typename X>  static
+			//eIF <!has_push_back<Ct>(), Ct>
+			typename std::enable_if <!has_push_back<Ct>(), Ct&&>::type
+		append_elem(Ct& C1, const X& x)    {  C1.push     (x);   return C1; };
+		
+			template<typename X> static
+			eIF <has_push_back<Ct>(),  Ct&>
+		append_elem(Ct& C1, const X& x)    {  C1.push_back(x);   return C1; };
+		*/
+
+/*	
+			template<bool PUSH_BACK,  bool PUSH>
+			static Ct&
+		append_elem(Ct& C1, const T& x);
+*/
 	};
+
+//template<typename Ct> Ct& ct_op<Ct>::append_elem< has_push_back<Ct>(), !has_push<Ct>()> (Ct& C1, const ct_op<Ct>::T& x)    {  C1.push_back(x);   return C1; };
+//template<typename Ct> Ct& ct_op<Ct>::append_elem<!has_push_back<Ct>(),  has_push<Ct>()> (Ct& C1, const ct_op<Ct>::T& x)    {  C1.push     (x);   return C1; };
 
 //  Ct / T   ---  find..() -> it	 
 	template<typename Ct, typename Second>
@@ -225,13 +257,20 @@ operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>
 
 //  Ct % T   ---  find..() -> bool	 
 	template<typename Ct, typename Second>
-	eIF <is_container<Ct>() , bool>
+	eIF <is_container<Ct>(), bool>
 operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D
 	template<typename Ct, typename Second>
 	eIF <is_container<Ct>() , Ct>
 operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
+
+/*
+//  Ct1 << Ct2   ---  --> Ct1
+	template<typename Ct, typename Second>
+	eIF <has_push_back<Ct>() ||  has_push<Ct>(),  Ct&>
+operator +=       (Ct& C, const Second& x)    {  return  ct_op<Ct>::template append<Second>(C, x); };
+*/
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
