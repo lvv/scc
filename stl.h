@@ -67,7 +67,7 @@ operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<T>(x));   return s
 
 //   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>()   &&   has_insert<Ct>(),    Ct&&>
+	eIF <is_elem_of<T, Ct>()   &&   has_1arg_insert<Ct>(),    Ct&&>
 operator<<      (Ct&& C, T&& x)    { C.insert(std::forward<T>(x));   return std::forward<Ct>(C); };
 
 
@@ -116,7 +116,7 @@ operator <<      (Ct1&& C1, const Ct2& C2)    {
 
 // Set << Ct 
 	template<typename Ct1, typename Ct2>
-	eIF <has_insert<Ct1>()   &&  is_container<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
+	eIF <has_1arg_insert<Ct1>()   &&  is_container<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
 operator <<      (Ct1&& C1, const Ct2& C2)    {
 	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
 		C1.insert(*it);  
@@ -213,6 +213,7 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 
 		//  append(Ct2)   --> Ct1
+		/*
 			eIF <is_elem_of<T,Ct>(),  Ct&>
 		append(Ct& C1, const T& x)            {  append_elem(C1, x, std::integral_constant<bool,has_push_back<Ct>>::type);   return C1; };
 
@@ -228,27 +229,23 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			template<typename X> static
 			eIF <has_push_back<Ct>(),  Ct&>
 		append_elem(Ct& C1, const X& x)    {  C1.push_back(x);   return C1; };
-
-		/*
-			template<typename X>  static
-			//eIF <!has_push_back<Ct>(), Ct>
-			typename std::enable_if <!has_push_back<Ct>(), Ct&&>::type
-		append_elem(Ct& C1, const X& x)    {  C1.push     (x);   return C1; };
-		
-			template<typename X> static
-			eIF <has_push_back<Ct>(),  Ct&>
-		append_elem(Ct& C1, const X& x)    {  C1.push_back(x);   return C1; };
 		*/
 
-/*	
-			template<bool PUSH_BACK,  bool PUSH>
-			static Ct&
-		append_elem(Ct& C1, const T& x);
-*/
 	};
 
-//template<typename Ct> Ct& ct_op<Ct>::append_elem< has_push_back<Ct>(), !has_push<Ct>()> (Ct& C1, const ct_op<Ct>::T& x)    {  C1.push_back(x);   return C1; };
-//template<typename Ct> Ct& ct_op<Ct>::append_elem<!has_push_back<Ct>(),  has_push<Ct>()> (Ct& C1, const ct_op<Ct>::T& x)    {  C1.push     (x);   return C1; };
+	namespace detail {
+		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&>  append_elem(Ct& C1, const X& x)   { C1.push_back(x);  return C1; };
+		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&>  append_elem(Ct& C1, const X& x)   { C1.push     (x);  return C1; };
+		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&>  append_elem(Ct& C1, const X& x)   { C1.insert   (x);  return C1; };
+	}
+
+	template<class Ct, class X>
+	eIF <is_elem_of<X,Ct>(),  Ct&>
+append(Ct& C1, const X& x)            {  detail::append_elem(C1, x);   return C1; };
+
+	template<class Ct, class Ct2> 
+	eIF <have_same_elem<Ct,Ct2>(),  Ct&>
+append(Ct& C1, const Ct2& C2)         {  for (auto &x: C2)  detail::append_elem(C1, x);   return C1; };
 
 //  Ct / T   ---  find..() -> it	 
 	template<typename Ct, typename Second>

@@ -259,7 +259,7 @@ struct in_t {
 
 	// SET
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
+		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		C.clear(); 
@@ -269,7 +269,7 @@ struct in_t {
 
 	// MAP
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
+		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::key_type	  k;
 		typename Ct::mapped_type  m;
@@ -368,7 +368,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
+		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
@@ -378,7 +378,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 // MAP
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
+		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::key_type	  k;
 	typename Ct::mapped_type  m;
