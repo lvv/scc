@@ -211,11 +211,6 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 			return  D;
 		};
 
-		//  append(Ct2)   --> Ct1
-			template<typename Ct2>  static
-			eIF <is_appendable<Ct1>()  &&  have_same_elem<Ct1,Ct2>,  bool>
-		append(Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
-
 	};
 
 //  Ct / T   ---  find..() -> it	 
