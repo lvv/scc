@@ -59,17 +59,6 @@ operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 
-//   Ct << x   ---  push_back()  replacement;   usage: scc 'vint V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>()  &&   has_push_back<Ct>(),    Ct&&>
-operator<<      (Ct&& C, T&& x)    { C.push_back(std::forward<T>(x));   return std::forward<Ct>(C); };
-
-
-//   Set << x   ---  insert()  replacement;   usage: scc 'set<int> V;  V << 1 << 2'   prints: {1, 2}
-	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>()   &&   has_1arg_insert<Ct>(),    Ct&&>
-operator<<      (Ct&& C, T&& x)    { C.insert(std::forward<T>(x));   return std::forward<Ct>(C); };
-
 
 /*	 		Ct	string	A	c-str
 *	-------------+-------------------------------
@@ -98,30 +87,6 @@ operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std
 	template<typename Ct, typename T>
 	eIF <is_elem_of<T,Ct>()  &&   has_pop_front<Ct>(),   Ct&&>
 operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
-
-
-// Ct1 << Ct2
-	template<typename Ct1, typename Ct2>
-	eIF <has_push_back<Ct1>()   &&  is_container<Ct2>()  &&  have_same_elem<Ct1,Ct2>(),  Ct1>	// RVO: no coping for T& or T&&
-operator <<      (Ct1&& C1, const Ct2& C2)    {
-
-	// Move - works for trace_obj, not for const char[].  Needs cl_traits<Ct>::move_iterator
-	//for(auto it = std::make_move_iterator(std::begin(C2));   it!=std::make_move_iterator(endz(C2));   ++it)
-	
-	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
-		C1.push_back(*it);  
-	return  std::forward<Ct1>(C1);
-};
-
-
-// Set << Ct 
-	template<typename Ct1, typename Ct2>
-	eIF <has_1arg_insert<Ct1>()   &&  is_container<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),   Ct1>
-operator <<      (Ct1&& C1, const Ct2& C2)    {
-	for(auto it = std::begin(C2);   it!=endz(C2);   ++it)
-		C1.insert(*it);  
-	return  std::forward<Ct1>(C1);
-};
 
 
 
@@ -218,21 +183,21 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 ////// Cl << T
 
 	namespace detail {
-		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&> append_elem(Ct&& C1, X&& x)   { C1.push_back(std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&> append_elem(Ct&& C1, X&& x)   { C1.push     (std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&>  append_elem(Ct&& C1, X&& x)   { C1.insert   (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back(std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push     (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert   (std::forward<X>(x));  return std::forward<Ct>(C1); };
 	}
 
-// Cl << x
+	// Cl << x
 	template<class Ct, class X>
 	eIF <is_elem_of<X,Ct>(),  Ct&&>
-append(Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
+operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
 
 
-// Cl << Cl2
+	// Cl << Cl2
 	template<class Ct, class Ct2> 
 	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
-append(Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
+operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
 
 
 //  Ct / T   ---  find..() -> it	 
@@ -249,13 +214,6 @@ operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::templat
 	template<typename Ct, typename Second>
 	eIF <is_container<Ct>() , Ct>
 operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
-
-/*
-//  Ct1 << Ct2   ---  --> Ct1
-	template<typename Ct, typename Second>
-	eIF <has_push_back<Ct>() ||  has_push<Ct>(),  Ct&>
-operator +=       (Ct& C, const Second& x)    {  return  ct_op<Ct>::template append<Second>(C, x); };
-*/
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
@@ -279,10 +237,12 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  STACK
 
+/*
 //  Stack << x
 	template<typename Ct, typename Xt>
 	eIF <is_stack<Ct>()  &&  is_elem_of<Xt,Ct>(),  Ct>
 operator<<      (Ct&& C, Xt&& x)    { C.push(std::forward<Xt>(x));   return std::forward<Ct>(C); };
+*/
 
 //  Stack--
 	template<typename Ct>
@@ -314,10 +274,12 @@ operator++      (Ct&& C, int)    { return C.top(); };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  QUEUE
 
+/*
 //  Queue << x
 	template<typename Ct>
 	eIF <is_queue<Ct>(), Ct> &
 operator<<      (Ct& C, const typename Ct::value_type& x)    { C.push(x);   return C; };
+*/
 
 //  --Queue
 	template<typename Ct>

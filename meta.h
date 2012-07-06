@@ -65,8 +65,6 @@ template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::refere
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
 template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
-template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
-template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>::value; }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
@@ -132,7 +130,7 @@ template<typename T, size_t N>	struct  is_container_t <T[N]>		: std::true_type {
 template<typename T, size_t N>	struct  is_container_t <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container_t <std::array<T,N>>	: std::true_type { };
 
-template<typename Ct>     constexpr bool   is_container()        { return  is_container_t<Ct>::value; };
+template<typename T>     constexpr bool   is_container()        { return  is_container_t<T>::value; };
 
 
 template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
@@ -195,6 +193,11 @@ struct is_queue_t {
 };
 template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<T>::value; };
 
+
+/////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
+template<typename T>     	      constexpr bool   is_collection()     { return  is_container<T>()  ||  is_stack<T>()  ||  is_queue<T>(); };
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
+template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
 // iterator_reference<T>::type operator*(void) const;
