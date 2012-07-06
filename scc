@@ -2,14 +2,14 @@
 
 
 if [[ -z "$CXXFLAGS" ]] ;  then 
-	CXXFLAGS+=" -Wall  -pipe "
+	CXXFLAGS+=" -std=gnu++11 -Wall  -pipe "
 fi
 
 [ -f /etc/scc ]  && . /etc/scc
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f     .scc ]  && .     .scc
 
-CXXFLAGS+=" -std=gnu++11 -Wno-unused-function "
+CXXFLAGS+=" -Wno-unused-function "
 O_FLAGS="-O3 -march=native"
 g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check"
 

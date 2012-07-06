@@ -41,6 +41,7 @@ template <typename T>	struct ref2name <volatile const T&&> { static constexpr co
 
 template<typename> void ttd();
 
+
 //////  TRACE_OBJ
 
 		template <typename T>
@@ -63,6 +64,8 @@ struct  to : counter<to> {
 	int id = 0;
 };
 
+	std::ostream&
+operator<<      (std::ostream& os, const to& o) { std::cout << "to{" << o.id << "}";  return os; };
 
 
 				#endif

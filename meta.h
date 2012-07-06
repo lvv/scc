@@ -37,15 +37,17 @@ template<typename Ct>   	   using  rm_ref           = typename std::remove_refer
 
 
 template <typename T>		struct cl_traits      {
-		template < typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
+		// can not use temp aliases here - this is gcc48 bug:
+		// template < typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
+		template < typename U, typename VT = typename std::remove_reference<U>::type::value_type>	static VT	vt(rm_ref<U>* u);
 		template <typename U>							static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
 
-		template <typename U, typename IT = typename rm_ref<U>::iterator>	static IT       it(rm_ref<U>* u);
+		template <typename U, typename IT = typename std::remove_reference<rm_ref<U>>::type::iterator>	static IT       it(rm_ref<U>* u);
 		template <typename U>							static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
 
-		template <typename U, typename RF = typename rm_ref<U>::reference>	static RF       rf(rm_ref<U>* u);
+		template <typename U, typename RF = typename std::remove_reference<rm_ref<U>>::type::reference>	static RF       rf(rm_ref<U>* u);
 		template <typename U>                                          		static no_type  rf(...);
 	typedef     decltype(rf<T>(0))     reference ;
 };
@@ -63,8 +65,6 @@ template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::refere
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
 template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
-template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
-template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  std::is_convertible<cl_elem_type<Ct1>, cl_elem_type<Ct2>>::value; }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
@@ -97,7 +97,8 @@ DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
 DEF_HAS_METHOD(has_push_front,push_front(typename U::value_type()))
 DEF_HAS_METHOD(has_push_back,push_back(typename U::value_type()))
-DEF_HAS_METHOD(has_insert,insert(typename U::value_type()))
+DEF_HAS_METHOD(has_push,push(typename rm_ref<U>::value_type()))
+DEF_HAS_METHOD(has_1arg_insert,insert(typename U::value_type()))
 DEF_HAS_METHOD(has_pop_back,pop_back())
 DEF_HAS_METHOD(has_pop_front,pop_front())
 DEF_HAS_METHOD(has_size,size())
@@ -129,7 +130,7 @@ template<typename T, size_t N>	struct  is_container_t <T[N]>		: std::true_type {
 template<typename T, size_t N>	struct  is_container_t <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container_t <std::array<T,N>>	: std::true_type { };
 
-template<typename Ct>     constexpr bool   is_container()        { return  is_container_t<Ct>::value; };
+template<typename T>     constexpr bool   is_container()        { return  is_container_t<T>::value; };
 
 
 template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
@@ -166,7 +167,7 @@ struct is_stack_t {
 		static long
 	test(...);
 
-	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
+	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
 template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<T>::value; };
 
@@ -188,10 +189,15 @@ struct is_queue_t {
 		static long
 	test(...);
 
-	enum { value = sizeof test<T>(0) == 1 };
+	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
 template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<T>::value; };
 
+
+/////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
+template<typename T>     	      constexpr bool   is_collection()     { return  is_container<T>()  ||  is_stack<T>()  ||  is_queue<T>(); };
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
+template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
 // iterator_reference<T>::type operator*(void) const;
