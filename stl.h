@@ -108,6 +108,25 @@ operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C);
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
+////// Cl << T
+
+	namespace detail {
+		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back(std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push     (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert   (std::forward<X>(x));  return std::forward<Ct>(C1); };
+	}
+
+	// Cl << x
+	template<class Ct, class X>
+	eIF <is_elem_of<X,Ct>(),  Ct&&>
+operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
+
+
+	// Cl << Cl2
+	template<class Ct, class Ct2> 
+	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
+operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////  Ct op T
@@ -177,25 +196,6 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 		};
 
 	};
-
-////// Cl << T
-
-	namespace detail {
-		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back(std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push     (std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert   (std::forward<X>(x));  return std::forward<Ct>(C1); };
-	}
-
-	// Cl << x
-	template<class Ct, class X>
-	eIF <is_elem_of<X,Ct>(),  Ct&&>
-operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
-
-
-	// Cl << Cl2
-	template<class Ct, class Ct2> 
-	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
-operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
 
 
 //  Ct / T   ---  find..() -> it	 
