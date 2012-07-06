@@ -169,7 +169,7 @@ struct is_stack_t {
 		static long
 	test(...);
 
-	enum { value = sizeof test<typename std::remove_reference<T>::type>(0) == 1 };
+	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
 template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<T>::value; };
 
@@ -191,7 +191,7 @@ struct is_queue_t {
 		static long
 	test(...);
 
-	enum { value = sizeof test<T>(0) == 1 };
+	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
 template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<T>::value; };
 
