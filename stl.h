@@ -72,10 +72,12 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 */
 
 
+/*
 //  x >> Ct    ---  push_front replacement;   usage: scc 'vint V;  1 >> V'   prints: {1}
 	template<typename Ct, typename T>
 	eIF <is_elem_of<T, Ct>()  &&   has_push_front<Ct>(),    Ct&&>
 operator>>      (T&& x, Ct&& C)    { C.push_front(std::forward<T>(x));   return std::forward<Ct>(C); };
+*/
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
@@ -91,10 +93,12 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 
 
+/*
 // Ct1 >> Ct2			// TOFIX:  self-assigment
 	template<typename Ct1, typename Ct2>
 	eIF <is_container<Ct1>()   &&  has_push_front<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct2>
 operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
+*/
 
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
@@ -108,12 +112,16 @@ operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C);
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
-////// Cl << T
+//////  Cl << T
 
 	namespace detail {
-		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back(std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push     (std::forward<X>(x));  return std::forward<Ct>(C1); };
-		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert   (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push      (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert    (std::forward<X>(x));  return std::forward<Ct>(C1); };
+
+		template<class Ct, class X>  eIF<has_push_front <Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.push_front(std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.push      (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.insert    (std::forward<X>(x));  return std::forward<Ct>(C1); };
 	}
 
 	// Cl << x
@@ -126,6 +134,20 @@ operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(
 	template<class Ct, class Ct2> 
 	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
 operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
+
+
+
+//////  T >> Cl 
+	// x >> Cl 
+	template<class Ct, class X>
+	eIF <is_elem_of<X,Ct>(),  Ct&&>
+operator >> (X&& x, Ct&& C1)            {  detail::prepend_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
+
+
+	// Ct >> Cl
+	template<class Ct, class Cl> 
+	eIF <have_same_elem<Cl,Ct>(),  Cl&&>
+operator >>  (Ct&& C1, Cl&& C2)         {   auto it = endz(C1); while(it-- != std::begin(C1))   detail::prepend_elem(std::forward<Cl>(C2), cl_elem_fwd<Ct>(*it));   return  std::forward<Cl>(C2); };
 
 
 
