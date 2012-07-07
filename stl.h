@@ -72,14 +72,6 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 */
 
 
-/*
-//  x >> Ct    ---  push_front replacement;   usage: scc 'vint V;  1 >> V'   prints: {1}
-	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>()  &&   has_push_front<Ct>(),    Ct&&>
-operator>>      (T&& x, Ct&& C)    { C.push_front(std::forward<T>(x));   return std::forward<Ct>(C); };
-*/
-
-
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct, typename T>
 	eIF <is_elem_of<T, Ct>()  &&   has_pop_back<Ct>(),   Ct&&>
@@ -92,13 +84,6 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 
 
-
-/*
-// Ct1 >> Ct2			// TOFIX:  self-assigment
-	template<typename Ct1, typename Ct2>
-	eIF <is_container<Ct1>()   &&  has_push_front<Ct2>()   &&  have_same_elem<Ct1,Ct2>(),  Ct2>
-operator >>      (const Ct1& C1, Ct2&& C2)    { auto it = endz(C1); while(it-- != std::begin(C1)) C2.push_front(*it);  return C2; };
-*/
 
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
@@ -335,10 +320,11 @@ operator <<       (It&& it, Ct&& C)    {};
 
 namespace x {  // eXperimental
 
-// waiting for implementation of Inherited Ctor-s -- http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2540.htm
 template<typename T>
 struct vector : std::vector<T> {
-
+	// waiting for implementation of Inherited Ctor-s -- http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2540.htm
+	//using vector<T>::vector;
+	
 	/* to bool conversion -- */
 			struct PointerConversion { int valid; };
 			typedef int PointerConversion::* datamemptr;
