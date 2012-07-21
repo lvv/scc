@@ -132,7 +132,13 @@ operator >> (X&& x, Ct&& C1)            {  detail::prepend_elem(std::forward<Ct>
 	// Ct >> Cl
 	template<class Ct, class Cl> 
 	eIF <have_same_elem<Cl,Ct>(),  Cl&&>
-operator >>  (Ct&& C1, Cl&& C2)         {   auto it = endz(C1); while(it-- != std::begin(C1))   detail::prepend_elem(std::forward<Cl>(C2), cl_elem_fwd<Ct>(*it));   return  std::forward<Cl>(C2); };
+operator >>  (Ct&& C1, Cl&& C2)  {  
+	auto it = endz(C1);
+	if (it != std::begin(C1))  it--;
+	while(it != std::begin(C1))
+		detail::prepend_elem(std::forward<Cl>(C2), cl_elem_fwd<Ct>(*it--));
+	return  std::forward<Cl>(C2);
+ };
 
 
 
