@@ -63,16 +63,34 @@ cout << "----------------------------------------------------------  CL_VALUE_TY
 	DO_CL_VALUE_TYPE(cl_elem_type<vint>&)
 	DO_CL_VALUE_TYPE(cl_elem_type<const vint>&)
 
-cout << "----------------------------------------------------------  FORWARD_CL_ELEM\n";
-#define DO_FWD_CL_ELEM(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_FWD_CL_ELEM(cl_elem_fwd<vint>)
-	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>)
-	DO_FWD_CL_ELEM(cl_elem_fwd<volatile vint>)
-	DO_FWD_CL_ELEM(cl_elem_fwd<const volatile vint>)
-	DO_FWD_CL_ELEM(cl_elem_fwd<vint>&&)
-	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>&&)
-	DO_FWD_CL_ELEM(cl_elem_fwd<vint>&)
-	DO_FWD_CL_ELEM(cl_elem_fwd<const vint>&)
+cout << "----------------------------------------------------------  Ct::iterator\n";
+#define DO_ITERATOR(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
+	DO_ITERATOR(vector<int>::iterator)
+	DO_ITERATOR(vector<int>::const_iterator)
+	//DO_ITERATOR(vector<volatile int       >::iterator)
+	//DO_ITERATOR(vector<const volatile int >::iterator)
+
+cout << "----------------------------------------------------------  CL_ITERATOR\n";
+#define DO_CL_ITERATOR(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
+	DO_CL_ITERATOR(cl_iterator<vint>)
+	DO_CL_ITERATOR(cl_iterator<const vint>)
+	DO_CL_ITERATOR(cl_iterator<volatile vint>)
+	DO_CL_ITERATOR(cl_iterator<const volatile vint>)
+	DO_CL_ITERATOR(cl_iterator<vint&&>)
+	DO_CL_ITERATOR(cl_iterator<const vint&&>)
+	DO_CL_ITERATOR(cl_iterator<vint&>)
+	DO_CL_ITERATOR(cl_iterator<const vint&>)
+
+cout << "----------------------------------------------------------  CL_ELEM_FWD\n";
+#define DO_CL_ELEM_FWD(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
+	DO_CL_ELEM_FWD(cl_elem_fwd<vint>)
+	DO_CL_ELEM_FWD(cl_elem_fwd<const vint>)
+	DO_CL_ELEM_FWD(cl_elem_fwd<volatile vint>)
+	DO_CL_ELEM_FWD(cl_elem_fwd<const volatile vint>)
+	DO_CL_ELEM_FWD(cl_elem_fwd<vint>&&)
+	DO_CL_ELEM_FWD(cl_elem_fwd<const vint>&&)
+	DO_CL_ELEM_FWD(cl_elem_fwd<vint>&)
+	DO_CL_ELEM_FWD(cl_elem_fwd<const vint>&)
 
 cout << "----------------------------------------------------------  DECL\n";
 #define DO_DECL(type)	 { typedef decltype((std::declval<type>()))  T;  for_T(LVV_STR(type));  }

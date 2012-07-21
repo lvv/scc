@@ -1,4 +1,5 @@
 // TR http://www2.research.att.com/~bs/C++0xFAQ.html#scoped-allocator
+// TR http://stackoverflow.com/questions/11373796/custom-memory-allocator-for-stl-map
 
 #ifndef LVV_ALLOCATOR_H
 #define LVV_ALLOCATOR_H
