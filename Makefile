@@ -12,7 +12,7 @@ install:
 #	cp -v *.h ${PREFIX}/include/scc/
 
 
-###############################################################################################
+############################################################################################### asciidoc gen
 ASCIIDOC_FILTERS ?= /usr/share/asciidoc/filters
 
 
@@ -100,3 +100,7 @@ bench: $(BENCH_FILE)
 
 $(BENCH_FILE):
 	scc 'char C[]="123456789"; REP(5*1000*1000) { REP(10) _ C << " "; __ "";}' > $(BENCH_FILE)
+
+######################################################  Unit Tests
+CXXFLAGS+= -std=gnu++11 -Wall -O0 -ggdb3 -D_GLIBCXX_DEBUG  -fno-inline -I/home/lvv/p/  
+

@@ -66,3 +66,6 @@ scc '__ v9 / [](int i){return i==3;} - +v9;'
 # Ct * F
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc 's="Hello";  __  *(s / islower);'
+
+# BEGIN/ END
+scc  ' *+v9=-33;  __ *+vint{1,2}, v9;'

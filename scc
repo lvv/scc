@@ -2,7 +2,7 @@
 
 
 if [[ -z "$CXXFLAGS" ]] ;  then 
-	CXXFLAGS+=" -std=gnu++11 -Wall  -pipe "
+	CXXFLAGS+=" -std=gnu++11 -Wall -D_GLIBCXX_DEBUG -pipe "
 fi
 
 [ -f /etc/scc ]  && . /etc/scc

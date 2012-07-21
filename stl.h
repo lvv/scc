@@ -24,15 +24,15 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
-	template<typename Ct>
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
-operator+      (Ct&& C) { return std::forward<cl_iterator<Ct>>(std::begin(C)); };
+	template<typename Ct>		// do we need to care about r-value-ness here?
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-values
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
-	template<typename Ct >
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>&&>
-operator-      (Ct&& C) { return  std::forward<cl_iterator<Ct>>(std::end(C)); };
+	template<typename Ct>
+	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+operator-      (Ct&& C) { return  std::end(C); };
 
 
 //  ~Ct  --- size()		(n/a for c-arrays)
@@ -132,7 +132,7 @@ operator >> (X&& x, Ct&& C1)            {  detail::prepend_elem(std::forward<Ct>
 	// Ct >> Cl
 	template<class Ct, class Cl> 
 	eIF <have_same_elem<Cl,Ct>(),  Cl&&>
-operator >>  (Ct&& C1, Cl&& C2)  {  
+operator >>  (Ct&& C1, Cl&& C2)  {
 	auto it = endz(C1);
 	if (it != std::begin(C1))  it--;
 	while(it != std::begin(C1))

@@ -42,6 +42,7 @@ template <typename T>		struct cl_traits      {
 	typedef   decltype(vt<T>(0))   elem_type ;
 
 		template <typename U, typename IT = typename rm_ref<U>::iterator>	static IT       it(rm_ref<U>* u);
+		//template <typename U, typename IT = typename rm_ref<U>::const_iterator>	static IT       it(rm_ref<const U>* u);
 		template <typename U>							static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
 

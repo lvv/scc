@@ -514,6 +514,7 @@ If you need to use it with older GCC - use v0.1.
 * httpx://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#status.iso.200x[LIBSTDC++ status +++C++11+++]
 * httpx://www.informit.com/guides/content.aspx?g=cplusplus&seqNum=286[Why I Hate Namespaces]
 * httpx://www.gotw.ca/publications/mill17.htm[Why Not Specialize Function Templates?]
+* httpx://richardminerich.com/2012/07/functional-programming-is-dead-long-live-expression-oriented-programming/[Functional Programming is Dead, Long Live Expression-Oriented Programming]
 
 ////////////////
 
