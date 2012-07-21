@@ -19,12 +19,13 @@ using namespace std;
 
 
 	template<typename T>
-struct has_const_iterator {
+struct has_const_iterator_t {
 	template<typename C>  static char  test (typename C::const_iterator*);
 	template<typename C>  static long  test (...);
 	static const bool value = sizeof(test<T>(0)) == 1;
 	typedef T type;
 };
+	template<typename T>   constexpr bool has_const_iterator() { return  has_const_iterator_t <T>::value; } ;
 
 
 
@@ -56,7 +57,7 @@ int main() {
 	#define for_T(name)  __ setw(26) << name \
 		<<   "  " << (is_container<T>()                                   ? "+" : "\u2219")\
 		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
-		<<  "   " << (is_iterator<T>::value                                    ? "+" : "\u2219")\
+		<<  "   " << (is_iterator<T>()                                    ? "+" : "\u2219")\
 		<<  "   " << (is_input_iterator<T>::value                              ? "+" : "\u2219")	/* incorrect*/ \
 		<<  "   " << (is_stack<T>()                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>()                                       ? "+" : "\u2219")\
