@@ -36,10 +36,6 @@ T query(St& S, Vt& V, size_t lo, size_t hi) {
 				__ "query v: ", V,  vint(+V+lo, +V+hi), s; 
 	return s;
 }
-	template<typename Vt>
-int triv(Vt& V, size_t lo, size_t hi) {
-	return std::accumulate(V.begin()+lo, V.begin()+hi, 0);
-}
 
 int main() {
 	size_t  N=10; 
@@ -59,10 +55,10 @@ int main() {
 					__ "lo,hi: ", lo, hi;
 
 		int q = query(S,V,lo, hi);
+		int t = std::accumulate(V.begin()+lo, V.begin()+hi, 0);
 					//__  q;
-		if (q != triv(V,lo,hi)) __ " ---------------------------------------------";
-		assert(q ==          triv(V,lo,hi));
-					__ " triv v: ", V,  vint(+V+lo, +V+hi),  triv(V,lo,hi); 
+		assert(q ==  t);
+					__ " triv v: ", V,  vint(+V+lo, +V+hi),  t; 
 	}
 					__  k, S, V;
 }
