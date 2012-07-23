@@ -64,6 +64,7 @@ template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::refere
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
 template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
+template<typename Cl>	                using  cl_iterator_fwd     = typename  copy_rcv<Cl&&, cl_iterator<Cl>>::type;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
