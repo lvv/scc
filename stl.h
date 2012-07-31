@@ -184,29 +184,7 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
 
-		////// MUL 
 
-			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
-			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
-			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
-
-
-		// Ct * f  (temporary demo, should really return  collection, not a container)
-			template<typename F>  static
-			eIF <is_callable<F, T(T)>::value, Ct>
-		mul(const Ct& C, F f)  {
-			Ct D;
-			size_t n = std::end(C)-std::begin(C);
-			ct_resizer(D, n);
-
-			std::transform(std::begin(C), endz(C), std::begin(D), f);
-
-			// c-string termination
-			if (endz(C) < std::end(C))
-				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
-			return  D;
-		};
 
 	};
 
@@ -221,10 +199,35 @@ operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>
 	eIF <is_container<Ct>(), bool>
 operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
 
+////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
+	
+		////// MUL 
+
+			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
+			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
+			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
+
+
+		// Ct * f  (temporary demo, should really return  collection, not a container)
+		//mul(const Ct& C, F f)  { };
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D
-	template<typename Ct, typename Second>
-	eIF <is_container<Ct>() , Ct>
-operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
+	template<typename Ct, typename F>
+	eIF <is_container<Ct>()  &&  is_callable<F, cl_elem_type<Ct>(const cl_elem_type<Ct>&)>::value, Ct>
+operator *       (Ct& C, F f)    { 
+			typedef  cl_elem_type<Ct>   T;
+			size_t n = std::end(C)-std::begin(C);
+			Ct D;
+			ct_resizer(D, n);
+
+			std::transform(std::begin(C), endz(C), std::begin(D), (T& (*)(const T&))f);
+
+			// c-string termination
+			if (endz(C) < std::end(C))
+				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+			return  D;
+	//return  ct_op<Ct>::template mul<F>(C, x);
+ };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
