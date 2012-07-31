@@ -201,8 +201,14 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::tuple_size;		// C++11
 	using	std::make_shared;		// C++11
 	using	std::iota;			// C++11
+
+	// iterator
 	using	std::begin;			// C++11
 	using	std::end;			// C++11
+	using	std::prev;			// C++11
+	using	std::next;			// C++11
+	using	std::advance;			//
+	using	std::distance;			//
 
 	// memory  (C++11)
 	using	std::shared_ptr;
@@ -231,6 +237,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 ///// types
 typedef		const	int			cint;
+typedef		size_t				idx;
 typedef		std::vector<int>		vint;
 typedef		std::vector<unsigned int>	vuint;
 typedef		std::vector<long>		vlong;

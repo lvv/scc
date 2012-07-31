@@ -275,15 +275,20 @@ x << Q			//  x = Q.front(x);  Q.pop()
 
 ///////////////////////////////////////////////
 TODO
-Ct / x --> it		// find(+Ct, -Ct, x)
-Ct % x --> bool		// find(+Ct, -Ct, x) != -Ct
-Ct / Fn --> it
-Ct % Fn --> bool	// find(+Ct, -Ct, x) != -Ct
-Ct / Rg  --> Rg 	// search(+Ct, -Ct, +Rg, -Rg) 
-Ct - it 		// Ct.eraze(it);
-Ct - Rg			// Ct.erase(+Rg, -Rg)
-Rg *= x 		// for (auto it: Rg) *it = x
-Rg = Rg2 		// 
+Col / x		--> it		// find(+Ct, -Ct, x)
+Col % x		--> bool	// find(+Ct, -Ct, x) != -Ct
+Col / f		--> it
+Col % f		--> bool	// find(+Ct, -Ct, x) != -Ct
+Col / Rg	--> Rg		// search(+Ct, -Ct, +Rg, -Rg) 
+Ct - it 			// Ct.eraze(it);
+Ct - Rg				// Ct.erase(+Rg, -Rg)
+Rg = Rg2 			// with conversion
+
+src >> ct-dest
+ct-dest << src
+col * f(x)			// transform	(map)
+col || f(x,y) 			// accumulate    (fold)
+
 ////////////////////////////////////////////////
 
 Shortcuts and predeclared vars
@@ -532,6 +537,7 @@ MAP
 			http://attractivechaos.wordpress.com/2008/09/12/the-google-hash-table-library/
 			http://www.augustana.ca/~mohrj/courses/1999.fall/csc210/lecture_notes/hashing.html
 			http://svn.python.org/view/python/trunk/Objects/dictnotes.txt?view=markup&pathrev=53782
+	http://stackoverflow.com/questions/11614106/is-gcc-stdunordered-map-implementation-slow-if-so-why
 
 BENCHMARKS
 	A Benchmark for Reading Flat Files Into Memory for Awk, Python, Perl, Java, and Ruby (steve.80cols.com)
