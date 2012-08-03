@@ -184,6 +184,30 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
 
 
+		////// MUL 
+
+			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
+			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
+			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
+
+
+		// Ct * f  (temporary demo, should really return  collection, not a container)
+			template<typename F>  static
+			eIF <is_callable<F, T(T)>::value, Ct>
+		mul(const Ct& C, F f)  {
+			Ct D;
+			size_t n = std::end(C)-std::begin(C);
+			ct_resizer(D, n);
+
+			std::transform(std::begin(C), endz(C), std::begin(D), f);
+
+			// c-string termination
+			if (endz(C) < std::end(C))
+				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+			return  D;
+		};
+
 
 
 	};
@@ -201,6 +225,7 @@ operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::templat
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
 	
+/*
 		////// MUL 
 
 			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
@@ -228,6 +253,12 @@ operator *       (Ct& C, F f)    {
 			return  D;
 	//return  ct_op<Ct>::template mul<F>(C, x);
  };
+*/
+
+//  Ct * F   ---  transform(+C,-C,+D,F) -> D
+	template<typename Ct, typename Second>
+	eIF <is_container<Ct>() , Ct>
+operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
