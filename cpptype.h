@@ -1,7 +1,8 @@
-				#ifndef  LVV_CPPTYPE_H
-				#define  LVV_CPPTYPEG_H
+				#ifndef  SCC_CPPTYPE_H
+				#define  SCC_CPPTYPE_H
 
 				namespace cpp {
+
 char	toupper(char c) { return ::toupper((int)c); }
 char	tolower(char c) { return ::tolower((int)c); }
 

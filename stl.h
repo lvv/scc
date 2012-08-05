@@ -60,17 +60,6 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back());
 
 
 
-/*	 		Ct	string	A	c-str
-*	-------------+-------------------------------
-*	+Ct		+	+	-	-
-*	-Ct		+	+	-	-
-*	~Ct		+	+	-	-
-*	!Ct		+	+	-	-
-*	++Ct		+	+	-	-
-*	Ct++		+	+	-	-
-*	Ct << x		+	+	-	-
-*/
-
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct, typename T>

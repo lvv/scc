@@ -243,6 +243,7 @@ Full list of container operators:
 C++			//  C.back()
 --C			//  C.pop_front()
 C--			//  C.pop_back()
+
 C << x			//  C.push_back(x)
 x >> C			//  C.push_front(x)
 C >> x			//  x = C.back(x);   C.pop_back();
@@ -275,21 +276,36 @@ x << Q			//  x = Q.front(x);  Q.pop()
 
 ///////////////////////////////////////////////
 TODO
-Col / x		--> it		// find(+Ct, -Ct, x)
-Col % x		--> bool	// find(+Ct, -Ct, x) != -Ct
-Col / f		--> it
-Col % f		--> bool	// find(+Ct, -Ct, x) != -Ct
-Col / Rg	--> Rg		// search(+Ct, -Ct, +Rg, -Rg) 
+Rg / x		-> it		// find(+Ct, -Ct, x)
+Rg % x		-> bool		// find(+Ct, -Ct, x) != -Ct
+Rg / f		-> it
+Rg % f		-> bool		// find(+Ct, -Ct, x) != -Ct
+Rg / Rg		-> Rg		// search(+Ct, -Ct, +Rg, -Rg) 
 Ct - it 			// Ct.eraze(it);
 Ct - Rg				// Ct.erase(+Rg, -Rg)
 Rg = Rg2 			// with conversion
 
 src >> ct-dest
+
 ct-dest << src
-col * f(x)			// transform	(map)
-col || f(x,y) 			// accumulate    (fold)
+Rg  * f(x)	-> Rg		// transform	(map)
+Rg || f(x,y)	-> T 		// accumulate    (fold)
+Rg  | filter-t	-> Rg 		// filter
 
 ////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////
+/*	 		Ct	string	A	c-str
+*	-------------+-------------------------------
+*	+Ct		+	+	-	-
+*	-Ct		+	+	-	-
+*	~Ct		+	+	-	-
+*	!Ct		+	+	-	-
+*	++Ct		+	+	-	-
+*	Ct++		+	+	-	-
+*	Ct << x		+	+	-	-
+*/
+/////////////////////////////////////////////////////////
 
 Shortcuts and predeclared vars
 -------------------------------
