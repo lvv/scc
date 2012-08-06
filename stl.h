@@ -86,7 +86,7 @@ operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C);
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
-//////  Cl << T
+//////  X >> Cl << X
 
 	namespace detail {
 		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back (std::forward<X>(x));  return std::forward<Ct>(C1); };
@@ -139,20 +139,6 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 				typedef  cl_elem_type<Ct>   T;
 				typedef  cl_iterator<Ct>    It;
 
-		/////  DIV
-
-		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
-			template<typename Second>  static
-			eIF <std::is_same<T, Second>::value, It>
-		div(Ct& C, const T& x)  { return std::find(C.begin(), C.end(), x); };
-
-
-		// Ct / f
-			template<typename F>  static
-			eIF <is_callable<F, bool(T)>::value, It>
-		div(Ct& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
-
-
 		/////  MOD
 	
 		//  Ct % x   ---  find() --> bool	
@@ -201,16 +187,34 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 	};
 
+	namespace detail {
+
+		/////  DIV
+
+		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
+			template<typename Ct, typename X>
+			eIF <is_elem_of<X, Ct>(), cl_iterator<Ct>>
+		find_elem(Ct&& C, const X& x)   { return std::find(C.begin(), C.end(), x); };
+
+
+		// Ct / f
+			template<typename Ct, typename F>
+			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
+		find_elem(Ct&& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
+	}
+
 
 //  Ct / T   ---  find..() -> it	 
-	template<typename Ct, typename Second>
-	eIF <is_container<Ct>() , typename Ct::iterator>
-operator /       (Ct& C, Second x)    {  return  ct_op<Ct>::template div<Second>(C, x); };
+	template<typename Ct, typename T>
+	eIF <is_container<Ct>() , cl_iterator<Ct>>
+operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
+
+
 
 //  Ct % T   ---  find..() -> bool	 
-	template<typename Ct, typename Second>
+	template<typename Ct, typename X>
 	eIF <is_container<Ct>(), bool>
-operator %       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mod<Second>(C, x); };
+operator %       (Ct&& C, const X& x)    {  return  std::end(C) != detail::find_elem(std::forward<Ct>(C), x); };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
 	
