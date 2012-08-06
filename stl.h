@@ -133,41 +133,52 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 //////////////////////////////////////////////////////////////////////////////////////////////  Ct op T
 
-	template<typename Ct>
-	struct ct_op  {
-
-				typedef  cl_elem_type<Ct>   T;
-				typedef  cl_iterator<Ct>    It;
-
-		/////  MOD
-	
-		//  Ct % x   ---  find() --> bool	
-			template<typename Second>  static
-			eIF<std::is_same<Second, T>::value, bool>
-		mod(const Ct& C, const T& x)    {  return C.cend() != std::find(C.cbegin(), C.cend(), x); };
+	namespace detail {
 
 
-		// Ct % f
-			template<typename F>  static
-			eIF <is_callable<F, bool(T)>::value, bool>
-		mod(const Ct& C, const F& pred)  { return  C.cend()  !=  std::find_if(C.cbegin(), C.cend(), pred); };
+		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
+			template<typename Ct, typename X>
+			eIF <is_elem_of<X, Ct>(), cl_iterator<Ct>>
+		find_elem(Ct&& C, const X& x)   { return std::find(C.begin(), C.end(), x); };
+
+
+		// Ct / f
+			template<typename Ct, typename F>
+			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
+		find_elem(Ct&& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
+
 
 			
-		//  Ct1 % Ct2   ---  search() --> bool	
-			template<typename Ct2>  static
-			eIF <is_container<Ct2>()  &&  std::is_same<T, cl_elem_type<Ct2>>::value,  bool>
-		mod(const Ct& C1, const Ct2& C2)    {  return std::end(C1) != std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
+		//  Ct1 / Ct2   ---  search() --> it   (FIXME shoule return Collection)	
+			template<typename Ct1, typename Ct2>
+			eIF <have_same_elem<Ct1, Ct2>(), cl_iterator<Ct1>>
+		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
+
+	}
 
 
-		////// MUL 
+//  Ct / T   ---  find..() -> it	 
+	template<typename Ct, typename T>
+	eIF <is_container<Ct>() , cl_iterator<Ct>>
+operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
 
+
+
+//  Ct % T   ---  find..() -> bool	 
+	template<typename Ct, typename T>
+	eIF <is_container<Ct>(), bool>
+operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+
+////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
+	
+	
+	namespace detail {
 			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
 			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
 			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
 
-
-		// Ct * f  (temporary demo, should really return  collection, not a container)
-			template<typename F>  static
+		// Ct * f 
+			template<typename Ct, typename F, typename T = cl_elem_type<Ct>> 
 			eIF <is_callable<F, T(T)>::value, Ct>
 		mul(const Ct& C, F f)  {
 			Ct D;
@@ -182,76 +193,15 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 			return  D;
 		};
-
-
-
 	};
 
-	namespace detail {
 
-		/////  DIV
-
-		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
-			template<typename Ct, typename X>
-			eIF <is_elem_of<X, Ct>(), cl_iterator<Ct>>
-		find_elem(Ct&& C, const X& x)   { return std::find(C.begin(), C.end(), x); };
-
-
-		// Ct / f
-			template<typename Ct, typename F>
-			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
-		find_elem(Ct&& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
-	}
-
-
-//  Ct / T   ---  find..() -> it	 
-	template<typename Ct, typename T>
-	eIF <is_container<Ct>() , cl_iterator<Ct>>
-operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
-
-
-
-//  Ct % T   ---  find..() -> bool	 
-	template<typename Ct, typename X>
-	eIF <is_container<Ct>(), bool>
-operator %       (Ct&& C, const X& x)    {  return  std::end(C) != detail::find_elem(std::forward<Ct>(C), x); };
-
-////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
-	
-/*
-		////// MUL 
-
-			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
-			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
-			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
-
-
-		// Ct * f  (temporary demo, should really return  collection, not a container)
-		//mul(const Ct& C, F f)  { };
-//  Ct * F   ---  transform(+C,-C,+D,F) -> D
+//  Ct * F   ---  transform(+C,-C,+D,F) -> D   (temporary demo, should really return  collection, not a container)
 	template<typename Ct, typename F>
-	eIF <is_container<Ct>()  &&  is_callable<F, cl_elem_type<Ct>(const cl_elem_type<Ct>&)>::value, Ct>
-operator *       (Ct& C, F f)    { 
-			typedef  cl_elem_type<Ct>   T;
-			size_t n = std::end(C)-std::begin(C);
-			Ct D;
-			ct_resizer(D, n);
-
-			std::transform(std::begin(C), endz(C), std::begin(D), (T& (*)(const T&))f);
-
-			// c-string termination
-			if (endz(C) < std::end(C))
-				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
-			return  D;
-	//return  ct_op<Ct>::template mul<F>(C, x);
- };
-*/
-
-//  Ct * F   ---  transform(+C,-C,+D,F) -> D
-	template<typename Ct, typename Second>
 	eIF <is_container<Ct>() , Ct>
-operator *       (const Ct& C, const Second& x)    {  return  ct_op<Ct>::template mul<Second>(C, x); };
+operator *       (const Ct& C, const F& f)    {  return  detail::mul(C, f); };
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
