@@ -17,48 +17,48 @@ scc 'type2name<cl_elem_type<int>          >()'
 
 
 ###  IS_CONTAINER
-scc 'is_container<vint>::value'
-scc 'is_container<vint&>::value'
-scc 'is_container<vint&&>::value'
+scc 'is_container<vint>()'
+scc 'is_container<vint&>()'
+scc 'is_container<vint&&>()'
 
-scc 'is_container<const vint>::value'
-scc 'is_container<const vint&>::value'
-scc 'is_container<const vint&&>::value'
+scc 'is_container<const vint>()'
+scc 'is_container<const vint&>()'
+scc 'is_container<const vint&&>()'
 
-scc 'is_container<int*(*)(int)>::value'
-scc 'is_container<int>::value'
-scc 'is_container<int(&)[2]>::value'
+scc 'is_container<int*(*)(int)>()'
+scc 'is_container<int>()'
+scc 'is_container<int(&)[2]>()'
 
 
 ###  HAS_PUSH_BACK
-scc 'has_push_back<vint>::value'
-scc 'has_push_back<vint&>::value'
-scc 'has_push_back<vint&&>::value'
+scc 'has_push_back<vint>()'
+scc 'has_push_back<vint&>()'
+scc 'has_push_back<vint&&>()'
 
-scc 'has_push_back<const vint&>::value'
-scc 'has_push_back<const vint&&>::value'
-scc 'has_push_back<volatile vint&>::value'
-scc 'has_push_back<int(&)[2]>::value'
+scc 'has_push_back<const vint&>()'
+scc 'has_push_back<const vint&&>()'
+scc 'has_push_back<volatile vint&>()'
+scc 'has_push_back<int(&)[2]>()'
 
 
 ###  REFNESS
-scc '__ type2name<cl_traits<vint>::value_type>(),	ref2name<cl_traits<vint>::value_type>::value; '
-scc '__ type2name<cl_traits<vint&>::value_type>(),	ref2name<cl_traits<vint&>::value_type>::value; '
-scc '__ type2name<cl_traits<vint&&>::value_type>(),	ref2name<cl_traits<vint&&>::value_type>::value; '
+scc '__ type2name<cl_traits<vint>::elem_type>(),	ref2name<cl_traits<vint>::elem_type>::value; '
+scc '__ type2name<cl_traits<vint&>::elem_type>(),	ref2name<cl_traits<vint&>::elem_type>::value; '
+scc '__ type2name<cl_traits<vint&&>::elem_type>(),	ref2name<cl_traits<vint&&>::elem_type>::value; '
 
-scc '__ type2name<cl_traits<const vint>::value_type>(),	 ref2name<cl_traits<const vint>::value_type>::value; '
-scc '__ type2name<cl_traits<const vint&>::value_type>(), ref2name<cl_traits<const vint&>::value_type>::value; '
-scc '__ type2name<cl_traits<const vint&&>::value_type>(),ref2name<cl_traits<const vint&&>::value_type>::value; '
+scc '__ type2name<cl_traits<const vint>::elem_type>(),	 ref2name<cl_traits<const vint>::elem_type>::value; '
+scc '__ type2name<cl_traits<const vint&>::elem_type>(), ref2name<cl_traits<const vint&>::elem_type>::value; '
+scc '__ type2name<cl_traits<const vint&&>::elem_type>(),ref2name<cl_traits<const vint&&>::elem_type>::value; '
 
-scc 'type2name<cl_traits<int(&)[2]>::value_type>()'
+scc 'type2name<cl_traits<int(&)[2]>::elem_type>()'
 
 ###  HAS_VALUE_TYPE
-scc 'has_value_type<int(&)[2]>::value'
-scc 'has_value_type<vint>::value'
-scc 'has_value_type<vint&>::value'
-scc 'has_value_type<vint&&>::value'
-scc 'has_value_type<const vint&>::value'
-scc 'has_value_type<volatile vint&>::value'
-scc 'has_value_type<vint&&>::value'
+scc 'has_value_type<int(&)[2]>()'
+scc 'has_value_type<vint>()'
+scc 'has_value_type<vint&>()'
+scc 'has_value_type<vint&&>()'
+scc 'has_value_type<const vint&>()'
+scc 'has_value_type<volatile vint&>()'
+scc 'has_value_type<vint&&>()'
 
 

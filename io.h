@@ -188,7 +188,7 @@ operator<<      (ostream& os, const std::tuple<TT...>& tup) {
 //	similar to ostream_iterator<T>(cout, " ")
 //	used as:	copy(V.begin(), V.end(), oi);
 
-	template<typename U, typename V, template<typename U, typename V> class CL>  void
+	template<typename U, typename V, template<typename, typename> class CL>  void
 oi_print(const CL<U,V>& v) { std::cout << v; };
 
 namespace oi_space {
@@ -197,7 +197,7 @@ namespace oi_space {
 				template<typename T>								// POD
 			oi_any_t (const T& v)				{ std::cout << v; };
 
-				template<typename U, typename V, template<typename U, typename V> class CL>	// std::pair
+				template<typename U, typename V, template<typename, typename> class CL>	// std::pair
 			oi_any_t (const CL<U,V>& v)	{ oi_print<U,V>(v); };
 		};
 
