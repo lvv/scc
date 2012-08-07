@@ -6,19 +6,21 @@
 	#include "lvv/timer.h"
 #endif
 
-void  print_line() {
-	if (!F.empty()) cout  << F[0];
-	for(int i=1;   i < (int)F.size();  i++)
-		cout  << OFS << F[i];
-	cout << ORS;
- }
+#ifndef scc_NOAWK
+	void  print_line() {
+		if (!F.empty()) cout  << F[0];
+		for(int i=1;   i < (int)F.size();  i++)
+			cout  << OFS << F[i];
+		cout << ORS;
+	 }
 
-struct buf_t;
-static buf_t	*buf;
+	struct buf_t;
+	static buf_t	*buf;
 
-static bool  read_line()  { return  buf->get_rec(RS, FS, F); };
-static bool  next_file()  { return  buf->next_file(); };
-#define		WRL	while( read_line()  ||  (next_file()  &&  read_line()) )
+	static bool  read_line()  { return  buf->get_rec(RS, FS, F); };
+	static bool  next_file()  { return  buf->next_file(); };
+	#define		WRL	while( read_line()  ||  (next_file()  &&  read_line()) )
+#endif
 
 // debug vars
 	vint		__attribute__((unused)) 	v9      {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
@@ -51,54 +53,60 @@ int main(int argc, char** argv) {
 	double z __attribute__((unused)) = 0.0;
 	double f __attribute__((unused)) = 0.0;
 
-	std::string s __attribute__((unused));
-	std::string w __attribute__((unused));
-	char  c       __attribute__((unused));
-	char *p, *q   __attribute__((unused)) = nullptr;
+	std::string s	__attribute__((unused));
+	std::string w	__attribute__((unused));
+	char  c      	__attribute__((unused));
+	char *p		__attribute__((unused)) = nullptr;
+	char *q		__attribute__((unused)) = nullptr;
 
 
 
-	char	**first_file_argv = argv+1;
+	#ifndef scc_NOAWK
+		char	**first_file_argv = argv+1;
 
-	buf = new buf_t(first_file_argv, argv+argc);	// stdio
-	// cin.sync_with_stdio(false);
+		buf = new buf_t(first_file_argv, argv+argc);	// stdio
+		// cin.sync_with_stdio(false);
 
-	////////  READ ENV
+		////////  READ ENV
 
-	// RS
-	p = std::getenv("RS");
-	if (p==nullptr)		RS = strr("\n");
-	else			RS = strr(p);
+		// RS
+		p = std::getenv("RS");
+		if (p==nullptr)		RS = strr("\n");
+		else			RS = strr(p);
 
-	// ORS
-	p = std::getenv("ORS");
-	if (p==nullptr)		ORS = strr(RS);
-	else			ORS = strr(p);
+		// ORS
+		p = std::getenv("ORS");
+		if (p==nullptr)		ORS = strr(RS);
+		else			ORS = strr(p);
 
-	// FS
-	#ifndef  scc_ifs
-		p = std::getenv("FS");
-		if (p==nullptr)		FS = strr(" ");
-		else			FS = strr(p);
-	#endif
+		// FS
+		#ifndef  scc_ifs
+			p = std::getenv("FS");
+			if (p==nullptr)		FS = strr(" ");
+			else			FS = strr(p);
+		#endif
 
-	// OFS
-	#ifndef  scc_OFS
-		p = std::getenv("OFS");
-		if (p==nullptr)		OFS = strr(FS);
-		else			OFS = strr(p);
-	#endif
+		// OFS
+		#ifndef  scc_OFS
+			p = std::getenv("OFS");
+			if (p==nullptr)		OFS = strr(FS);
+			else			OFS = strr(p);
+		#endif
 
-	// PAD
-	#ifndef  scc_PAD
-		p = std::getenv("PAD");
-		if (p==nullptr)		PAD = strr(" \t");
-		else			PAD = strr(p);
-	#endif
+		// PAD
+		#ifndef  scc_PAD
+			p = std::getenv("PAD");
+			if (p==nullptr)		PAD = strr(" \t");
+			else			PAD = strr(p);
+		#endif
 
-	// PAD_tab
-	for (const char *p = PAD.b;  p!=PAD.e;  p++)
-		PAD_tab[size_t(*p)] = 1;
+		// PAD_tab
+		for (const char *p = PAD.b;  p!=PAD.e;  p++)
+			PAD_tab[size_t(*p)] = 1;
+
+	#else // ^NOAWK 
+		#define ORS "\n"
+	#endif // ^NOAWK 
  
 	// BENCHMARK
 	#ifdef  scc_BENCHMARK
@@ -127,12 +135,15 @@ int main(int argc, char** argv) {
 		///////////////////////////////////////////////////////////
 
 		if (is_header) {
+			#ifndef scc_NOAWK
 			read_line();
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
+			#endif
 		}
 
 		if (is_stream)  {
+			#ifndef scc_NOAWK
 			while (read_line()) {
 				#include "/tmp/snippet.h"
 
@@ -143,11 +154,14 @@ int main(int argc, char** argv) {
 
 				if (is_p)  print_line();
 			}
+			#endif
 		} else {
 			#include "/tmp/snippet.h"
 			if (is_print_last)  cout << ORS;
 		}
 	}
 
+	#ifndef scc_NOAWK
 	delete buf;
+	#endif
 }

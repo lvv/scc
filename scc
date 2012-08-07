@@ -48,12 +48,11 @@ gch_dir=.gch
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts npf:vBi:F:o:x:OgHtbr opt;  do
+while getopts Anpf:vBi:F:o:x:OgHtbr opt;  do
 	case $opt in
-		#n)	n_opt=1;  is_stream=1;;
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
-		#p)	p_opt=1;  is_stream=1;;
 		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
+		A)	CXXFLAGS+=" -Dscc_NOAWK " ;;
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
