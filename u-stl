@@ -63,9 +63,14 @@ scc 'copy(v9/2, v9/5, oi)'
 scc '__ v9 / 3 - +v9;'
 scc '__ v9 / [](int i){return i==3;} - +v9;'
 
-# Ct * F
+# Ct * (T(*)(T))F  	same type 
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc 's="Hello";  __  *(s / islower);'
+
+# Ct * (R(*)(T))F    -- type convertion  
+scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
+#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
+
 
 # BEGIN/ END
 scc  ' *+v9=-33;  __ *+vint{1,2}, v9;'

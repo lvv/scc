@@ -176,31 +176,32 @@ operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_
 			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
 			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
 			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
-
-		// Ct * f 
-			template<typename Ct, typename F, typename T = cl_elem_type<Ct>> 
-			eIF <is_callable<F, T(T)>::value, Ct>
-		mul(const Ct& C, F f)  {
-			Ct D;
-			size_t n = std::end(C)-std::begin(C);
-			ct_resizer(D, n);
-
-			std::transform(std::begin(C), endz(C), std::begin(D), f);
-
-			// c-string termination
-			if (endz(C) < std::end(C))
-				* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
-			return  D;
-		};
 	};
 
 
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D   (temporary demo, should really return  collection, not a container)
-	template<typename Ct, typename F>
-	eIF <is_container<Ct>() , Ct>
-operator *       (const Ct& C, const F& f)    {  return  detail::mul(C, f); };
 
+	template<
+		typename Ct,
+		typename F,
+		typename T = cl_elem_type<Ct>,
+		//typename Ret=typename std::function<rm_qualifier<F>>::result_type,
+		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
+	> 
+	eIF <is_container<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
+operator *       (Ct&& C, F f)    {
+	std::vector<Ret> D;
+	size_t n = std::end(C)-std::begin(C);
+	detail::ct_resizer(D, n);
+
+	std::transform(std::begin(C), endz(C), std::begin(D), f);
+
+	// c-string termination
+	if (endz(C) < std::end(C))
+		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+	return  D;
+ };
 
 
 
