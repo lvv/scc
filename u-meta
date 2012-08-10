@@ -62,3 +62,7 @@ scc 'has_value_type<volatile vint&>()'
 scc 'has_value_type<vint&&>()'
 
 
+### ITERATORS
+scc 'is_input_iterator<vint::const_iterator>()  &&  ! is_input_iterator<void>()  &&  ! is_input_iterator<char*>()  && ! is_input_iterator<char[]>()  && ! is_input_iterator<std::true_type>()'
+
+

@@ -6,6 +6,9 @@
 #include "scc/io.h"
 #include "scc/regex.h"
 
+
+// list af all C/C++ headers --- http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c
+
 //////////////////////////////////////////////////////////////////// C
 
 #include <cstdlib>

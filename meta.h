@@ -200,46 +200,28 @@ template<typename T, typename Ct>     constexpr bool   is_elem_of()        { ret
 template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
-// iterator_reference<T>::type operator*(void) const;
-// iterator_pointer<T>::type operator->(void) const;
-// T & operator++(void);
-// T operator++(int);
 
-/*
-	template<typename T>
-struct is_iterator { //: std::enable_if<std::is_same<T, decltype(std::declval<T>()++)>::value, std::true_type>::type {
-					static char				test (...);	// anything else
-	template<typename  U>		static void *				test (decltype((*std::declval<U>)()++)**);	// Pointer
-	//template<typename  U, size_t N>	static void *			test (decltype(std::declval<U>()++)(*)[N]);	// C-array
-	//template<typename  U>		static void*				test (U**);					// Pointer
-	template<typename  U>		static typename U::iterator_category*	test (U*);					// Iterator
-
-	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == sizeof(void *);
+	template<typename T>    
+	constexpr bool  
+is_iterator()        {
+	return  has_iterator_category<T>() 
+		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value);
 };
-*/
-	template<typename T>
-struct is_iterator_t {
-	static const bool value =
-		has_iterator_category<T>()  ||
-		(std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value)
-	; 
-};
-template<typename T>     constexpr bool   is_iterator()        { return  is_iterator_t<T>::value; };
 
 
 	template<typename T>
-struct is_input_iterator {
-					static char				test (...);	// anything else
-	template<typename  U>		static void *				test (decltype(std::declval<U>()++)**);	// Pointer
-	template<typename  U, size_t N>	static void *				test (decltype(std::declval<U>()++)(*)[N]);	// C-array
-
+struct is_input_iterator_t {
+					static int16_t	test (...);					// no match
+	template<typename  U>		static int8_t	test (decltype(std::declval<U>()++)**);		// Pointer
+	template<typename  U, size_t N>	static int8_t	test (decltype(std::declval<U>()++)(*)[N]);	// C-array
 	template<typename  U>		static 
-		eIF<std::is_same<typename U::iterator_category, std::input_iterator_tag>::value, typename U::iterator_category*>
-										test (U*);	// Iterator
+		eIF<std::is_base_of<std::input_iterator_tag, typename U::iterator_category>::value, int8_t>
+							test (U*);					// Iterator 
 
-	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == sizeof(void *);
+	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == 1;
 };
 
+template<typename T>     constexpr bool   is_input_iterator()        { return  is_input_iterator_t<T>::value; };
 
 
 
