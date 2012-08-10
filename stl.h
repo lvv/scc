@@ -189,7 +189,28 @@ operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_
 		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
 	> 
 	eIF <is_container<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
-operator *       (Ct&& C, F f)    {
+operator *       (Ct&& C, const F& f)    {
+	std::vector<Ret> D;
+	size_t n = std::end(C)-std::begin(C);
+	detail::ct_resizer(D, n);
+
+	std::transform(std::begin(C), endz(C), std::begin(D), f);
+
+	// c-string termination
+	if (endz(C) < std::end(C))
+		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+	return  D;
+ };
+
+	// overload for :  std::abs
+	template<
+		typename Ct,
+		typename T = cl_elem_type<Ct>,
+		typename Ret= T
+	> 
+	eIF <is_container<Ct>(), std::vector<Ret>>
+operator *=       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
 	size_t n = std::end(C)-std::begin(C);
 	detail::ct_resizer(D, n);

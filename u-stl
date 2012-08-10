@@ -70,6 +70,7 @@ scc 's="Hello";  __  *(s / islower);'
 # Ct * (R(*)(T))F    -- type convertion  
 scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
 #scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
+#scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
 
 
 # BEGIN/ END

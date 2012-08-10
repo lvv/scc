@@ -72,8 +72,8 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
 		template <typename T>										\
 	struct NAME##_t {											\
-		template <typename U,  typename M = typename U::MEMBER>		static char	test(U* u);	\
-		template <typename U>						static long	test(...);	\
+		template <typename U,  typename M = typename U::MEMBER>		static int8_t	test(U* u);	\
+		template <typename U>						static int16_t	test(...);	\
 		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
 	}; 													\
 	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
@@ -82,8 +82,8 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 #define DEF_HAS_METHOD(NAME,METHOD)										\
 		template <typename T>										\
 	struct NAME##_t {											\
-		template <typename U,  typename F = decltype (((U*)0)->METHOD)>	static char	test(U* u);	\
-		template <typename U>						static long	test(...);	\
+		template <typename U,  typename F = decltype (((U*)0)->METHOD)>	static int8_t	test(U* u);	\
+		template <typename U>						static int16_t	test(...);	\
 		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
 	}; 													\
 	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
@@ -116,11 +116,11 @@ struct is_container_t {
 			typename S = decltype (((U*)0)->size()),
 			typename I = typename U::const_iterator
 		>
-		static char
+		static int8_t
 	test(U* u);
 
 		template <typename U>
-		static long
+		static int16_t
 	test(...);
 
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
@@ -160,11 +160,11 @@ struct is_stack_t {
 			typename POP	= decltype (((U*)0)->pop()),
 			typename TOP	= decltype (((U*)0)->top())
 		>
-		static char
+		static int8_t
 	test(U* u);
 
 		template <typename U>
-		static long
+		static int16_t
 	test(...);
 
 	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
@@ -182,11 +182,11 @@ struct is_queue_t {
 			typename FRONT	= decltype (((U*)0)->front()),
 			typename BACK	= decltype (((U*)0)->back())
 		>
-		static char
+		static int8_t
 	test(U* u);
 
 		template <typename U>
-		static long
+		static int16_t
 	test(...);
 
 	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
@@ -242,15 +242,15 @@ template<typename F, typename Signature> struct is_callable;
 
 		template<typename F, typename R, typename... Args>
 struct is_callable<F, R(Args...)> {
-		template<typename>   static char
+		template<typename>   static int8_t
 	test(...);
 		template<typename U> static
 		eIF<
 			std::is_same<decltype(std::declval<U>()(std::declval<Args>()...)), R>::value,
-			void*
+			int16_t
 		>
 	test(int);
-	static const bool value = (sizeof(test<F>(0)) == sizeof(void*));
+	static const bool value = (sizeof(test<F>(0)) == sizeof(int16_t));
 };
 	// can not make is_foo<R<Args...>()  constexpr func - needs partial specialization
 
