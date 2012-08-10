@@ -4,7 +4,7 @@ include::/tmp/t.ad[]
 
 * Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
 // * License:  httpx://en.wikipedia.org/wiki/Public_domain[Public Domain]
-* Requires:  +++ C++11 +++   compiler (tested with httpx://gcc.gnu.org/[GCC-4.7])
+* Requires:  +++ C++11 +++   compiler (tested with GCC-4.7, CLANG-3.2)
 
 +++ </small> +++
 
@@ -493,19 +493,24 @@ Install
 -----------------------------------------
 git clone http://github.com/lvv/scc scc
 cd scc
-./scc -r
 echo "PATH+=:$PWD/scc/" >> ~/.profile
 . ~/.profile
 scc '"SCC is installed"'
 ---------------------------------------
 
-This project is in alpha stage. Version with "latest" git tag (if any) and documented features are more stable.
-SCC uses C+11 extensively and some GCC extensions, so currently it
-can work only with GCC-4.7 (or later).   Other compilers were not tested.
-Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
+This project is in alpha stage. Version with "latest" git tag (if any) and
+documented features are more stable.  SCC uses C+11 extensively and it was
+developed with GCC-4.7.  CLANG-3.2 now can execute simple snippets which do not use
+`awk.h`, `stl.h` and `io.h` functionality. 
 
-You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with `scc -r`
-Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
+----------------------------------------------
+CXX=clang++
+CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
+scc 2+2
+4
+----------------------------------------------
+
+Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
 +++ C++ +++ parser is semi-broken.  It sometimes incorrectly parse (to extract
 last expression) multi-line scripts or expressions with "{}". As workaround
@@ -513,6 +518,22 @@ terminate every line with semicolon (even for comment-line) and do not use
 print-if-not-terminated-with-semicolon feature.
 
 If you need to use it with older GCC - use v0.1.
+
+Pre-compiled headers
+~~~~~~~~~~~~~~~~~~~~
+
+For GCC you can enable precompiled headers, which will allow slightly (20%) faster compile:
+
+-----------------
+cd path-to-scc-home
+scc -r
+ls -l .gch
+-----------------
+
+Directory `.gch` will be created.
+You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with the same command - `scc -r`
+Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
+
 
 
 

@@ -1,11 +1,11 @@
 
 ############################################################################################### make + install
 make:
-	echo "aready made"
+	@echo "done"
 
 PREFIX=/usr/local
 install:
-	echo "not implemented - just use this (scc/) directory."
+	@echo "not implemented - just use this (scc/) directory."
 #	mkdir -p  ${PREFIX}/bin/
 #	cp -v scc ${PREFIX}/bin/
 #	mkdir -p  ${PREFIX}/include/scc/
