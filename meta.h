@@ -14,6 +14,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////  META META
 
 struct no_type{};
+template<class T> struct identity_t{ typedef T type; };
+template<class T> using  identity  = typename identity_t<T>::type;
 
 template<class From, class To> struct copy_rcv			           { typedef To type; };
 template<class From, class To> struct copy_rcv<From const            , To> { typedef typename copy_rcv<From, To> ::type const           type; };

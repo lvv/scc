@@ -203,6 +203,7 @@ operator *       (Ct&& C, const F& f)    {
 	return  D;
  };
 
+
 	// overload for :  std::abs
 	template<
 		typename Ct,
@@ -224,14 +225,49 @@ operator *       (Ct&& C, T (*f)(T) )    {
 	return  D;
  };
 
+
+	// overload for :  lamdas
+	template<
+		typename Ct,
+		typename T = cl_elem_type<Ct>,
+		typename Ret= T
+	> 
+	eIF <is_container<Ct>(), std::vector<Ret>>
+operator *       (Ct&& C, std::function<T(T)> f )    {
+	std::vector<Ret> D;
+	size_t n = std::end(C)-std::begin(C);
+	detail::ct_resizer(D, n);
+
+	std::transform(std::begin(C), endz(C), std::begin(D), f);
+
+	// c-string termination
+	if (endz(C) < std::end(C))
+		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
+
+	return  D;
+ };
+
+
 //  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
+	// overload for: std::min
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_container<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
 	return  std::accumulate(i, std::end(std::forward<Ct>(C)), C.front(), f);
+ };
+
+
+	// overload for: lambda, std::plus
+	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
+	eIF <is_container<Ct>(), R>
+operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
+	auto i = std::begin(std::forward<Ct>(C));
+	std::advance(i,1);
+	const T init = C.front();
+	return  std::accumulate(i, std::end(std::forward<Ct>(C)), init, f);
  };
 
 

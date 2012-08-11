@@ -66,11 +66,15 @@ scc '__ v9 / [](int i){return i==3;} - +v9;'
 # Ct * F 	
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc 's="Hello";  __  *(s / islower);'
+scc '__ v9 * [](int x){return x+10;};'
+scc '__ v9 * bind(std::plus<int>(),10,_1);'
 # todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
 
 # Ct || F
 scc '__ (v9 || min), (mk_v9()||min);'
-# todo scc 'vint{1,5} || std::plus<int>();'
+scc '__ (vint{1,5} || function<int(int,int)>(std::plus<int>()));'
+scc 'v9 || std::plus<int>();'
+scc 'v9 || [](int a, int b){return min(a,b);};'
 
 
 # Ct * (R(*)(T))F    -- type convertion  
