@@ -210,7 +210,7 @@ operator *       (Ct&& C, const F& f)    {
 		typename Ret= T
 	> 
 	eIF <is_container<Ct>(), std::vector<Ret>>
-operator *=       (Ct&& C, T (*f)(T) )    {
+operator *       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
 	size_t n = std::end(C)-std::begin(C);
 	detail::ct_resizer(D, n);
@@ -222,6 +222,16 @@ operator *=       (Ct&& C, T (*f)(T) )    {
 		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
 
 	return  D;
+ };
+
+//  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
+
+	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
+	eIF <is_container<Ct>(), R>
+operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
+	auto i = std::begin(std::forward<Ct>(C));
+	std::advance(i,1);
+	return  std::accumulate(i, std::end(std::forward<Ct>(C)), C.front(), f);
  };
 
 

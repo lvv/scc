@@ -63,9 +63,15 @@ scc 'copy(v9/2, v9/5, oi)'
 scc '__ v9 / 3 - +v9;'
 scc '__ v9 / [](int i){return i==3;} - +v9;'
 
-# Ct * (T(*)(T))F  	same type 
+# Ct * F 	
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc 's="Hello";  __  *(s / islower);'
+# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
+
+# Ct || F
+scc '__ (v9 || min), (mk_v9()||min);'
+# todo scc 'vint{1,5} || std::plus<int>();'
+
 
 # Ct * (R(*)(T))F    -- type convertion  
 scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
