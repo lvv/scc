@@ -93,8 +93,9 @@ struct  numeric_range {
 		const_iterator	operator++()		{ current+=range.step;  return *this; }
 		const_iterator	operator++(int)		{ auto tmp=*this;  current+=range.step;  return tmp; }
 
-		bool		operator==(const_iterator rhs)	const	{ return  abs(current - rhs.current) <= range.step; }
-		bool		operator!=(const_iterator rhs)	const	{ return  abs(current - rhs.current) >  range.step; }
+		bool		operator==(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) <= range.step; }
+		bool		operator!=(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) >  range.step; }
+		bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 
 	};
 

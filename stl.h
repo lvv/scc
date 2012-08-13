@@ -181,6 +181,7 @@ operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_
 
 //  Ct * F   ---  transform(+C,-C,+D,F) -> D   (temporary demo, should really return  collection, not a container)
 
+	// overload for generic Ret 
 	template<
 		typename Ct,
 		typename F,
@@ -204,7 +205,7 @@ operator *       (Ct&& C, const F& f)    {
  };
 
 
-	// overload for :  std::abs
+	// overload for :  Ret == T  
 	template<
 		typename Ct,
 		typename T = cl_elem_type<Ct>,
@@ -213,10 +214,10 @@ operator *       (Ct&& C, const F& f)    {
 	eIF <is_container<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
-	size_t n = std::end(C)-std::begin(C);
-	detail::ct_resizer(D, n);
+	//size_t n = std::end(C)-std::begin(C);
+	//detail::ct_resizer(D, n);
 
-	std::transform(std::begin(C), endz(C), std::begin(D), f);
+	std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
 
 	// c-string termination
 	if (endz(C) < std::end(C))
@@ -226,7 +227,7 @@ operator *       (Ct&& C, T (*f)(T) )    {
  };
 
 
-	// overload for :  lamdas
+	// overload for :  lambdas
 	template<
 		typename Ct,
 		typename T = cl_elem_type<Ct>,
