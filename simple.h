@@ -18,6 +18,13 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 //#include <cctype>
 #include <cmath>
+	using	std::abs;
+	using	std::floor;
+	using	std::ceil;
+	using	std::trunc;
+	using	std::round;
+	using	std::signbit;
+
 #include <cassert>
 
 
