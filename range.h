@@ -129,10 +129,6 @@ range(T1 low,  T2 high,  T3 step=1) { return numeric_range<T>(low, high, step); 
 range(I b, I e) { return iterator_range<I>(b,e); };
 
 
-	template<typename Ct>
-	eIF<is_container<Ct>(), iterator_range<cl_iterator<Ct>>>
-range(Ct& C) { return iterator_range<cl_iterator<Ct>>(std::begin(C), std::end(C)); };
-
 template<typename T   ,  size_t N> iterator_range<T   *> range(T    (&C)[N])  { return iterator_range<T   *>(std::begin(C), std::end(C)); };
 template<                size_t N> iterator_range<char*> range(char (&C)[N])  { return iterator_range<char*>(std::begin(C), endz    (C)); };
 template<                size_t N> iterator_range<const char*> range(const char (&C)[N])  { return iterator_range<const char*>(std::begin(C), endz    (C)); };
@@ -151,9 +147,10 @@ static  __attribute__((unused)) struct range_converter_t {} rng;
 
 /////////////////////////////////////////////////////////////////// RNG -- range proxy
 
+/*
 	template<typename Ct>
 	eIF<
-		is_container<Ct>(),
+		is_collection<Ct>(),
 		iterator_range<typename container_iterator<Ct>::type>
 	>
 operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
@@ -165,18 +162,18 @@ operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::e
 
 	template<typename Ct>
 	eIF<
-		is_container<Ct>(),
+		is_collection<Ct>(),
 		iterator_range<typename container_iterator<Ct>::type>
 	>
 operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
-
+*/
 
 /*
 static  __attribute__((unused)) struct iot_t {} iot;
 
 	template<typename Ct>
 	typename std::enable_if<
-		is_container<Ct>(),
+		is_collection<Ct>(),
 		iterator_range<typename container_iterator<Ct>::type>
 	>::type
 operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
@@ -194,7 +191,7 @@ template<typename T>    constexpr bool   is_range()        { return  is_range_t<
 //  Ct1 | Ct2   ---  search() --> range	   
 /*
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>(),  iterator_range&>::type
+	typename std::enable_if <is_collection<Ct>(),  iterator_range&>::type
 operator |       (Ct& C1, const Ct& C2)    { 
 	auto it = search(C1.begin(), C1.end(), C2.begin(), C2.end());
 	return  iterator_range(it, advance(it, distance(C2.end(), C2.begin())));
@@ -202,13 +199,13 @@ operator |       (Ct& C1, const Ct& C2)    {
 
 //  Ct1 / Ct2   ---  search() --> it
 	template<typename Ct>
-	typename std::enable_if <is_container<Ct>(),  typename Ct::iterator>::type
+	typename std::enable_if <is_collection<Ct>(),  typename Ct::iterator>::type
 operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 */
 
 /////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
 template<typename T>  constexpr bool   is_collection()     {
-	return      is_container<T>() 
+	return      is_collection<T>() 
 		||  is_stack<T>() 
 		||  is_queue<T>() 
 		||  is_range<T>()

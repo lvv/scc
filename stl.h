@@ -25,13 +25,13 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>		// do we need to care about r-value-ness here?
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
 operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-values
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Ct>
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
 operator-      (Ct&& C) { return  std::end(C); };
 
 
@@ -51,11 +51,11 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 
 	template<typename Ct>
-	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 
@@ -77,12 +77,12 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 // --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	eIF <is_container<Ct>(), Ct>
+	eIF <is_collection<Ct>(), Ct>
 operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C); };
 
 
 	template<typename Ct>
-	eIF <is_container<Ct>(), Ct>
+	eIF <is_collection<Ct>(), Ct>
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
@@ -159,14 +159,14 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 //  Ct / T   ---  find..() -> it	 
 	template<typename Ct, typename T>
-	eIF <is_container<Ct>() , cl_iterator<Ct>>
+	eIF <is_collection<Ct>() , cl_iterator<Ct>>
 operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
 
 
 
 //  Ct % T   ---  find..() -> bool	 
 	template<typename Ct, typename T>
-	eIF <is_container<Ct>(), bool>
+	eIF <is_collection<Ct>(), bool>
 operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
@@ -188,7 +188,7 @@ operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_
 		//typename Ret=typename std::function<rm_qualifier<F>>::result_type,
 		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
 	> 
-	eIF <is_container<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
+	eIF <is_collection<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
 operator *       (Ct&& C, const F& f)    {
 	std::vector<Ret> D;
 	size_t n = std::end(C)-std::begin(C);
@@ -210,7 +210,7 @@ operator *       (Ct&& C, const F& f)    {
 		typename T = cl_elem_type<Ct>,
 		typename Ret= T
 	> 
-	eIF <is_container<Ct>(), std::vector<Ret>>
+	eIF <is_collection<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
 	size_t n = std::end(C)-std::begin(C);
@@ -232,7 +232,7 @@ operator *       (Ct&& C, T (*f)(T) )    {
 		typename T = cl_elem_type<Ct>,
 		typename Ret= T
 	> 
-	eIF <is_container<Ct>(), std::vector<Ret>>
+	eIF <is_collection<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, std::function<T(T)> f )    {
 	std::vector<Ret> D;
 	size_t n = std::end(C)-std::begin(C);
@@ -252,7 +252,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 
 	// overload for: std::min
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
-	eIF <is_container<Ct>(), R>
+	eIF <is_collection<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
@@ -262,7 +262,7 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 
 	// overload for: lambda, std::plus
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
-	eIF <is_container<Ct>(), R>
+	eIF <is_collection<Ct>(), R>
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);

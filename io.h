@@ -102,7 +102,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 
 // SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Ct >
-	eIF<is_container<Ct>()  &&  !is_ioable_t<Ct>::value, std::ostream&>
+	eIF<is_collection<Ct>()  &&  !is_ioable_t<Ct>::value, std::ostream&>
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
@@ -208,7 +208,7 @@ namespace oi_space {
 		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
 
 			template<typename Ct >
-			eIF<is_container<Ct>(),  void>
+			eIF<is_collection<Ct>(),  void>
 		operator=(const Ct& C)  {
 			copy(C.begin(),  C.end(),  *this);
 		}
@@ -249,7 +249,7 @@ struct in_t {
 
 	// SEQ-CONT
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value,  void>
+		eIF<is_collection<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value,  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -259,7 +259,7 @@ struct in_t {
 
 	// SET
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
+		eIF<is_collection<Ct>()  &&  has_1arg_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		C.clear(); 
@@ -269,7 +269,7 @@ struct in_t {
 
 	// MAP
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
+		eIF<is_collection<Ct>()  &&  has_1arg_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::key_type	  k;
 		typename Ct::mapped_type  m;
@@ -294,7 +294,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value, std::istream& >
+		eIF<is_collection<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value, std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
@@ -368,7 +368,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
+		eIF<is_collection<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
@@ -378,7 +378,7 @@ operator>>      (std::istream& is, Ct& C)    {
 
 // MAP
 		template<typename Ct>
-		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
+		eIF<is_collection<Ct>()  &&  has_1arg_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::key_type	  k;
 	typename Ct::mapped_type  m;
