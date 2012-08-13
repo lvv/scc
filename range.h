@@ -13,7 +13,7 @@
 
 #include "scc/meta.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////  RANGE
+/////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE
 
 	struct range_tag{};
 
@@ -56,11 +56,66 @@ struct  iterator_range {
 };
 
 
+/////////////////////////////////////////////////////////////////////////////////////////  NUMERIC_RANGE
+
+
+	template<typename T>
+struct  numeric_range {
+
+		typedef		void		iterator;
+		//typedef		iterator	const_iterator;
+		typedef		T		value_type;
+		typedef		size_t		difference_type;
+		typedef		size_t		size_type;
+		typedef		const T*	const_pointer;
+		typedef		const T*	pointer;
+		typedef		const T&	const_reference;
+		typedef		const_reference	reference;
+
+	struct	const_iterator {
+		explicit const_iterator (const numeric_range<T>& range, T init=end_value) : range(range),  current(init) {};
+
+			typedef		std::input_iterator_tag		iterator_category;
+
+			typedef		T		value_type;
+			typedef		size_t		difference_type ;
+			typedef		size_t		size_type ;
+			typedef		const T*	const_pointer ;
+			typedef		const_pointer	pointer ;
+			typedef		const T&	const_reference ;
+			typedef		const_reference	reference ;
+
+		const numeric_range<T>&		range;
+		T				current;
+
+		const_reference	operator*()	const	{ return   current; }
+		const_pointer	operator->()	const	{ return  &current; }
+		const_iterator	operator++()		{ current+=range.step;  return *this; }
+		const_iterator	operator++(int)		{ auto tmp=*this;  current+=range.step;  return tmp; }
+		bool		operator==(const_iterator rhs)	const	{ return current == rhs.current; }
+		bool		operator!=(const_iterator rhs)	const	{ return current != rhs.current; }
+
+	};
+
+
+	T low, high, step;
+	const static T end_value = std::numeric_limits<T>::max();
+
+	// CTOR
+	numeric_range()  : low(T()), high(T()), step(T())  {};
+	numeric_range(T low, T high, T step=1)  : low(low), high(high), step(step) {};
+
+
+	const_iterator	begin() const	{ return const_iterator(*this, low); };
+	const_iterator	end()   const	{ return const_iterator(*this, high); };
+
+};
+
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
-	template<typename I>
-	eIF<is_iterator<I>(), iterator_range<I>>
-operator, (I b, I e)  { return iterator_range<I>(b,e); };
+//	template<typename I>
+//	eIF<is_iterator<I>(), iterator_range<I>>
+//operator, (I b, I e)  { return iterator_range<I>(b,e); };
 
 ////////////////////////////////////////////////////////////////  RANGE() -- makes range
 

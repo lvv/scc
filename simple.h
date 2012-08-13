@@ -238,6 +238,10 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::greater_equal;
 	using	std::less_equal;
 
+	using	std::bit_and;
+	using	std::bit_or;
+	using	std::bit_xor;
+
 	using	std::placeholders::_1;
 	using	std::placeholders::_2;
 	using	std::placeholders::_3;
