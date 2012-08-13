@@ -92,14 +92,15 @@ struct  numeric_range {
 		const_pointer	operator->()	const	{ return  &current; }
 		const_iterator	operator++()		{ current+=range.step;  return *this; }
 		const_iterator	operator++(int)		{ auto tmp=*this;  current+=range.step;  return tmp; }
-		bool		operator==(const_iterator rhs)	const	{ return current == rhs.current; }
-		bool		operator!=(const_iterator rhs)	const	{ return current != rhs.current; }
+
+		bool		operator==(const_iterator rhs)	const	{ return  abs(current - rhs.current) <= range.step; }
+		bool		operator!=(const_iterator rhs)	const	{ return  abs(current - rhs.current) >  range.step; }
 
 	};
 
 
 	T low, high, step;
-	const static T end_value = std::numeric_limits<T>::max();
+	constexpr static T end_value = std::numeric_limits<T>::max();
 
 	// CTOR
 	numeric_range()  : low(T()), high(T()), step(T())  {};
@@ -110,6 +111,10 @@ struct  numeric_range {
 	const_iterator	end()   const	{ return const_iterator(*this, high); };
 
 };
+
+	template<typename T>
+	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
+range(T low,  identity<T> high,  identity<T> step=1) { return numeric_range<T>(low, high, step); };
 
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
@@ -179,6 +184,7 @@ operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 
 template<typename T>	struct  is_range		: std::false_type {};
 template<typename T>	struct  is_range<iterator_range<T>>	: std::true_type  {};
+template<typename T>	struct  is_range<numeric_range<T>>	: std::true_type  {};
 
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
