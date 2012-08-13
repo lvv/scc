@@ -182,9 +182,10 @@ static  __attribute__((unused)) struct iot_t {} iot;
 operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 */
 
-template<typename T>	struct  is_range		: std::false_type {};
+template<typename T>	struct  is_range			: std::false_type {};
 template<typename T>	struct  is_range<iterator_range<T>>	: std::true_type  {};
 template<typename T>	struct  is_range<numeric_range<T>>	: std::true_type  {};
+template<typename T>     constexpr bool   is_range()        { return  is_range_t<T>::value; };
 
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
