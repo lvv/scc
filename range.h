@@ -125,6 +125,7 @@ operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 template<typename T>	struct  is_range		: std::false_type {};
 template<typename T>	struct  is_range<iterator_range<T>>	: std::true_type  {};
 
+
 ////////////////////////////////////////////////////////////////  RANGE OPS
 
 

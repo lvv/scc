@@ -222,9 +222,22 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	// function
 	using	std::function;
 	using	std::bind;
+
+	using	std::plus;
+	using	std::minus;
+	using	std::multiplies;
+	using	std::divides;
+	using	std::modulus;
+	using	std::negate;
+
 	using	std::less;
 	using	std::greater;
 	using	std::equal;
+	using	std::equal_to;
+	using	std::not_equal_to;
+	using	std::greater_equal;
+	using	std::less_equal;
+
 	using	std::placeholders::_1;
 	using	std::placeholders::_2;
 	using	std::placeholders::_3;
