@@ -11,7 +11,7 @@
 #include <tuple>
 */
 
-#include "scc/meta.h"
+#include "meta.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE
 
@@ -112,9 +112,9 @@ struct  numeric_range {
 
 };
 
-	template<typename T>
+	template<class T1, class T2, class T3, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
-range(T low,  identity<T> high,  identity<T> step=1) { return numeric_range<T>(low, high, step); };
+range(T1 low,  T2 high,  T3 step=1) { return numeric_range<T>(low, high, step); };
 
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
@@ -182,10 +182,10 @@ static  __attribute__((unused)) struct iot_t {} iot;
 operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 */
 
-template<typename T>	struct  is_range			: std::false_type {};
-template<typename T>	struct  is_range<iterator_range<T>>	: std::true_type  {};
-template<typename T>	struct  is_range<numeric_range<T>>	: std::true_type  {};
-template<typename T>     constexpr bool   is_range()        { return  is_range_t<T>::value; };
+template<typename T>	struct  is_range_t			: std::false_type {};
+template<typename T>	struct  is_range_t<iterator_range<T>>	: std::true_type  {};
+template<typename T>	struct  is_range_t<numeric_range<T>>	: std::true_type  {};
+template<typename T>    constexpr bool   is_range()        { return  is_range_t<T>::value; };
 
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
@@ -206,5 +206,16 @@ operator |       (Ct& C1, const Ct& C2)    {
 operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
 */
 
+/////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
+template<typename T>  constexpr bool   is_collection()     {
+	return      is_container<T>() 
+		||  is_stack<T>() 
+		||  is_queue<T>() 
+		||  is_range<T>()
+	;
+ };
+
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
+template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
 #endif	// LVV_STL_H

@@ -18,7 +18,7 @@
 	using	std::endl;
 	using	std::ostream;
 
-#include "meta.h"
+#include "range.h"
 
 struct  io_t {
 	std::streambuf  *sb;
