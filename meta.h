@@ -115,7 +115,7 @@ struct is_container_t {
 
 		template <
 			typename U,
-			typename S = decltype (((U*)0)->size()),
+			//typename S = decltype (((U*)0)->size()),
 			typename I = typename U::const_iterator
 		>
 		static int8_t
@@ -133,19 +133,6 @@ template<typename T, size_t N>	struct  is_container_t <T(&)[N]>		: std::true_typ
 template<typename T, size_t N>	struct  is_container_t <std::array<T,N>>	: std::true_type { };
 
 template<typename T>     constexpr bool   is_container()        { return  is_container_t<T>::value; };
-
-template<typename T>		struct is_collection_t : is_container_t<T> {};
-template<typename T>     constexpr bool   is_collection()        { return  is_collection_t<T>::value; };
-
-/*
-template<typename T>  constexpr bool   XXXis_collection()     {
-	return      is_container<T>() 
-		||  is_stack<T>() 
-		||  is_queue<T>() 
-		||  is_range<T>()
-	;
- };
-*/
 
 
 template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
@@ -186,8 +173,6 @@ struct is_stack_t {
 };
 template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<T>::value; };
 
-template<typename T>	struct  is_collection_t <std::stack<T>>	: std::true_type { };
-
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_QUEUE
 	template <typename T>
@@ -210,7 +195,6 @@ struct is_queue_t {
 };
 template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<T>::value; };
 
-template<typename T>	struct  is_collection_t <std::queue<T>>	: std::true_type { };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
