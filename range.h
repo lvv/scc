@@ -145,6 +145,7 @@ range(char* p) { auto pp=p; while (*p) ++p; return iterator_range<char*>(pp,p); 
 */
 
 template<typename I>	struct  is_container_t <iterator_range<I>>	: std::true_type { };
+template<typename T>	struct  is_container_t <numeric_range<T>>	: std::true_type { };
 
 static  __attribute__((unused)) struct range_converter_t {} rng;
 

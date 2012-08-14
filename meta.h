@@ -115,7 +115,7 @@ struct is_container_t {
 
 		template <
 			typename U,
-			typename S = decltype (((U*)0)->size()),
+			//typename S = decltype (((U*)0)->size()),
 			typename I = typename U::const_iterator
 		>
 		static int8_t
@@ -128,7 +128,7 @@ struct is_container_t {
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_container_t <T[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_container_t <T[N]>			: std::true_type { };
 template<typename T, size_t N>	struct  is_container_t <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_container_t <std::array<T,N>>	: std::true_type { };
 
