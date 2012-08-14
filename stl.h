@@ -26,7 +26,7 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 	template<typename Ct>		// do we need to care about r-value-ness here?
 	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
-operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-values
+operator+      (Ct&& C) { return std::begin(C); };
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)

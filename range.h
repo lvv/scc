@@ -95,8 +95,7 @@ struct  numeric_range {
 
 		bool		operator==(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) <= range.step; }
 		bool		operator!=(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) >  range.step; }
-		bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
-
+		//bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 	};
 
 
@@ -113,7 +112,7 @@ struct  numeric_range {
 
 };
 
-	template<class T1, class T2, class T3, class T=decltype(T1()+T2()+T3())>
+	template<class T1, class T2, class T3=T1, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
 range(T1 low,  T2 high,  T3 step=1) { return numeric_range<T>(low, high, step); };
 
