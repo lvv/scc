@@ -62,8 +62,6 @@ struct  iterator_range {
 	template<typename T>
 struct  numeric_range {
 
-		typedef		void		iterator;
-		//typedef		iterator	const_iterator;
 		typedef		T		value_type;
 		typedef		size_t		difference_type;
 		typedef		size_t		size_type;
@@ -98,6 +96,7 @@ struct  numeric_range {
 		//bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 	};
 
+		typedef		const_iterator		iterator;
 
 	T low, high, step;
 	constexpr static T end_value = std::numeric_limits<T>::max();
