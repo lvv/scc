@@ -62,8 +62,7 @@ struct  iterator_range {
 	template<typename T>
 struct  numeric_range {
 
-		typedef		void		iterator;
-		//typedef		iterator	const_iterator;
+		//typedef		--- 		const_iterator;
 		typedef		T		value_type;
 		typedef		size_t		difference_type;
 		typedef		size_t		size_type;
@@ -97,6 +96,7 @@ struct  numeric_range {
 		bool		operator!=(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) >  range.step; }
 		//bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 	};
+		typedef		const_iterator	iterator;
 
 
 	T low, high, step;
@@ -111,6 +111,8 @@ struct  numeric_range {
 	const_iterator	end()   const	{ return const_iterator(*this, high); };
 
 };
+
+template<typename T>	struct  is_collection_t <numeric_range<T>>	: std::true_type { };
 
 	template<class T1, class T2, class T3=T1, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
@@ -204,14 +206,6 @@ operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(
 */
 
 /////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
-template<typename T>  constexpr bool   is_collection()     {
-	return      is_container<T>() 
-		||  is_stack<T>() 
-		||  is_queue<T>() 
-		||  is_range<T>()
-	;
- };
-
 template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
 template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 

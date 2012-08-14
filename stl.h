@@ -25,7 +25,7 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>		// do we need to care about r-value-ness here?
-	eIF <is_collection<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_collection<identity<Ct>>() /* &&  !std::is_array<identity<Ct>>::value */,  identity<cl_iterator<Ct>> >
 operator+      (Ct&& C) { return std::begin(C); };
 
 

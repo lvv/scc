@@ -368,7 +368,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Ct>
-		eIF<is_collection<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
+		eIF<is_container<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	typename Ct::value_type c;
 	while(is>>c)  C.insert(c);
