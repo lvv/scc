@@ -48,17 +48,18 @@ int main() {
 
 	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
 	cout <<  endl <<   left 
-		<< setw(26)<<""        <<   " is  has  is  is      is      is     \n"
-		<< setw(26)<<""        <<   " CT  cns  IT inpt    Queue   call    \n"
-		<< setw(26)<<""        <<   "     IT       IT  is      is  1   is \n"
-		<< setw(26)<<""        <<   "                 Stack    IO-    call\n"
-		<< setw(26)<<""        <<   "                         able     2  \n";
+		<< setw(26)<<""        <<   " is  is  has  is  is      is      is     \n"
+		<< setw(26)<<""        <<   " Co  Ct  cns  IT inpt    Queue   call    \n"
+		<< setw(26)<<""        <<   "         IT       IT  is      is  1   is \n"
+		<< setw(26)<<""        <<   "                     Stack    IO-    call\n"
+		<< setw(26)<<""        <<   "                             able     2  \n";
 
 	#define for_T(name)  __ setw(26) << name \
-		<<   "  " << (is_container<T>()                                   ? "+" : "\u2219")\
+		<<  "  " <<  (is_collection<T>()                                   ? "+" : "\u2219")\
+		<<  "  " <<  (is_container<T>()                                   ? "+" : "\u2219")\
 		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
 		<<  "   " << (is_iterator<T>()                                    ? "+" : "\u2219")\
-		<<  "   " << (is_input_iterator<T>::value                              ? "+" : "\u2219")	/* incorrect*/ \
+		<<  "   " << (is_input_iterator<T>()                              ? "+" : "\u2219")	/* incorrect*/ \
 		<<  "   " << (is_stack<T>()                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>()                                       ? "+" : "\u2219")\
 		<<  "   " << (is_ioable_t<T>::value                                      ? "+" : "\u2219")\
@@ -68,6 +69,15 @@ int main() {
 
 
 cout << "CONTAINER ---------------------------------------------------------------------\n";
+	{ typedef array<int,2>  T;
+	for_T(   "array<int,2>"); }
+
+	{ typedef numeric_range<int>  T;
+	for_T(   "numeric_range<int>"); }
+
+	{ typedef iterator_range<vint::iterator>  T;
+	for_T(   "iterator_range<vint::it>"); }
+
 	{ typedef vector<int>  T;
 	for_T(   "vector<int>"); }
 
