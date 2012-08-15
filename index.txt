@@ -620,6 +620,7 @@ FORMATS
 		http://stackoverflow.com/questions/245973/whats-the-best-c-json-parser
 		http://stackoverflow.com/a/8560856
 		https://github.com/udp/json-parser
+		http://zserge.bitbucket.org/jsmn.html
 
 	CSV
 		http://csvkit.readthedocs.org/en/latest/index.html

@@ -66,7 +66,7 @@ struct  numeric_range {
 		typedef		size_t		difference_type;
 		typedef		size_t		size_type;
 		typedef		const T*	const_pointer;
-		typedef		const T*	pointer;
+		typedef		const_pointer	pointer;
 		typedef		const T&	const_reference;
 		typedef		const_reference	reference;
 
@@ -75,6 +75,7 @@ struct  numeric_range {
 
 			typedef		std::input_iterator_tag		iterator_category;
 
+			
 			typedef		T		value_type;
 			typedef		size_t		difference_type ;
 			typedef		size_t		size_type ;
@@ -82,6 +83,7 @@ struct  numeric_range {
 			typedef		const_pointer	pointer ;
 			typedef		const T&	const_reference ;
 			typedef		const_reference	reference ;
+		
 
 		const numeric_range<T>&		range;
 		T				current;
