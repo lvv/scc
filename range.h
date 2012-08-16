@@ -53,7 +53,7 @@ struct  iterator_range {
 		return  (b_ != e_) ? &PointerConversion::valid : 0;
 	};
 
-};
+ };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////  NUMERIC_RANGE
@@ -71,7 +71,7 @@ struct  numeric_range {
 		typedef		const_reference	reference;
 
 	struct	const_iterator {
-		explicit const_iterator (const numeric_range<T>& range, T init=end_value) : range(range),  current(init) {};
+		explicit const_iterator (const numeric_range<T>& range, T init=end_value) : range(range),  current(init), i(0) {};
 
 			typedef		std::input_iterator_tag		iterator_category;
 
@@ -87,11 +87,12 @@ struct  numeric_range {
 
 		const numeric_range<T>&		range;
 		T				current;
+		size_t				i;	
 
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; }
-		const_iterator	operator++()		{ current+=range.step;  return *this; }
-		const_iterator	operator++(int)		{ auto tmp=*this;  current+=range.step;  return tmp; }
+		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
+		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
 		bool		operator==(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) <= range.step; }
 		bool		operator!=(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) >  range.step; }
@@ -111,7 +112,7 @@ struct  numeric_range {
 	const_iterator	begin() const	{ return const_iterator(*this, low); };
 	const_iterator	end()   const	{ return const_iterator(*this, high); };
 
-};
+ };
 
 	template<class T1, class T2, class T3=T1, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
@@ -200,7 +201,7 @@ template<typename T>    constexpr bool   is_range()        { return  is_range_t<
 operator |       (Ct& C1, const Ct& C2)    { 
 	auto it = search(C1.begin(), C1.end(), C2.begin(), C2.end());
 	return  iterator_range(it, advance(it, distance(C2.end(), C2.begin())));
-};
+ };
 
 //  Ct1 / Ct2   ---  search() --> it
 	template<typename Ct>
