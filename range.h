@@ -119,8 +119,10 @@ struct  numeric_range {
 	numeric_range(T from, T to, T step=1)  : from(from), to(to), step(step) {};
 
 
-	const_iterator	begin() const	{ return const_iterator(*this, from); };
-	const_iterator	end()   const	{ return const_iterator(*this, to); };
+	const_iterator	cbegin() const	{ return const_iterator(*this, from); };
+	const_iterator	cend()   const	{ return const_iterator(*this, to); };
+	const_iterator	begin() const	{ return cbegin(); };
+	const_iterator	end()   const	{ return cend(); };
 
  };
 
