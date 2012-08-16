@@ -14,7 +14,11 @@ scc 'range(v9/2, v9/5) = 42;  v9'
 #scc 'range(a9) = 42; a9'
 
 
-# numeric_range
+### NUMERIC_RANGE
+# ctor
+scc '__ range(0,10,2),  range(10,0,-1.5);'
+# loops
 scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
 scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
+# stl algorithms
 scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'

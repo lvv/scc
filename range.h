@@ -71,7 +71,8 @@ struct  numeric_range {
 		typedef		const_reference	reference;
 
 	struct	const_iterator {
-		explicit const_iterator (const numeric_range<T>& range, T init=end_value) : range(range),  current(init), i(0) {};
+		explicit const_iterator (const numeric_range<T>& range, T init=end_value)
+			: range(range),  current(init), i(0), step_sign(range.step >= 0 ? 1 : -1) {};
 
 			typedef		std::input_iterator_tag		iterator_category;
 
@@ -88,36 +89,37 @@ struct  numeric_range {
 		const numeric_range<T>&		range;
 		T				current;
 		size_t				i;	
+		T				step_sign;
+		std::function<void(T&)>		next;
 
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; } // what is this for?
 		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
-				// we take wild assumpation that comparission is done only with this->end()
-		bool		operator==(const const_iterator &rhs)	const	{ return   (range.high-(current+range.step))*range.step < 0; }
+				// we take assumpation that comparission is done only with  end()
+		bool		operator==(const const_iterator &rhs)	const	{ return   (range.to-(current+range.step))*step_sign < 0; }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
-		//bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 	};
 
 		typedef		const_iterator		iterator;
 
-	T low, high, step;
+	T from, to, step;
 	constexpr static T end_value = std::numeric_limits<T>::max();
 
 	// CTOR
-	numeric_range()  : low(T()), high(T()), step(T())  {};
-	numeric_range(T low, T high, T step=1)  : low(low), high(high), step(step) {};
+	numeric_range()  : from(T()), to(T()), step(T())  {};
+	numeric_range(T from, T to, T step=1)  : from(from), to(to), step(step) {};
 
 
-	const_iterator	begin() const	{ return const_iterator(*this, low); };
-	const_iterator	end()   const	{ return const_iterator(*this, high); };
+	const_iterator	begin() const	{ return const_iterator(*this, from); };
+	const_iterator	end()   const	{ return const_iterator(*this, to); };
 
  };
 
 	template<class T1, class T2, class T3=T1, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
-range(T1 low,  T2 high,  T3 step=1) { return numeric_range<T>(low, high, step); };
+range(T1 from,  T2 to,  T3 step=1) { return numeric_range<T>(from, to, step); };
 
 
 ////////////////////////////////////////////////////////////////  OPERATOR, -- (it1, it2) ctor
