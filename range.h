@@ -90,12 +90,13 @@ struct  numeric_range {
 		size_t				i;	
 
 		const_reference	operator*()	const	{ return   current; }
-		const_pointer	operator->()	const	{ return  &current; }
+		const_pointer	operator->()	const	{ return  &current; } // what is this for?
 		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
-		bool		operator==(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) <= range.step; }
-		bool		operator!=(const_iterator rhs)	const	{ return  std::abs(current - rhs.current) >  range.step; }
+				// we take wild assumpation that comparission is done only with this->end()
+		bool		operator==(const const_iterator &rhs)	const	{ return   (range.high-(current+range.step))*range.step < 0; }
+		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 		//bool		operator< (const_iterator rhs)	const	{ return  current < rhs.current; }
 	};
 
