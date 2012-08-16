@@ -72,7 +72,14 @@ struct  numeric_range {
 
 	struct	const_iterator {
 		explicit const_iterator (const numeric_range<T>& range, T init=end_value)
-			: range(range),  current(init), i(0), step_sign(range.step >= 0 ? 1 : -1) {};
+			:	range		(range), 
+				current		(init),
+				i		(0),
+				step_sign	(range.step >= 0 ? 1 : -1),
+				next		([&range](T& current){current += range.step;})
+		{};
+
+
 
 			typedef		std::input_iterator_tag		iterator_category;
 
@@ -94,8 +101,8 @@ struct  numeric_range {
 
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; } // what is this for?
-		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
-		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
+		const_iterator&	operator++()		{ next(current); ++i;  return *this; }
+		const_iterator&	operator++(int)		{ auto tmp=*this;  next(current);  ++i; return tmp; }
 
 				// we take assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   (range.to-(current+range.step))*step_sign < 0; }
