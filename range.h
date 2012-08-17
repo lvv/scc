@@ -71,12 +71,11 @@ struct  numeric_range {
 		typedef		const_reference	reference;
 
 	struct	const_iterator {
-		explicit const_iterator (const numeric_range<T>& range, T init=end_value)
+		explicit const_iterator (const numeric_range<T>& range, T current)
 			:	range		(range), 
-				current		(init),
+				current		(current),
 				i		(0),
-				step_sign	(range.step >= 0 ? 1 : -1),
-				next		([&range](T& current){current += range.step;})
+				step_sign	(range.step >= 0 ? 1 : -1)
 		{};
 
 
@@ -97,12 +96,11 @@ struct  numeric_range {
 		T				current;
 		size_t				i;	
 		T				step_sign;
-		std::function<void(T&)>		next;
 
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; } // what is this for?
-		const_iterator&	operator++()		{ next(current); ++i;  return *this; }
-		const_iterator&	operator++(int)		{ auto tmp=*this;  next(current);  ++i; return tmp; }
+		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
+		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
 				// we take assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   (range.to-(current+range.step))*step_sign < 0; }
@@ -112,7 +110,6 @@ struct  numeric_range {
 		typedef		const_iterator		iterator;
 
 	T from, to, step;
-	constexpr static T end_value = std::numeric_limits<T>::max();
 
 	// CTOR
 	numeric_range()  : from(T()), to(T()), step(T())  {};
@@ -201,7 +198,6 @@ template<typename T>	struct  is_range_t			: std::false_type {};
 template<typename T>	struct  is_range_t<iterator_range<T>>	: std::true_type  {};
 template<typename T>	struct  is_range_t<numeric_range<T>>	: std::true_type  {};
 template<typename T>    constexpr bool   is_range()        { return  is_range_t<T>::value; };
-
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
 
