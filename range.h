@@ -103,7 +103,7 @@ struct  numeric_range {
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
 				// we take assumpation that comparission is done only with  end()
-		bool		operator==(const const_iterator &rhs)	const	{ return   (range.to-(current+range.step))*step_sign < 0; }
+		bool		operator==(const const_iterator &rhs)	const	{ return   std::abs(rhs.current-current) < std::abs(range.step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 	};
 
@@ -118,8 +118,8 @@ struct  numeric_range {
 
 	const_iterator	cbegin() const	{ return const_iterator(*this, from); };
 	const_iterator	cend()   const	{ return const_iterator(*this, to); };
-	const_iterator	begin() const	{ return cbegin(); };
-	const_iterator	end()   const	{ return cend(); };
+	const_iterator	begin()	 const	{ return cbegin(); };
+	const_iterator	end()    const	{ return cend(); };
 
  };
 
