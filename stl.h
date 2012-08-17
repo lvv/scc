@@ -149,7 +149,7 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 
 			
-		//  Ct1 / Ct2   ---  search() --> it   (FIXME shoule return Collection)	
+		//  Ct1 / Ct2   ---  search() --> it
 			template<typename Ct1, typename Ct2>
 			eIF <have_same_elem<Ct1, Ct2>(), cl_iterator<Ct1>>
 		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };

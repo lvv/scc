@@ -139,9 +139,12 @@ template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterato
 template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			type; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
-template<typename T>	struct  is_string_t		: std::false_type {};
-template<>		struct  is_string_t <std::string>	: std::true_type  {};
-template<typename T>     constexpr bool   is_string()        { return  is_string_t<T>::value; };
+template<class T>	struct  is_string_t				: std::false_type {};
+template<class CharT>	struct  is_string_t <std::basic_string<CharT>>	: std::true_type  {};
+template<size_t N>	struct  is_string_t <const char[N]>		: std::true_type  {};
+template<size_t N>	struct  is_string_t <char[N]>			: std::true_type  {};
+
+template<class T>     constexpr bool   is_string()        { return  is_string_t<T>::value; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
 template<typename T>	struct  is_ioable_t 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
