@@ -74,8 +74,7 @@ struct  numeric_range {
 		explicit const_iterator (const numeric_range<T>& range, T current)
 			:	range		(range), 
 				current		(current),
-				i		(0),
-				step_sign	(range.step >= 0 ? 1 : -1)
+				i		(0)
 		{};
 
 
@@ -95,7 +94,6 @@ struct  numeric_range {
 		const numeric_range<T>&		range;
 		T				current;
 		size_t				i;	
-		T				step_sign;
 
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; } // what is this for?
@@ -112,9 +110,8 @@ struct  numeric_range {
 	T from, to, step;
 
 	// CTOR
-	numeric_range()  : from(T()), to(T()), step(T())  {};
-	numeric_range(T from, T to, T step=1)  : from(from), to(to), step(step) {};
-
+	numeric_range()  			: from(T()),  to(T()), step(T())  {};
+	numeric_range(T from, T to, T step=1)	: from(from), to(to), step(step) {};
 
 	const_iterator	cbegin() const	{ return const_iterator(*this, from); };
 	const_iterator	cend()   const	{ return const_iterator(*this, to); };

@@ -85,3 +85,6 @@ scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
 
 # BEGIN/ END
 scc  ' *+v9=-33;  __ *+vint{1,2}, v9;'
+
+# SIZE
+scc '__ size(s9), size(c9), size(a9), size(v9);'
