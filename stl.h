@@ -207,9 +207,8 @@ operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  std::end
 	
 	
 	namespace detail {
-			template<typename U>              static eIF< has_resize<U>()>  ct_resizer(U& D,      size_t n)  { D.resize(n);};
-			template<typename U>              static eIF<!has_resize<U>()>  ct_resizer(U& D,      size_t n)  {};
-			template<typename U,  size_t N>   static void                   ct_resizer(U (&D)[N], size_t n)  {}; 
+			template<typename T>		static void                   cstr_zstop(const T&    ret) {};
+							static void                   cstr_zstop(char* ret) { ++ret = '\0'; };
 	};
 
 
@@ -226,19 +225,13 @@ operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  std::end
 	eIF <is_container<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
 operator *       (Ct&& C, const F& f)    {
 	std::vector<Ret> D;
-	size_t n = std::end(C)-std::begin(C);
-	detail::ct_resizer(D, n);
-
-	std::transform(std::begin(C), endz(C), std::begin(D), f);
-
-	// c-string termination
-	if (endz(C) < std::end(C))
-		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
+	auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
+	detail::cstr_zstop(ret);
 	return  D;
  };
 
 
+/*
 	// overload for :  Ret == T  
 	template<
 		typename Ct,
@@ -248,17 +241,11 @@ operator *       (Ct&& C, const F& f)    {
 	eIF <is_container<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
-	//size_t n = std::end(C)-std::begin(C);
-	//detail::ct_resizer(D, n);
-
-	std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
-
-	// c-string termination
-	if (endz(C) < std::end(C))
-		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
+	auto ret = std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
+	detail::cstr_zstop(ret);
 	return  D;
  };
+ */
 
 
 	// overload for :  lambdas
@@ -270,15 +257,8 @@ operator *       (Ct&& C, T (*f)(T) )    {
 	eIF <is_container<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, std::function<T(T)> f )    {
 	std::vector<Ret> D;
-	size_t n = std::end(C)-std::begin(C);
-	detail::ct_resizer(D, n);
-
-	std::transform(std::begin(C), endz(C), std::begin(D), f);
-
-	// c-string termination
-	if (endz(C) < std::end(C))
-		* (std::begin(D) + (endz(C) - std::begin(C)) + 0)  = '\0';
-
+	auto ret = std::transform(std::begin(C), endz(C), std::begin(D), f);
+	detail::cstr_zstop(ret);
 	return  D;
  };
 

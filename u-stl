@@ -73,9 +73,9 @@ scc '__ str("Hello") % [](char c){return c==*"l";},  str("Hello") % islower, str
 
 # Ct * F 	
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
-scc 's="Hello";  __  *(s / islower);'
 scc '__ v9 * [](int x){return x+10;};'
 scc '__ v9 * bind(std::plus<int>(),10,_1);'
+scc 'vector<const char*> ss{"1","22","333"};  __ (ss * strlen);'
 # todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
 
 # Ct || F
