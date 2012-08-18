@@ -14,8 +14,8 @@
 #include <cstdlib>
 //#include <cstddef>
 
-// replacement for <cctype>
-#include "scc/cpptype.h"
+#include "scc/cpptype.h" 	// complement for <cctype>
+	using namespace sto;
 
 #include <cstring>
 extern "C"  void *memcpy(void *dest, const void *src, size_t n);

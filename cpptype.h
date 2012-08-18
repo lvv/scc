@@ -22,6 +22,5 @@ bool	isupper (char c) { return std::isupper ((int)c); }
 bool	isxdigit(char c) { return std::isxdigit((int)c); }
 
 				};
-				using namespace sto;
 
 				#endif

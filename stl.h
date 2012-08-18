@@ -166,27 +166,42 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 	}
 
-//  Ct / T   ---  non callable
+
+////////  Ct / T  
+
+// ---  non callable
 	template<typename Ct, typename T>
 	eIF <is_container<Ct>() , cl_iterator<Ct>>
-operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
+operator / (Ct&& C, const T& t)                                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
-//  Ct / T   ---  plain func
+// ---  plain func
 	template<typename Ct>
 	eIF <is_container<Ct>() , cl_iterator<Ct>>
-operator /       (Ct&& C, bool(*t)(cl_elem_type<Ct>))   {  return  detail::find_elem(std::forward<Ct>(C), t); };
+operator / (Ct&& C, bool(*t)(cl_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
-//  Ct / T   ---  func obj, lambdas
+// ---  func obj, lambda
 	template<typename Ct>
 	eIF <is_container<Ct>() , cl_iterator<Ct>>
-operator /       (Ct&& C, const std::function<bool(cl_elem_type<Ct>)>& t)   {  return  detail::find_elem(std::forward<Ct>(C), t); };
+operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 
 
-//  Ct % T   ---  find..() -> bool	 
+////////  Ct % T
+
+//  ---  non callable
 	template<typename Ct, typename T>
 	eIF <is_container<Ct>(), bool>
-operator %       (Ct&& C, const T& t)    {  return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, const T& t)                               { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+
+//  ---  plain func
+	template<typename Ct>
+	eIF <is_container<Ct>(), bool>
+operator % (Ct&& C, bool(*t)(cl_elem_type<Ct>))               { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+
+//  ---  func obj, lambda
+	template<typename Ct>
+	eIF <is_container<Ct>(), bool>
+operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
 	
