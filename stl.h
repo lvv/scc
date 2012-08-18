@@ -10,7 +10,7 @@
 #include <tuple>
 
 #include "range.h"
-#include "cpptype.h"
+//#include "cpptype.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////  ENDZ()
 
@@ -57,7 +57,7 @@ operator~      (const Ct& C) { return C.size(); };
 operator!      (const Ct& C) { return C.empty(); };
 
 
-//  ++T / T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
+//  ++T, T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
 	eIF <is_container<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
@@ -84,7 +84,7 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 
 
-// --Ct/Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
+// --Ct, Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
 	eIF <is_container<Ct>(), Ct>
 operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C); };
@@ -151,6 +151,7 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 		find_elem(Ct&& C, const X& x)   { return std::find(C.begin(), C.end(), x); };
 
 
+
 		// Ct / f
 			template<typename Ct, typename F>
 			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
@@ -165,11 +166,20 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 
 	}
 
-
-//  Ct / T   ---  find..() -> it	 
+//  Ct / T   ---  non callable
 	template<typename Ct, typename T>
 	eIF <is_container<Ct>() , cl_iterator<Ct>>
 operator /       (Ct&& C, const T& t)    {  return  detail::find_elem(std::forward<Ct>(C), t); };
+
+//  Ct / T   ---  plain func
+	template<typename Ct>
+	eIF <is_container<Ct>() , cl_iterator<Ct>>
+operator /       (Ct&& C, bool(*t)(cl_elem_type<Ct>))   {  return  detail::find_elem(std::forward<Ct>(C), t); };
+
+//  Ct / T   ---  func obj, lambdas
+	template<typename Ct>
+	eIF <is_container<Ct>() , cl_iterator<Ct>>
+operator /       (Ct&& C, const std::function<bool(cl_elem_type<Ct>)>& t)   {  return  detail::find_elem(std::forward<Ct>(C), t); };
 
 
 

@@ -1,3 +1,6 @@
+// do not define ctype funcs as macros (gcc specific)
+# define __NO_CTYPE 1
+
 #include "cj.h"
 #include "scc.h"
 
@@ -101,24 +104,6 @@ int main(int argc, char** argv) {
 
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
-		///////// <cctype> funcs have bad  C-ish signatures, unsuable with stl-op, we hide them with good function objects
-		std::function<char(char)> toupper(::toupper);
-		std::function<char(char)> tolower(::tolower);
-
-		std::function<bool(char)> isalnum (::isalnum );
-		std::function<bool(char)> isalpha (::isalpha );
-		std::function<bool(char)> iscntrl (::iscntrl );
-		std::function<bool(char)> isdigit (::isdigit );
-		std::function<bool(char)> isgraph (::isgraph );
-		std::function<bool(char)> islower (::islower );
-		std::function<bool(char)> isprint (::isprint );
-		std::function<bool(char)> ispunct (::ispunct );
-		std::function<bool(char)> isspace (::isspace );
-		std::function<bool(char)> isupper (::isupper );
-		std::function<bool(char)> isxdigit(::isxdigit);
-
-
-		///////////////////////////////////////////////////////////
 
 		if (is_header) {
 			#ifndef scc_NOAWK

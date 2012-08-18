@@ -13,10 +13,13 @@
 
 #include <cstdlib>
 //#include <cstddef>
+
+// replacement for <cctype>
+#include "scc/cpptype.h"
+
 #include <cstring>
 extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
-//#include <cctype>
 #include <cmath>
 	using	std::abs;
 	using	std::floor;
