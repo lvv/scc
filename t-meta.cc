@@ -56,7 +56,7 @@ int main() {
 
 	#define for_T(name)  __ setw(26) << name \
 		<<  "  " <<  (is_collection<T>()                                   ? "+" : "\u2219")\
-		<<  "  " <<  (is_container<T>()                                   ? "+" : "\u2219")\
+		<<  "  " <<  (is_iterable<T>()                                   ? "+" : "\u2219")\
 		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
 		<<  "   " << (is_iterator<T>()                                    ? "+" : "\u2219")\
 		<<  "   " << (is_input_iterator<T>()                              ? "+" : "\u2219")	/* incorrect*/ \

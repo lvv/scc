@@ -47,7 +47,7 @@ struct  iterator_range {
 ////////////////////////////////////////////////////////////////  TRAITS
 
 template<typename T>	struct  is_range_t     <iterator_range<T>> 	: std::true_type  {};
-template<typename I>	struct  is_container_t <iterator_range<I>>	: std::true_type { };
+template<typename I>	struct  is_iterable_t <iterator_range<I>>	: std::true_type { };
 
 
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker
@@ -58,7 +58,7 @@ range(I b, I e) { return iterator_range<I>(b,e); };
 
 //  container wrapper range
 	template<typename Ct>
-	eIF<is_container<Ct>(), iterator_range<cl_iterator<Ct>>>
+	eIF<is_iterable<Ct>(), iterator_range<cl_iterator<Ct>>>
 range(Ct& C) { return iterator_range<cl_iterator<Ct>>(std::begin(C), std::end(C)); };
 
 template<typename T, size_t N> iterator_range<T   *>       range(T          (&C)[N]) { return iterator_range<T   *>      (std::begin(C), std::end(C)); };

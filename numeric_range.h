@@ -71,7 +71,7 @@ struct  numeric_range {
 ////////////////////////////////////////////////////////////////  TRAITS
 
 template<typename T>	struct  is_range_t     <numeric_range<T>>	: std::true_type  {};
-template<typename T>	struct  is_container_t <numeric_range<T>>	: std::true_type  {};
+template<typename T>	struct  is_iterable_t <numeric_range<T>>	: std::true_type  {};
 
 
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker
