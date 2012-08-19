@@ -68,7 +68,7 @@ scc '__ *(str("Hello") / [](char c){return c==*"l";});'
 # Ct / F (ctype)
 scc '*(str("Hello") / islower)'
 # Ct %
-scc '__ str("Hello") % [](char c){return c==*"l";},  str("Hello") % islower, str("Hello") % isdigit;'
+scc '__ s9 % [](char c){return c==*"b";},  str("Hello") % islower,  str("Hello") % isdigit,  vs9 % str("bb");'
 
 
 # Ct * F 	

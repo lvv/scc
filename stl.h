@@ -148,27 +148,24 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
 			template<typename Ct, typename X>
 			eIF <is_elem_of<X, Ct>(), cl_iterator<Ct>>
-		find_elem(Ct&& C, const X& x)   { return std::find(C.begin(), C.end(), x); };
+		find_elem(Ct&& C, const X& x)   { return std::find(std::begin(C), endz(C), x); };
 
 
 
 		// Ct / f
 			template<typename Ct, typename F>
 			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
-		find_elem(Ct&& C, const F& pred)  { return  std::find_if(C.begin(), C.end(), pred); };
+		find_elem(Ct&& C, const F& pred)  { return  std::find_if(std::begin(C), endz(C), pred); };
 
 
 			
 		//  Ct1 / Ct2   ---  search() --> it
 			template<typename Ct1, typename Ct2>
 			eIF <have_same_elem<Ct1, Ct2>(), cl_iterator<Ct1>>
-		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), std::end(C1), std::begin(C2), endz(C2)); };
-
-	}
+		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), endz(C1), std::begin(C2), endz(C2)); }; }
 
 
 ////////  Ct / T  
-
 // ---  non callable
 	template<typename Ct, typename T>
 	eIF <is_container<Ct>() , cl_iterator<Ct>>
@@ -191,17 +188,17 @@ operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail:
 //  ---  non callable
 	template<typename Ct, typename T>
 	eIF <is_container<Ct>(), bool>
-operator % (Ct&& C, const T& t)                               { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, const T& t)                               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 //  ---  plain func
 	template<typename Ct>
 	eIF <is_container<Ct>(), bool>
-operator % (Ct&& C, bool(*t)(cl_elem_type<Ct>))               { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, bool(*t)(cl_elem_type<Ct>))               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 //  ---  func obj, lambda
 	template<typename Ct>
 	eIF <is_container<Ct>(), bool>
-operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  std::end(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
 	
@@ -231,8 +228,7 @@ operator *       (Ct&& C, const F& f)    {
  };
 
 
-/*
-	// overload for :  Ret == T  
+	// overload for :  Ret == T   (needed for oveloaded functions like abs)
 	template<
 		typename Ct,
 		typename T = cl_elem_type<Ct>,
@@ -245,7 +241,6 @@ operator *       (Ct&& C, T (*f)(T) )    {
 	detail::cstr_zstop(ret);
 	return  D;
  };
- */
 
 
 	// overload for :  lambdas
