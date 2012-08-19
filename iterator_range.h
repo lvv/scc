@@ -46,8 +46,8 @@ struct  iterator_range {
 
 ////////////////////////////////////////////////////////////////  TRAITS
 
-template<typename T>	struct  is_range_t     <iterator_range<T>> 	: std::true_type  {};
-template<typename I>	struct  is_iterable_t <iterator_range<I>>	: std::true_type { };
+template<typename T>	struct  is_range_t	<iterator_range<T>> 	: std::true_type  {};
+template<typename I>	struct  is_iterable_t	<iterator_range<I>>	: std::true_type { };
 
 
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker

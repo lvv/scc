@@ -10,16 +10,13 @@ template<typename T>    constexpr bool  is_range()        { return  is_range_t<T
 #include "scc/iterator_range.h"
 
 
-
-
-
 /////////////////////////////////////////////////////////////////// RNG -- range proxy
 static  __attribute__((unused)) struct range_converter_t {} rng;
 
 	template<typename Ct>
 	eIF<
 		is_iterable<Ct>(),
-		iterator_range<typename container_iterator<Ct>::type>
+		iterator_range<cl_iterator<Ct>>
 	>
 operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
 
@@ -31,7 +28,7 @@ operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::e
 	template<typename Ct>
 	eIF<
 		is_iterable<Ct>(),
-		iterator_range<typename container_iterator<Ct>::type>
+		iterator_range<cl_iterator<Ct>>
 	>
 operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
 
@@ -42,7 +39,7 @@ static  __attribute__((unused)) struct iot_t {} iot;
 	template<typename Ct>
 	typename std::enable_if<
 		is_iterable<Ct>(),
-		iterator_range<typename container_iterator<Ct>::type>
+		iterator_range<cl_iterator<Ct>>
 	>::type
 operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 */

@@ -64,6 +64,7 @@ template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::refere
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
+
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
 template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 template<typename Cl>	                using  cl_iterator_fwd     = typename  copy_rcv<Cl&&, cl_iterator<Cl>>::type;
@@ -128,15 +129,12 @@ struct is_iterable_t {
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_iterable_t <T[N]>			: std::true_type { };
+template<typename T, size_t N>	struct  is_iterable_t <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_iterable_t <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_iterable_t <std::array<T,N>>	: std::true_type { };
 
 template<typename T>     constexpr bool   is_iterable()        { return  is_iterable_t<T>::value; };
 
-
-template <typename Ct>		struct container_iterator	{ typedef	typename Ct::iterator	type; };
-template <typename T, size_t N>	struct container_iterator<T[N]>	{ typedef	T*			type; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<class T>	struct  is_string_t				: std::false_type {};
