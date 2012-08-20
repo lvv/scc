@@ -1,0 +1,30 @@
+
+CONSEPTS
+
+non-ridgit (~ const size)
+	appendable
+		prependable
+	insertable
+	erasable	
+const (elem wise like in const_iterator)
+range	- something that can be iterated through 
+container - something containing real objects
+
+STO COLLECTIONS
+container:
+	stl
+		container
+			non-const::   	- range
+			array::		- range ridgid
+		container-adaper
+			stack/queue::	- non-range; 
+
+	c-array				- range; ridgid
+
+sto
+	numeric_range::		- range; ridgid const
+	iterator_range::	- range; ridgid
+	chane_range::		- range 
+	c-str			- range
+
+
