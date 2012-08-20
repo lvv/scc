@@ -13,6 +13,8 @@ set -v
 scc 'range(v9/2, v9/5) = 42;  v9'
 #scc 'range(a9) = 42; a9'
 
+# empty
+#scc 'if(range(v9)) __ v9;  v9.clear(); if(!range(v9)) __ "empty";'
 
 ### NUMERIC_RANGE
 # ctor

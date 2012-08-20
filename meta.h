@@ -112,7 +112,7 @@ DEF_HAS_METHOD(has_resize,resize(size_t()))
 //////////////////////////////////////////////////////////////////////////////////////// IS_ITERABLE
 
 	template <typename T>
-struct is_iterable_t {
+struct is_range_t {
 
 		template <
 			typename U,
@@ -129,11 +129,11 @@ struct is_iterable_t {
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
 
-template<typename T, size_t N>	struct  is_iterable_t <T[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_iterable_t <T(&)[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_iterable_t <std::array<T,N>>	: std::true_type { };
+template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_range_t <T(&)[N]>		: std::true_type { };
+template<typename T, size_t N>	struct  is_range_t <std::array<T,N>>	: std::true_type { };
 
-template<typename T>     constexpr bool   is_iterable()        { return  is_iterable_t<T>::value; };
+template<typename T>     constexpr bool   is_range()        { return  is_range_t<T>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING

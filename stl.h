@@ -25,13 +25,13 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>		// do we need to care about r-value-ness here?
-	eIF <is_iterable<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
 operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-values
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Ct>
-	eIF <is_iterable<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
 operator-      (Ct&& C) { return  std::end(C); };
 
 
@@ -60,11 +60,11 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T, T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	eIF <is_iterable<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
 
 	template<typename Ct>
-	eIF <is_iterable<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 
@@ -86,12 +86,12 @@ operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std:
 
 // --Ct, Ct--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Ct>
-	eIF <is_iterable<Ct>(), Ct>
+	eIF <is_range<Ct>(), Ct>
 operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C); };
 
 
 	template<typename Ct>
-	eIF <is_iterable<Ct>(), Ct>
+	eIF <is_range<Ct>(), Ct>
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
@@ -168,17 +168,17 @@ operator >>  (Ct&& C1, Cl&& C2)  {
 ////////  Ct / T  
 // ---  non callable
 	template<typename Ct, typename T>
-	eIF <is_iterable<Ct>() , cl_iterator<Ct>>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
 operator / (Ct&& C, const T& t)                                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 // ---  plain func
 	template<typename Ct>
-	eIF <is_iterable<Ct>() , cl_iterator<Ct>>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
 operator / (Ct&& C, bool(*t)(cl_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 // ---  func obj, lambda
 	template<typename Ct>
-	eIF <is_iterable<Ct>() , cl_iterator<Ct>>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
 operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 
@@ -187,17 +187,17 @@ operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail:
 
 //  ---  non callable
 	template<typename Ct, typename T>
-	eIF <is_iterable<Ct>(), bool>
+	eIF <is_range<Ct>(), bool>
 operator % (Ct&& C, const T& t)                               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 //  ---  plain func
 	template<typename Ct>
-	eIF <is_iterable<Ct>(), bool>
+	eIF <is_range<Ct>(), bool>
 operator % (Ct&& C, bool(*t)(cl_elem_type<Ct>))               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 //  ---  func obj, lambda
 	template<typename Ct>
-	eIF <is_iterable<Ct>(), bool>
+	eIF <is_range<Ct>(), bool>
 operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
@@ -219,7 +219,7 @@ operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  endz(C) 
 		//typename Ret=typename std::function<rm_qualifier<F>>::result_type,
 		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
 	> 
-	eIF <is_iterable<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
+	eIF <is_range<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
 operator *       (Ct&& C, const F& f)    {
 	std::vector<Ret> D;
 	auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
@@ -234,7 +234,7 @@ operator *       (Ct&& C, const F& f)    {
 		typename T = cl_elem_type<Ct>,
 		typename Ret= T
 	> 
-	eIF <is_iterable<Ct>(), std::vector<Ret>>
+	eIF <is_range<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, T (*f)(T) )    {
 	std::vector<Ret> D;
 	auto ret = std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
@@ -249,7 +249,7 @@ operator *       (Ct&& C, T (*f)(T) )    {
 		typename T = cl_elem_type<Ct>,
 		typename Ret= T
 	> 
-	eIF <is_iterable<Ct>(), std::vector<Ret>>
+	eIF <is_range<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, std::function<T(T)> f )    {
 	std::vector<Ret> D;
 	auto ret = std::transform(std::begin(C), endz(C), std::begin(D), f);
@@ -262,7 +262,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 
 	// overload for: std::min
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
-	eIF <is_iterable<Ct>(), R>
+	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
@@ -272,7 +272,7 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 
 	// overload for: lambda, std::plus
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
-	eIF <is_iterable<Ct>(), R>
+	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
@@ -377,24 +377,6 @@ operator <<       (It&& it, Ct&& C)    {};
 */
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////  
 
-namespace x {  // eXperimental
-
-template<typename T>
-struct vector : std::vector<T> {
-	// waiting for implementation of Inherited Ctor-s -- http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2540.htm
-	//using vector<T>::vector;
-	
-	/* to bool conversion -- */
-			struct PointerConversion { int valid; };
-			typedef int PointerConversion::* datamemptr;
-
-	operator datamemptr  () const {
-		return  this->empty() ? &PointerConversion::valid : 0;
-	};
-};
-
-} // x namespace
 
 #endif	// LVV_STL_H
