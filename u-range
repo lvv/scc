@@ -24,3 +24,7 @@ scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;
 scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
 # stl algorithms
 scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
+
+### CHAIN_RANGE
+scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
+scc 'range(a9)=42;  a9'

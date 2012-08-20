@@ -57,8 +57,8 @@ template <typename T>		struct cl_traits      {
 };
 
 
-template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;   typedef  T&  reference;  };
-template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
 
 
 template<typename Ct>   using cl_elem_type      = typename cl_traits<Ct>::elem_type;
@@ -256,6 +256,18 @@ struct is_callable<F, R(Args...)> {
 	static const bool value = (sizeof(test<F>(0)) == sizeof(int16_t));
 };
 	// can not make is_foo<R<Args...>()  constexpr func - needs partial specialization
+
+
+// not really a meta functions
+//  ~Ct  --- size()		(n/a for c-arrays)
+//
+	template<typename Ct>
+	eIF <has_size<Ct>(), size_t>
+size      (const Ct& C) { return C.size(); };
+
+	template<typename T, size_t N>
+	size_t
+size      (const T (&C)[N]) { return endz(C) - std::begin(C); };
 
 
 #endif

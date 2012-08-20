@@ -2,12 +2,9 @@
 					#define  STO_RANGE_H
 
 					#include "scc/meta.h"
-
-//template<typename T>	struct  	is_range_t			: std::false_type {};
-//template<typename T>    constexpr bool  is_range()        { return  is_range_t<T>::value; };
-
 					#include "scc/numeric_range.h"
 					#include "scc/iterator_range.h"
+					#include "scc/chain_range.h"
 
 
 /////////////////////////////////////////////////////////////////// RNG -- range proxy

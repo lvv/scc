@@ -35,15 +35,6 @@ operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-value
 operator-      (Ct&& C) { return  std::end(C); };
 
 
-//  ~Ct  --- size()		(n/a for c-arrays)
-//
-	template<typename Ct>
-	eIF <has_size<Ct>(), size_t>
-size      (const Ct& C) { return C.size(); };
-
-	template<typename T, size_t N>
-	size_t
-size      (const T (&C)[N]) { return endz(C) - std::begin(C); };
 
 	template<typename Ct>
 	eIF <has_size<Ct>(), size_t>
