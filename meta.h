@@ -44,9 +44,12 @@ template <typename T>		struct cl_traits      {
 	typedef   decltype(vt<T>(0))   elem_type ;
 
 		template <typename U, typename IT = typename rm_ref<U>::iterator>	static IT       it(rm_ref<U>* u);
-		//template <typename U, typename IT = typename rm_ref<U>::const_iterator>	static IT       it(rm_ref<const U>* u);
 		template <typename U>							static no_type  it(...);
 	typedef   decltype(it<T>(0))   iterator;
+
+		template <typename U, typename IT = typename rm_ref<U>::const_iterator>	static IT       cit(rm_ref<U>* u);
+		template <typename U>							static no_type  cit(...);
+	typedef   decltype(cit<T>(0))   const_iterator;
 
 		template <typename U, typename RF = typename rm_ref<U>::reference>	static RF       rf(rm_ref<U>* u);
 		template <typename U>                                          		static no_type  rf(...);
@@ -60,6 +63,7 @@ template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_ty
 
 template<typename Ct>   using cl_elem_type      = typename cl_traits<Ct>::elem_type;
 template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
+template<typename Ct>   using cl_const_iterator = typename cl_traits<Ct>::const_iterator;
 template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::reference;
 
 

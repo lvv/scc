@@ -11,15 +11,6 @@
 	template<typename T>
 struct  numeric_range {
 
-		/*
-		typedef		T		value_type;
-		typedef		size_t		difference_type;
-		typedef		size_t		size_type;
-		typedef		const T*	const_pointer;
-		typedef		const_pointer	pointer;
-		typedef		const T&	const_reference;
-		typedef		const_reference	reference;
-		*/
 
 	struct	const_iterator {
 		explicit const_iterator (const numeric_range<T>& range, T current)
