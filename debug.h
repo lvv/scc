@@ -1,15 +1,19 @@
 				#ifndef  LVV_DEBUG_H
 				#define  LVV_DEBUG_H
 
-	#include <iostream>
-	#include <vector>
-	#include <deque>
-	#include <stack>
-	#include <set>
+				#include <iostream>
+				#include <vector>
+				#include <deque>
+				#include <stack>
+				#include <set>
+
+				#include <cxxabi.h>
+
+				namespace sto {
 
 //////  TYPE2NAME
 
-	#include <cxxabi.h>
+
 
 
 	template <typename T>
@@ -89,5 +93,5 @@ static std::deque<int>   mk_d9()	{ return  d9; };
 static std::vector<int>  mk_v23()	{ return  v23; };
 static std::vector<int>  mk_v0()	{ return  v0; };
 
-
+				};
 				#endif

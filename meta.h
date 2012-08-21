@@ -8,6 +8,8 @@
 #include <stack>
 #include <queue>
 
+namespace sto {
+
 // TODO
 // 	SFNIE with NOEXCEPT  --- http://nonchalantlytyped.net/blog/2012/06/27/yet-another-sfinae/
 
@@ -270,11 +272,12 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 
 template<typename Ct>	 eIF<has_size<Ct>(), size_t> 	size (const Ct& C)     { return C.size(); };
-template<typename T, size_t N>		     size_t	size (const T (&C)[N]) { return endz(C) - std::begin(C); };
+template<typename T, size_t N>		     size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 
 
 template<typename Rn>	eIF< has_empty<Rn>(), bool>  empty(const Rn& rn) { return  rn.empty(); }
-template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return  (bool) ::size(rn); }
+template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return  (bool) sto::size(rn); }
 
+};
 
 #endif

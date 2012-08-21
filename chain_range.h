@@ -3,6 +3,7 @@
 						#define  STO_CHAIN_RANGE_H
 
 						#include "meta.h"
+						namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE
 
@@ -30,9 +31,9 @@ struct  chain_range {
 
 
 	// CT MANAGMENT
-	size_t		size()  const	{ return ::size(rn); };
-	bool		empty() const	{ return ::empty(rn); }
-	explicit operator bool  () const { return  (bool) ::empty(rn); }  
+	size_t		size()  const	{ return sto::size(rn); };
+	bool		empty() const	{ return sto::empty(rn); }
+	explicit operator bool  () const{ return sto::empty(rn); }  
 
 
 	// CT ACCESS
@@ -53,4 +54,5 @@ struct  chain_range {
 range(Rn& rn) { return chain_range<Rn>(rn); };
 
 
+						}; 
 						#endif //  STO_CHAIN_RANGE_H

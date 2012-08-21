@@ -1,25 +1,25 @@
 
-#ifndef  SCC_IO_H
-#define  SCC_IO_H
-////////////////////////////////////////////////////////////////////  OUT, OUTLN
-//#include <x86_64-pc-linux-gnu/bits/stdc++.h>
+					#ifndef  SCC_IO_H
+					#define  SCC_IO_H
+					//#include <x86_64-pc-linux-gnu/bits/stdc++.h>
 
-#include <type_traits>
-#include <iterator>
+					#include <type_traits>
+					#include <iterator>
 
-#include <utility>	// pair
-#include <tuple>
+					#include <utility>	// pair
+					#include <tuple>
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-	using	std::cout;
-	using	std::cout;
-	using	std::endl;
-	using	std::ostream;
+					#include <iostream>
+					#include <iomanip>
+					#include <fstream>
+						using	std::cout;
+						using	std::cout;
+						using	std::endl;
+						using	std::ostream;
 
-#include "range.h"
+					#include "range.h"
 
+					namespace sto {
 struct  io_t {
 	std::streambuf  *sb;
 	std::ofstream    ofs;
@@ -386,6 +386,6 @@ operator>>      (std::istream& is, Ct& C)    {
 	return is;
 };
 
-
-#endif	// SCC_IO_H
+					};
+					#endif	// SCC_IO_H
 

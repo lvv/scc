@@ -262,6 +262,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::is_same;
 	using	std::enable_if;
 
+using namespace sto;
 
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 

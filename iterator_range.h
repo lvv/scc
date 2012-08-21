@@ -3,6 +3,7 @@
 						#define  STO_ITERATOR_RANGE_H
 
 						#include "meta.h"
+						namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE
 
@@ -57,4 +58,5 @@ template<typename I>	struct  is_range_t	<iterator_range<I>>	: std::true_type { }
 range(I b, I e) { return iterator_range<I>(b,e); };
 
 
+						};
 						#endif //  STO_ITERATOR_RANGE_H

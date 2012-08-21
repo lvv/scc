@@ -1,7 +1,8 @@
 // fld type, stream op, included only from scc.h
 
-#ifndef  SCC_AWK_H
-#define  SCC_AWK_H
+					#ifndef  SCC_AWK_H
+					#define  SCC_AWK_H
+					using namespace sto;
 
 
 struct strr {         ///////////////////////////////////////////////////////  STRR
@@ -24,8 +25,10 @@ struct strr {         ///////////////////////////////////////////////////////  S
  };
 
 
+namespace sto {
 template<>		struct  is_ioable_t    <strr>:   std::true_type  {};
 template<>		struct  is_range_t <strr>:   std::false_type  {};
+};
 
 	std::ostream&
 operator<<      (std::ostream& os, const strr& sr) {
@@ -162,8 +165,10 @@ struct	fld : strr {
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 
 
+namespace sto {
 template<>		struct  is_ioable_t <fld>	        : std::true_type  {};
 template<>		struct  is_range_t <fld>	: std::false_type  {};
+};
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>
@@ -411,8 +416,9 @@ struct buf_t {
 
 
 // traits
+namespace sto {
 template<>	struct  is_string_t    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 template<>	struct  is_string_t    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
+};
 
-
-#endif // SCC_AWK
+					#endif // SCC_AWK

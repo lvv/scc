@@ -1,9 +1,10 @@
-					#ifndef  STO_NUMERIC_RANGE_H
-					#define  STO_NUMERIC_RANGE_H
+						#ifndef  STO_NUMERIC_RANGE_H
+						#define  STO_NUMERIC_RANGE_H
 
-					#include "scc/meta.h"
-					#include "scc/iterator_range.h"
+						#include "scc/meta.h"
+						#include "scc/iterator_range.h"
 
+						namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  NUMERIC_RANGE
 
@@ -73,4 +74,5 @@ template<typename T>	struct  is_range_t  <numeric_range<T>>	: std::true_type  {}
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
 range(T1 from,  T2 to,  T3 step=1) { return numeric_range<T>(from, to, step); };
 
+						};
 						#endif //  STO_NUMERIC_RANGE_H

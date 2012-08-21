@@ -10,7 +10,8 @@
 #include <tuple>
 
 #include "range.h"
-//#include "cpptype.h"
+
+namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -30,7 +31,7 @@ operator-      (Ct&& C) { return  std::end(C); };
 
 	template<typename Ct>
 	eIF <has_size<Ct>(), size_t>
-operator~      (const Ct& C) { return C.size(); };
+operator~      (const Ct& C) { return size(C); };
 
 
 //  if(!Ct)  --- (!Ct.empty())
@@ -360,6 +361,7 @@ operator <<       (It&& it, Ct&& C)    {};
 */
 
 
+};
 
 
 #endif	// LVV_STL_H

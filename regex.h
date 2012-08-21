@@ -1,21 +1,23 @@
-#ifndef  LVV_REGEX_H
-#define  LVV_REGEX_H
+					#ifndef  STO_REGEX_H
+					#define  STO_REGEX_H
 
-#include "range.h"
-#include <regex>
-	using std::regex;
+					#include "range.h"
+					#include <regex>
+						using std::regex;
 
-	using std::match_results;
-	using std::cmatch;
-	using std::smatch;
+						using std::match_results;
+						using std::cmatch;
+						using std::smatch;
 
-	using std::regex_match;
-	using std::regex_search;
-	using std::regex_replace;
+						using std::regex_match;
+						using std::regex_search;
+						using std::regex_replace;
 
-	using std::regex_token_iterator;
-	using std::sregex_token_iterator;
-	using std::cregex_token_iterator;
+						using std::regex_token_iterator;
+						using std::sregex_token_iterator;
+						using std::cregex_token_iterator;
+
+					namespace sto {
 
 std::regex operator "" _R (const char* p, size_t n)	{ return std::regex(p); };
 
@@ -49,4 +51,5 @@ operator ~     (const S e)	{ return  std::regex(e.begin(), e.end()); };
 */
 
 
-#endif	// LVV_REGEX_H
+					};
+					#endif	// LVV_REGEX_H

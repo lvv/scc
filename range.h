@@ -1,11 +1,12 @@
-					#ifndef  STO_RANGE_H
-					#define  STO_RANGE_H
+						#ifndef  STO_RANGE_H
+						#define  STO_RANGE_H
 
-					#include "scc/meta.h"
-					#include "scc/numeric_range.h"
-					#include "scc/iterator_range.h"
-					#include "scc/chain_range.h"
+						#include "scc/meta.h"
+						#include "scc/numeric_range.h"
+						#include "scc/iterator_range.h"
+						#include "scc/chain_range.h"
 
+						namespace sto {
 
 /////////////////////////////////////////////////////////////////// RNG -- range proxy
 static  __attribute__((unused)) struct range_converter_t {} rng;
@@ -71,4 +72,5 @@ template<typename T>  constexpr bool   is_collection()     {
 template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
 template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
-					#endif	// STO_RANGE_H
+						}
+						#endif	// STO_RANGE_H
