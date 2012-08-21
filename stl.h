@@ -196,7 +196,7 @@ operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  endz(C) 
 	
 	namespace detail {
 		template<typename T>	static void	cstr_zstop(const T&    ret) {};
-					static void	cstr_zstop(      char* ret) { ++ret = '\0'; };
+					static void	cstr_zstop(      char* ret) { *++ret = '\0'; };
 	};
 
 
