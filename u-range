@@ -28,3 +28,7 @@ scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x)
 ### CHAIN_RANGE
 scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'range(a9)=42;  a9'
+scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
+scc 'auto r = range(v9);  __ r.front(), ++r; r.front()=11; r'
+
+###

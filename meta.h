@@ -111,6 +111,8 @@ DEF_HAS_METHOD(has_pop_front,pop_front())
 DEF_HAS_METHOD(has_size,size())
 DEF_HAS_METHOD(has_empty,empty())
 DEF_HAS_METHOD(has_resize,resize(size_t()))
+DEF_HAS_METHOD(has_back,back())
+DEF_HAS_METHOD(has_front,front())
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_ITERABLE
