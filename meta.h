@@ -7,6 +7,7 @@
 #include <array>
 #include <stack>
 #include <queue>
+#include <tuple>
 
 namespace sto {
 
@@ -266,13 +267,17 @@ struct is_callable<F, R(Args...)> {
 
 // like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
-template<typename Ct>	auto  endz(Ct&& C)              -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
+template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
 template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
 
 
-template<typename Ct>	 eIF<has_size<Ct>(), size_t> 	size (const Ct& C)     { return C.size(); };
-template<typename T, size_t N>		     size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
+template<class Ct> eIF<has_size<Ct>(),	  size_t> 	size (const Ct& C)     { return C.size(); };
+template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
+template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
+template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
+template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
+
 
 
 template<typename Rn>	eIF< has_empty<Rn>(), bool>  empty(const Rn& rn) { return  rn.empty(); }

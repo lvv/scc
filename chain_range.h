@@ -24,25 +24,26 @@ struct  chain_range {
 	chain_range&   operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
 
 	// ITERATOR
-	iterator	begin()		{ return std::begin(rn); };
-	iterator	end()		{ return std::end(rn); };
-	const_iterator	begin() const	{ return std::begin(rn); };
-	const_iterator	end()   const	{ return std::end(rn); };
+	iterator	begin()		{ return std::begin(rn); }
+	iterator	end()		{ return std::end(rn); }
+	const_iterator	begin() const	{ return std::begin(rn); }
+	const_iterator	end()   const	{ return std::end(rn); }
 
 
 	// CT MANAGMENT
-	size_t		size()  const	{ return sto::size(rn); };
-	bool		empty() const	{ return sto::empty(rn); }
-	explicit operator bool  () const{ return sto::empty(rn); }  
+	size_t		size  () const	{ return  sto::size (rn); }
+	bool		empty () const	{ return  sto::empty(rn); }
+	explicit operator bool() const	{ return !sto::empty(rn); }
 
 
 	// CT ACCESS
 	
-	eIF<has_back<Rn>(), value_type>  	back()  const	{ return  rn.back(); }  
-	eIF<has_back<Rn>(), reference>  	back()		{ return  rn.back(); }  
+	value_type  	front()  const	{ return  *std::begin(rn); }  
+	reference  	front()		{ return  *std::begin(rn); }  
 
-	eIF<has_front<Rn>(), value_type>  	front()  const	{ return  rn.front(); }  
-	eIF<has_front<Rn>(), reference>  	front()		{ return  rn.front(); }  
+	value_type  	back()  const	{ return  *(std::prev(sto::endz(rn))); }  
+	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  
+
  };
 
 

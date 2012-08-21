@@ -1,17 +1,17 @@
-#ifndef  LVV_STL_H
-#define  LVV_STL_H
+					#ifndef  LVV_STL_H
+					#define  LVV_STL_H
 
-#include <stddef.h>
+					#include <stddef.h>
 
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <deque>
-#include <tuple>
+					#include <algorithm>
+					#include <iterator>
+					#include <string>
+					#include <deque>
+					#include <tuple>
 
-#include "range.h"
+					#include "range.h"
 
-namespace sto {
+					namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  MEMBERS ALIASES
 
@@ -26,7 +26,6 @@ operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-value
 	template<typename Ct>
 	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
 operator-      (Ct&& C) { return  std::end(C); };
-
 
 
 	template<typename Ct>
@@ -45,11 +44,11 @@ operator!      (const Ct& C) { return C.empty(); };
 
 	template<typename Ct>
 	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.front()); };
+operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
 
 	template<typename Ct>
 	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
+operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
 
 
 
@@ -360,8 +359,5 @@ operator/       (It&& i, const typename std::iterator_traits<It>::value_type x) 
 operator <<       (It&& it, Ct&& C)    {};
 */
 
-
-};
-
-
-#endif	// LVV_STL_H
+					};
+					#endif	// LVV_STL_H
