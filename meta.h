@@ -257,17 +257,22 @@ struct is_callable<F, R(Args...)> {
 };
 	// can not make is_foo<R<Args...>()  constexpr func - needs partial specialization
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////  ENDZ, SIZE
 // not really a meta functions
-//  ~Ct  --- size()		(n/a for c-arrays)
-//
-	template<typename Ct>
-	eIF <has_size<Ct>(), size_t>
-size      (const Ct& C) { return C.size(); };
 
-	template<typename T, size_t N>
-	size_t
-size      (const T (&C)[N]) { return endz(C) - std::begin(C); };
+// like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
+
+template<typename Ct>	auto  endz(Ct&& C)              -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
+template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
+template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
+
+
+template<typename Ct>	 eIF<has_size<Ct>(), size_t> 	size (const Ct& C)     { return C.size(); };
+template<typename T, size_t N>		     size_t	size (const T (&C)[N]) { return endz(C) - std::begin(C); };
+
+
+template<typename Rn>	eIF< has_empty<Rn>(), bool>  empty(const Rn& rn) { return  rn.empty(); }
+template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return  (bool) ::size(rn); }
 
 
 #endif
