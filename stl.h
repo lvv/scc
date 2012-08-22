@@ -270,14 +270,28 @@ operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )   
 template<typename U, typename V>   U&     operator++   (std::pair<U,V>& P)      { return P.first;  };
 template<typename U, typename V>   V&     operator++   (std::pair<U,V>& P, int) { return P.second; };
 
+
+// ++Tpl 
 	template <class... Types>
 	typename std::tuple_element<std::tuple_size<std::tuple<Types...> >::value-1, typename std::tuple<Types...> >::type&
 operator++	(typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
 
+// ++Tpl  (const)
+	template <class... Types>
+	const typename std::tuple_element<std::tuple_size<std::tuple<Types...> >::value-1, typename std::tuple<Types...> >::type&
+operator++	(const typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
 
+
+// Tpl++ 
 	template <class... Types>
 	typename std::tuple_element<0, std::tuple<Types...> >::type&
 operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
+
+// Tpl++  (const) 
+	template <class... Types>
+	const typename std::tuple_element<0, std::tuple<Types...> >::type&
+operator++	(const typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
+
 
 	template <class... Types>
 	constexpr size_t

@@ -97,3 +97,4 @@ scc  ' *+v9=-33;  __ *+vint{1,2}, v9;'
 # ACCESS
 scc '__ size(s9), size(c9), size(a9), size(v9);'
 scc '__ ++range(c9), range(a23)++, ++v9;'
+scc '__ ++MT(1,2), MT(1,2)++;'
