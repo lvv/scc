@@ -102,7 +102,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 
 // SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Ct >
-	eIF<is_range<Ct>()  &&  !is_ioable_t<Ct>::value, std::ostream&>
+	eIF<is_range<Ct>()  &&  !is_ioable<Ct>(), std::ostream&>
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
@@ -244,12 +244,12 @@ struct in_t {
 
 	// PRIMARY (directly inputable)
 		template<typename T>	
-		eIF< is_ioable_t<T>::value, void >
+		eIF< is_ioable<T>(), void >
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
 		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value,  void>
+		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>(),  void>
 	input(Ct& C)	{
 		typename Ct::value_type t;
 		if (n>0) C.resize(n);
@@ -294,7 +294,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable_t<Ct>::value, std::istream& >
+		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>(), std::istream& >
 operator>>      (std::istream& is, Ct& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 

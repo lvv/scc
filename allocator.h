@@ -2,6 +2,22 @@
 // TR http://stackoverflow.com/questions/11373796/custom-memory-allocator-for-stl-map
 // TR http://www.codeguru.com/cpp/cpp/cpp_mfc/stl/article.php/c4079/Allocators-STL.htm
 
+/* (from c++ now presentation) - A Minimal Allocator • Much of the C++03 boilerplate is now defaulted
+
+	template <class T>
+	class MyAlloc {
+		public:
+		typedef T value_type;
+		MyAlloc();
+		template <class U>
+		MyAlloc(const MyAlloc<U>&);
+		T* allocate(std::size_t);
+		void deallocate(T*, std::size_t);
+	};
+	template <class T, class U> bool operator==(const MyAlloc<T>&, const MyAlloc<U>&);
+	template <class T, class U> bool operator!=(const MyAlloc<T>&, const MyAlloc<U>&);
+*/
+
 #ifndef LVV_ALLOCATOR_H
 #define LVV_ALLOCATOR_H
 

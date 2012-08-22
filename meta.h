@@ -80,24 +80,24 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
 
+
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
 	namespace detail {											\
-		template <class T>  static std::true_type	NAME##_ol(typename T::MEMBER* u);		\
-		template <class T>  static std::false_type	NAME##_ol(...);					\
+		template <class T>                                static std::false_type  NAME##_ol(...);	\
+		template <class T, class M = typename T::MEMBER>  static std::true_type	  NAME##_ol(T* t);	\
 	}; 													\
-	template<class T> constexpr bool NAME(T c)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
-	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
+	template<class T> constexpr bool NAME(const T& t)  { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; }; \
+	template<class T> constexpr bool NAME()            { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
 
 
 
 #define DEF_HAS_METHOD(NAME,METHOD)										\
 	namespace detail {											\
-		template <class T, class F = decltype (((T*)0)->METHOD)>static std::true_type	NAME##_ol(T* u);\
 		template <class T>					static std::false_type	NAME##_ol(...);	\
+		template <class T, class F = decltype (((T*)0)->METHOD)>static std::true_type	NAME##_ol(T* u);\
 	}; 													\
 	template<class T> constexpr bool NAME(T t)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
 	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
-
 
 
 DEF_HAS_MEMBER(has_iterator,iterator)
@@ -124,9 +124,8 @@ DEF_HAS_METHOD(has_front,front())
 struct is_range_t {
 
 		template <
-			typename U,
-			//typename S = decltype (((U*)0)->size()),
-			typename I = typename U::const_iterator
+			class U,
+			class I = typename U::const_iterator
 		>
 		static int8_t
 	test(U* u);
@@ -137,6 +136,16 @@ struct is_range_t {
 
 	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
 };
+
+
+/*
+template <class U, class I = typename U::const_iterator >	static std::true_type	is_range_ol(U* u=0);
+template <class U>						static std::false_type	is_range_ol(...);
+
+template<class T> constexpr bool is_range(T t=std::declval<T>())   { return  decltype(is_range_ol<rm_qualifier<T>>(0))::value; };
+*/
+
+
 
 template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_range_t <T(&)[N]>		: std::true_type { };
@@ -286,3 +295,4 @@ template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return 
 };
 
 #endif
+
