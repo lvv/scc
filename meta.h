@@ -79,24 +79,24 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
+
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
-		template <typename T>										\
-	struct NAME##_t {											\
-		template <typename U,  typename M = typename U::MEMBER>		static int8_t	test(U* u);	\
-		template <typename U>						static int16_t	test(...);	\
-		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
+	namespace detail {											\
+		template <class T>  static std::true_type	NAME##_ol(typename T::MEMBER* u);		\
+		template <class T>  static std::false_type	NAME##_ol(...);					\
 	}; 													\
-	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
+	template<class T> constexpr bool NAME(T c)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
+	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
+
 
 
 #define DEF_HAS_METHOD(NAME,METHOD)										\
-		template <typename T>										\
-	struct NAME##_t {											\
-		template <typename U,  typename F = decltype (((U*)0)->METHOD)>	static int8_t	test(U* u);	\
-		template <typename U>						static int16_t	test(...);	\
-		enum { value = sizeof test <rm_qualifier<T>> (0) == 1 };					\
+	namespace detail {											\
+		template <class T, class F = decltype (((T*)0)->METHOD)>static std::true_type	NAME##_ol(T* u);\
+		template <class T>					static std::false_type	NAME##_ol(...);	\
 	}; 													\
-	template<typename T>   constexpr bool NAME() { return  NAME##_t <T>::value; } ;
+	template<class T> constexpr bool NAME(T t)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
+	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
 
 
 
@@ -105,10 +105,10 @@ DEF_HAS_MEMBER(has_iterator_category,iterator_category)
 DEF_HAS_MEMBER(has_value_type,value_type)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
-DEF_HAS_METHOD(has_push_front,push_front(typename U::value_type()))
-DEF_HAS_METHOD(has_push_back,push_back(typename U::value_type()))
-DEF_HAS_METHOD(has_push,push(typename rm_ref<U>::value_type()))
-DEF_HAS_METHOD(has_1arg_insert,insert(typename U::value_type()))
+DEF_HAS_METHOD(has_push_front,push_front(typename T::value_type()))
+DEF_HAS_METHOD(has_push_back,push_back(typename T::value_type()))
+DEF_HAS_METHOD(has_push,push(typename rm_ref<T>::value_type()))
+DEF_HAS_METHOD(has_1arg_insert,insert(typename T::value_type()))
 DEF_HAS_METHOD(has_pop_back,pop_back())
 DEF_HAS_METHOD(has_pop_front,pop_front())
 DEF_HAS_METHOD(has_size,size())
