@@ -83,8 +83,8 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
 	namespace detail {											\
-		template <class T>                                static std::false_type  NAME##_ol(...);	\
-		template <class T, class M = typename T::MEMBER>  static std::true_type	  NAME##_ol(T* t);	\
+		template <class T>                                std::false_type	NAME##_ol(...);		\
+		template <class T, class M = typename T::MEMBER>  std::true_type	NAME##_ol(T* t);	\
 	}; 													\
 	template<class T> constexpr bool NAME(const T& t)  { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; }; \
 	template<class T> constexpr bool NAME()            { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
@@ -93,8 +93,8 @@ template<typename Cl>	                using  cl_iterator_fwd     = typename  cop
 
 #define DEF_HAS_METHOD(NAME,METHOD)										\
 	namespace detail {											\
-		template <class T>					static std::false_type	NAME##_ol(...);	\
-		template <class T, class F = decltype (((T*)0)->METHOD)>static std::true_type	NAME##_ol(T* u);\
+		template <class T>					std::false_type	NAME##_ol(...);		\
+		template <class T, class F = decltype (((T*)0)->METHOD)>std::true_type	NAME##_ol(T* u);	\
 	}; 													\
 	template<class T> constexpr bool NAME(T t)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
 	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
