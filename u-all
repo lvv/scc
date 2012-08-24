@@ -2,6 +2,7 @@
 set -o errexit
 set -v 
 
+make -B u-meta && ./u-meta
 . u-stl
 . u-scc
 . u-in

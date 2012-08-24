@@ -2,7 +2,7 @@
 						#ifndef  STO_ITERATOR_RANGE_H
 						#define  STO_ITERATOR_RANGE_H
 
-						#include "meta.h"
+						#include "scc/meta.h"
 						namespace sto {
 
 /////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE

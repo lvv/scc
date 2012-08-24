@@ -29,6 +29,7 @@ include $(INCLUDE)
 index.txt: 
 	head -n-1 README.asciidoc > /tmp/t.ad
 
+u-meta.cc: *.h
 
 #COPY_LIST += $(wildcard *.png)
 
