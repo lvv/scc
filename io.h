@@ -47,7 +47,7 @@ struct  io_t {
 	}
 
 	// docs http://stackoverflow.com/questions/366955/obtain-a-stdostream-either-from-stdcout-or-stdofstreamfile
-};
+ };
 
 
 static io_t io;

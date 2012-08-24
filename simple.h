@@ -45,6 +45,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 #include <deque>
 #include <iterator>
 #include <list>
+#include <forward_list>
 #include <map>
 #include <unordered_map>
 #include <set>
@@ -90,6 +91,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::unordered_set;
 	using	std::unordered_multiset;
 	using	std::list;
+	using	std::forward_list;
 	using	std::multiset;
 	using	std::map;
 	using	std::unordered_map;

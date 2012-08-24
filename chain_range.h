@@ -36,7 +36,7 @@ struct  chain_range {
 	explicit operator bool() const	{ return !sto::empty(rn); }
 
 
-	// CT ACCESS
+	// ELEM ACCESS
 	
 	value_type  	front()  const	{ return  *std::begin(rn); }  
 	reference  	front()		{ return  *std::begin(rn); }  
@@ -44,6 +44,17 @@ struct  chain_range {
 	value_type  	back()  const	{ return  *(std::prev(sto::endz(rn))); }  
 	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  
 
+	// CT MOD
+	/*
+	eIF<has_push_back<Rn>()>	push_back( const value_type& value)	{rn.push_back(value);}
+	eIF<has_push_back<Rn>()>	push_back( value_type&& value)		{rn.push_back(std::move(value));}
+	
+	eIF<has_push_front<Rn>()>	push_front( const value_type& value)	{rn.push_front(value);}
+	eIF<has_push_front<Rn>()>	push_front( value_type&& value)		{rn.push_front(std::move(value));}
+	
+	eIF<has_1arg_insert<Rn>()>	insert( const value_type& value)	{rn.insert(value);}
+	eIF<has_1arg_insert<Rn>()>	insert( value_type&& value)		{rn.insert(std::move(value));}
+	*/
  };
 
 

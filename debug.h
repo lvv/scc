@@ -6,6 +6,10 @@
 				#include <deque>
 				#include <stack>
 				#include <set>
+				#include <list>
+				#include <forward_list>
+
+
 
 				#include <cxxabi.h>
 
@@ -79,6 +83,8 @@ operator<<      (std::ostream& os, const to& o) { std::cout << "to{" << o.id << 
 
 std::vector<int>		__attribute__((unused)) 	v9      {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
 std::deque<int>		__attribute__((unused)) 	d9      {0,1,2,3,4,5,6,7,8,9},  d0, d23{2,3};
+std::list<int>		__attribute__((unused)) 	l9      {0,1,2,3,4,5,6,7,8,9},  l0, l23{2,3};
+std::forward_list<int>		__attribute__((unused)) 	fl9      {0,1,2,3,4,5,6,7,8,9},  fl0, fl23{2,3};
 std::stack<int>	__attribute__((unused))		st0;
 std::set<int>	__attribute__((unused))		sk0;
 int		__attribute__((unused))		a9[]    {0,1,2,3,4,5,6,7,8,9},  a23[]{2,3};
