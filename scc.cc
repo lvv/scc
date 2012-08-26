@@ -27,7 +27,12 @@
 
 
 struct	tracking_buf_t : std::streambuf {
-	tracking_buf_t(std::streambuf* buf) :  last_char(0), buf(buf), count(0) {
+
+		char last_char;
+		std::streambuf* buf;
+		long count;
+
+	tracking_buf_t (std::streambuf* buf) :  last_char(0), buf(buf), count(0) {
 	    setp(0, 0); 	// no buffering, overflow on every char
 	}
 
@@ -40,10 +45,6 @@ struct	tracking_buf_t : std::streambuf {
 		return c;
 	}
 
-	char last_char;
-	std::streambuf* buf;
-	long count;
-	private:
 };
 
 
@@ -55,7 +56,6 @@ int main(int argc, char** argv) {
 	std::streambuf* org_cout_buf = std::cout.rdbuf();
 	tracking_buf_t tracking_buf(org_cout_buf);
 	std::cout.rdbuf(&tracking_buf);
-	io.rdbuf(&tracking_buf);
 
 	// pre-declared vars
 	long i __attribute__((unused)) = 0;
@@ -160,18 +160,9 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	//if ( ! tracking_buf.terminated_line()) 	 cout << endl << flush;
-	{
-		cerr << endl;
-		cerr << "terminated: " << tracking_buf.terminated_line() << endl;
-		cerr << "cout: " << tracking_buf.count << endl;
-		cerr << "last_char: " << tracking_buf.last_char << endl;
-		//cout << "\nswitching buf back to org\n";
-		//cout << flush;
-		//_  flush;
-		std::cout.rdbuf(org_cout_buf);
-		//cout << "last char: \"" << c << "\"  " << int(c)  << endl;
-	}
+	// last output should have terminated '\n'
+	if ( ! tracking_buf.terminated_line()) 	 cout << '\n';
+	std::cout.rdbuf(org_cout_buf);
 
 
 	#ifndef scc_NOAWK
