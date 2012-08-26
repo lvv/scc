@@ -25,19 +25,10 @@ struct  io_t {
 	std::ofstream    ofs;
 	std::ostream	*osp;
 
-	io_t() :
-		sb(std::cout.rdbuf()),
-		osp(new std::ostream(sb))
-		{}
+	io_t() :  sb((std::cout << std::flush).rdbuf()),  osp(new std::ostream(sb)) {}
+	~io_t() { if ( ofs.is_open())   ofs.close();   delete  osp; }
 
-	~io_t() {
-		if ( ofs.is_open()) {
-			ofs.close();
-		}
-		delete  osp;
-	}
-
-	bool out(const char* path) {
+	bool open(const char* path) {
 		if (ofs.is_open())  ofs.close();
 		ofs.open (path);
 		sb = ofs.rdbuf();
@@ -45,6 +36,9 @@ struct  io_t {
 		osp = new std::ostream(sb);
 		return true;
 	}
+
+	std::streambuf*  rdbuf() const			{ return sb; }
+	std::streambuf*  rdbuf(std::streambuf* new_sb)	{ auto old_sb=sb; sb=new_sb; return old_sb; }
 
 	// docs http://stackoverflow.com/questions/366955/obtain-a-stdostream-either-from-stdcout-or-stdofstreamfile
  };
@@ -82,7 +76,7 @@ struct  out {
 
 struct  outln : out  {
 	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
-	~outln()				{ *io.osp << endl; }
+	~outln()				{ *io.osp << "\n"; }
  };
 
 
