@@ -21,7 +21,6 @@
 
 					namespace sto {
 
-
 	std::filebuf cout_fb;
 
 bool set_out_file(const char* path) { 
