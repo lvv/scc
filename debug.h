@@ -29,25 +29,25 @@ const char* type2name() {
 
 //////////////////////////////////////////////////////////////////////////////////////////  REF 2 NAME
 
-template <typename T>	struct ref2name                      { static constexpr const char* value =  "T";};
-template <typename T>	struct ref2name <const T>            { static constexpr const char* value =  "const T";};
-template <typename T>	struct ref2name <volatile T>         { static constexpr const char* value =  "volatile T";};
-template <typename T>	struct ref2name <volatile const T>   { static constexpr const char* value =  "volatile const T";};
+template <typename T>	struct ref2name                      { static constexpr const char* value =  "";};
+template <typename T>	struct ref2name <const T>            { static constexpr const char* value =  "const";};
+template <typename T>	struct ref2name <volatile T>         { static constexpr const char* value =  "volatile";};
+template <typename T>	struct ref2name <volatile const T>   { static constexpr const char* value =  "volatile const";};
 
-template <typename T>	struct ref2name <T&>                 { static constexpr const char* value =  "T&";};
-template <typename T>	struct ref2name <const T&>           { static constexpr const char* value =  "const T&";};
-template <typename T>	struct ref2name <volatile T&>        { static constexpr const char* value =  "volatile T&";};
-template <typename T>	struct ref2name <volatile const  T&> { static constexpr const char* value =  "volatile const  T&";};
+template <typename T>	struct ref2name <T&>                 { static constexpr const char* value =  "&";};
+template <typename T>	struct ref2name <const T&>           { static constexpr const char* value =  "const &";};
+template <typename T>	struct ref2name <volatile T&>        { static constexpr const char* value =  "volatile &";};
+template <typename T>	struct ref2name <volatile const  T&> { static constexpr const char* value =  "volatile const &";};
 
-template <typename T>	struct ref2name <T&&>                { static constexpr const char* value =  "T&&";};
-template <typename T>	struct ref2name <const T&&>          { static constexpr const char* value =  "const T&&";};
-template <typename T>	struct ref2name <volatile T&&>       { static constexpr const char* value =  "volatile T&&";};
-template <typename T>	struct ref2name <volatile const T&&> { static constexpr const char* value =  "volatile const T&&";};
+template <typename T>	struct ref2name <T&&>                { static constexpr const char* value =  "&&";};
+template <typename T>	struct ref2name <const T&&>          { static constexpr const char* value =  "const &&";};
+template <typename T>	struct ref2name <volatile T&&>       { static constexpr const char* value =  "volatile &&";};
+template <typename T>	struct ref2name <volatile const T&&> { static constexpr const char* value =  "volatile const &&";};
 
 //////////////////////////////////////////////////////////////////////////////////////////////  printT
 
-#define printT(T)  std::cout << ref2name<T>::value << "  \t---   \t"  <<  type2name<T>()  <<  std::endl;
-#define printToV(V)  printT(decltype(V));
+#define ptype(T)  std::cout <<  type2name<T>() << " " << ref2name<T>::value <<  std::endl;
+#define pvtype(V)  ptype(decltype(V));
 
 ////////////////////////////////////////////////////////////////////////////////////////////// Template Type Dumper
 
