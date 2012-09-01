@@ -501,7 +501,7 @@ scc '"SCC is installed"'
 This project is in alpha stage. Version with "latest" git tag (if any) and
 documented features are more stable.  SCC uses C+11 extensively and it was
 developed with GCC-4.7.  CLANG-3.2 now can execute simple snippets which do not use
-`awk.h`, `stl.h` and `io.h` functionality. 
+`awk.h`, `stl.h` and `io.h` functionality:  
 
 ----------------------------------------------
 CXX=clang++
@@ -509,6 +509,13 @@ CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
 scc 2+2
 4
 ----------------------------------------------
+
+//////////////////////
+CLANG constexpr bug
+http://llvm.org/bugs/show_bug.cgi?id=11851
+/////////////////////////////
+
+
 
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 

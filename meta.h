@@ -1,15 +1,15 @@
-#ifndef  LVV_META_H
-#define  LVV_META_H
+					#ifndef  STO_META_H
+					#define  STO_META_H
 
-#include <type_traits>
-#include <functional>
-#include <iterator>
-#include <array>
-#include <stack>
-#include <queue>
-#include <tuple>
+					#include <type_traits>
+					#include <functional>
+					#include <iterator>
+					#include <array>
+					#include <stack>
+					#include <queue>
+					#include <tuple>
 
-namespace sto {
+					namespace sto {
 
 // TODO
 // 	SFNIE with NOEXCEPT  --- http://nonchalantlytyped.net/blog/2012/06/27/yet-another-sfinae/
@@ -292,7 +292,7 @@ template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& 
 template<typename Rn>	eIF< has_empty<Rn>(), bool>  empty(const Rn& rn) { return  rn.empty(); }
 template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return  (bool) sto::size(rn); }
 
-};
+					};
 
-#endif
+					#endif
 

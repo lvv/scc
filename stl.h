@@ -55,7 +55,7 @@ operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Ct, typename T>
-	eIF <is_elem_of<T, Ct>()  &&   has_pop_back<Ct>(),   Ct&&>
+	eIF <is_elem_of<T, Ct>() &&   has_pop_back<Ct>(),   Ct&&>
 operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std::forward<Ct>(C); };
 
 
