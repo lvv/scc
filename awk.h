@@ -402,6 +402,9 @@ struct buf_t {
 		const char *sep, *eof;
 		const char *bof = F.a.b;
 
+		// TODO: gawk: In the special case that FS is a single space, fields are separated by runs of spaces
+		//   and/or tabs and/or newlines.  (But see the section POSIX COMPATIBILITY, below).
+
 		do {
 			while( bof < F.a.e   &&   PAD_tab[size_t(*bof)]  )  bof++;		// skip padding
 			sep = eof = search(bof, F.a.e, FS.b, FS.e);			//

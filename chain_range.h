@@ -17,10 +17,10 @@ struct  chain_range {
 		typedef		typename std::iterator_traits<iterator>::pointer		pointer ;
 		typedef		typename std::iterator_traits<iterator>::reference		reference ;
 
-	Rn& rn;
+	Rn&& rn;
 
 	// CTOR
-	chain_range(Rn& rn)  : rn(rn) {};
+	explicit chain_range(Rn&& rn)  : rn(std::forward<Rn>(rn)) {};
 	chain_range&   operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
 
 	// ITERATOR
@@ -61,9 +61,10 @@ struct  chain_range {
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker
 
 
-	template<typename Rn>
-	eIF<is_range<Rn>(), chain_range<Rn>>
-range(Rn& rn) { return chain_range<Rn>(rn); };
+template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&& rn)  { return chain_range<Rn>(rn); };
+//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn& rn)  { return chain_range<Rn>(rn); };
+//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&  rn)  { return chain_range<Rn>(rn); };
+//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&& rn)  { return chain_range<Rn>(std::forward<Rn>(rn)); };
 
 
 						}; 

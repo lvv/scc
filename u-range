@@ -30,5 +30,7 @@ scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'range(a9)=42;  a9'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
 #scc 'auto r = range(range(v9));  __ r.front(), ++r; r.front()=11; r'
+scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
+
 
 ###
