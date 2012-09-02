@@ -5,10 +5,27 @@
 						#include "meta.h"
 						namespace sto {
 
-/////////////////////////////////////////////////////////////////////////////////////////  ITERATOR_RANGE
+/////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
+
+template<typename Rn>
+struct  rn_wrapper;
+
+template<typename Rn>
+struct  rn_wrapper<Rn&> {
+	Rn& rn; 
+	explicit rn_wrapper(Rn& rn) : rn(rn) {};
+};
+
+template<typename Rn>
+struct  rn_wrapper<Rn&&> {
+	Rn   rn;
+	explicit rn_wrapper(Rn&& rn) : rn(std::move(rn)) {};
+};
+
+////////
 
 	template<typename Rn>
-struct  chain_range {
+struct  chain_range : rn_wrapper<Rn&&> {
 
 		typedef		cl_iterator<Rn>							iterator;
 		typedef		cl_const_iterator<Rn>						const_iterator;
@@ -17,11 +34,12 @@ struct  chain_range {
 		typedef		typename std::iterator_traits<iterator>::pointer		pointer ;
 		typedef		typename std::iterator_traits<iterator>::reference		reference ;
 
-	Rn&& rn;
+		using rn_wrapper<Rn&&>::rn;
 
 	// CTOR
-	explicit chain_range(Rn&& rn)  : rn(std::forward<Rn>(rn)) {};
+	explicit chain_range(Rn&& rn)  : rn_wrapper<Rn&&>(std::forward<Rn>(rn)) {};
 	chain_range&   operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
+
 
 	// ITERATOR
 	iterator	begin()		{ return std::begin(rn); }
@@ -61,10 +79,11 @@ struct  chain_range {
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker
 
 
-template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&& rn)  { return chain_range<Rn>(rn); };
-//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn& rn)  { return chain_range<Rn>(rn); };
-//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&  rn)  { return chain_range<Rn>(rn); };
-//template<class Rn>    eIF<is_range<Rn>(), chain_range<Rn>>    range(Rn&& rn)  { return chain_range<Rn>(std::forward<Rn>(rn)); };
+	template<class Rn>   
+	eIF<is_range<Rn>(), chain_range<Rn&&>>   
+range(Rn&& rn)  {
+	return  std::move(chain_range<Rn&&>(std::forward<Rn>(rn)));
+};
 
 
 						}; 
