@@ -54,7 +54,7 @@ struct  numeric_range {
 
 	// CTOR
 	numeric_range()  			: from(T()),  to(T()), step(T())  {};
-	numeric_range(T from, T to, T step=1)	: from(from), to(to), step(step) {};
+	numeric_range(T from, T to, T step=1)	: from(from), to(to),  step(step) {};
 
 	const_iterator	cbegin() const	{ return const_iterator(*this, from); };
 	const_iterator	cend()   const	{ return const_iterator(*this, to); };
@@ -73,6 +73,10 @@ template<typename T>	struct  is_range_t  <numeric_range<T>>	: std::true_type  {}
 	template<class T1, class T2, class T3=T1, class T=decltype(T1()+T2()+T3())>
 	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
 range(T1 from,  T2 to,  T3 step=1) { return numeric_range<T>(from, to, step); };
+
+	template<class T>
+	eIF<std::is_arithmetic<T>::value,  numeric_range<T>>
+range(T to) { return numeric_range<T>(0, to, 1); };
 
 						};
 						#endif //  STO_NUMERIC_RANGE_H
