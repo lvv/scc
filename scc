@@ -106,8 +106,8 @@ fi
 #else
 	#  SED
 	if [[ $snippet_file ]]    
-	then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h
-	else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 cout << ( \2 ); is_print_last=true;/' > /tmp/snippet.h
+	then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
+	else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
 		shift 1;
 	fi
 #fi
