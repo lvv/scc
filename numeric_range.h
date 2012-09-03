@@ -27,11 +27,11 @@ struct  numeric_range {
 			
 			typedef		T		value_type;
 			typedef		size_t		difference_type ;
-			typedef		size_t		size_type ;
-			typedef		const T*	const_pointer ;
-			typedef		const_pointer	pointer ;
-			typedef		const T&	const_reference ;
-			typedef		const_reference	reference ;
+			typedef		size_t		size_type;
+			typedef		const T*	const_pointer;
+			typedef		const_pointer	pointer;
+			typedef		const T&	const_reference;
+			typedef		const_reference	reference;
 		
 
 		const numeric_range<T>&		range;
@@ -43,7 +43,7 @@ struct  numeric_range {
 		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
-				// we take assumpation that comparission is done only with  end()
+				// we make assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   std::abs(rhs.current-current) < std::abs(range.step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 	};
