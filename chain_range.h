@@ -27,6 +27,8 @@ struct  rn_wrapper<Rn&&> {
 	template<typename Rn>
 struct  chain_range : rn_wrapper<Rn&&> {
 
+		typedef		Rn								range;
+
 		typedef		cl_iterator<Rn>							iterator;
 		typedef		cl_const_iterator<Rn>						const_iterator;
 		typedef		cl_elem_type<Rn>  						value_type;
@@ -63,9 +65,9 @@ struct  chain_range : rn_wrapper<Rn&&> {
 	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  
 
 	// CT MOD
-	/*
 	eIF<has_push_back<Rn>()>	push_back( const value_type& value)	{rn.push_back(value);}
 	eIF<has_push_back<Rn>()>	push_back( value_type&& value)		{rn.push_back(std::move(value));}
+	/*
 	
 	eIF<has_push_front<Rn>()>	push_front( const value_type& value)	{rn.push_front(value);}
 	eIF<has_push_front<Rn>()>	push_front( value_type&& value)		{rn.push_front(std::move(value));}
