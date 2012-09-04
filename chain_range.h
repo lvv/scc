@@ -41,7 +41,9 @@ struct  chain_range : rn_wrapper<Rn&&> {
 
 	// CTOR
 	explicit chain_range(Rn&& rn)  : rn_wrapper<Rn&&>(std::forward<Rn>(rn)) {};
-	chain_range&   operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
+
+	// ASSIGNMENT
+	chain_range&   operator= (value_type x) { std::fill(std::begin(rn), sto::endz(rn), x);  return *this; };
 
 
 	// ITERATOR

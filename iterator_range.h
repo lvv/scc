@@ -21,6 +21,9 @@ struct  iterator_range {
 	iterator_range()  : b_(0), e_(0) {};
 	iterator_range(iterator b, iterator e)  : b_(b), e_(e) {};
 
+	// ASSIGNMENT
+	iterator_range& operator= (value_type x) { std::fill(b_, e_, x);  return *this; };
+
 
 	//template<typename Ct>
 	//iterator_range( typename std::enable_if<std::is_same<I, typename Ct::iterator>::value, Ct>::type&  C)  : b_(begin(C)), e_(end(C)) {};
@@ -30,7 +33,6 @@ struct  iterator_range {
 	const_iterator	begin() const	{ return b_; };
 	const_iterator	end()   const	{ return e_; };
 
-	iterator_range& operator= (value_type v) { for(auto& el: *this) el = v;  return *this; };
 
 
 	/* to bool conversion --

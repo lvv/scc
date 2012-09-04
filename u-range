@@ -2,35 +2,25 @@
 set -o errexit
 set -v
 
-# converters
-#scc 'array<int,3> a;	a|rng = 10;  a'
-#scc 'int a[3];		a|rng = 10;  a'
-#scc 'vint a(3);		a|rng = 10;  a'
-
-# constructors
-#scc '(+v9, +v9/5) =  33; v9'
-#scc '__ (range(v9) = 222);'
+################################################################# ITERATOR_RANGE
 scc 'range(v9/2, v9/5) = 42;  v9'
-#scc 'range(a9) = 42; a9'
 
-# empty
-#scc 'if(range(v9)) __ v9;  v9.clear(); if(!range(v9)) __ "empty";'
-
-### NUMERIC_RANGE
+################################################################# NUMERIC_RANGE
 # ctor
 scc '__ range(0,10,2),  range(10,0,-1.5);'
+#scc 'auto r=range(5); copy(+r, -r, back_inserter(v0));  v0 << range(5); v0'
 # loops
 scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
 scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
 # stl algorithms
 scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
 
-### CHAIN_RANGE
+################################################################# CHAIN_RANGE
 scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'range(a9)=42;  a9'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
 scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
 scc 'auto r = range(range(v9));  _ r.front();  ++r=11; r'
 
-### CHAIN_RANGE IMPORTED METHODS
+# Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
