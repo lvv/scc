@@ -48,7 +48,6 @@ struct  chain_range : rn_wrapper<Rn&&> {
 
 	template<typename rhsRn>
 	eIF <have_same_elem<Rn,rhsRn>(), chain_range&>
-
 	operator= (const rhsRn& rhs) { sto::clear(rn); for (const auto &x: rhs)  detail::append_elem(std::forward<Rn>(rn), x);    return *this; };
 
 

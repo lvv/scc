@@ -24,6 +24,19 @@ struct  iterator_range {
 	// ASSIGNMENT
 	iterator_range& operator= (value_type x) { std::fill(b_, e_, x);  return *this; };
 
+		template<typename rhsRn>
+		eIF <is_elem_of<value_type, rhsRn>(), iterator_range&>
+	operator= (const rhsRn& rhs) {
+		auto it= b_;
+		for (const auto &x: rhs)  {
+			if (it==e_) break; 
+			*it++ = x;
+		}
+		return *this;
+	}
+
+
+
 
 	//template<typename Ct>
 	//iterator_range( typename std::enable_if<std::is_same<I, typename Ct::iterator>::value, Ct>::type&  C)  : b_(begin(C)), e_(end(C)) {};
