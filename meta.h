@@ -116,6 +116,7 @@ DEF_HAS_METHOD(has_empty,empty())
 DEF_HAS_METHOD(has_resize,resize(size_t()))
 DEF_HAS_METHOD(has_back,back())
 DEF_HAS_METHOD(has_front,front())
+DEF_HAS_METHOD(has_clear,clear())
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_ITERABLE
@@ -271,27 +272,46 @@ struct is_callable<F, R(Args...)> {
 };
 	// can not make is_foo<R<Args...>()  constexpr func - needs partial specialization
 
-/////////////////////////////////////////////////////////////////////////////////////////////  ENDZ, SIZE
+/////////////////////////////////////////////////////////////////// RANGE GENERICS: ENDZ, SIZE, CLEAR
 // not really a meta functions
 
-// like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
+/////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
 template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
 template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
 
 
-template<class Ct> eIF<has_size<Ct>(),	  size_t> 	size (const Ct& C)     { return C.size(); };
+/////  SIZE
+template<class Ct> eIF<has_size<Ct>(),	  size_t>	size (const Ct& C)     { return C.size(); };
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
 template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
 
 
+/////  EMPTY
+template<typename Rn>	eIF< has_empty<Rn>(), bool>	empty(const Rn& rn)	{ return  rn.empty(); }
+template<typename Rn>	eIF<!has_empty<Rn>(), bool>	empty(const Rn& rn)	{ return  (bool) sto::size(rn); }
 
-template<typename Rn>	eIF< has_empty<Rn>(), bool>  empty(const Rn& rn) { return  rn.empty(); }
-template<typename Rn>	eIF<!has_empty<Rn>(), bool>  empty(const Rn& rn) { return  (bool) sto::size(rn); }
+/////  CLEAR
+template<typename Rn>	eIF< has_clear<Rn>()>		clear(Rn&& rn) 		{ rn.clear(); }
+template<typename Rn>	eIF<!has_clear<Rn>()>		clear(Rn&& rn) 		{}
+                                              void	clear(char*rn) 		{ *rn = '\0'; }
+	// TODO: spceialization for c-str, arrays
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+template<typename T>  constexpr bool   is_collection()     {
+	return      is_range<T>() 
+		||  is_stack<T>() 
+		||  is_queue<T>() 
+		||  is_range<T>()
+	;
+ };
+
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
+template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 					};
 
 					#endif

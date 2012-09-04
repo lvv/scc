@@ -60,16 +60,6 @@ operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(
 */
 
 /////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 
-template<typename T>  constexpr bool   is_collection()     {
-	return      is_range<T>() 
-		||  is_stack<T>() 
-		||  is_queue<T>() 
-		||  is_range<T>()
-	;
- };
-
-template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
-template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
 
 						}
 						#endif	// STO_RANGE_H

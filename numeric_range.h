@@ -13,6 +13,7 @@
 struct  numeric_range {
 
 
+			typedef		T		value_type;
 	struct	const_iterator {
 		explicit const_iterator (const numeric_range<T>& range, T current)
 			:	range		(range), 

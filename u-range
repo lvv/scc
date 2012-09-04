@@ -24,3 +24,8 @@ scc 'auto r = range(range(v9));  _ r.front();  ++r=11; r'
 
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
+
+# op=(range)
+scc 'range(v0) = a9; v0'
+scc 'range(s) = cc9; s'
+scc 'range(v9) = range(5); v9'
