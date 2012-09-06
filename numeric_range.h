@@ -42,10 +42,6 @@ struct  numeric_range {
 			typedef		const_reference	reference;
 		
 
-		const numeric_range<T>&		range;
-		T				current;
-		size_t				i;	
-
 		const_reference	operator*()	const	{ return   current; }
 		const_pointer	operator->()	const	{ return  &current; } // what is this for?
 		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
@@ -54,6 +50,12 @@ struct  numeric_range {
 				// we make assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   std::abs(rhs.current-current) < std::abs(range.step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
+
+	   private:
+		const numeric_range<T>&		range;
+		T				current;
+		size_t				i;	
+
 	};
 
 		typedef		const_iterator		iterator;
