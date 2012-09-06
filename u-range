@@ -2,21 +2,6 @@
 set -o errexit
 set -v
 
-################################################################# ITERATOR_RANGE
-# op=(value_type)
-scc 'range(v9/2, v9/5)   = 42;  v9'
-scc 'range(v9/5, v9/999) = v9;  v9'
-
-################################################################# NUMERIC_RANGE
-# ctor
-scc '__ range(0,10,2),  range(10,0,-1.5);'
-#scc 'auto r=range(5); copy(+r, -r, back_inserter(v0));  v0 << range(5); v0'
-# loops
-scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
-scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
-# stl algorithms
-scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
-
 ################################################################# CHAIN_RANGE
 scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
@@ -33,3 +18,19 @@ scc 'range(a9)=42;  a9'
 scc 'range(v0) = a9; v0'
 scc 'range(s) = cc9; s'
 scc 'range(v9) = range(5); v9'
+
+################################################################# ITERATOR_RANGE
+# op=(value_type)
+scc 'range(v9/2, v9/5)   = 42;  v9'
+scc 'range(v9/5, v9/999) = v9;  v9'
+
+################################################################# NUMERIC_RANGE
+# ctor
+scc '__ range(0,10,2),  range(10,0,-1.5);'
+#scc 'auto r=range(5); copy(+r, -r, back_inserter(v0));  v0 << range(5); v0'
+# loops
+scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
+scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
+# stl algorithms
+scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
+

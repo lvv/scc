@@ -47,10 +47,12 @@ operator!      (const Ct& C) { return C.empty(); };
 operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
 
 	template<typename Ct>
-	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
+
+	template<typename Ct>
+	eIF <!has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
-
-
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 

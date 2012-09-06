@@ -26,29 +26,39 @@ struct  rn_wrapper<Rn&&> {
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 
-template <class T, class Ref, class Ptr, class It>
+template <class Rn>
 struct chain_range_iterator {
 
 	// MEMBERS
-	It		current;
+	typedef    typename std::conditional<
+		std::is_const<rm_ref<Rn>>::value,
+		cl_const_iterator<Rn>,
+		cl_iterator<Rn>
+	>::type   org_iterator;
+
+
+	org_iterator current;
 
 
 	// STL ITERATOR TYPES
-	typedef		chain_range_iterator<T, T&, T*, It>		iterator;
-	typedef		chain_range_iterator<T, const T&, const T*, const It>	const_iterator;
-	typedef		std::forward_iterator_tag				iterator_category;
-	typedef		T						value_type;
-	typedef		Ptr						pointer;
-	typedef		const Ptr					const_pointer;
-	typedef		Ref						reference;
-	typedef		const Ref					const_reference;
+	typedef		std::forward_iterator_tag			iterator_category;
+
+	typedef		chain_range_iterator<Rn>			iterator;
+	typedef		chain_range_iterator<const Rn>			const_iterator;
+	typedef		cl_elem_type<Rn>				value_type;
+	typedef		value_type*					pointer;
+	typedef		const value_type*				const_pointer;
+	typedef		value_type&					reference;
+	typedef		const value_type&				const_reference;
 	typedef		size_t						size_type;
 	typedef		ptrdiff_t					difference_type;
 
 	typedef		chain_range_iterator				self;
 
 	////// CTOR
-	explicit chain_range_iterator (It current)  : current(current) {};
+	//chain_range_iterator ()                             : current()            {};  // default
+	chain_range_iterator (const org_iterator& current)  : current(current)     {};
+	//chain_range_iterator (const self& rhs)              : current(rhs.current) {};	// copy 
 
 	////// IFACE
 	reference	operator*()		{ return   *current; }
@@ -57,15 +67,13 @@ struct chain_range_iterator {
 	pointer		operator->()		{ return  &*current; }
 	const_pointer	operator->()	const	{ return  &*current; }
 
-	self&		operator++()		{ ++current;  return *this;  }
-	self 		operator++()	const	{ ++current;  return *this;  }
+	iterator&	operator++()		{ ++current;  return *this;  }
+	const_iterator	operator++()	const	{ ++current;  return *this;  }
 
-	self		operator++(int)		{ auto tmp=*this;  current++;  return tmp; }
+	const_iterator	operator++(int)		{  static int i=0; std::cout << ++i << std::endl;  const_iterator tmp=*this;  ++current;return tmp; }
 
 	bool		operator==(const const_iterator &rhs)	const	{ return   current == rhs.current; }
 	bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
-
-
  };
 
 
@@ -73,19 +81,10 @@ struct chain_range_iterator {
 	template<typename Rn>
 struct  chain_range : rn_wrapper<Rn&&> {
 
-		/*
-		typedef		cl_iterator<Rn>							iterator;
-		typedef		cl_const_iterator<Rn>						const_iterator;
-		typedef		cl_elem_type<Rn>  						value_type;
-		typedef		size_t  							size_type;
-		typedef		typename std::iterator_traits<iterator>::difference_type	difference_type ;
-		typedef		typename std::iterator_traits<iterator>::pointer		pointer ;
-		typedef		typename std::iterator_traits<iterator>::reference		reference ;
-		*/
 		typedef		cl_elem_type<Rn>  						value_type;
 		typedef		value_type							T;
-		typedef		chain_range_iterator<T,       T&,       T*,       cl_iterator<Rn>>      iterator;
-		typedef		chain_range_iterator<T, const T&, const T*, cl_const_iterator<Rn>>	const_iterator;
+		typedef		chain_range_iterator<Rn>      					iterator;
+		typedef		chain_range_iterator<const Rn>					const_iterator;
 		typedef		size_t  							size_type;
 		typedef		typename std::iterator_traits<typename rm_ref<Rn>::iterator>::difference_type	difference_type ;
 		typedef		typename std::iterator_traits<typename rm_ref<Rn>::iterator>::pointer		pointer ;
@@ -108,7 +107,9 @@ struct  chain_range : rn_wrapper<Rn&&> {
 
 
 	// ITERATOR
-	iterator	begin()		{ return iterator(std::begin(rn)); }
+	//iterator	begin()		{ return iterator(std::begin(rn)); }
+	//sto::chain_range_iterator<Rn>	begin()		{ auto it = chain_range_iterator<Rn>(std::begin(rn)); return it;}
+	sto::chain_range_iterator<Rn>	begin()		{ auto it = chain_range_iterator<Rn>(std::begin(rn)); return it;}
 	iterator	end()		{ return iterator(std::end(rn)); }
 	const_iterator	begin() const	{ return const_iterator(std::begin(rn)); }
 	const_iterator	end()   const	{ return const_iterator(std::end(rn)); }
@@ -121,7 +122,6 @@ struct  chain_range : rn_wrapper<Rn&&> {
 
 
 	// ELEM ACCESS
-	
 	value_type  	front()  const	{ return  *std::begin(rn); }  
 	reference  	front()		{ return  *std::begin(rn); }  
 
@@ -146,7 +146,6 @@ struct  chain_range : rn_wrapper<Rn&&> {
 
 	template<class U=Rn>   eIF<has_back<U>(), value_type>	back()					{return rn.back();}
 	template<class U=Rn>   eIF<has_front<U>(), value_type>	front()					{return rn.front();}
-
  };
 
 

@@ -9,9 +9,11 @@
 				#include <list>
 				#include <forward_list>
 
-
-
 				#include <cxxabi.h>
+
+				#include "scc/range.h"
+
+
 
 				namespace sto {
 
@@ -98,6 +100,9 @@ static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  v9; };
 static std::vector<int>	__attribute__((unused))		mk_v23(){ return  v23; };
 static std::vector<int>	__attribute__((unused))		mk_v0()	{ return  v0; };
 static std::deque<int>	__attribute__((unused))		mk_d9()	{ return  d9; };
+
+// range
+static 	auto __attribute__((unused))		r9	= range(v9); 
 
 				};
 				#endif
