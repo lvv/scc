@@ -57,6 +57,10 @@ template <typename T>		struct cl_traits      {
 		template <typename U, typename RF = typename rm_ref<U>::reference>	static RF       rf(rm_ref<U>* u);
 		template <typename U>                                          		static no_type  rf(...);
 	typedef     decltype(rf<T>(0))     reference ;
+
+		template <typename U, typename RF = typename rm_ref<U>::const_reference>static RF       crf(rm_ref<U>* u);
+		template <typename U>                                          		static no_type  crf(...);
+	typedef     decltype(crf<T>(0))     const_reference ;
 };
 
 
