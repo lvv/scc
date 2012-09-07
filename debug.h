@@ -103,6 +103,7 @@ static std::deque<int>	__attribute__((unused))		mk_d9()	{ return  d9; };
 
 // range
 static 	auto __attribute__((unused))		r9	= range(v9); 
+static 	auto __attribute__((unused))		rr9	= range(mk_v9()); 
 
 				};
 				#endif
