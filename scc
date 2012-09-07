@@ -105,11 +105,13 @@ fi
 #	fi
 #else
 	#  SED
-	if [[ $snippet_file ]]    
-	then	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
-	else	echo "${1%% }"     | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
-		shift 1;
+	if [[ -z $snippet_file ]] ;  then
+		snippet_file=/tmp/snippet.org
+		echo "${1%% }" > $snippet_file
+		shift 1
 	fi
+
+	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
 #fi
 
 
