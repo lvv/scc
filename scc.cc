@@ -25,7 +25,6 @@
 	#define		WRL	while( read_line()  ||  (next_file()  &&  read_line()) )
 #endif
 
-#include "/tmp/snippet.h"
 
 struct	tracking_buf_t : std::streambuf {
 
@@ -48,6 +47,7 @@ struct	tracking_buf_t : std::streambuf {
 
 };
 
+#include "/tmp/snippet.h"
 
 int main(int argc, char** argv) {
 

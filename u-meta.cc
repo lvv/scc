@@ -76,6 +76,13 @@ CHECK( ! is_input_iterator<char*>() 			)
 CHECK( ! is_input_iterator<char[]>() 			)
 CHECK( ! is_input_iterator<std::true_type>()		)
 
+// constess of iterator
+CHECK(   is_const_iterator<vint::const_iterator>()	)
+CHECK( ! is_const_iterator<vint::iterator>()		)
+CHECK(   is_const_iterator<const int*>()		)
+CHECK( ! is_const_iterator<int*>()			)
+CHECK(   (is_const_iterator<std::array<int,3>::const_iterator>()))
+CHECK( ! (is_const_iterator<std::array<int,3>::iterator>()))
 
 					CHECK_EXIT;
 					}

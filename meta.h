@@ -256,6 +256,16 @@ template<typename T> struct is_bidirectional_iterator: is_iterator<T> { template
 template<typename T> struct is_random_access_iterator: is_iterator<T> { template<typename U>  static typename U::random_access_iterator*  test (U*); };
 */
 
+	template<class IT, class T=decltype(*std::declval<IT>())>    
+	constexpr bool  
+is_const_iterator() {	// does not answer if this is CI, but if IT is const or not
+	return  ! std::is_assignable <
+		decltype( *std::declval<IT>() ),
+		T
+	>::value;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////  IS_CALLABLE
 
 // to check  ---  http://stackoverflow.com/questions/5100015/c-metafunction-to-determine-whether-a-type-is-callable
