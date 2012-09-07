@@ -25,6 +25,7 @@
 	#define		WRL	while( read_line()  ||  (next_file()  &&  read_line()) )
 #endif
 
+#include "/tmp/snippet.h"
 
 struct	tracking_buf_t : std::streambuf {
 
@@ -68,7 +69,6 @@ int main(int argc, char** argv) {
 	double x __attribute__((unused)) = 0.0;
 	double y __attribute__((unused)) = 0.0;
 	double z __attribute__((unused)) = 0.0;
-	double f __attribute__((unused)) = 0.0;
 
 	std::string s	__attribute__((unused));
 	std::string w	__attribute__((unused));
@@ -144,7 +144,7 @@ int main(int argc, char** argv) {
 		if (is_stream)  {
 			#ifndef scc_NOAWK
 			while (read_line()) {
-				#include "/tmp/snippet.h"
+				#include "/tmp/snippet.cc"
 
 				if (is_print_last)  {
 					if (is_n) cout << ORS;
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 			}
 			#endif
 		} else {
-			#include "/tmp/snippet.h"
+			#include "/tmp/snippet.cc"
 			if (is_print_last)  cout << ORS;
 		}
 	}

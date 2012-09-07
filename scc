@@ -111,7 +111,8 @@ fi
 		shift 1
 	fi
 
-	cat  $snippet_file | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.h
+	cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.cc
+	cat  $snippet_file | sed  -n 's/\(;;\).*//p'  > /tmp/snippet.h
 #fi
 
 
