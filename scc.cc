@@ -133,16 +133,15 @@ int main(int argc, char** argv) {
 	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
 
+		#ifdef scc_IS_STREAM
+		#ifndef scc_NOAWK
 		if (is_header) {
-			#ifndef scc_NOAWK
 			read_line();
 			for (size_t i = 0;  i<F.size();  i++)
 				F.header[F[i]] = i;
-			#endif
 		}
 
 		if (is_stream)  {
-			#ifndef scc_NOAWK
 			while (read_line()) {
 				#include "/tmp/snippet.cc"
 
@@ -153,11 +152,15 @@ int main(int argc, char** argv) {
 
 				if (is_p)  print_line();
 			}
-			#endif
-		} else {
+		}
+		else
+		#endif
+		#else
+		{
 			#include "/tmp/snippet.cc"
 			if (is_print_last)  cout << ORS;
 		}
+		#endif
 	}
 
 	// last output should have terminated '\n'
