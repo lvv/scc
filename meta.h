@@ -265,6 +265,17 @@ is_const_iterator() {	// does not answer if this is CI, but if IT is const or no
 	>::value;
 }
 
+/*
+	template<class Rn, class T=decltype(*std::declval<IT>())>    
+	constexpr bool  
+is_const_rn_elem() {	// does not answer if this is CI, but if IT is const or not
+	return  ! std::is_assignable <
+		decltype( *std::declval<IT>() ),
+		T
+	>::value;
+}
+*/
+
 
 ////////////////////////////////////////////////////////////////////////////////////////  IS_CALLABLE
 
