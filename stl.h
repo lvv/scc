@@ -243,7 +243,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
  };
 
 
-//  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
+//////////////////////////////////////////////////////////////////////  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	// overload for: std::min
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
@@ -251,7 +251,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
-	return  std::accumulate(i, std::end(std::forward<Ct>(C)), C.front(), f);
+	return  std::accumulate(i, endz(std::forward<Ct>(C)), front(C), f);
  };
 
 
@@ -261,8 +261,8 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::begin(std::forward<Ct>(C));
 	std::advance(i,1);
-	const T init = C.front();
-	return  std::accumulate(i, std::end(std::forward<Ct>(C)), init, f);
+	const T init = front(C);
+	return  std::accumulate(i, endz(std::forward<Ct>(C)), init, f);
  };
 
 
