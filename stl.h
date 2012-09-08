@@ -43,16 +43,24 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T, T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
+	//eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+//front      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
+	auto
+front    (Ct&& C)  -> decltype(*std::begin(C))  { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
 
 	template<typename Ct>
-	eIF <has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
+	//eIF <has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <has_back<Ct>(),  cl_reference<Ct>>
+back      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.back()); };
 
-	template<typename Ct>
-	eIF <!has_back<Ct>()  &&  !std::is_array<Ct>::value  &&  !has_top<Ct>(), cl_reference<Ct>>
-operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
+//	template<typename Ct>
+//	eIF <!has_back<Ct>()  &&  value  &&  !has_top<Ct>(), cl_reference<Ct>>
+//back      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
+
+	// c-arrays and strings
+	template<class Ct, class=eIF<!has_back<Ct>()>>
+	auto
+back      (Ct&& C) -> decltype(endz(C))  { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
@@ -269,30 +277,33 @@ operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )   
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
 
-template<typename U, typename V>   U&     operator++   (std::pair<U,V>& P)      { return P.first;  };
-template<typename U, typename V>   V&     operator++   (std::pair<U,V>& P, int) { return P.second; };
+template<class U, class V>   U&    front  (std::pair<U,V>&  P)      { return P.first;  };
+//template<class U, class V>   U&&   front  (std::pair<U,V>&& P)      { return std::move(P.first);  };
+//
+template<class U, class V>   V&    back   (std::pair<U,V>&  P) { return P.second; };
+//template<class U, class V>   V&&   back   (std::pair<U,V>&& P, int) { return std::move(P.second); };
 
 
 // ++Tpl 
 	template <class... Types>
 	typename std::tuple_element<std::tuple_size<std::tuple<Types...> >::value-1, typename std::tuple<Types...> >::type&
-operator++	(typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
+back	(typename std::tuple<Types...>& Tpl)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
 
 // ++Tpl  (const)
 	template <class... Types>
 	const typename std::tuple_element<std::tuple_size<std::tuple<Types...> >::value-1, typename std::tuple<Types...> >::type&
-operator++	(const typename std::tuple<Types...>& Tpl, int)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
+back	(const typename std::tuple<Types...>& Tpl)  {  return  std::get<std::tuple_size<std::tuple<Types...> >::value-1>(Tpl); };
 
 
 // Tpl++ 
 	template <class... Types>
 	typename std::tuple_element<0, std::tuple<Types...> >::type&
-operator++	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
+front	(typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 
 // Tpl++  (const) 
 	template <class... Types>
 	const typename std::tuple_element<0, std::tuple<Types...> >::type&
-operator++	(const typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
+front	(const typename std::tuple<Types...>& Tpl)  {  return  std::get<0>(Tpl); };
 
 
 	template <class... Types>
@@ -327,7 +338,7 @@ operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forwa
 
 	template<typename Ct>
  	eIF <has_top<Ct>(), cl_elem_type<Ct>>
-operator++      (Ct&& C, int)    { return C.top(); };
+back      (Ct&& C)    { return C.top(); };
 
 
 
@@ -346,14 +357,14 @@ operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop()
 
 
 //  Queue++
-	template<typename Ct>
-	eIF <is_queue<Ct>(), typename Ct::value_type> &
-operator++      (Ct& C, int)    { return C.back(); };
+//	template<typename Ct>
+//	eIF <is_queue<Ct>(), typename Ct::value_type> &
+//back      (Ct& C, int)    { return C.back(); };
 
 //  ++Queue
-	template<typename Ct>
-	eIF <is_queue<Ct>(), typename Ct::value_type> &
-operator++      (Ct& C)    { return C.front(); };
+//	template<typename Ct>
+//	eIF <is_queue<Ct>(), typename Ct::value_type> &
+//front      (Ct& C)    { return C.front(); };
 
 //  !Queue
 	template<typename Ct>
@@ -374,6 +385,10 @@ operator/       (It&& i, const typename std::iterator_traits<It>::value_type x) 
 	eIF <is_iterator<It>::value,  It>
 operator <<       (It&& it, Ct&& C)    {};
 */
+/////////////////////////////////////////////////////////////////////////////////////////////////////  GENERICS 
+
+template<typename Rn>	auto operator++(Rn&& rn)      -> decltype(front(rn)) 			{ return front(rn); }
+template<typename Rn>	auto operator++(Rn&& rn, int) -> decltype(back (rn)) 			{ return back (rn); }
 
 					};
 					#endif	// LVV_STL_H

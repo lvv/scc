@@ -327,11 +327,8 @@ template<typename Rn>	eIF<!has_clear<Rn>()>		clear(Rn&& rn) 		{}
                                               void	clear(char*rn) 		{ *rn = '\0'; }
 
 /////  FRONT/BACK
-template<typename Rn>	eIF< has_front<Rn>(), cl_elem_type<Rn>>		front(Rn&& rn) 		{ return rn.front(); }
-template<typename Rn>	eIF<!has_clear<Rn>(), cl_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }
+//template<typename Rn>	eIF<!has_clear<Rn>(), cl_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }
 
-template<typename Rn>	eIF< has_back<Rn>(), cl_elem_type<Rn>>		back(Rn&& rn) 		{ return rn.back(); }
-template<typename Rn>	eIF<!has_back<Rn>(), cl_elem_type<Rn>>		back(Rn&& rn) 		{ return *sto::endz(rn); }
 	// TODO: spceialization for c-str, arrays
 
 
