@@ -2,6 +2,7 @@
 						#define  STO_NUMERIC_RANGE_H
 
 						#include "scc/meta.h"
+						#include "scc/functor.h"
 						#include "scc/iterator_range.h"
 
 						namespace sto {
@@ -48,7 +49,7 @@ struct  numeric_range {
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
 
 				// we make assumpation that comparission is done only with  end()
-		bool		operator==(const const_iterator &rhs)	const	{ return   std::abs(rhs.current-current) < std::abs(range.step); }
+		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.current-current) < sto::abs(range.step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 
 	   private:

@@ -1,5 +1,5 @@
-				#ifndef  SCC_CPPTYPE_H
-				#define  SCC_CPPTYPE_H
+				#ifndef  SCC_FUNCTOR_H
+				#define  SCC_FUNCTOR_H
 
 
 
@@ -20,6 +20,9 @@ bool	ispunct (char c) { return std::ispunct ((int)c); }
 bool	isspace (char c) { return std::isspace ((int)c); }
 bool	isupper (char c) { return std::isupper ((int)c); }
 bool	isxdigit(char c) { return std::isxdigit((int)c); }
+
+
+template<class T> 	T abs(T t) { return  t > 0 ?  t : -t; }
 
 				};
 
