@@ -8,6 +8,7 @@
 					#include <stack>
 					#include <queue>
 					#include <tuple>
+					#include <algorithm>
 
 					namespace sto {
 
@@ -120,6 +121,7 @@ DEF_HAS_METHOD(has_empty,empty())
 DEF_HAS_METHOD(has_resize,resize(size_t()))
 DEF_HAS_METHOD(has_back,back())
 DEF_HAS_METHOD(has_front,front())
+DEF_HAS_METHOD(has_top,top())
 DEF_HAS_METHOD(has_clear,clear())
 
 
@@ -303,8 +305,8 @@ struct is_callable<F, R(Args...)> {
 /////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
 template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
-template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
-template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(array,array+N,'\0'); };
+template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
+//template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 
 /////  SIZE

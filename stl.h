@@ -51,7 +51,7 @@ operator++      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C))
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(C.back()); };
 
 	template<typename Ct>
-	eIF <!has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
+	eIF <!has_back<Ct>()  &&  !std::is_array<Ct>::value  &&  !has_top<Ct>(), cl_reference<Ct>>
 operator++      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
 
 
@@ -326,7 +326,7 @@ operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forwa
 //	3
 
 	template<typename Ct>
- 	eIF <is_stack<Ct>(), cl_elem_type<Ct>>
+ 	eIF <has_top<Ct>(), cl_elem_type<Ct>>
 operator++      (Ct&& C, int)    { return C.top(); };
 
 
