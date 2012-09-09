@@ -43,8 +43,6 @@ operator!      (const Ct& C) { return C.empty(); };
 //  ++T, T++  ---  front()/back()/.first/.second  (n/a for c-arrays)
 
 	template<typename Ct>
-	//eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-//front      (Ct&& C) { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
 	auto
 front    (Ct&& C)  -> decltype(*std::begin(C))  { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
 
@@ -53,11 +51,6 @@ front    (Ct&& C)  -> decltype(*std::begin(C))  { return std::forward<cl_referen
 	eIF <has_back<Ct>(),  cl_reference<Ct>>
 back      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.back()); };
 
-//	template<typename Ct>
-//	eIF <!has_back<Ct>()  &&  value  &&  !has_top<Ct>(), cl_reference<Ct>>
-//back      (Ct&& C, int) { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
-
-	// c-arrays and strings
 	template<class Ct, class=eIF<!has_back<Ct>()>>
 	auto
 back      (Ct&& C) -> decltype(endz(C))  { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
@@ -72,8 +65,6 @@ operator>>      (Ct&& C, T&& x)    { x = C.back();   C.pop_back();   return  std
 	template<typename Ct, typename T>
 	eIF <is_elem_of<T,Ct>()  &&   has_pop_front<Ct>(),   Ct&&>
 operator<<      (T& x, Ct&& C)    { x = C.front();  C.pop_front();  return  std::forward<Ct>(C); };
-
-
 
 
 
@@ -277,11 +268,11 @@ operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )   
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
 
-template<class U, class V>   U&    front  (std::pair<U,V>&  P)      { return P.first;  };
-//template<class U, class V>   U&&   front  (std::pair<U,V>&& P)      { return std::move(P.first);  };
-//
-template<class U, class V>   V&    back   (std::pair<U,V>&  P) { return P.second; };
-//template<class U, class V>   V&&   back   (std::pair<U,V>&& P, int) { return std::move(P.second); };
+template<class U, class V>   U&    front  (std::pair<U,V>&  P)		{ return           P.first;   };
+template<class U, class V>   U&&   front  (std::pair<U,V>&& P)		{ return std::move(P.first);  };
+
+template<class U, class V>   V&    back   (std::pair<U,V>&  P)		{ return           P.second;  };
+template<class U, class V>   V&&   back   (std::pair<U,V>&& P)		{ return std::move(P.second); };
 
 
 // ++Tpl 
@@ -326,7 +317,7 @@ operator--      (Ct&& C, int)    { C.pop();   return std::forward<Ct>(C); };
 //	[1, 2] 3
 
 	template<typename Ct, typename Xt>
-	eIF <is_stack<Ct>()  &&  is_elem_of<Xt,Ct>(),  Ct>
+	eIF <has_pop<Ct>()  &&  is_elem_of<Xt,Ct>(),  Ct>
 operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Ct>(C); };
 
 
@@ -346,30 +337,15 @@ back      (Ct&& C)    { return C.top(); };
 
 
 //  --Queue
-	template<typename Ct>
-	eIF <is_queue<Ct>(), Ct> &
-operator--      (Ct& C)    { C.pop();   return C; };
+	template<class Ct, class Xt>
+	eIF <is_queue<Ct>(), Ct&&> 
+operator--      (Ct&& C)    { C.pop();   return std::forward<Ct>(C); };
 
 //  x << Queue
-	template<typename Ct>
-	eIF <is_queue<Ct>(), typename Ct::value_type> &
-operator<<      (typename Ct::value_type& x, Ct& C)    { x = C.front();  C.pop();   return x; };
+	template<class Ct, class Xt>
+	eIF <has_pop<Ct>()  &&  is_elem_of<Xt,Ct>(), Ct&&> &
+operator<<      (Xt& x, Ct&& C)    { x = C.front();  C.pop();   return std::forward<Ct>(C); };
 
-
-//  Queue++
-//	template<typename Ct>
-//	eIF <is_queue<Ct>(), typename Ct::value_type> &
-//back      (Ct& C, int)    { return C.back(); };
-
-//  ++Queue
-//	template<typename Ct>
-//	eIF <is_queue<Ct>(), typename Ct::value_type> &
-//front      (Ct& C)    { return C.front(); };
-
-//  !Queue
-	template<typename Ct>
-	eIF <is_queue<Ct>(), size_t>
-operator~      (const Ct& C)    { return C.size(); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  ITERATOR

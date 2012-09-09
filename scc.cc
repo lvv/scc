@@ -161,7 +161,8 @@ int main(int argc, char** argv) {
 			if (is_print_last)  cout << ORS;
 		}
 		#endif
-	;}
+		; // this semicolon terminates possible empty else
+	}
 
 	// last output should have terminated '\n'
 	if ( ! tracking_buf.terminated_line()) 	 cout << '\n';
