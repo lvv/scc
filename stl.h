@@ -106,20 +106,25 @@ operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_e
 
 //////  T >> Cl 
 	// x >> Cl 
-	template<class Ct, class X>
+	template<class X, class Ct>
 	eIF <is_elem_of<X,Ct>(),  Ct&&>
 operator >> (X&& x, Ct&& C1)            {  detail::prepend_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
 
 
-	// Ct >> Cl
-	template<class Ct, class Cl> 
-	eIF <have_same_elem<Cl,Ct>(),  Cl&&>
-operator >>  (Ct&& C1, Cl&& C2)  {
-	auto it = endz(C1);
-	if (it != std::begin(C1))  it--;
-	while(it != std::begin(C1))
-		detail::prepend_elem(std::forward<Cl>(C2), cl_elem_fwd<Ct>(*it--));
-	return  std::forward<Cl>(C2);
+	// sRn >> tRn
+	template<class sRn, class tRn> 
+	eIF <have_same_elem<tRn,sRn>(),  tRn&&>
+operator >>  (sRn&& src, tRn&& trg)  {
+
+	if (std::begin(src) == endz(src)) 
+		return  std::forward<tRn>(trg);
+
+	auto it = endz(src);
+	do {
+		detail::prepend_elem(std::forward<tRn>(trg), cl_elem_fwd<sRn>(*(it = std::prev(it))));
+	} while ( it != std::begin(src));
+
+	return  std::forward<tRn>(trg);
  };
 
 
