@@ -1,9 +1,7 @@
 #!/bin/bash
 
 
-if [[ -z "$CXXFLAGS" ]] ;  then 
-	CXXFLAGS+=" -std=gnu++11 -Wall -pipe "
-fi
+CXXFLAGS+=" -std=gnu++11 -Wall -pipe "
 
 [ -f /etc/scc ]  && . /etc/scc
 [ -f   ~/.scc ]  && .   ~/.scc

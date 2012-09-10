@@ -238,7 +238,6 @@ Full list of container operators:
 +C			//  C.begin()
 -C			//  C.end()
 ~C			//  C.size()
-!C			//  C.empty()
 ++C			//  C.front()
 C++			//  C.back()
 --C			//  C.pop_front()
@@ -334,6 +333,8 @@ You don't need to remember these. Predefined variables are defined in external
 to snippet scope, so you can
 re-define these to what ever you want. 
 
+
+/////////////////////////////////////////////////////////////////////
 Examples
 --------
 
@@ -343,6 +344,7 @@ Square an array.  +++C++11 +++ is on by default:
 scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
 {1, 4, 9}								
 ----------------------------------------------------------------------------
+*/
 
 Calculate words frequencies from `stdin`. (`w` - is pre-defined `std::string`)
 
@@ -352,6 +354,7 @@ echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M'
 ----------------------------------------------------------------------------
 
 You can also find a lot of examples in `u-*` files.  These are unit-test like files.
+/////////////////////////////////////////////////////////////////////
 
 
 
@@ -480,7 +483,7 @@ echo -e '1 -\n2 none\n3 abc'  |  scc -p 'if ($2 == "(none|-)"_R)  $2="n/a";'
 
 
 C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std::regex_match()`.
-Unfortunately GCC's LIBSTDC++ not yet +++ C++11 +++  compliant.  Algorithms
+Unfortunately GCC's LIBSTDC not yet +++ C++11 +++  compliant.  Algorithms
 `std::regex_replace` and `std::regex_search` are not implemented yet in
 LIBSTDC++  and we have to use `if`.
 
@@ -500,31 +503,7 @@ scc '"SCC is installed"'
 
 This project is in alpha stage. Version with "latest" git tag (if any) and
 documented features are more stable.  SCC uses C+11 extensively and it was
-developed with GCC-4.7.  CLANG-3.2 now can execute simple snippets which do not use
-`awk.h`, `stl.h` and `io.h` functionality:  
-
-----------------------------------------------
-CXX=clang++
-CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
-scc 2+2
-4
-----------------------------------------------
-
-//////////////////////
-CLANG constexpr bug
-http://llvm.org/bugs/show_bug.cgi?id=11851
-/////////////////////////////
-
-
-
-Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
-
-+++ C++ +++ parser is semi-broken.  It sometimes incorrectly parse (to extract
-last expression) multi-line scripts or expressions with "{}". As workaround
-terminate every line with semicolon (even for comment-line) and do not use
-print-if-not-terminated-with-semicolon feature.
-
-If you need to use it with older GCC - use v0.1.
+developed with GCC-4.7. 
 
 Pre-compiled headers
 ~~~~~~~~~~~~~~~~~~~~
@@ -540,6 +519,47 @@ ls -l .gch
 Directory `.gch` will be created.
 You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with the same command - `scc -r`
 Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
+
+
+
+//////////////////////
+CLANG constexpr bug
+
+/////////////////////////////
+
+Status 
+------
+Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
+
+Parser which extracts last +++ C++ +++ statment from snippet is semi-broken. 
+It sometimes incorrectly parse (to extract
+last expression) multi-line scripts or expressions with "{}". As workaround
+terminate every line with semicolon (even for comment-line) and do not use
+print-if-not-terminated-with-semicolon feature.
+
+If you need to use it with older GCC - use v0.1.
+
+
+GCC Status
+~~~~~~~~~~
+Works best with 4.7.x though it might work with 4.8 too.  In course of development of SCC several 
+GCC bugs were encountered: Bug [54538]
+
+
+
+CLANG Status
+~~~~~~~~~~~~
+When this http://llvm.org/bugs/show_bug.cgi?id=11851[constexpr bug 11851] will
+be fixed, I expect that SCC will fully support CLANG.  Until that, it is
+already usable with CLANG-3.2 if you won't use `awk.h`, `stl.h` and `io.h`
+functionality.  
+
+----------------------------------------------
+CXX=clang++
+CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
+scc 2+2
+4
+----------------------------------------------
 
 
 
