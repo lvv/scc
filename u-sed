@@ -1,0 +1,22 @@
+
+cat  <<END  | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\0	==>>  \1   PRINT(\2);/'
+
+ 
+print
+no-print;
+OK;  print 
+OK;  no-print;
+OK;  no-print;  print
+OK;	while(a){b;}  print
+FAIL;	while(a)  no-print
+OK;	for(a;b;c) {no-print}
+FAIL;	for(a;b;c) no-print
+OK;	{}
+OK;	{code-block;}
+FAIL;  print_rvalue_t{1}
+FAIL;	f(int{1})
+FAIL;	f(";")
+FAIL;	f(';')
+FAIL;	f("}")
+END
+

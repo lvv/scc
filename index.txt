@@ -526,9 +526,12 @@ Do not use GCC pre-compiled headers if you are modifying source.  To disable pre
 Status 
 ------
 
-This project is in alpha stage. Version with "latest" git tag (if any) and
-documented features are more stable. It is very picky with what compiler it
-will work because +++ C++11 +++ is used extensively (see GCC, CLANG sections below).
+SCC is in alpha stage. Version with "latest" git tag (if any) and
+documented features are more stable.
+
+SCC uses +++ C++11 +++ extensively.  Because no complier yet
+implemented +++ C++11 +++ fully and each implemented different subset, 
+SCC very picky compiler.  See GCC, CLANG sections below. 
 
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
