@@ -3,8 +3,8 @@ include::/tmp/t.ad[]
 +++ <small> +++
 
 * Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
-// * License:  httpx://en.wikipedia.org/wiki/Public_domain[Public Domain]
-* Requires:  +++ C++11 +++   compiler (tested with GCC-4.7, CLANG-3.2)
+* Requires:  +++ C++11 +++   compiler (works with GCC-4.7, partially works with CLANG-3.2) +
+* License:  httpx://en.wikipedia.org/wiki/Boost_Software_License[Boost Software License]
 
 +++ </small> +++
 
@@ -39,12 +39,20 @@ echo "ABC"  |  scc 'char c;  while (cin>>c)  cout << tolower(c);'
 abc
 ----------------------------------------------------------------------------
 
+If double semicolon `;;` is present, then what come before it is goes before `main` (into the file scope):
+
+--------------------------------------------
+scc 'int f(int i) {return  i+i;} ;;  f(10)'
+20
+--------------------------------------------
+
 Snippet is evaluated in environment where all STL includes are included and almost
 all STL objects are imported into default namespace with `using std::...;`
 
-If you need only plain +++C++ +++ REPL, that is about all you need to know.  You can
-skip to link:#_install[install] section now.  Sections that follow are about
-SCC C++ extensions to alleviate +++C++ +++ verbosity and AWK like capabilities.
+If you need only plain +++C++ +++ REPL, that is about all you need to know.
+You can skip to link:#_install[install] section now.  Sections that follow are
+about SCC C++ extensions and shortcuts to squeeze +++C++ +++ verbosity for
+one-liner context.
 
 
 Simple IO
@@ -488,8 +496,6 @@ Unfortunately GCC's LIBSTDC not yet +++ C++11 +++  compliant.  Algorithms
 LIBSTDC++  and we have to use `if`.
 
 
-
-
 Install
 -------
 
@@ -501,13 +507,8 @@ echo "PATH+=:$PWD/scc/" >> ~/.profile
 scc '"SCC is installed"'
 ---------------------------------------
 
-This project is in alpha stage. Version with "latest" git tag (if any) and
-documented features are more stable.  SCC uses C+11 extensively and it was
-developed with GCC-4.7. 
-
-Pre-compiled headers
-~~~~~~~~~~~~~~~~~~~~
-
+GCC Pre-compiled headers
+~~~~~~~~~~~~~~~~~~~~~~~~
 For GCC you can enable precompiled headers, which will allow slightly (20%) faster compile:
 
 -----------------
@@ -516,39 +517,49 @@ scc -r
 ls -l .gch
 -----------------
 
-Directory `.gch` will be created.
+Command `scc -r` will create directory `.gch`.
 You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with the same command - `scc -r`
 Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
 
 
 
-//////////////////////
-CLANG constexpr bug
-
-/////////////////////////////
-
 Status 
 ------
+
+This project is in alpha stage. Version with "latest" git tag (if any) and
+documented features are more stable. It is very picky with what compiler it
+will work because +++ C++11 +++ is used extensively (see GCC, CLANG sections below).
+
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
-Parser which extracts last +++ C++ +++ statment from snippet is semi-broken. 
-It sometimes incorrectly parse (to extract
-last expression) multi-line scripts or expressions with "{}". As workaround
+Parser which extracts last +++ C++ +++ statement from snippet is semi-broken.
+It sometimes incorrectly parse (to extract last expression) multi-line scripts
+or expressions with "{}". See `u-sed` file for details.  As workaround
 terminate every line with semicolon (even for comment-line) and do not use
 print-if-not-terminated-with-semicolon feature.
 
-If you need to use it with older GCC - use v0.1.
+
+GCC 
+~~~
+ 
+SCC was developed mostly with 4.7.x  and it should work with 4.8-pre-release
+with version later than 9/13/2012.  If you need to use SCC with older GCC - use
+commit tagged as `v0.1`.
+
+In course of development several GCC bugs were encountered in 4.7 and
+4.8. Luckily, GCC team is pretty quick to fix things after you will file a but report.
+
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=51989[Bug 51989 (fixed) -- deque iterator, void with templates]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54425[Bug 54425 -- Rvalue/Lvalue overload resolution of templated]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54111[Bug 54111 -- function return type template deduction]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54538[Bug 54538 (fixed) -- (4.8 Regression) Getting assembler messages when compiling]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=53858[Bug 53858 (fixed)  -- (4.8 Regression) template aliases used in template parameters default expression]
 
 
-GCC Status
-~~~~~~~~~~
-Works best with 4.7.x though it might work with 4.8 too.  In course of development of SCC several 
-GCC bugs were encountered: Bug [54538]
 
+CLANG 
+~~~~~
 
-
-CLANG Status
-~~~~~~~~~~~~
 When this http://llvm.org/bugs/show_bug.cgi?id=11851[constexpr bug 11851] will
 be fixed, I expect that SCC will fully support CLANG.  Until that, it is
 already usable with CLANG-3.2 if you won't use `awk.h`, `stl.h` and `io.h`
@@ -560,7 +571,6 @@ CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
 scc 2+2
 4
 ----------------------------------------------
-
 
 
 
@@ -620,6 +630,7 @@ STL
 	map adapter: https://github.com/krig/k11/blob/master/src/tests/iter.cpp
 
 GNU AWK
+	Specifying how Fields are Separated -- http://www.staff.science.uu.nl/~oostr102/docs/nawk/nawk_23.html
 	one liners -- http://www.gnu.org/s/gawk/manual/gawk.html#One_002dshot
 
 STR TO INT 

@@ -1,7 +1,8 @@
 
 ############################################################################################### make + install
 make:
-	@echo "done"
+	@echo "SCC is headers only code, no preliminary compilation is needed."
+	@echo "After checking out from repo, it's in read-to-use state."
 
 PREFIX=/usr/local
 install:
