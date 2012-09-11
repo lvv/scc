@@ -1,5 +1,5 @@
-				#ifndef  LVV_DEBUG_H
-				#define  LVV_DEBUG_H
+				#ifndef  STO_DEBUG_H
+				#define  STO_DEBUG_H
 
 				#include <iostream>
 				#include <vector>
@@ -17,10 +17,9 @@
 
 				namespace sto {
 
-//////  TYPE2NAME
+//////////////////////////////////////////////////////////////////////////////////////////////  PTYPE / PVTYPE
 
-
-
+////  TYPE2NAME
 
 	template <typename T>
 const char* type2name() {
@@ -29,7 +28,7 @@ const char* type2name() {
 	return abi::__cxa_demangle(t_name, NULL, NULL, &status);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////  REF 2 NAME
+/////  REF 2 NAME
 
 template <typename T>	struct ref2name                      { static constexpr const char* value =  "";};
 template <typename T>	struct ref2name <const T>            { static constexpr const char* value =  "const";};
@@ -46,12 +45,11 @@ template <typename T>	struct ref2name <const T&&>          { static constexpr co
 template <typename T>	struct ref2name <volatile T&&>       { static constexpr const char* value =  "volatile &&";};
 template <typename T>	struct ref2name <volatile const T&&> { static constexpr const char* value =  "volatile const &&";};
 
-//////////////////////////////////////////////////////////////////////////////////////////////  printT
 
 #define ptype(T)  std::cout <<  type2name<T>() << " " << ref2name<T>::value <<  std::endl;
 #define pvtype(V)  ptype(decltype(V));
 
-////////////////////////////////////////////////////////////////////////////////////////////// Template Type Dumper
+//// Template Type Dumper
 
 template<typename> void ttd();
 
@@ -81,7 +79,8 @@ struct  to : counter<to> {
 	std::ostream&
 operator<<      (std::ostream& os, const to& o) { std::cout << "to{" << o.id << "}";  return os; };
 
-//////////////////////////////////////////////////////////////////////////////////////////////// debug vars
+
+//////////////////////////////////////////////////////////////////////////////////////////////// DEBUG VARS
 
 std::vector<int>	__attribute__((unused)) 	v9      {0,1,2,3,4,5,6,7,8,9},  v0, v23{2,3};
 std::deque<int>		__attribute__((unused)) 	d9      {0,1,2,3,4,5,6,7,8,9},  d0, d23{2,3};
@@ -105,5 +104,5 @@ static std::deque<int>	__attribute__((unused))		mk_d9()	{ return  d9; };
 static 	auto __attribute__((unused))		r9	= range(v9); 
 static 	auto __attribute__((unused))		rr9	= range(mk_v9()); 
 
-				};
-				#endif
+				};	// namespace sto
+				#endif  // STO_DEBUG_H
