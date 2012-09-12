@@ -4,6 +4,11 @@
 #include "scc/cj.h"
 #include "scc/scc.h"
 
+#ifndef NDEBUG
+#include "scc/debug.h"
+#endif
+
+
 //#include "scc/matrix.h"
 #ifdef  scc_BENCHMARK
 	#include "lvv/timer.h"
