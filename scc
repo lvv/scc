@@ -19,7 +19,7 @@ chmod 700 $tmpdir
 SCC_HOME=$(dirname $(readlink -f $0))
 CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} -I $tmpdir "
 
-main_cc=$SCC_HOME/scc.cc
+main_cc=$SCC_HOME/main.cc
 main_exe=$tmpdir/main_exe
 snippet_cc=$tmpdir/snippet.cc
 snippet_h=$tmpdir/snippet.h
@@ -99,8 +99,6 @@ if [[ $verbose ]] ; then
 fi 
 
 
-
-#  SED PARSING
 if [[ -z $snippet_file ]] ;  then
 	snippet_file=$tmpdir/snippet.scc
 	echo "${1%% }" > $snippet_file
