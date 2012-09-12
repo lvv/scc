@@ -12,13 +12,18 @@ O_FLAGS="-O3 -march=native"
 g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check"
 
 
-SCC_HOME=$(dirname $(readlink -f $0))
-CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} "
+tmpdir=/tmp/`{ echo scc-$USER-; tty; } | sed "s/^\/dev\///"| tr -dc "[0-9a-zA-Z-]"`
+mkdir -p ${tmpdir:?}
+chmod 700 $tmpdir
 
-prg=/tmp/$USER-scc
-src=$SCC_HOME/scc.cc
-snippet_h=/tmp/snippet.h
-rm -f $prg $snippet_h
+SCC_HOME=$(dirname $(readlink -f $0))
+CXXFLAGS+=" -I $SCC_HOME -I ${SCC_HOME%/*} -I $tmpdir "
+
+main_cc=$SCC_HOME/scc.cc
+main_exe=$tmpdir/main_exe
+snippet_cc=$tmpdir/snippet.cc
+snippet_h=$tmpdir/snippet.h
+rm -f $main_exe
 execute=1
 
 usage_exit() {
@@ -54,7 +59,7 @@ while getopts Anpf:vBi:F:o:x:OgHtbr opt;  do
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
-		x)	execute=0;  prg=$OPTARG;;
+		x)	execute=0;  main_exe=$OPTARG;;
 		i|F)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$OPTARG "
 						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
@@ -95,32 +100,27 @@ fi
 
 
 
-#if [[ -x $SCC_HOME/sccpp ]];   then 
-#	#  SCCPP
-#	if [[ $snippet_file ]]    
-#	then	cat  $snippet_file | $SCC_HOME/sccpp /dev/stdin   /tmp/snippet.h
-#	else	echo "${1%% }"     | $SCC_HOME/sccpp /dev/stdin   /tmp/snippet.h
-#	fi
-#else
-	#  SED
-	if [[ -z $snippet_file ]] ;  then
-		snippet_file=/tmp/snippet.org
-		echo "${1%% }" > $snippet_file
-		shift 1
-	fi
+#  SED PARSING
+if [[ -z $snippet_file ]] ;  then
+	snippet_file=$tmpdir/snippet.scc
+	echo "${1%% }" > $snippet_file
+	shift 1
+fi
 
-	cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > /tmp/snippet.cc
-	cat  $snippet_file | sed  -n 's/\(;;\).*//p'  > /tmp/snippet.h
-#fi
+# wrap last statment into "cout << (last_statement) << endl;"
+cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out() <<  \2 ; is_print_last=true;/' > $snippet_cc
+
+# split file scope part
+cat  $snippet_file | sed  -n 's/\(;;\).*//p'  > $snippet_h
 
 
 #####################################################################################  GENERATE SRC
 
 
-${CXX-g++} $CXXFLAGS $src -o $prg $LIBS || exit 1
+${CXX-g++} $CXXFLAGS $main_cc -o $main_exe $LIBS || exit 1
 	
 if  [[ $execute == 1 ]]  ; then 
-	LCC_ALL=C $time $prg "$@"
+	LCC_ALL=C $time $main_exe "$@"
 	exit $?
 else
 	exit 0

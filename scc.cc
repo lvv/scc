@@ -1,10 +1,10 @@
 // do not define ctype funcs as macros (gcc specific)
 # define __NO_CTYPE 1
 
-#include "cj.h"
-#include "scc.h"
+#include "scc/cj.h"
+#include "scc/scc.h"
 
-//#include "matrix.h"
+//#include "scc/matrix.h"
 #ifdef  scc_BENCHMARK
 	#include "lvv/timer.h"
 #endif
@@ -47,7 +47,7 @@ struct	tracking_buf_t : std::streambuf {
 
 };
 
-#include "/tmp/snippet.h"
+#include "snippet.h"
 
 int main(int argc, char** argv) {
 
@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
 
 		if (is_stream)  {
 			while (read_line()) {
-				#include "/tmp/snippet.cc"
+				#include "snippet.cc"
 
 				if (is_print_last)  {
 					if (is_n) cout << ORS;
@@ -157,7 +157,7 @@ int main(int argc, char** argv) {
 		#endif
 		#else
 		{
-			#include "/tmp/snippet.cc"
+			#include "snippet.cc"
 			if (is_print_last)  cout << ORS;
 		}
 		#endif
