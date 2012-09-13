@@ -7,7 +7,7 @@ no-print;
 OK;  print 
 OK;  no-print;
 OK;  no-print;  print
-OK;	while(a){b;}  print
+FAIL;	while(a){b;}  no-print
 FAIL;	while(a)  no-print
 OK;	for(a;b;c) {no-print}
 FAIL;	for(a;b;c) no-print

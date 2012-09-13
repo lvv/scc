@@ -100,9 +100,13 @@ struct  chain_range : ref_container<Rn&&> {
 	// ASSIGNMENT
 	chain_range&   operator= (value_type x) { std::fill(std::begin(rn), sto::endz(rn), x);  return *this; };
 
-	template<typename rhsRn>
-	eIF <have_same_elem<Rn,rhsRn>(), chain_range&>
-	operator= (const rhsRn& rhs) { sto::clear(rn); for (const auto &x: rhs)  detail::append_elem(std::forward<Rn>(rn), x);    return *this; };
+		template<typename rhsRn>
+		eIF <have_same_elem<Rn,rhsRn>(), chain_range&>
+	operator= (const rhsRn& rhs) {
+		sto::clear(rn);
+		for (const auto &x: rhs)  detail::append_elem(std::forward<Rn>(rn), x);   
+		return *this;
+	};
 
 
 	// ITERATOR
