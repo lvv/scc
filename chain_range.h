@@ -14,20 +14,29 @@ template<typename T>	struct  ref_container<T&&>  { T  value;  explicit ref_conta
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 
-//template <class Rn, bool CONST_IT=is_const_iterator<cl_iterator<Rn>>()>
+template<typename Rn> struct  chain_range;
+
 template <class Rn, bool CONST_IT>
 struct chain_range_iterator {
 
-	// MEMBERS
+
+		// TYPES
 		typedef    typename std::conditional<
 			CONST_IT,
-			//std::is_const<rm_ref<Rn>>::value,
 			cl_const_iterator<Rn>,
 			cl_iterator<Rn>
 		>::type   org_iterator;
 
+		typedef typename std::conditional<
+			CONST_IT,
+			chain_range<Rn> const,
+			chain_range<Rn>
+		>::type*   parent_t;
 
-	org_iterator current;
+
+	// MEMBERS
+	parent_t	parent;
+	org_iterator	current;
 
 
 	// STL ITERATOR TYPES
@@ -51,9 +60,10 @@ struct chain_range_iterator {
 	typedef		chain_range_iterator				self;
 
 	////// CTOR
-	chain_range_iterator ()                             : current()            {};  // default
-	chain_range_iterator (const org_iterator& current)  : current(current)     {};
-	chain_range_iterator (const self& rhs)              : current(rhs.current) {};	// copy 
+	chain_range_iterator ()				: parent(0),      current()            {};	// default
+	chain_range_iterator ( const self& rhs)		: parent(rhs.parent), current(rhs.current) {};	// copy 
+	chain_range_iterator ( parent_t parent, const org_iterator& current) 
+							: parent(parent), current(current)     {};
 
 	////// IFACE
 	reference	operator*()		{ return   *current; }
@@ -76,8 +86,8 @@ struct  chain_range : ref_container<Rn&&> {
 
 		typedef		cl_elem_type<Rn>  						value_type;
 		typedef		value_type							T;
-		typedef		chain_range_iterator<      Rn, false>     			iterator;
-		typedef		chain_range_iterator<const Rn, true >				const_iterator;
+		typedef		chain_range_iterator<Rn, false>     				iterator;
+		typedef		chain_range_iterator<Rn, true >					const_iterator;
 		typedef		size_t  							size_type;
 		typedef		typename std::iterator_traits<cl_iterator<Rn>>::difference_type	difference_type ;
 		typedef		typename std::iterator_traits<cl_iterator<Rn>>::pointer		pointer ;
@@ -110,10 +120,10 @@ struct  chain_range : ref_container<Rn&&> {
 
 
 	// ITERATOR
-	iterator	begin()		{ return iterator(std::begin(rn)); }
-	iterator	end()		{ return iterator(std::end(rn)); }
-	const_iterator	begin() const	{ return const_iterator(std::begin(rn)); }
-	const_iterator	end()   const	{ return const_iterator(std::end(rn)); }
+	iterator	begin()		{ return iterator      (this, std::begin(rn)); }
+	iterator	end()		{ return iterator      (this, std::end(rn)); }
+	const_iterator	begin() const	{ return const_iterator(this, std::begin(rn)); }
+	const_iterator	end()   const	{ return const_iterator(this, std::end(rn)); }
 
 	void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }
 
