@@ -64,8 +64,8 @@ while getopts Anpf:vBi:F:o:x:OgHtbr opt;  do
 						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
 		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
 						  else  CXXFLAGS+=" -Dscc_OFS=\"$OPTARG\" ";  fi;; 
-		O) 	CXXFLAGS+="-O3 -march=native"; gch_dir=.gch/O;;
-		g) 	CXXFLAGS+="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check"; gch_dir=.gch/g;;
+		O) 	CXXFLAGS+=$O_FLAGS; gch_dir=.gch/O; is_optimized=1;;
+		g) 	CXXFLAGS+=$g_FLAGS; gch_dir=.gch/g;;
 		H)	CXXFLAGS+=" -Dscc_HEADER "; ;;
 		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native";;
@@ -84,6 +84,8 @@ done
 
 [[ -d $gch_dir ]] && CXXFLAGS=" -include $SCC_HOME/$gch_dir/cj.h    -Winvalid-pch  $CXXFLAGS "
 [[ -f .scc.h   ]] && CXXFLAGS+=" -include $PWD/.scc.h  "
+[[ $is_optimized  ]] || { CXXFLAGS+=$g_FLAGS;  gch_dir=.gch/g; }
+
 
 # shift out snippet arg
 #[[ -z $snippet_file ]]  &&  shift $((OPTIND-1))
