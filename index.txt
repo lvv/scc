@@ -549,14 +549,15 @@ SCC was developed mostly with 4.7.x  and it should work with 4.8-pre-release
 with version later than 9/13/2012.  If you need to use SCC with older GCC - use
 commit tagged as `v0.1`.
 
-In course of development several GCC bugs were encountered in 4.7 and
-4.8. Luckily, GCC team is pretty quick to fix things after you will file a but report.
+In course of development several GCC bugs were encountered.
+Luckily, GCC team is pretty quick to fix things after you will file a but report.
 
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=51989[Bug 51989 (fixed) -- deque iterator, void with templates]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54425[Bug 54425 -- Rvalue/Lvalue overload resolution of templated]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54111[Bug 54111 -- function return type template deduction]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54538[Bug 54538 (fixed) -- (4.8 Regression) Getting assembler messages when compiling]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=53858[Bug 53858 (fixed)  -- (4.8 Regression) template aliases used in template parameters default expression]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54648[Bug 54648 - constexpr function rejected as non const]
 
 
 
@@ -602,6 +603,12 @@ scc 2+2
 
 RANGES
 	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3350.html
+
+	random iterator
+		Take arbitrary integer number P that GCD(P, N) == 1 where GCD(P, N) is greatest common divisor of P and N (e.g. GCD(70, 42) == 14, GCD(24, 35) == 1).
+		Get sequence K[i] ::= (P * i) mod N + 1, i from 1 to N
+		It's proven that sequence K[i] enumerates all numbers between 1 and N with no repeats (actually K[N + 1] == K[1] but that is not a problem because we need only first N numbers).
+		If you can efficiently generate such numbers P with uniform distribution (e.g. with a good random function) with using Euclidean algorithm to calculate GCD in O(log(N)) complexity you'll get what you want.
 
 MAP
 	TRIE
