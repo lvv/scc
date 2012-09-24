@@ -545,9 +545,8 @@ print-if-not-terminated-with-semicolon feature.
 GCC 
 ~~~
  
-SCC was developed mostly with 4.7.x  and it should work with 4.8-pre-release
-with version later than 9/13/2012.  If you need to use SCC with older GCC - use
-commit tagged as `v0.1`.
+SCC was developed mostly with 4.7.x  and it might work with 4.8-pre-release.
+If you need to use SCC with older GCC - use commit tagged as `v0.1`.
 
 In course of development several GCC bugs were encountered.
 Luckily, GCC team is pretty quick to fix things after you will file a but report.

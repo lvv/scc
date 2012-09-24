@@ -1,3 +1,4 @@
+// TR http://stackoverflow.com/questions/12556638/stl-container-constructors-allocator-parameter-and-scoped-allocators
 // TR sample allocator -- http://stackoverflow.com/questions/8089850/how-to-overwrite-the-default-behavor-of-the-construct-method-in-the-allocator-cl/8090161#8090161
 // TR http://www2.research.att.com/~bs/C++0xFAQ.html#scoped-allocator
 // TR http://stackoverflow.com/questions/11373796/custom-memory-allocator-for-stl-map

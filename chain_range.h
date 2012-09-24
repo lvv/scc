@@ -6,12 +6,6 @@
 						#include "scc/stl.h"
 						namespace sto {
 
-/////////////////////////////////////////////////////////////////////////////////////////  REF PROVIDER
-
-template<typename T>	struct  ref_container;
-template<typename T>	struct  ref_container<T& >  { T& value;  explicit ref_container(T&  x) : value(x)            {} };
-template<typename T>	struct  ref_container<T&&>  { T  value;  explicit ref_container(T&& x) : value(std::move(x)) {} };
-
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 
 template<typename Rn> struct  chain_range;
@@ -65,6 +59,11 @@ struct chain_range_iterator {
 	chain_range_iterator ( parent_t parent, const org_iterator& current) 
 							: parent(parent), current(current)     {};
 
+	////// CONVERSION 
+	//template<typename  U=eIF<!CONST_IT> >
+	//operator const_iterator()   		{ return const_iterator(*this); };
+	operator chain_range_iterator<Rn&&, true>() { return chain_range_iterator<Rn&&,true>(parent, current); };
+
 	////// IFACE
 	reference	operator*()		{ return   *current; }
 	const_reference	operator*()	const	{ return   *current; }
@@ -80,6 +79,12 @@ struct chain_range_iterator {
  };
 
 
+/////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER
+
+template<typename T>	struct  ref_container;
+template<typename T>	struct  ref_container<T& >  { T& value;  explicit ref_container(T&  x) : value(x)            {} };
+template<typename T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_container(T&& x) : value(x) {} };
+
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 	template<typename Rn>
 struct  chain_range : ref_container<Rn&&> {
@@ -94,17 +99,16 @@ struct  chain_range : ref_container<Rn&&> {
 		typedef		typename std::iterator_traits<cl_iterator<Rn>>::reference	reference ;
 
 	// MEMBERS
-	//using ref_container<Rn&&>::rn;
+	//using ref_container<Rn&&>::value;
 	Rn& rn;
 
-	       std::function<bool(const value_type&)>		default_pred = [](const value_type& x) {return true;};
+	       std::function<bool(const value_type&)>		default_pred = [](const value_type& x) -> bool {return true;};
 	const  std::function<bool(const value_type&)>&		pred;
 
 	// CTOR
-	template<class Pred>
-	explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(ref_container<Rn&&>::value), pred(pred)         {};
-	explicit chain_range(Rn&& rn)             : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(ref_container<Rn&&>::value), pred(default_pred) {};
-
+	//template<class Pred>
+	//explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(pred)         {};
+	explicit chain_range(Rn&& rn)             : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(default_pred) {};
 
 
 	// ASSIGNMENT
@@ -124,6 +128,10 @@ struct  chain_range : ref_container<Rn&&> {
 	iterator	end()		{ return iterator      (this, std::end(rn)); }
 	const_iterator	begin() const	{ return const_iterator(this, std::begin(rn)); }
 	const_iterator	end()   const	{ return const_iterator(this, std::end(rn)); }
+	const_iterator	cbegin() const	{ return const_iterator(this, std::begin(rn)); }
+	const_iterator	cend()   const	{ return const_iterator(this, std::end(rn)); }
+
+
 
 	void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }
 
@@ -166,8 +174,9 @@ struct  chain_range : ref_container<Rn&&> {
 
 	template<class Rn>   
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
+	//eIF<is_range_t<Rn>::value, chain_range<Rn&&> >    <--------------------  OK
 range(Rn&& rn)  {
-	return  std::move(chain_range<Rn&&>(std::forward<Rn>(rn)));
+	return  std::forward<chain_range<Rn&&>>(chain_range<Rn&&>(std::forward<Rn>(rn)));
 };
 
 
