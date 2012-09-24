@@ -5,6 +5,7 @@
 						#include "scc/meta.h"
 						#include "scc/stl.h"
 						namespace sto {
+						//template<class Ch> class basic_string<Ch>;
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 
@@ -71,8 +72,17 @@ struct chain_range_iterator {
 	pointer		operator->()		{ return  &*current; }
 	const_pointer	operator->()	const	{ return  &*current; }
 
-	self&		operator++()		{ ++current;  return *this;  }
-	self		operator++(int)		{  static int i=0;  self tmp=*this;  ++current;  return std::move(tmp); }
+	//self&		operator++()		{ ++current;  return *this;  }
+	self&		operator++()		{
+		auto end = sto::endz(parent->rn);
+		while(
+			current != end 
+			&&  ++current != end
+			&& !(parent->pred)(*current)
+		);
+		return *this; 
+	}
+	self		operator++(int)		{ static int i=0;  self tmp=*this;  ++current;  return std::move(tmp); }
 
 	bool		operator==(const const_iterator& rhs)	const	{ return   current == rhs.current; }
 	bool		operator!=(const const_iterator& rhs)	const	{ return   ! (*this == rhs); }
@@ -102,12 +112,12 @@ struct  chain_range : ref_container<Rn&&> {
 	//using ref_container<Rn&&>::value;
 	Rn& rn;
 
-	       std::function<bool(const value_type&)>		default_pred = [](const value_type& x) -> bool {return true;};
-	const  std::function<bool(const value_type&)>&		pred;
+	std::function<bool(const value_type&)>		default_pred = [](const value_type& x) -> bool {return true;};
+	std::function<bool(const value_type&)>		pred;
 
 	// CTOR
-	//template<class Pred>
-	//explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(pred)         {};
+	template<class Pred>
+	explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(pred)         {};
 	explicit chain_range(Rn&& rn)             : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(default_pred) {};
 
 
@@ -126,11 +136,19 @@ struct  chain_range : ref_container<Rn&&> {
 	// ITERATOR
 	iterator	begin()		{ return iterator      (this, std::begin(rn)); }
 	iterator	end()		{ return iterator      (this, std::end(rn)); }
-	const_iterator	begin() const	{ return const_iterator(this, std::begin(rn)); }
+	//const_iterator	begin() const	{ return const_iterator(this, std::begin(rn)); }
 	const_iterator	end()   const	{ return const_iterator(this, std::end(rn)); }
 	const_iterator	cbegin() const	{ return const_iterator(this, std::begin(rn)); }
 	const_iterator	cend()   const	{ return const_iterator(this, std::end(rn)); }
 
+	const_iterator	begin()	const	{
+		typename rm_ref<Rn>::const_iterator end   = sto::endz (this->rn);
+		typename rm_ref<Rn>::const_iterator begin = std::begin(this->rn);
+		while( begin != end   &&  !pred(*begin)) {
+			++begin;
+		};
+		return  const_iterator(this, begin);
+	};
 
 
 	void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }

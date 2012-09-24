@@ -9,6 +9,7 @@
 					#include <queue>
 					#include <tuple>
 					#include <algorithm>
+					#include <string>
 
 					namespace sto {
 

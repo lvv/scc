@@ -6,6 +6,7 @@
 
 				namespace sto {
 
+//  CTYPE.H
 char	toupper (char c) { return std::toupper((int)c); }
 char	tolower (char c) { return std::tolower((int)c); }
 
@@ -22,7 +23,12 @@ bool	isupper (char c) { return std::isupper ((int)c); }
 bool	isxdigit(char c) { return std::isxdigit((int)c); }
 
 
+// MATH
 template<class T> 	T abs(T t) { return  t > 0 ?  t : -t; }
+
+// PREDICATE
+template<class T> 	bool is_even(const T& t) { return  t%2; }
+template<class T> 	bool is_odd (const T& t) { return  !bool(t%2); }
 
 				};
 
