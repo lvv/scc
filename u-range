@@ -3,10 +3,11 @@ set -o errexit
 set -v
 
 ################################################################# CHAIN_RANGE
+#scc 'chain_range<chain_range<vint&>&&> cc(chain_range<vint&>(v9));  _ cc;   chain_range<vint&&> rv(mk_v9());  _ rv;'
+scc 'auto r = range(range(v9));  _ r.front();  ++r=11; r'
 scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
 scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
-scc 'auto r = range(range(v9));  _ r.front();  ++r=11; r'
 
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'

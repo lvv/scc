@@ -174,9 +174,8 @@ struct  chain_range : ref_container<Rn&&> {
 
 	template<class Rn>   
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
-	//eIF<is_range_t<Rn>::value, chain_range<Rn&&> >    <--------------------  OK
 range(Rn&& rn)  {
-	return  std::forward<chain_range<Rn&&>>(chain_range<Rn&&>(std::forward<Rn>(rn)));
+	return  chain_range<Rn&&>(std::forward<Rn>(rn));  // there is no copy on return
 };
 
 
