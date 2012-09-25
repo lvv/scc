@@ -128,8 +128,6 @@ struct  chain_range : ref_container<Rn&&> {
 		template<class Rn2>
 		eIF <have_same_elem<Rn,Rn2>(), self_type&>
 	operator= (const Rn2& rhs) {
-										//puts(rhs);
-										puts("cr<T>::op=\n");
 		sto::clear(rn);
 		auto e = endz(rhs);
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
@@ -140,13 +138,13 @@ struct  chain_range : ref_container<Rn&&> {
 		return *this;
 	};
 
+	/*
 		self_type&
 	operator= (const self_type& rhs) {
-										puts("cr::op=\n");
 		sto::clear(rn);
 		for (const auto &x: rhs)  detail::append_elem(rn, x);   
 		return *this;
-	};
+	};*/
 
 
 	// ITERATOR
