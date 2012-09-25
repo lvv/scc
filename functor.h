@@ -27,8 +27,8 @@ bool	isxdigit(char c) { return std::isxdigit((int)c); }
 template<class T> 	T abs(T t) { return  t > 0 ?  t : -t; }
 
 // PREDICATE
-template<class T> 	bool is_even(const T& t) { return  t%2; }
-template<class T> 	bool is_odd (const T& t) { return  !bool(t%2); }
+template<class T> 	bool is_odd (const T& t) { return  t%2; }
+template<class T> 	bool is_even(const T& t) { return  !bool(t%2); }
 
 				};
 

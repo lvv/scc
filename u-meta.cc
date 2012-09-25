@@ -68,6 +68,19 @@ CHECK(   has_value_type<vint&&>()		)
 CHECK( ! has_value_type<int(&)[2]>()		)
 CHECK( ! has_value_type<int>()			)
 
+//  HAVE_SAME_ELEM
+CHECK( ! (have_same_elem<vint, int>())			)
+CHECK(   (have_same_elem<vint, int[]>())		)
+CHECK(   (have_same_elem<vint, int(&)[]>())		)
+CHECK(   (have_same_elem<vint, int(&)[]>())		)
+CHECK(   (have_same_elem<vint, vlong>())		)
+CHECK(   (have_same_elem<vint, llong>())		)
+CHECK(   (have_same_elem<vint, vint&&>())		)
+CHECK(   (have_same_elem<vint, vint&&>())		)
+CHECK(   (have_same_elem<vint, vint&&>())		)
+CHECK(   (have_same_elem<vint, chain_range<vint>>())	)
+CHECK(   (have_same_elem<vint, chain_range<vint&>&>())	)
+CHECK(   (have_same_elem<vint, chain_range<vint&>&>())	)
 
 // ITERATORS
 CHECK(   is_input_iterator<vint::const_iterator>()	)
