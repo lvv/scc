@@ -28,8 +28,8 @@ scc 'int i=200; set<int> st; st << 100 << i;  __ st, (set<int>() << 100 << i);'
 
 
 # Set << Ct 
-scc 'set<char> st;  st << "11221133"'
-scc 'set<char>()       << "11221133"'
+scc 'set<char> st;  (st << "11221133")'
+scc '(set<char>()       << "11221133")'
 
 #  Pair/Tuple
 scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'

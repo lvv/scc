@@ -85,9 +85,9 @@ operator<<      (ostream& os, const IT&) { return os; };
 operator<<      (ostream& os, const Ct& C) {
 	cout << "{";
 		auto I=std::begin(C);
-		while (I != std::end(C)) {
+		while (I != endz(C)) {
 			os  << *I;
-			if (++I == std::end(C))  break;
+			if (++I == endz(C))  break;
 			os << ", ";
 		}
 	cout << "}";
@@ -189,7 +189,7 @@ namespace oi_space {
 			template<typename Ct >
 			eIF<is_range<Ct>(),  void>
 		operator=(const Ct& C)  {
-			copy(C.begin(),  C.end(),  *this);
+			copy(std::begin(C),  endz(C),  *this);
 		}
 	};
 

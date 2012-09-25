@@ -70,9 +70,11 @@ CHECK( ! has_value_type<int>()			)
 
 //  HAVE_SAME_ELEM
 CHECK( ! (have_same_elem<vint, int>())			)
-CHECK(   (have_same_elem<vint, int[]>())		)
-CHECK(   (have_same_elem<vint, int(&)[]>())		)
-CHECK(   (have_same_elem<vint, int(&)[]>())		)
+
+CHECK(   (have_same_elem<vint, int[3]>())		)
+CHECK(   (have_same_elem<vint, int(&)[3]>())		)
+CHECK(   (have_same_elem<vlong, int(&)[3]>())		)
+
 CHECK(   (have_same_elem<vint, vlong>())		)
 CHECK(   (have_same_elem<vint, llong>())		)
 CHECK(   (have_same_elem<vint, vint&&>())		)

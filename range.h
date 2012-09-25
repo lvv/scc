@@ -7,7 +7,9 @@
 
 						namespace sto {
 
+/*
 /////////////////////////////////////////////////////////////////// RNG -- range proxy
+
 static  __attribute__((unused)) struct range_converter_t {} rng;
 
 	template<typename Ct>
@@ -28,7 +30,7 @@ operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::e
 		iterator_range<cl_iterator<Ct>>
 	>
 operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
-
+*/
 
 /*
 static  __attribute__((unused)) struct iot_t {} iot;
@@ -43,6 +45,14 @@ operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 
 ////////////////////////////////////////////////////////////////  RANGE OPS
 
+
+//  Ct1 | Pred    --> range	 (grep like)
+	//template<class Rn, class Pred = bool(*)(const cl_elem_type<Rn>&)>
+//operator|  (Rn&& rn,  identity<Pred> pred)    { 
+//operator|  (Rn&& rn,  bool(*)(const cl_elem_type<Rn>&) pred)    { 
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const cl_elem_type<Rn>&)> pred)  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const cl_elem_type<Rn>&))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(cl_elem_type<Rn>))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
 
 //  Ct1 | Ct2   ---  search() --> range	   
 /*

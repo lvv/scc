@@ -5,6 +5,9 @@ set -v
 ################################################################# RANGE
 # PIPE
 scc '(r9|is_even)'
+scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
+scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
+scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
 
 ################################################################# CHAIN_RANGE
 # PRED
@@ -20,6 +23,8 @@ scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;
 
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
+# Iterators
+scc 'chain_range<vint&>::iterator it=+r9;  chain_range<vint&>::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
 
 # op=(value_type)
 scc 'range(a9)=42;  a9'

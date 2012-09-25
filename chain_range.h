@@ -61,8 +61,6 @@ struct chain_range_iterator {
 							: parent(parent), current(current)     {};
 
 	////// CONVERSION 
-	//template<typename  U=eIF<!CONST_IT> >
-	//operator const_iterator()   		{ return const_iterator(*this); };
 	operator chain_range_iterator<Rn&&, true>() { return chain_range_iterator<Rn&&,true>(parent, current); };
 
 	////// IFACE
@@ -74,18 +72,19 @@ struct chain_range_iterator {
 
 	//self&		operator++()		{ ++current;  return *this;  }
 	self&		operator++()		{
-		auto end = sto::endz(parent->rn);
-		while(
-			current != end 
-			&&  ++current != end
-			&& !(parent->pred)(*current)
-		);
+		auto e = endz(parent->rn);
+		assert(current !=e);
+		while( ++current != e   &&  !(parent->pred)(*current));
 		return *this; 
 	}
 	self		operator++(int)		{ static int i=0;  self tmp=*this;  ++current;  return std::move(tmp); }
 
-	bool		operator==(const const_iterator& rhs)	const	{ return   current == rhs.current; }
-	bool		operator!=(const const_iterator& rhs)	const	{ return   ! (*this == rhs); }
+	bool		operator==(const_iterator rhs)		{ return   current == rhs.current; }
+	bool		operator!=(const_iterator rhs)		{ return   current != rhs.current; }
+	bool		operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
+	bool		operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
+	//bool		operator==(const iterator& rhs)	const	{ return   current == rhs.current; }
+	//bool		operator!=(const iterator& rhs)	const	{ return   ! (*this == rhs); }
  };
 
 
@@ -108,6 +107,8 @@ struct  chain_range : ref_container<Rn&&> {
 		typedef		typename std::iterator_traits<cl_iterator<Rn>>::pointer		pointer ;
 		typedef		typename std::iterator_traits<cl_iterator<Rn>>::reference	reference ;
 
+		typedef		chain_range<Rn>							self_type;
+
 	// MEMBERS
 	//using ref_container<Rn&&>::value;
 	Rn& rn;
@@ -124,34 +125,39 @@ struct  chain_range : ref_container<Rn&&> {
 	// ASSIGNMENT
 	chain_range&   operator= (value_type x) { std::fill(std::begin(rn), sto::endz(rn), x);  return *this; };
 
-		template<typename rhsRn>
-		eIF <have_same_elem<Rn,rhsRn>(), chain_range&>
-	operator= (const rhsRn& rhs) {
+		template<class Rn2>
+		eIF <have_same_elem<Rn,Rn2>(), self_type&>
+	operator= (const Rn2& rhs) {
+										//puts(rhs);
+										puts("cr<T>::op=\n");
 		sto::clear(rn);
-		for (const auto &x: rhs)  detail::append_elem(std::forward<Rn>(rn), x);   
+		auto e = endz(rhs);
+		for (auto it = std::begin(rhs);   it != e;  ++it)  {
+			//putchar(*it); putchar('\n');
+			detail::append_elem(std::forward<Rn>(rn), *it);
+		}
+		//for (const auto &x: rhs)  { putchar(x); putchar('\n'); detail::append_elem(std::forward<Rn>(rn), x); }
+		return *this;
+	};
+
+		self_type&
+	operator= (const self_type& rhs) {
+										puts("cr::op=\n");
+		sto::clear(rn);
+		for (const auto &x: rhs)  detail::append_elem(rn, x);   
 		return *this;
 	};
 
 
 	// ITERATOR
-	iterator	begin()		{ return iterator      (this, std::begin(rn)); }
-	iterator	end()		{ return iterator      (this, std::end(rn)); }
-	//const_iterator	begin() const	{ return const_iterator(this, std::begin(rn)); }
-	const_iterator	end()   const	{ return const_iterator(this, std::end(rn)); }
-	const_iterator	cbegin() const	{ return const_iterator(this, std::begin(rn)); }
-	const_iterator	cend()   const	{ return const_iterator(this, std::end(rn)); }
+	      iterator	end()		{ return       iterator(this, endz(rn)); }
+	const_iterator	end()   const	{ return const_iterator(this, endz(rn)); }
 
-	const_iterator	begin()	const	{
-		typename rm_ref<Rn>::const_iterator end   = sto::endz (this->rn);
-		typename rm_ref<Rn>::const_iterator begin = std::begin(this->rn);
-		while( begin != end   &&  !pred(*begin)) {
-			++begin;
-		};
-		return  const_iterator(this, begin);
-	};
+	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rn), sto::endz(rn), pred)); };
+	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rn), sto::endz(rn), pred)); };
 
 
-	void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }
+	//void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }
 
 
 	// CT MANAGMENT

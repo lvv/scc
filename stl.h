@@ -8,6 +8,7 @@
 					#include <string>
 					#include <deque>
 					#include <tuple>
+					#include <cassert>
 
 					#include "meta.h"
 
@@ -85,10 +86,12 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back (std::forward<X>(x));  return std::forward<Ct>(C1); };
 		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push      (std::forward<X>(x));  return std::forward<Ct>(C1); };
 		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.insert    (std::forward<X>(x));  return std::forward<Ct>(C1); };
+		template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
 
 		template<class Ct, class X>  eIF<has_push_front <Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.push_front(std::forward<X>(x));  return std::forward<Ct>(C1); };
 		template<class Ct, class X>  eIF<has_push       <Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.push      (std::forward<X>(x));  return std::forward<Ct>(C1); };
 		template<class Ct, class X>  eIF<has_1arg_insert<Ct>(), Ct&&> prepend_elem(Ct&& C1, X&& x)   { C1.insert    (std::forward<X>(x));  return std::forward<Ct>(C1); };
+
 	}
 
 	// Cl << x
@@ -253,9 +256,9 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
-	auto i = std::begin(std::forward<Ct>(C));
+	auto i = std::begin(C);
 	std::advance(i,1);
-	return  std::accumulate(i, endz(std::forward<Ct>(C)), front(C), f);
+	return  std::accumulate(i, endz(C), front(C), f);
  };
 
 
@@ -263,10 +266,10 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
-	auto i = std::begin(std::forward<Ct>(C));
-	std::advance(i,1);
+	auto i = std::begin(C);
+	std::next(i);
 	const T init = front(C);
-	return  std::accumulate(i, endz(std::forward<Ct>(C)), init, f);
+	return  std::accumulate(i, endz(C), init, f);
  };
 
 

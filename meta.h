@@ -306,9 +306,9 @@ struct is_callable<F, R(Args...)> {
 
 /////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
-template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(std::forward<Ct>(C)))     { return  std::end(std::forward<Ct>(C)); };
+template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(C))     { return  std::end(C); };
 template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
-//template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
+template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 
 /////  SIZE
@@ -344,7 +344,7 @@ template<typename T>  constexpr bool   is_collection()     {
  };
 
 template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
-template<typename Ct1, typename Ct2>  constexpr bool   have_same_elem()    { return  is_collection<Ct1>()  &&  is_collection<Ct2>()  &&  std::is_convertible<cl_elem_type<Ct1>,  cl_elem_type<Ct2>>::value; }
+template<class Ct1, class Ct2>        constexpr bool   have_same_elem()    { return  is_range<Ct1>()  &&  is_range<Ct2>()  &&  std::is_convertible< rm_qualifier<cl_elem_type<Ct1>>,  rm_qualifier<cl_elem_type<Ct2>> >::value; }
 					};
 
 					#endif
