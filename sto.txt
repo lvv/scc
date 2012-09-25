@@ -1,29 +1,38 @@
 
 CONSEPTS
 
-non-ridgit (~ const size)
+	(stl-iterator-tags)
+		input 
+		output 
+		forward
+		random-acces
+	non-rigit (~ const size)
 	appendable
 		prependable
 	insertable
 	erasable	
-const (elem wise like in const_iterator)
-range	- something that can be iterated through 
-container - something containing real objects
+
+
+	range	- something that can be iterated through 
+	container - something containing real objects
+	order indexable - having op[int]
+	value indexable - having op[x]
+
 
 STO COLLECTIONS
 container:
 	stl
 		container
 			non-const::   	- range
-			array::		- range ridgid
+			array::		- range rigit
 		container-adaper
 			stack/queue::	- non-range; 
 
-	c-array				- range; ridgid
+	c-array				- range; rigit
 
 sto
-	numeric_range::		- range; ridgid const
-	iterator_range::	- range; ridgid
+	numeric_range::		- range; rigit const
+	iterator_range::	- range; rigit
 	chane_range::		- range 
 	c-str			- range
 
