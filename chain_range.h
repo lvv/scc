@@ -147,22 +147,20 @@ struct  chain_range : ref_container<Rn&&> {
 
 
 	// CT MANAGMENT
-	size_t		size  () const	{ return  sto::size (rn); }
-	bool		empty () const	{ return  sto::empty(rn); }
-	explicit operator bool() const	{ return !sto::empty(rn); }
+	//size_t		size  () const	{ return  sto::size (rn); }	// TOFIX
+	size_t		size  () const	{ return  std::count_if(std::begin(rn), endz(rn), pred); }	// TOFIX
+	bool		empty () const	{ return  sto::empty(rn); }	// TOFIX
+	explicit operator bool() const	{ return !sto::empty(rn); }	// TOFIX
 
 
 	// ELEM ACCESS
-	value_type  	front()  const	{ return  *std::begin(rn); }  
-	reference  	front()		{ return  *std::begin(rn); }  
+	value_type  	front()  const	{ return  *std::begin(rn); }  	// TOFIX
+	reference  	front()		{ return  *std::begin(rn); }  	// TOFIX
 
-	value_type  	back()  const	{ return  *(std::prev(sto::endz(rn))); }  
-	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  
+	value_type  	back()  const	{ return  *(std::prev(sto::endz(rn))); }  	// TOFIX
+	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  	// TOFIX
 
 	// INPORT CT METHODS
-	template<class U=Rn>   eIF<has_size<U>(), size_type>	size()					{return rn.size();}
-	template<class U=Rn>   eIF<has_empty<U>(), bool>	empty()					{return rn.empty();}
-
 	template<class U=Rn>   eIF<has_push_back<U>()>		push_back( const value_type& value)	{rn.push_back(value);}
 	template<class U=Rn>   eIF<has_push_back<U>()>		push_back( value_type&& value)		{rn.push_back(std::move(value));}
 
