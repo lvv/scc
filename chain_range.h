@@ -70,21 +70,16 @@ struct chain_range_iterator {
 	pointer		operator->()		{ return  &*current; }
 	const_pointer	operator->()	const	{ return  &*current; }
 
-	//self&		operator++()		{ ++current;  return *this;  }
 	self&		operator++()		{
-		auto e = endz(parent->rn);
+		org_iterator e = endz(parent->rn);
 		assert(current !=e);
-		while( ++current != e   &&  !(parent->pred)(*current));
+		current = std::find_if(std::next(current), e, parent->pred);
 		return *this; 
 	}
 	self		operator++(int)		{ static int i=0;  self tmp=*this;  ++current;  return std::move(tmp); }
 
-	bool		operator==(const_iterator rhs)		{ return   current == rhs.current; }
-	bool		operator!=(const_iterator rhs)		{ return   current != rhs.current; }
 	bool		operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
 	bool		operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
-	//bool		operator==(const iterator& rhs)	const	{ return   current == rhs.current; }
-	//bool		operator!=(const iterator& rhs)	const	{ return   ! (*this == rhs); }
  };
 
 
@@ -131,21 +126,10 @@ struct  chain_range : ref_container<Rn&&> {
 		sto::clear(rn);
 		auto e = endz(rhs);
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
-			//putchar(*it); putchar('\n');
 			detail::append_elem(std::forward<Rn>(rn), *it);
 		}
-		//for (const auto &x: rhs)  { putchar(x); putchar('\n'); detail::append_elem(std::forward<Rn>(rn), x); }
 		return *this;
 	};
-
-	/*
-		self_type&
-	operator= (const self_type& rhs) {
-		sto::clear(rn);
-		for (const auto &x: rhs)  detail::append_elem(rn, x);   
-		return *this;
-	};*/
-
 
 	// ITERATOR
 	      iterator	end()		{ return       iterator(this, endz(rn)); }
@@ -153,9 +137,6 @@ struct  chain_range : ref_container<Rn&&> {
 
 	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rn), sto::endz(rn), pred)); };
 	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rn), sto::endz(rn), pred)); };
-
-
-	//void		increment(iterator& it) { while (!pred(*++it.current)  &&  it.current != it.end() ); }
 
 
 	// CT MANAGMENT

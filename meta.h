@@ -44,7 +44,7 @@ template<typename Ct>   	   using  rm_ref           = typename std::remove_refer
 
 
 template <typename T>		struct cl_traits      {
-		template < typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
+		template <typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
 		template <typename U>							static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
 
@@ -143,16 +143,9 @@ struct is_range_t {
 		static int16_t
 	test(...);
 
-	enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
+	//enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
+	enum { value  =  sizeof test <typename std::remove_cv<typename std::remove_reference<T>::type>::type> (0) == 1 };
 };
-
-
-/*
-template <class U, class I = typename U::const_iterator >	static std::true_type	is_range_ol(U* u=0);
-template <class U>						static std::false_type	is_range_ol(...);
-
-template<class T> constexpr bool is_range(T t=std::declval<T>())   { return  decltype(is_range_ol<rm_qualifier<T>>(0))::value; };
-*/
 
 
 
