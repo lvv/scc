@@ -73,7 +73,7 @@ struct chain_range_iterator {
 	self&		operator++()		{
 		org_iterator e = endz(parent->rn);
 		assert(current !=e);
-		current = std::find_if(std::next(current), e, parent->pred);
+		current = std::find_if(++current, e, parent->pred);
 		return *this; 
 	}
 
@@ -81,7 +81,7 @@ struct chain_range_iterator {
 		org_iterator e = endz(parent->rn);
 		assert(current !=e);
 		self tmp=*this;
-		current = std::find_if(std::next(current), e, parent->pred);
+		current = std::find_if(++current, e, parent->pred);
 		return std::move(tmp);
 	}
 
@@ -125,7 +125,7 @@ struct  chain_range : ref_container<Rn&&> {
 
 
 	// ASSIGNMENT
-	chain_range&   operator= (value_type x) { std::fill(std::begin(rn), sto::endz(rn), x);  return *this; };
+	chain_range&   operator= (value_type x) { std::fill(begin(), end(), x);  return *this; };
 
 		template<class Rn2>
 		eIF <have_same_elem<Rn,Rn2>(), self_type&>
