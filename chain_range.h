@@ -76,7 +76,14 @@ struct chain_range_iterator {
 		current = std::find_if(std::next(current), e, parent->pred);
 		return *this; 
 	}
-	self		operator++(int)		{ static int i=0;  self tmp=*this;  ++current;  return std::move(tmp); }
+
+	self		operator++(int)		{
+		org_iterator e = endz(parent->rn);
+		assert(current !=e);
+		self tmp=*this;
+		current = std::find_if(std::next(current), e, parent->pred);
+		return std::move(tmp);
+	}
 
 	bool		operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
 	bool		operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
