@@ -33,6 +33,7 @@ bool set_out_file(const char* path) {
 
 struct  out {
 
+	bool need_blank = false;
 	/*
 	bool  first_use;
 	const char*	sep;
@@ -45,14 +46,28 @@ struct  out {
 	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
 	*/
 
-	template<typename T>		out&  operator<<  (T x)				{ std::cout <<        x;	return *this; };
-	template<typename T>		out&  operator,   (T x)				{ std::cout << ' ' << x;	return *this; };
-	template<typename T, size_t N>	out&  operator<<  (const T (&x)[N])		{ std::cout <<        x;	return *this; };
-	template<typename T, size_t N>	out&  operator,   (const T (&x)[N])		{ std::cout << ' ' << x;	return *this; };
-	/* endl, hex, ..  */	out&  operator<< (std::ostream&  (*x) (std::ostream& ))	{ std::cout << x;		return *this; };
-				out&  operator<< (std::ios&      (*x) (std::ios&     ))	{ std::cout << x;		return *this; };
-				out&  operator<< (std::ios_base& (*x) (std::ios_base&))	{ std::cout << x;		return *this; };
-				out&  operator,  (std::ostream&  (*x) (std::ostream& ))	{ std::cout << x;		return *this; };
+	
+		template<typename T>	
+		out& 
+	operator,   (T x)	{
+		if (need_blank) std::cout << ' '; 
+		need_blank = std::is_arithmetic<T>::value  || is_range<T>(); 
+		std::cout << x;  
+		return *this;
+	};
+
+
+		template<typename T, size_t N> // we need this beacause of array decays to pointer
+		out& 
+	operator,   (const T (&x)[N])	{
+		if (need_blank) std::cout << ' ';
+		need_blank = true;
+		std::cout << x;
+		return *this;
+	};
+
+
+	/* endl, hex, ..  */	out&  operator,  (std::ostream&  (*x) (std::ostream& ))	{ std::cout << x;		return *this; };
 				out&  operator,  (std::ios&      (*x) (std::ios&     ))	{ std::cout << x;		return *this; };
 				out&  operator,  (std::ios_base& (*x) (std::ios_base&))	{ std::cout << x;		return *this; };
 
@@ -75,8 +90,8 @@ std::ostream& operator<<      (ostream& os, const out&)			{return os; };
 operator<<      (ostream& os, const IT&) { return os; }; 
 
 
-#define		_    out()   <<
-#define		__   outln() <<
+#define		_    out()   ,
+#define		__   outln() ,
 
 
 // SEQUANCE CONTAINTER or C-ARRAY
