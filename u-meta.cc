@@ -20,7 +20,7 @@ CHECK_TYPES_ARE_SAME(   cl_elem_type<int*(*)(int)>, no_type)
 CHECK_TYPES_ARE_SAME(   cl_elem_type<int>         , no_type)
 
 
-//  IS_CONTAINER
+//  IS_RANGE
 CHECK(   is_range<vint>()         ) 
 CHECK(   is_range<vint&>()        ) 
 CHECK(   is_range<vint&&>()       ) 
@@ -32,6 +32,19 @@ CHECK(   is_range<const vint&&>() )
 CHECK( ! is_range<int*(*)(int)>() ) 
 CHECK( ! is_range<int>()          ) 
 CHECK(   is_range<int(&)[2]>()    ) 
+
+//  IS_STRING
+CHECK(   is_string<decltype("abc")>()) 
+CHECK(   is_string<char[3]>()) 
+CHECK( ! is_string<unsigned char[3]>()) 
+CHECK( ! is_string<signed char[3]>()) 
+CHECK( ! is_string<int[3]>()) 
+CHECK(   is_string<char(&)[3]>()) 
+//CHECK( ! is_string<const char[3]>()) 
+//CHECK( ! is_string<char*>()) 
+//CHECK(   is_string<const char*>()) 
+CHECK(   is_string<string>()) 
+CHECK(   is_string<const string&>()) 
 
 //  HAS_PUSH_BACK
 CHECK(   has_push_back<vint>()			)

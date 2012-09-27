@@ -159,19 +159,19 @@ template<typename T>     constexpr bool   is_range()        { return  is_range_t
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<class T>	struct  is_string_t				: std::false_type {};
 template<class CharT>	struct  is_string_t <std::basic_string<CharT>>	: std::true_type  {};
-template<size_t N>	struct  is_string_t <const char[N]>		: std::true_type  {};
+//template<size_t N>	struct  is_string_t <const char(&)[N]>		: std::true_type  {};
+//template<size_t N>	struct  is_string_t <char(&)[N]>		: std::true_type  {};
 template<size_t N>	struct  is_string_t <char[N]>			: std::true_type  {};
 
-template<class T>     constexpr bool   is_string()        { return  is_string_t<T>::value; };
+template<class T>     constexpr bool   is_string()        { return  is_string_t<rm_qualifier<T>>::value; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
 template<typename T>	struct  is_ioable_t 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
 template<typename T,typename CT,typename AL>	struct  is_ioable_t <std::basic_string<T,CT,AL>>	: std::true_type  {};
 template<size_t N>	struct  is_ioable_t <char[N]>	: std::true_type  {};
-template<size_t N>	struct  is_ioable_t <const char[N]>: std::true_type  {};
 template<>		struct  is_ioable_t <char*>	: std::true_type  {};
 template<>		struct  is_ioable_t <const char*>	: std::true_type  {};
-template<typename T>     constexpr bool   is_ioable()        { return  is_ioable_t<T>::value; };
+template<typename T>     constexpr bool   is_ioable()        { return  is_ioable_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_STACK

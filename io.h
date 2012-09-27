@@ -50,19 +50,19 @@ struct  out {
 		template<typename T>	
 		out& 
 	operator,   (T x)	{
-		if (need_blank) std::cout << ' '; 
-		need_blank = std::is_arithmetic<T>::value  || is_range<T>(); 
+		if (need_blank  &&  !is_string<T>())  std::cout << ' '; 
 		std::cout << x;  
+		need_blank =  ! is_string<T>(); 
 		return *this;
 	};
 
 
 		template<typename T, size_t N> // we need this beacause of array decays to pointer
 		out& 
-	operator,   (const T (&x)[N])	{
-		if (need_blank) std::cout << ' ';
-		need_blank = true;
+	operator,   (T (&x)[N])	{
+		if (need_blank  &&  !is_string<T(&)[N]>())  std::cout << ' '; 
 		std::cout << x;
+		need_blank =  ! is_string<T(&)[N]>(); 
 		return *this;
 	};
 
