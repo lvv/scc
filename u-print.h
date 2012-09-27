@@ -6,9 +6,10 @@
 { fld				v ("abc");			_ "fld      :  ", v, ";    ";  cout << v << "\n"; }
 { std::array<int,3>		v {{1,2,3}};			_ "array    :  ", v, ";    ";  cout << v << "\n"; }
 { vector<int>			v {1,2,3};			_ "vint     :  ", v, ";    ";  cout << v << "\n"; }
-{ deque<int>			v {1,2,3};			_ "vint     :  ", v, ";    ";  cout << v << "\n"; }
+{ deque<int>			v {1,2,3};			_ "dchar    :  ", v, ";    ";  cout << v << "\n"; }
 { deque<char>			v; v << "abc";			_ "vchar    :  ", v, ";    ";  cout << v << "\n"; }
-{ auto v			= range("abc");   		_ "range(\"abc\"):  ", v, ";    ";  cout << v << "\n"; }
+{ set<char>			v; v << "abc";			_ "set<char>:  ", v, ";    ";  cout << v << "\n"; }
+{ auto                          v = range("abc");   		_ "range(\"abc\"):  ", v, ";    ";  cout << v << "\n"; }
 { vector<int>			v {};				_ "vint{}   :  ", v, ";    ";  cout << v << "\n"; }
 { vector<vector<int>>		v {{1,1}, {2,2}};		_ "v..<vint>:  ", v, ";    ";  cout << v << "\n"; }
 { int				v[3]{1,2,3};			_ "int[]    :  ", v, ";    ";  cout << v << "\n"; }

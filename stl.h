@@ -103,8 +103,7 @@ operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(
 	// Cl << Cl2
 	template<class Ct, class Ct2> 
 	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
-operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto &&x: C2)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(x));   return  std::forward<Ct>(C1); };
-
+operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto i=std::begin(C2);  i!=endz(C2);  ++i)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(*i));   return  std::forward<Ct>(C1); };
 
 
 //////  T >> Cl 
