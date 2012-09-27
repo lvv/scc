@@ -144,23 +144,20 @@ struct is_range_t {
 	test(...);
 
 	//enum { value  =  sizeof test <rm_qualifier<T>> (0) == 1 };
-	enum { value  =  sizeof test <typename std::remove_cv<typename std::remove_reference<T>::type>::type> (0) == 1 };
+	enum { value  =  sizeof test <T> (0) == 1 };
 };
 
 
 
 template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_range_t <T(&)[N]>		: std::true_type { };
 template<typename T, size_t N>	struct  is_range_t <std::array<T,N>>	: std::true_type { };
 
-template<typename T>     constexpr bool   is_range()        { return  is_range_t<T>::value; };
+template<typename T>     constexpr bool   is_range()        { return  is_range_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
 template<class T>	struct  is_string_t				: std::false_type {};
 template<class CharT>	struct  is_string_t <std::basic_string<CharT>>	: std::true_type  {};
-//template<size_t N>	struct  is_string_t <const char(&)[N]>		: std::true_type  {};
-//template<size_t N>	struct  is_string_t <char(&)[N]>		: std::true_type  {};
 template<size_t N>	struct  is_string_t <char[N]>			: std::true_type  {};
 
 template<class T>     constexpr bool   is_string()        { return  is_string_t<rm_qualifier<T>>::value; };
@@ -192,7 +189,7 @@ struct is_stack_t {
 
 	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
-template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<T>::value; };
+template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_QUEUE
@@ -214,7 +211,7 @@ struct is_queue_t {
 
 	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
 };
-template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<T>::value; };
+template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<rm_qualifier<T>>::value; };
 
 
 
@@ -261,17 +258,6 @@ is_const_iterator() {	// does not answer if this is CI, but if IT is const or no
 		T
 	>::value;
 }
-
-/*
-	template<class Rn, class T=decltype(*std::declval<IT>())>    
-	constexpr bool  
-is_const_rn_elem() {	// does not answer if this is CI, but if IT is const or not
-	return  ! std::is_assignable <
-		decltype( *std::declval<IT>() ),
-		T
-	>::value;
-}
-*/
 
 
 ////////////////////////////////////////////////////////////////////////////////////////  IS_CALLABLE
