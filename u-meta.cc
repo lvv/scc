@@ -29,6 +29,13 @@ CHECK(   is_range<const vint>()   )
 CHECK(   is_range<const vint&>()  ) 
 CHECK(   is_range<const vint&&>() ) 
 
+CHECK(   is_range<decltype(range(1,2))>()   ) 
+CHECK(   is_range<decltype(range(v9))>()  ) 
+CHECK(   is_range<decltype(range(range(v9)))>()  ) 
+CHECK(   is_range<decltype(range(+v9,-v9))>() ) 
+CHECK(   is_range<sto::chain_range<vector<int>>&&>() )
+CHECK(   is_range<vector<int>&>())
+
 CHECK( ! is_range<int*(*)(int)>() ) 
 CHECK( ! is_range<int>()          ) 
 CHECK(   is_range<int(&)[2]>()    ) 

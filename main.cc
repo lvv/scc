@@ -81,6 +81,14 @@ int main(int argc, char** argv) {
 	char *p		__attribute__((unused)) = nullptr;
 	char *q		__attribute__((unused)) = nullptr;
 
+	// non static debug vars
+	#ifndef NDEBUG
+	//  range
+	static 	auto __attribute__((unused))		r9	= range(v9); 
+	static 	auto __attribute__((unused))		rr9	= range(mk_v9()); 
+	#endif
+	
+
 
 
 	#ifndef scc_NOAWK
