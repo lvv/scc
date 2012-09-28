@@ -363,11 +363,7 @@ operator<<      (Xt& x, Ct&& C)    { x = C.front();  C.pop();   return std::forw
 	eIF <is_iterator<It>(),  It>
 operator/       (It&& i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return std::forward<It>(i); };
 
-/*
-	template<typename It, typename Ct>
-	eIF <is_iterator<It>::value,  It>
-operator <<       (It&& it, Ct&& C)    {};
-*/
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////  GENERICS 
 
 template<typename Rn>	auto operator++(Rn&& rn)      -> decltype(front(rn)) 			{ return front(rn); }

@@ -306,6 +306,10 @@ template<typename Rn>	eIF<!has_empty<Rn>(), bool>	empty(const Rn& rn)	{ return  
 template<typename Rn>	eIF< has_clear<Rn>()>		clear(Rn&& rn) 		{ rn.clear(); }
 template<typename Rn>	eIF<!has_clear<Rn>()>		clear(Rn&& rn) 		{}
                                               void	clear(char*rn) 		{ *rn = '\0'; }
+/////  RESIZE
+template<typename Rn>	eIF< has_resize<Rn>()>		resize(Rn&& rn, size_t n) 		{ rn.resize(n); }
+template<typename Rn>	eIF<!has_resize<Rn>()>		resize(Rn&& rn, size_t n) 		{}
+                                              void	resize(char*rn, size_t n) 		{ *(rn+n) = '\0'; }
 
 /////  FRONT/BACK
 //template<typename Rn>	eIF<!has_clear<Rn>(), cl_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }

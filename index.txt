@@ -564,7 +564,9 @@ Luckily, GCC team is pretty quick to fix things after you will file a but report
 CLANG 
 ~~~~~
 
-When this http://llvm.org/bugs/show_bug.cgi?id=11851[constexpr bug 11851] will
+When following bugs  will fixed, SCC fill fully support CLANG.
+- httpx://http://llvm.org/bugs/show_bug.cgi?id=11851[Bug 11851 - constexpr bug ]
+- httpx://http://llvm.org/bugs/show_bug.cgi?id=13970[Bug 13970 - constexpr function rejected as non const]
 be fixed, I expect that SCC will fully support CLANG.  Until that, it is
 already usable with CLANG-3.2 if you won't use `awk.h`, `stl.h` and `io.h`
 functionality.  

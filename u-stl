@@ -48,11 +48,11 @@ scc 'stack<int> sk;  sk << 1<< 2;  set<int> st;  st << 1<< 2;  __ ~vint{1,2}, ~M
 scc '__ v9, ((!!v9) ? "-- not empty" : "-- empty");   __ v0, ((!!v0) ? "-- not empty " : "-- empty");' 
 
 # FIND
-scc '__ v9 % 3,  v9 % 33;'
+scc 'v9 % 3,  v9 % 33'
 scc '__ vint{1,2,3} % 3,  vint{1,2,3} % 33;'
 scc '__ v9 % vint{3,4},  v9 % vint{}, v9 % vint{3,444};'
 scc '__ v9 % [](int i){return i==3;}, v9 % [](int i){return i==30;};'
-scc '__ s9 % "bc",  s9 % "n/a"'
+scc 's9 % "bc",  s9 % "n/a"'
 
 #scc 'v9 /= 22 = 33; v9'
 #scc 'v9 /= 3  = 33; v9'
@@ -60,7 +60,7 @@ scc 'copy(v9/2, v9/5, oi)'
 #scc 'copy(v9/vint{3,4}, v9/vint{8}, oi); endl'
 
 # Ct / x
-scc '__ v9 / 3 - +v9;'
+scc 'v9 / 3 - +v9'
 # Ct / F
 scc '__ v9 / [](int i){return i==3;} - +v9;'
 # Ct / F (lambdas)
@@ -81,8 +81,8 @@ scc 'vector<const char*> ss{"1","22","333"};  __ (ss * strlen);'
 # Ct || F
 scc '__ (v9 || min), (mk_v9()||min);'
 scc '__ (vint{1,5} || function<int(int,int)>(std::plus<int>()));'
-scc 'v9 || std::plus<int>();'
-scc 'v9 || [](int a, int b){return min(a,b);};'
+scc '__ v9 || std::plus<int>();'
+scc '__ v9 || [](int a, int b){return min(a,b);};'
 
 
 # Ct * (R(*)(T))F    -- type convertion  

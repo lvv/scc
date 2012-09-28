@@ -127,7 +127,7 @@ struct  chain_range : ref_container<Rn&&> {
 	// ASSIGNMENT
 	chain_range&   operator= (value_type x) { std::fill(begin(), end(), x);  return *this; };
 
-		template<class Rn2>
+		template<class Rn2>			// FIXME specialize for seq containers to handel self-assignemet
 		eIF <have_same_elem<Rn,Rn2>(), self_type&>
 	operator= (const Rn2& rhs) {
 		sto::clear(rn);
