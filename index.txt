@@ -67,9 +67,11 @@ Below are bar-print statements with equivalent code in comments:
 ---------------------------------------------------------------
 _  x;                  //  cout << x;
 __ x;                  //  cout << x << endl;
-__ x << y;             //  cout << x << y << endl;
 __ x, y;               //  cout << x << " " << y << endl;
 -------------------------------------------------------------------------
+
+On last line `" "` will not be printed if `x` and `y` are strings.
+
 
 OI - Generic ostream_iterator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,6 +216,8 @@ STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is alternative terser interface to STL.
+
+///////////////////////////////////////////////////////////
 Below is string manipulation example.   Given `Thello?` string, it
 transforms it and prints -  `" H e l l o ! "`.  In +++C++ +++:  
 
@@ -239,13 +243,13 @@ dchar  S;  S << "Thello?";
 '"' >> S << "!\"\n";
 oi = S;
 ------------------------------------------------------
+////////////////////////////////////////////////////////////////
 
-Full list of container operators:
+Container operators:
 
 ----------------------------------------------------------------
 +C			//  C.begin()
 -C			//  C.end()
-~C			//  C.size()
 ++C			//  C.front()
 C++			//  C.back()
 --C			//  C.pop_front()
@@ -280,24 +284,53 @@ Q << x			//  Q.push(x)
 x << Q			//  x = Q.front(x);  Q.pop()
 ----------------------------------------------------------------
 
+Ranges are numeric ranges,  iterator ranges,  chain ranges, stl containers, c-arrays and c-strings. 
+
+Numeric ranges:
+
+-----------------------------------
+ scc 'range(0,10)'
+ {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+ scc 'range(10,0,-1.5)'
+ {10, 8.5, 7, 5.5, 4, 2.5}
+-----------------------------------
+
+Iterator ranges - assigne 42 from 2 to 5:
+
+------------------------------------
+scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
+{0, 1, 2, 3, 4, 5, 6, 7, 8}
+{0, 1, 42, 42, 42, 5, 6, 7, 8}
+------------------------------------
+
+Chain range - references other range or container:
+
+------------------------------------------
+scc  'vint v;  auto r=range(v);  r = range(0,9);  r'
+{0, 1, 2, 3, 4, 5, 6, 7, 8}
+
+
+scc 'char  s[99];  range(s) = "abc-123";  __ s;   range(s) << " XYZ";  s'
+------------------------------------------
+
 
 ///////////////////////////////////////////////
-TODO
-Rg / x		-> it		// find(+Ct, -Ct, x)
-Rg % x		-> bool		// find(+Ct, -Ct, x) != -Ct
-Rg / f		-> it
-Rg % f		-> bool		// find(+Ct, -Ct, x) != -Ct
-Rg / Rg		-> Rg		// search(+Ct, -Ct, +Rg, -Rg) 
-Ct - it 			// Ct.eraze(it);
-Ct - Rg				// Ct.erase(+Rg, -Rg)
-Rg = Rg2 			// with conversion
+Rn / x		-> it		// find(+Ct, -Ct, x)
+Rn % x		-> bool		// find(+Ct, -Ct, x) != -Ct
+Rn / f		-> it
+Rn % f		-> bool		// find(+Ct, -Ct, x) != -Ct
+Rn / Rn		-> Rn		// search(+Ct, -Ct, +Rg, -Rg) 
+Rn - it 			// Ct.eraze(it);
+Rn - Rn				// erase
+Rn = Rn2 			// with conversion
 
 src >> ct-dest
-
 ct-dest << src
-Rg  * f(x)	-> Rg		// transform	(map)
-Rg || f(x,y)	-> T 		// accumulate    (fold)
-Rg  | filter-t	-> Rg 		// filter
+
+Rn  * f(x)	-> Rn		// transform	(map)
+Rn || f(x,y)	-> T 		// accumulate    (fold)
+Rn  | filter-t	-> Rn 		// filter
 
 ////////////////////////////////////////////////
 
@@ -566,7 +599,7 @@ CLANG
 
 When following bugs  will fixed, SCC fill fully support CLANG.
 - httpx://http://llvm.org/bugs/show_bug.cgi?id=11851[Bug 11851 - constexpr bug ]
-- httpx://http://llvm.org/bugs/show_bug.cgi?id=13970[Bug 13970 - constexpr function rejected as non const]
+- httpx://http://llvm.org/bugs/show_bug.cgi?id=13970[Bug 13970 - constexpr function rejected as non const(dup of 11851)]
 be fixed, I expect that SCC will fully support CLANG.  Until that, it is
 already usable with CLANG-3.2 if you won't use `awk.h`, `stl.h` and `io.h`
 functionality.  

@@ -4,7 +4,7 @@ set -v
 
 ################################################################# RANGE
 # PIPE
-scc '(r9|is_even)'
+scc 'r9|is_even'
 scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
 scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
 scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
