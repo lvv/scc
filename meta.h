@@ -82,6 +82,9 @@ template<bool Cnd, typename T=void>     using  eIF                 = typename st
 template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
 template<typename Cl>	                using  cl_iterator_fwd     = typename  copy_rcv<Cl&&, cl_iterator<Cl>>::type;
 
+template<class T, class TT=rm_qualifier<T>>  constexpr bool 
+is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 

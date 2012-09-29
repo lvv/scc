@@ -155,6 +155,26 @@ operator >>  (sRn&& src, tRn&& trg)  {
 			eIF <have_same_elem<Ct1, Ct2>(), cl_iterator<Ct1>>
 		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), endz(C1), std::begin(C2), endz(C2)); }; }
 
+///////////////////////////////////////////////////////////////////////////////////////////////  OP-  (ERASE)
+////////  Ct - T  
+// ---  non callable
+	template<typename Ct, typename T>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
+operator - (Ct&& C, const T& t)                                { return  detail::find_elem(std::forward<Ct>(C), t); };
+
+/*
+// ---  plain func
+	template<typename Ct>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
+operator / (Ct&& C, bool(*t)(cl_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
+
+// ---  func obj, lambda
+	template<typename Ct>
+	eIF <is_range<Ct>() , cl_iterator<Ct>>
+operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
+*/
+
+///////////////////////////////////////////////////////////////////////////////////////////////  OP/  (SEARCH)
 
 ////////  Ct / T  
 // ---  non callable

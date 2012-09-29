@@ -53,6 +53,19 @@ CHECK(   is_string<char(&)[3]>())
 CHECK(   is_string<string>()) 
 CHECK(   is_string<const string&>()) 
 
+//  IS_C_STRING
+CHECK(   is_c_string<decltype("abc")>()) 
+CHECK(   is_c_string<char[3]>()) 
+CHECK( ! is_c_string<unsigned char[3]>()) 
+CHECK( ! is_c_string<signed char[3]>()) 
+CHECK( ! is_c_string<int[3]>()) 
+CHECK(   is_c_string<char(&)[3]>()) 
+CHECK(   is_c_string<const char[3]>()) 
+//CHECK( ! is_c_string<char*>()) 
+//CHECK(   is_c_string<const char*>()) 
+CHECK( ! is_c_string<string>()) 
+CHECK( ! is_c_string<const string&>()) 
+
 //  HAS_PUSH_BACK
 CHECK(   has_push_back<vint>()			)
 CHECK(   has_push_back<vint&>()			)

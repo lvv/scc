@@ -4,14 +4,19 @@
 
 						#include "scc/meta.h"
 						#include "scc/stl.h"
+
+						#ifndef NDEBUG
+						#include <iostream>
+						#endif
+
 						namespace sto {
 						//template<class Ch> class basic_string<Ch>;
 
-/////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
+/////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE_ITERATOR
 
-template<typename Rn> struct  chain_range;
+	template<typename Rn> struct  chain_range;
 
-template <class Rn, bool CONST_IT>
+	template <class Rn, bool CONST_IT>
 struct chain_range_iterator {
 
 
@@ -127,7 +132,7 @@ struct  chain_range : ref_container<Rn&&> {
 	// ASSIGNMENT
 	chain_range&   operator= (value_type x) { std::fill(begin(), end(), x);  return *this; };
 
-		template<class Rn2>			// FIXME specialize for seq containers to handel self-assignemet
+		template<class Rn2>			// FIXME specialize for seq containers self-assignemet
 		eIF <have_same_elem<Rn,Rn2>(), self_type&>
 	operator= (const Rn2& rhs) {
 		sto::clear(rn);
@@ -160,21 +165,31 @@ struct  chain_range : ref_container<Rn&&> {
 	value_type  	back()  const	{ return  *(std::prev(sto::endz(rn))); }  	// TOFIX
 	reference  	back()		{ return  *(std::prev(sto::endz(rn))); }  	// TOFIX
 
-	// INPORT CT METHODS
-	template<class U=Rn>   eIF<has_push_back<U>()>		push_back( const value_type& value)	{rn.push_back(value);}
-	template<class U=Rn>   eIF<has_push_back<U>()>		push_back( value_type&& value)		{rn.push_back(std::move(value));}
+	// INPORTED CT METHODS
+	template<class U=Rn>   eIF<has_push_back<U>()>		push_back(const value_type& value)	{rn.push_back(value);}
+	template<class U=Rn>   eIF<has_push_back<U>()>		push_back(value_type&& value)		{rn.push_back(std::move(value));}
 
-	template<class U=Rn>   eIF<has_push_front<U>()>		push_front( const value_type& value)	{rn.push_front(value);}
-	template<class U=Rn>   eIF<has_push_front<U>()>		push_front( value_type&& value)		{rn.push_front(std::move(value));}
+	template<class U=Rn>   eIF<has_push_front<U>()>		push_front(const value_type& value)	{rn.push_front(value);}
+	template<class U=Rn>   eIF<has_push_front<U>()>		push_front(value_type&& value)		{rn.push_front(std::move(value));}
 
-	template<class U=Rn>   eIF<has_1arg_insert<U>()>	insert( const value_type& value)	{rn.insert(value);}
-	template<class U=Rn>   eIF<has_1arg_insert<U>()>	insert( value_type&& value)		{rn.insert(std::move(value));}
+	template<class U=Rn>   eIF<has_1arg_insert<U>()>	insert(const value_type& value)	{rn.insert(value);}
+	template<class U=Rn>   eIF<has_1arg_insert<U>()>	insert(value_type&& value)		{rn.insert(std::move(value));}
 
 	template<class U=Rn>   eIF<has_pop_back<U>()>		pop_back()				{rn.pop_back();}
 	template<class U=Rn>   eIF<has_pop_front<U>()>		pop_front()				{rn.pop_front();}
 
 	template<class U=Rn>   eIF<has_back<U>(), value_type>	back()					{return rn.back();}
 	template<class U=Rn>   eIF<has_front<U>(), value_type>	front()					{return rn.front();}
+
+	// ADDED CT METHODS
+		template<class U=Rn>   eIF<is_c_string<U>()>	
+	push_back(char value)			{
+		auto e=endz(rn);  
+		assert(e < (rn + std::extent<rm_qualifier<U>>::value-1)); 
+		*e = value; 
+		*++e='\0';
+	}
+
  };
 
 
@@ -184,7 +199,7 @@ struct  chain_range : ref_container<Rn&&> {
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
 range(Rn&& rn)  {
 	return  chain_range<Rn&&>(std::forward<Rn>(rn));  // there is no copy on return
-};
+ };
 
 
 						}; 
