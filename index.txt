@@ -50,9 +50,10 @@ Snippet is evaluated in environment where all STL includes are included and almo
 all STL objects are imported into default namespace with `using std::...;`
 
 If you need only plain +++C++ +++ REPL, that is about all you need to know.
-You can skip to link:#_install[install] section now.  Sections that follow are
-about SCC C++ extensions and shortcuts to squeeze +++C++ +++ verbosity for
-one-liner context.
+You can skip to link:#_install[install] section now.
+
+Sections that follow are about SCC STL extensions, which probably deserve it own project, and shortcuts to squeeze
++++C++ +++ verbosity for one-liner context.
 
 
 Simple IO
@@ -70,7 +71,7 @@ __ x;                  //  cout << x << endl;
 __ x, y;               //  cout << x << " " << y << endl;
 -------------------------------------------------------------------------
 
-On last line `" "` will not be printed if `x` and `y` are strings.
+On last line `" "` will not be printed if at leas one of `x`, `y` is strings.
 
 
 OI - Generic ostream_iterator
@@ -215,7 +216,7 @@ Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is alternative terser interface to STL.
+This is extension and alternative interface to STL.
 
 ///////////////////////////////////////////////////////////
 Below is string manipulation example.   Given `Thello?` string, it
@@ -245,7 +246,8 @@ oi = S;
 ------------------------------------------------------
 ////////////////////////////////////////////////////////////////
 
-Container operators:
+In table below are mundane shortcuts for container member functions.
+Unlike STL member functions they usually return result of operation (so it can be used in container expressions).
 
 ----------------------------------------------------------------
 +C			//  C.begin()
@@ -267,8 +269,7 @@ Pair++			//  Pair.second
 
 ++Tuple			//  get\<0>(Tuple)
 Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
-~Tuple			//  tuple_size<decltype(Tuple) >::value
-
+size(Tuple)		//  tuple_size<decltype(Tuple) >::value
 
 			//  STACK
 S << x			//  S.push(x)
@@ -284,9 +285,15 @@ Q << x			//  Q.push(x)
 x << Q			//  x = Q.front(x);  Q.pop()
 ----------------------------------------------------------------
 
-Ranges are numeric ranges,  iterator ranges,  chain ranges, stl containers, c-arrays and c-strings. 
 
-Numeric ranges:
+Ranges
+~~~~~~
+
+Ranges are numeric ranges,  iterator ranges,  chain ranges, stl containers, c-arrays and c-strings. 
+C-strings are  zero terminated  arrays of char (not signed or unsigned chars).
+
+
+Numeric range is simple numeric sequence generator :
 
 -----------------------------------
  scc 'range(0,10)'
@@ -296,7 +303,8 @@ Numeric ranges:
  {10, 8.5, 7, 5.5, 4, 2.5}
 -----------------------------------
 
-Iterator ranges - assigne 42 from 2 to 5:
+Iterator and chain ranges do not contain data, they refer to an existing STL container.
+Iterator range: assign 42 to values from 2 to 5:
 
 ------------------------------------
 scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
@@ -310,10 +318,73 @@ Chain range - references other range or container:
 scc  'vint v;  auto r=range(v);  r = range(0,9);  r'
 {0, 1, 2, 3, 4, 5, 6, 7, 8}
 
-
-scc 'char  s[99];  range(s) = "abc-123";  __ s;   range(s) << " XYZ";  s'
+scc 'char s[99];  range(s) = "abc-123";  __ s;   range(s) << " XYZ"'
+abc-123
+abc-123 XYZ
 ------------------------------------------
 
+Pipe, Map, Reduce
+~~~~~~~~~~~~~~~~~
+
+We will use a lot of functors here. Unfortunately many functions inherited from C are not usable with STO.
+STO relies on fact that functor have argument of the same type as range element type. 
+But for examples `ctype.h` functions, which work with c-strings, take not `char` but `int` and can be defined as macros. 
+And they randomly inject these functions into default namespace.
+As workaround STO put equivalent functions with correct signatures into `sto` namespace.
+
+Also note that we can not use POD types with operators (+++C++ +++ limitation). If it is binary op,
+with need to wrap at least one of operands in a class:
+
+-----------------------------------------
+scc 'char s[99]="abc";   s << "xyz"'  
+// compile error
+
+scc 'char s[99]="abc";   range(s) << "xyz"'
+abcxyz
+-----------------------------------------
+
+
+
+Map
+~~~
+
+`sto::operator* (Range,Functor)` - equivalent to `std::transform`
+
+------------------------------------------
+scc 'char s[]="abc-123";  range(s) * sto::toupper'
+ABC-123
+------------------------------------------
+
+
+Pipe
+~~~~
+
+------------------------------------------
+scc 'char s[]="abc-123";  range(s) | sto::isdigit'
+123
+
+scc 'char s[]="abc-123, xyz/";  (range(s) | sto::isalnum) * sto::toupper'
+ABC123XYZ
+------------------------------------------
+
+Reduce/Fold
+~~~~~~~~~~~
+
+`sto::operator|| (Range,Functor)` - equivalent to `std::transform`
+
+------------------------------------------
+scc 'vint v{3,2,5,9};  v || min'
+2
+------------------------------------------
+
+Find (brute force) minimum of  `cos(x)/x` on  for `2 < x < 20`:
+
+------------------------------------------
+scc '__ range(2, 20, 0.01) * [](double x){return cos(x)/x;} || max;'
+0.161228
+------------------------------------------
+
+THIS DOC SECTION IS INCOMPLETE
 
 ///////////////////////////////////////////////
 Rn / x		-> it		// find(+Ct, -Ct, x)

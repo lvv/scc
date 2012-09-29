@@ -71,25 +71,6 @@ scc '*(str("Hello") / islower)'
 scc '__ s9 % [](char c){return c==*"b";},  str("Hello") % islower,  str("Hello") % isdigit,  vs9 % str("bb");'
 
 
-# Ct * F 	
-scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
-scc '__ v9 * [](int x){return x+10;};'
-scc '__ v9 * bind(std::plus<int>(),10,_1);'
-scc 'vector<const char*> ss{"1","22","333"};  __ (ss * strlen);'
-# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
-
-# Ct || F
-scc '__ (v9 || min), (mk_v9()||min);'
-scc '__ (vint{1,5} || function<int(int,int)>(std::plus<int>()));'
-scc '__ v9 || std::plus<int>();'
-scc '__ v9 || [](int a, int b){return min(a,b);};'
-
-
-# Ct * (R(*)(T))F    -- type convertion  
-scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
-#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
-#scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
-
 
 # BEGIN/ END
 scc  ' *+v9=-33;  __ *+vint{1,2}, v9;'
