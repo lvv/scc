@@ -266,8 +266,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
-	auto i = std::begin(C);
-	std::advance(i,1);
+	auto i = std::next(std::begin(C));
 	return  std::accumulate(i, endz(C), front(C), f);
  };
 
@@ -276,8 +275,7 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
-	auto i = std::begin(C);
-	std::next(i);
+	auto i = std::next(std::begin(C));
 	const T init = front(C);
 	return  std::accumulate(i, endz(C), init, f);
  };

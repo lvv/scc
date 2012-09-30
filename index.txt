@@ -377,8 +377,14 @@ Reduce/Fold
 `sto::operator|| (Range,Functor)` - equivalent to `std::transform`
 
 ------------------------------------------
-scc 'vint v{3,2,5,9};  v || min'
-2
+scc 'vint v{2,1,3};  v || min'
+1
+
+scc 'vint v{2,1,3};  v || plus<int>()'
+6
+
+scc 'vint v{2,1,3};  v || multiplies<int>()'
+6
 ------------------------------------------
 
 Find (brute force) maximum of  `cos(x)/x` for `2 < x < 20`:
