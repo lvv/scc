@@ -352,11 +352,14 @@ abcxyz
 Map/Transform
 ~~~~~~~~~~~~~
 
-operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`
+Operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`:
 
 ------------------------------------------
 scc 'char s[]="abc-123";  range(s) * sto::toupper'
 ABC-123
+
+scc '__ vint{2,-1,3} * std::abs;'
+{2, 1, 3}
 ------------------------------------------
 
 

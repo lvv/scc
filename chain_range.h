@@ -123,6 +123,7 @@ struct  chain_range : ref_container<Rn&&> {
 	std::function<bool(const value_type&)>		default_pred = [](const value_type& x) -> bool {return true;};
 	std::function<bool(const value_type&)>		pred;
 
+
 	// CTOR
 	template<class Pred>
 	explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(pred)         {};
@@ -195,11 +196,37 @@ struct  chain_range : ref_container<Rn&&> {
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
-	template<class Rn>   
+	template<class Rn, class O = cl_elem_type<Rn> >   
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
 range(Rn&& rn)  {
 	return  chain_range<Rn&&>(std::forward<Rn>(rn));  // there is no copy on return
  };
+
+////////////////////////////////////////////////////////////////  PIPE
+
+
+//  Ct1 | Pred    --> range	 (grep like)
+	//template<class Rn, class Pred = bool(*)(const cl_elem_type<Rn>&)>
+//operator|  (Rn&& rn,  identity<Pred> pred)    { 
+//operator|  (Rn&& rn,  bool(*)(const cl_elem_type<Rn>&) pred)    { 
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const cl_elem_type<Rn>&)> pred)  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const cl_elem_type<Rn>&))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(cl_elem_type<Rn>))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+
+//  Ct1 | Ct2   ---  search() --> range	   
+/*
+	template<typename Ct>
+	typename std::enable_if <is_range<Ct>(),  iterator_range&>::type
+operator |       (Ct& C1, const Ct& C2)    { 
+	auto it = search(C1.begin(), C1.end(), C2.begin(), C2.end());
+	return  iterator_range(it, advance(it, distance(C2.end(), C2.begin())));
+ };
+
+//  Ct1 / Ct2   ---  search() --> it
+	template<typename Ct>
+	typename std::enable_if <is_range<Ct>(),  typename Ct::iterator>::type
+operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(), C2.begin(), C2.end()); };
+*/
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
@@ -223,6 +250,9 @@ range(Rn&& rn)  {
 	> 
 	eIF <is_range<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
 operator *       (Ct&& C, const F& f)    {
+	//std::vector<Ret> D;
+	//auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
+	//detail::cstr_zstop(ret);
 	std::vector<Ret> D;
 	auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
 	detail::cstr_zstop(ret);
@@ -238,6 +268,10 @@ operator *       (Ct&& C, const F& f)    {
 	> 
 	eIF <is_range<Ct>(), std::vector<Ret>>
 operator *       (Ct&& C, T (*f)(T) )    {
+	//std::vector<Ret> D;
+	//auto ret = std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
+	//detail::cstr_zstop(ret);
+	//return  D;
 	std::vector<Ret> D;
 	auto ret = std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
 	detail::cstr_zstop(ret);
@@ -262,7 +296,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 
 //////////////////////////////////////////////////////////////////////  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
-	// overload for: std::min
+	// overload for plain functions
 	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
