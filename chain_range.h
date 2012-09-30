@@ -23,8 +23,8 @@ struct chain_range_iterator {
 		// TYPES
 		typedef    typename std::conditional<
 			CONST_IT,
-			cl_const_iterator<Rn>,
-			cl_iterator<Rn>
+			rn_const_iterator<Rn>,
+			rn_iterator<Rn>
 		>::type   org_iterator;
 
 		typedef typename std::conditional<
@@ -44,7 +44,7 @@ struct chain_range_iterator {
 
 	typedef		chain_range_iterator<Rn, false>			iterator;
 	typedef		chain_range_iterator<Rn, true>			const_iterator;
-	typedef		cl_elem_type<Rn>				value_type;
+	typedef		rn_elem_type<Rn>				value_type;
 
 	typedef		const value_type*				const_pointer;
 	typedef		typename std::conditional<CONST_IT, const_pointer, value_type*>::type
@@ -105,14 +105,14 @@ template<typename T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit r
 	template<typename Rn>
 struct  chain_range : ref_container<Rn&&> {
 
-		typedef		cl_elem_type<Rn>  						value_type;
+		typedef		rn_elem_type<Rn>  						value_type;
 		typedef		value_type							T;
 		typedef		chain_range_iterator<Rn, false>     				iterator;
 		typedef		chain_range_iterator<Rn, true >					const_iterator;
 		typedef		size_t  							size_type;
-		typedef		typename std::iterator_traits<cl_iterator<Rn>>::difference_type	difference_type ;
-		typedef		typename std::iterator_traits<cl_iterator<Rn>>::pointer		pointer ;
-		typedef		typename std::iterator_traits<cl_iterator<Rn>>::reference	reference ;
+		typedef		typename std::iterator_traits<rn_iterator<Rn>>::difference_type	difference_type ;
+		typedef		typename std::iterator_traits<rn_iterator<Rn>>::pointer		pointer ;
+		typedef		typename std::iterator_traits<rn_iterator<Rn>>::reference	reference ;
 
 		typedef		chain_range<Rn>							self_type;
 
@@ -196,7 +196,7 @@ struct  chain_range : ref_container<Rn&&> {
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
-	template<class Rn, class O = cl_elem_type<Rn> >   
+	template<class Rn, class O = rn_elem_type<Rn>>   
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
 range(Rn&& rn)  {
 	return  chain_range<Rn&&>(std::forward<Rn>(rn));  // there is no copy on return
@@ -206,12 +206,12 @@ range(Rn&& rn)  {
 
 
 //  Ct1 | Pred    --> range	 (grep like)
-	//template<class Rn, class Pred = bool(*)(const cl_elem_type<Rn>&)>
+	//template<class Rn, class Pred = bool(*)(const rn_elem_type<Rn>&)>
 //operator|  (Rn&& rn,  identity<Pred> pred)    { 
-//operator|  (Rn&& rn,  bool(*)(const cl_elem_type<Rn>&) pred)    { 
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const cl_elem_type<Rn>&)> pred)  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const cl_elem_type<Rn>&))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(cl_elem_type<Rn>))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+//operator|  (Rn&& rn,  bool(*)(const rn_elem_type<Rn>&) pred)    { 
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const rn_elem_type<Rn>&)> pred)  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const rn_elem_type<Rn>&))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(rn_elem_type<Rn>))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
 
 //  Ct1 | Ct2   ---  search() --> range	   
 /*
@@ -244,7 +244,7 @@ operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(
 	template<
 		typename Ct,
 		typename F,
-		typename T = cl_elem_type<Ct>,
+		typename T = rn_elem_type<Ct>,
 		//typename Ret=typename std::function<rm_qualifier<F>>::result_type,
 		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
 	> 
@@ -263,7 +263,7 @@ operator *       (Ct&& C, const F& f)    {
 	// overload for :  Ret == T   (needed for oveloaded functions like abs)
 	template<
 		typename Ct,
-		typename T = cl_elem_type<Ct>,
+		typename T = rn_elem_type<Ct>,
 		typename Ret= T
 	> 
 	eIF <is_range<Ct>(), std::vector<Ret>>
@@ -282,7 +282,7 @@ operator *       (Ct&& C, T (*f)(T) )    {
 	// overload for :  lambdas
 	template<
 		typename Ct,
-		typename T = cl_elem_type<Ct>,
+		typename T = rn_elem_type<Ct>,
 		typename Ret= T
 	> 
 	eIF <is_range<Ct>(), std::vector<Ret>>
@@ -297,7 +297,7 @@ operator *       (Ct&& C, std::function<T(T)> f )    {
 //////////////////////////////////////////////////////////////////////  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	// overload for plain functions
-	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
+	template< typename Ct, typename T = rn_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::next(std::begin(C));
@@ -306,7 +306,7 @@ operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 
 
 	// overload for: lambda, std::plus
-	template< typename Ct, typename T = cl_elem_type<Ct>, typename R = T > 
+	template< typename Ct, typename T = rn_elem_type<Ct>, typename R = T > 
 	eIF <is_range<Ct>(), R>
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::next(std::begin(C));

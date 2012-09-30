@@ -19,13 +19,13 @@
 //  +Ct   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Ct>		// do we need to care about r-value-ness here?
-	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  rn_iterator<Ct>>
 operator+      (Ct&& C) { return std::begin(C); };	// does not work with r-values
 
 
 //  -Ct   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Ct>
-	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  cl_iterator<Ct>>
+	eIF <is_range<Ct>()  &&  !std::is_array<Ct>::value,  rn_iterator<Ct>>
 operator-      (Ct&& C) { return  std::end(C); };
 
 
@@ -45,16 +45,16 @@ operator!      (const Ct& C) { return C.empty(); };
 
 	template<typename Ct>
 	auto
-front    (Ct&& C)  -> decltype(*std::begin(C))  { return std::forward<cl_reference<Ct>>(*std::begin(C)); };
+front    (Ct&& C)  -> decltype(*std::begin(C))  { return std::forward<rn_reference<Ct>>(*std::begin(C)); };
 
 	template<typename Ct>
-	//eIF <has_back<Ct>()  &&  !std::is_array<Ct>::value, cl_reference<Ct>>
-	eIF <has_back<Ct>(),  cl_reference<Ct>>
-back      (Ct&& C) { return std::forward<cl_reference<Ct>>(C.back()); };
+	//eIF <has_back<Ct>()  &&  !std::is_array<Ct>::value, rn_reference<Ct>>
+	eIF <has_back<Ct>(),  rn_reference<Ct>>
+back      (Ct&& C) { return std::forward<rn_reference<Ct>>(C.back()); };
 
 	template<class Ct, class=eIF<!has_back<Ct>()>>
 	auto
-back      (Ct&& C) -> decltype(endz(C))  { return std::forward<cl_reference<Ct>>(*std::prev(sto::endz(C))); };
+back      (Ct&& C) -> decltype(endz(C))  { return std::forward<rn_reference<Ct>>(*std::prev(sto::endz(C))); };
 
 
 //  x << Ct >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
@@ -103,7 +103,7 @@ operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(
 	// Cl << Cl2
 	template<class Ct, class Ct2> 
 	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
-operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto i=std::begin(C2);  i!=endz(C2);  ++i)  detail::append_elem(std::forward<Ct>(C1), cl_elem_fwd<Ct2>(*i));   return  std::forward<Ct>(C1); };
+operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto i=std::begin(C2);  i!=endz(C2);  ++i)  detail::append_elem(std::forward<Ct>(C1), rn_elem_fwd<Ct2>(*i));   return  std::forward<Ct>(C1); };
 
 
 //////  T >> Cl 
@@ -123,7 +123,7 @@ operator >>  (sRn&& src, tRn&& trg)  {
 
 	auto it = endz(src);
 	do {
-		detail::prepend_elem(std::forward<tRn>(trg), cl_elem_fwd<sRn>(*(it = std::prev(it))));
+		detail::prepend_elem(std::forward<tRn>(trg), rn_elem_fwd<sRn>(*(it = std::prev(it))));
 	} while ( it != std::begin(src));
 
 	return  std::forward<tRn>(trg);
@@ -138,40 +138,40 @@ operator >>  (sRn&& src, tRn&& trg)  {
 
 		// Ct / x     usage: scc 'copy(v9/2, v9/5,oi)'
 			template<typename Ct, typename X>
-			eIF <is_elem_of<X, Ct>(), cl_iterator<Ct>>
+			eIF <is_elem_of<X, Ct>(), rn_iterator<Ct>>
 		find_elem(Ct&& C, const X& x)   { return std::find(std::begin(C), endz(C), x); };
 
 
 
 		// Ct / f
 			template<typename Ct, typename F>
-			eIF <is_callable<F, bool(cl_elem_type<Ct>)>::value, cl_iterator<Ct>>
+			eIF <is_callable<F, bool(rn_elem_type<Ct>)>::value, rn_iterator<Ct>>
 		find_elem(Ct&& C, const F& pred)  { return  std::find_if(std::begin(C), endz(C), pred); };
 
 
 			
 		//  Ct1 / Ct2   ---  search() --> it
 			template<typename Ct1, typename Ct2>
-			eIF <have_same_elem<Ct1, Ct2>(), cl_iterator<Ct1>>
+			eIF <have_same_elem<Ct1, Ct2>(), rn_iterator<Ct1>>
 		find_elem(Ct1&& C1, const Ct2& C2)    {  return std::search(std::begin(C1), endz(C1), std::begin(C2), endz(C2)); }; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP-  (ERASE)
 ////////  Ct - T  
 // ---  non callable
 	template<typename Ct, typename T>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
 operator - (Ct&& C, const T& t)                                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 /*
 // ---  plain func
 	template<typename Ct>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
-operator / (Ct&& C, bool(*t)(cl_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
+operator / (Ct&& C, bool(*t)(rn_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 // ---  func obj, lambda
 	template<typename Ct>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
-operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
+operator / (Ct&& C, std::function<bool(rn_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP/  (SEARCH)
@@ -179,18 +179,18 @@ operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail:
 ////////  Ct / T  
 // ---  non callable
 	template<typename Ct, typename T>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
 operator / (Ct&& C, const T& t)                                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 // ---  plain func
 	template<typename Ct>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
-operator / (Ct&& C, bool(*t)(cl_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
+operator / (Ct&& C, bool(*t)(rn_elem_type<Ct>))                { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 // ---  func obj, lambda
 	template<typename Ct>
-	eIF <is_range<Ct>() , cl_iterator<Ct>>
-operator / (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
+	eIF <is_range<Ct>() , rn_iterator<Ct>>
+operator / (Ct&& C, std::function<bool(rn_elem_type<Ct>)> t)   { return  detail::find_elem(std::forward<Ct>(C), t); };
 
 
 
@@ -204,12 +204,12 @@ operator % (Ct&& C, const T& t)                               { return  endz(C) 
 //  ---  plain func
 	template<typename Ct>
 	eIF <is_range<Ct>(), bool>
-operator % (Ct&& C, bool(*t)(cl_elem_type<Ct>))               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, bool(*t)(rn_elem_type<Ct>))               { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 //  ---  func obj, lambda
 	template<typename Ct>
 	eIF <is_range<Ct>(), bool>
-operator % (Ct&& C, std::function<bool(cl_elem_type<Ct>)> t)  { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
+operator % (Ct&& C, std::function<bool(rn_elem_type<Ct>)> t)  { return  endz(C) != detail::find_elem(std::forward<Ct>(C), t); };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  TUPLE / PAIR
@@ -274,7 +274,7 @@ operator>>      (Ct&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forwa
 //	3
 
 	template<typename Ct>
- 	eIF <has_top<Ct>(), cl_elem_type<Ct>>
+ 	eIF <has_top<Ct>(), rn_elem_type<Ct>>
 back      (Ct&& C)    { return C.top(); };
 
 

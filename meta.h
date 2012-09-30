@@ -43,7 +43,7 @@ template<typename Ct>   	   using  rm_ref           = typename std::remove_refer
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
 
-template <typename T>		struct cl_traits      {
+template <typename T>		struct rn_traits      {
 		template <typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
 		template <typename U>							static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
@@ -66,21 +66,21 @@ template <typename T>		struct cl_traits      {
 };
 
 
-template <typename T, size_t N> struct cl_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
-template <typename T, size_t N> struct cl_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct rn_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct rn_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
 
 
-template<typename Ct>   using cl_elem_type      = typename cl_traits<Ct>::elem_type;
-template<typename Ct>   using cl_iterator       = typename cl_traits<Ct>::iterator;
-template<typename Ct>   using cl_const_iterator = typename cl_traits<Ct>::const_iterator;
-template<typename Ct>   using cl_reference      = typename cl_traits<Ct>::reference;
+template<typename Ct>   using rn_elem_type      = typename rn_traits<Ct>::elem_type;
+template<typename Ct>   using rn_iterator       = typename rn_traits<Ct>::iterator;
+template<typename Ct>   using rn_const_iterator = typename rn_traits<Ct>::const_iterator;
+template<typename Ct>   using rn_reference      = typename rn_traits<Ct>::reference;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
-template<typename Cl>	                using  cl_elem_fwd         = typename  copy_rcv<Cl&&, cl_elem_type<Cl>>::type;
-template<typename Cl>	                using  cl_iterator_fwd     = typename  copy_rcv<Cl&&, cl_iterator<Cl>>::type;
+template<typename Cl>	                using  rn_elem_fwd         = typename  copy_rcv<Cl&&, rn_elem_type<Cl>>::type;
+template<typename Cl>	                using  rn_iterator_fwd     = typename  copy_rcv<Cl&&, rn_iterator<Cl>>::type;
 
 template<class T, class TT=rm_qualifier<T>>  constexpr bool 
 is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
@@ -315,7 +315,7 @@ template<typename Rn>	eIF<!has_resize<Rn>()>		resize(Rn&& rn, size_t n) 		{}
                                               void	resize(char*rn, size_t n) 		{ *(rn+n) = '\0'; }
 
 /////  FRONT/BACK
-//template<typename Rn>	eIF<!has_clear<Rn>(), cl_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }
+//template<typename Rn>	eIF<!has_clear<Rn>(), rn_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }
 
 	// TODO: spceialization for c-str, arrays
 
@@ -329,8 +329,8 @@ template<typename T>  constexpr bool   is_collection()     {
 	;
  };
 
-template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<cl_elem_type<Ct>>>::value; }
-template<class Ct1, class Ct2>        constexpr bool   have_same_elem()    { return  is_range<Ct1>()  &&  is_range<Ct2>()  &&  std::is_convertible< rm_qualifier<cl_elem_type<Ct1>>,  rm_qualifier<cl_elem_type<Ct2>> >::value; }
+template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<rn_elem_type<Ct>>>::value; }
+template<class Ct1, class Ct2>        constexpr bool   have_same_elem()    { return  is_range<Ct1>()  &&  is_range<Ct2>()  &&  std::is_convertible< rm_qualifier<rn_elem_type<Ct1>>,  rm_qualifier<rn_elem_type<Ct2>> >::value; }
 					};
 
 					#endif

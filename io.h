@@ -99,7 +99,7 @@ operator<<      (ostream& os, const IT&) { return os; };
 	eIF<is_range<Ct>()  &&  !is_ioable<Ct>(), std::ostream&>
 operator<<      (ostream& os, const Ct& C) {
 
-	if (std::is_same<char, cl_elem_type<Ct>>::value)  {
+	if (std::is_same<char, rn_elem_type<Ct>>::value)  {
 		auto I=std::begin(C);
 		while (I != endz(C)) {
 			os  << *I;
