@@ -216,7 +216,8 @@ Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is extension and alternative interface to STL.
+STO defines operators to work with containers and ranges.  Initally it was simple compendium  
+of sortcuts, but now it probably deserve seperate project status.
 
 ///////////////////////////////////////////////////////////
 Below is string manipulation example.   Given `Thello?` string, it
@@ -290,7 +291,7 @@ Ranges
 ~~~~~~
 
 Ranges are numeric ranges,  iterator ranges,  chain ranges, stl containers, c-arrays and c-strings. 
-C-strings are  zero terminated  arrays of `char` (not `signed char` or `unsigned chars`).
+STO defines C-strings as zero terminated  arrays of `char` (not `signed char` or `unsigned chars`).
 
 
 Numeric range is simple numeric sequence generator :
@@ -326,11 +327,14 @@ abc-123 XYZ
 Pipe, Map, Reduce
 ~~~~~~~~~~~~~~~~~
 
-We will use a lot of functors here. Unfortunately many functions inherited from C are not usable with STO.
-STO relies on fact that functor have argument of the same type as range element type. 
-But for examples `ctype.h` functions, which work with c-strings, take not `char` but `int` and can be defined as macros. 
-And they randomly inject these functions into default namespace.
-As workaround STO put equivalent functions with correct signatures into `sto` namespace.
+We will use a lot of functors here. Functors are function object, lambdas and
+plain functions. Unfortunately many functions inherited from C are not usable
+with STO.  STO relies on fact that functor have argument of the same type as
+range element type.  But for examples `ctype.h` functions, which work with
+c-strings, take not `char` but `int` and thay can be defined as macros.  And
+what makes it even worse,  they are randomly injected into default namespace.
+As workaround STO put equivalent functions with correct signatures into `sto`
+namespace.
 
 Also note that we can not use POD types with operators (+++C++ +++ limitation). If it is binary op,
 with need to wrap at least one of operands in a class:
@@ -345,10 +349,10 @@ abcxyz
 
 
 
-Map
-~~~
+Map/Transform
+~~~~~~~~~~~~~
 
-`sto::operator* (Range,Functor)` - equivalent to `std::transform`
+operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`
 
 ------------------------------------------
 scc 'char s[]="abc-123";  range(s) * sto::toupper'
@@ -359,6 +363,9 @@ ABC-123
 Pipe
 ~~~~
 
+Pipe have much more freedom on what it can do with range. It can filter out,
+add, reoder and convert to different type:
+
 ------------------------------------------
 scc 'char s[]="abc-123";  range(s) | sto::isdigit'
 123
@@ -367,24 +374,24 @@ scc 'char s[]="abc-123, xyz/";  (range(s) | sto::isalnum) * sto::toupper'
 ABC123XYZ
 ------------------------------------------
 
-Range expression are lazy evaluated - there are no temporary strings.  It
-should be as efficient as manually writen for loop.
+Range expression are lazy evaluated. In above explae there are no temporary
+strings.  It should be as efficient as manually writen for loop.
 
 
 Reduce/Fold
 ~~~~~~~~~~~
 
-`sto::operator|| (Range,Functor)` - equivalent to `std::transform`
+Operator `sto::operator|| (Range,Functor)` is somewhat equivalent to `std::accumulate`
 
 ------------------------------------------
-scc 'vint v{2,1,3};  v || min'
-1
-
 scc 'vint v{2,1,3};  v || plus<int>()'
 6
 
 scc 'vint v{2,1,3};  v || multiplies<int>()'
 6
+
+scc 'vint v{2,1,3};  v || min'
+1
 ------------------------------------------
 
 Find (brute force) maximum of  `cos(x)/x` for `2 < x < 20`:

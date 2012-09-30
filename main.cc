@@ -3,6 +3,8 @@
 
 #include "scc/cj.h"
 #include "scc/scc.h"
+//#define MAP(expr)   [](any){ return expr; }
+
 
 #ifndef NDEBUG
 #include "scc/debug.h"
@@ -49,7 +51,6 @@ struct	tracking_buf_t : std::streambuf {
 		++count;
 		return c;
 	}
-
 };
 
 #include "snippet.h"
@@ -87,8 +88,6 @@ int main(int argc, char** argv) {
 	static 	auto __attribute__((unused))		r9	= range(d9); 
 	static 	auto __attribute__((unused))		rr9	= range(mk_d9()); 
 	#endif
-	
-
 
 
 	#ifndef scc_NOAWK
@@ -181,9 +180,7 @@ int main(int argc, char** argv) {
 	if ( ! tracking_buf.terminated_line()) 	 cout << '\n';
 	std::cout.rdbuf(org_cout_buf);
 
-
 	#ifndef scc_NOAWK
 	delete buf;
 	#endif
-
 }

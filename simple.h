@@ -337,7 +337,6 @@ typedef		std::list<std::string>		lstr;
 #define		xALL(C)		for (auto x:C)
 
 
-
 ///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
 
 
