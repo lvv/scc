@@ -222,6 +222,9 @@ template<typename T>     constexpr bool   is_queue()        { return  is_queue_t
 
 	template<typename T>    
 	constexpr bool  
+	// TO CHECK: better(?) is_iterator --
+	// 	http://stackoverflow.com/questions/12161109/stdenable-if-or-sfinae-for-iterator-or-pointer
+	//	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=40497#c23
 is_iterator()        {
 	return  has_iterator_category<T>() 
 		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value);

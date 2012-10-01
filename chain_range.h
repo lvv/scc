@@ -14,9 +14,9 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE_ITERATOR
 
-	template<typename Rn> struct  chain_range;
+	template<class Rn, class O = rn_elem_type<Rn>> struct  chain_range;
 
-	template <class Rn, bool CONST_IT>
+	template <class Rn, class O,  bool CONST_IT>
 struct chain_range_iterator {
 
 
@@ -42,9 +42,10 @@ struct chain_range_iterator {
 	// STL ITERATOR TYPES
 	typedef		std::forward_iterator_tag			iterator_category;
 
-	typedef		chain_range_iterator<Rn, false>			iterator;
-	typedef		chain_range_iterator<Rn, true>			const_iterator;
-	typedef		rn_elem_type<Rn>				value_type;
+	typedef		chain_range_iterator<Rn, O, false>		iterator;
+	typedef		chain_range_iterator<Rn, O, true>		const_iterator;
+	//typedef		rn_elem_type<Rn>				value_type;
+	typedef		O						value_type;
 
 	typedef		const value_type*				const_pointer;
 	typedef		typename std::conditional<CONST_IT, const_pointer, value_type*>::type
@@ -66,14 +67,18 @@ struct chain_range_iterator {
 							: parent(parent), current(current)     {};
 
 	////// CONVERSION 
-	operator chain_range_iterator<Rn&&, true>() { return chain_range_iterator<Rn&&,true>(parent, current); };
+	operator chain_range_iterator<Rn&&,O,true>() { return chain_range_iterator<Rn&&,O,true>(parent, current); };
 
 	////// IFACE
 	reference	operator*()		{ return   *current; }
 	const_reference	operator*()	const	{ return   *current; }
+	//reference	operator*()		{ return   tran(*current); }
+	//const_reference	operator*()	const	{ return   tran(*current); }
 
 	pointer		operator->()		{ return  &*current; }
 	const_pointer	operator->()	const	{ return  &*current; }
+	//pointer		operator->()		{ return  &tran(*current); }
+	//const_pointer	operator->()	const	{ return  &tran(*current); }
 
 	self&		operator++()		{
 		org_iterator e = endz(parent->rn);
@@ -97,18 +102,18 @@ struct chain_range_iterator {
 
 /////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER
 
-template<typename T>	struct  ref_container;
-template<typename T>	struct  ref_container<T& >  { T& value;  explicit ref_container(T&  x) : value(x)            {} };
-template<typename T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_container(T&& x) : value(x) {} };
+template<class T>	struct  ref_container;
+template<class T>	struct  ref_container<T& >  { T& value;  explicit ref_container(T&  x) : value(x)            {} };
+template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_container(T&& x) : value(x) {} };
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
-	template<typename Rn>
+	template<class Rn, class O /*= rn_elem_type<Rn>*/ >
 struct  chain_range : ref_container<Rn&&> {
 
 		typedef		rn_elem_type<Rn>  						value_type;
 		typedef		value_type							T;
-		typedef		chain_range_iterator<Rn, false>     				iterator;
-		typedef		chain_range_iterator<Rn, true >					const_iterator;
+		typedef		chain_range_iterator<Rn, O, false>     				iterator;
+		typedef		chain_range_iterator<Rn, O, true >				const_iterator;
 		typedef		size_t  							size_type;
 		typedef		typename std::iterator_traits<rn_iterator<Rn>>::difference_type	difference_type ;
 		typedef		typename std::iterator_traits<rn_iterator<Rn>>::pointer		pointer ;
@@ -117,17 +122,31 @@ struct  chain_range : ref_container<Rn&&> {
 		typedef		chain_range<Rn>							self_type;
 
 	// MEMBERS
-	//using ref_container<Rn&&>::value;
 	Rn& rn;
 
-	std::function<bool(const value_type&)>		default_pred = [](const value_type& x) -> bool {return true;};
-	std::function<bool(const value_type&)>		pred;
+	std::function<bool(value_type)>	static  	nop_pred;	// predicate
+	std::function<bool(value_type)>			pred = nop_tran;;
 
+	//std::function<const value_type&(const value_type&)>  static	nop_tran;	// transform
+	std::function<value_type(value_type)>  static		nop_tran;	// transform
+	std::function<value_type(value_type)>			tran = nop_tran;
 
-	// CTOR
-	template<class Pred>
-	explicit chain_range(Rn&& rn, Pred pred)  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(pred)         {};
-	explicit chain_range(Rn&& rn)             : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value), pred(default_pred) {};
+	// default CTOR
+	explicit chain_range(Rn&& rn)		  : ref_container<Rn&&>(std::forward<Rn>(rn)), rn(this->value)              {};
+
+	// full CTOR
+	
+		template <class Pred, class Tran>
+		explicit 
+	chain_range (
+		Rn&& rn,
+		Pred pred,
+		Tran tran
+		//eIF<is_callable<Pred, bool(value_type)>::value, int> unused=0
+		//eIF<is_callable<Tran, O(value_type)>::value  &&  ! std::is_same<bool, O>::value, int> unused=0
+	)
+	:  ref_container<Rn&&>(std::forward<Rn>(rn)),  rn(this->value),  pred(pred), tran(tran)
+	{};
 
 
 	// ASSIGNMENT
@@ -193,25 +212,37 @@ struct  chain_range : ref_container<Rn&&> {
 
  };
 
+ // CHAIN_RANGE  STATIC MEMBERS
+
+	template<class Rn, class O /*= rn_elem_type<Rn>*/ >
+	std::function<bool(typename chain_range<Rn,O>::value_type)>   
+	chain_range<Rn,O>::
+nop_pred = [](const typename chain_range<Rn,O>::value_type& x) -> bool  {return true;};
+
+	template<class Rn, class O /*= rn_elem_type<Rn>*/ >
+	std::function<typename chain_range<Rn,O>::value_type(typename chain_range<Rn,O>::value_type)>
+	chain_range<Rn,O>::
+nop_tran =  [](typename chain_range<Rn,O>::value_type x)   {return x;};
+
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
-	template<class Rn, class O = rn_elem_type<Rn>>   
+	template<class Rn>   
 	eIF<is_range<Rn>(), chain_range<Rn&&>>   
 range(Rn&& rn)  {
 	return  chain_range<Rn&&>(std::forward<Rn>(rn));  // there is no copy on return
  };
-
 ////////////////////////////////////////////////////////////////  PIPE
 
 
-//  Ct1 | Pred    --> range	 (grep like)
-	//template<class Rn, class Pred = bool(*)(const rn_elem_type<Rn>&)>
-//operator|  (Rn&& rn,  identity<Pred> pred)    { 
-//operator|  (Rn&& rn,  bool(*)(const rn_elem_type<Rn>&) pred)    { 
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const rn_elem_type<Rn>&)> pred)  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const rn_elem_type<Rn>&))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
-template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(rn_elem_type<Rn>))  { return  chain_range<Rn&&>(std::forward<Rn>(rn), pred); };
+//  Ct1 | Pred    --> range
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(const rn_elem_type<Rn>&)> pred) { return   chain_range<Rn&&> (std::forward<Rn>(rn),  pred,  chain_range<Rn&&>::nop_tran); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  std::function<bool(rn_elem_type<Rn>)> pred)        { return   chain_range<Rn&&> (std::forward<Rn>(rn),  pred,  chain_range<Rn&&>::nop_tran); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(const rn_elem_type<Rn>&))               { return   chain_range<Rn&&> (std::forward<Rn>(rn),  pred,  chain_range<Rn&&>::nop_tran); };
+template<class Rn> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator|  (Rn&& rn,  bool(pred)(rn_elem_type<Rn>))                      { return   chain_range<Rn&&> (std::forward<Rn>(rn),  pred,  chain_range<Rn&&>::nop_tran); };
+		// Overload is better than SFINAE selection. With OL we do not need to specify functor template arguments
+
+
 
 //  Ct1 | Ct2   ---  search() --> range	   
 /*

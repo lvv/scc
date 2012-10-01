@@ -10,10 +10,10 @@ scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
 scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
 
 ################################################################# CHAIN_RANGE
-# PRED
-scc 'chain_range<vint&>  r(v9, [](const int& c)->bool{ return c%2;}); r'
-scc 'chain_range<string&>  r(s9, [](const char& c){ return *"b"==c;}); r'
-scc 'chain_range<string&>  r(s9, sto::isdigit); r'
+# PRED CTOR
+#scc 'chain_range<vint&>  r(v9, [](const int& c)->bool{ return c%2;}); r'
+#scc 'chain_range<string&>  r(s9, [](const char& c){ return *"b"==c;}); r'
+#scc 'chain_range<string&>  r(s9, sto::isdigit); r'
 
 # CTOR
 scc 'auto r = range(range(v9));  _ r.front();  ++r=11;  auto rr=range(range(mk_v9()));  _ r, rr;'
@@ -24,7 +24,8 @@ scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
 # Iterators
-scc 'chain_range<vint&>::iterator it=+r9;  chain_range<vint&>::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
+#scc 'chain_range<vint&>::iterator it=+r9;  chain_range<vint&>::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
+scc 'auto it=+r9;  decltype(r9)::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
 
 # op=(value_type)
 scc 'range(a9)=42;  a9'

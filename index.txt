@@ -736,6 +736,8 @@ RANGES
 		It's proven that sequence K[i] enumerates all numbers between 1 and N with no repeats (actually K[N + 1] == K[1] but that is not a problem because we need only first N numbers).
 		If you can efficiently generate such numbers P with uniform distribution (e.g. with a good random function) with using Euclidean algorithm to calculate GCD in O(log(N)) complexity you'll get what you want.
 
+	linq -- http://stackoverflow.com/questions/8910045/template-argument-deduction
+
 MAP
 	TRIE
 		http://login2win.blogspot.com/2011/06/c-tries.html
