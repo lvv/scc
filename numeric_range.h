@@ -23,7 +23,7 @@ struct  numeric_range {
 			typedef		const_reference	reference;
 
 	struct	const_iterator {
-		explicit const_iterator (const numeric_range<T>& range, T current)
+		explicit const_iterator (const numeric_range<T>* range, T current)
 			:	range		(range), 
 				current		(current),
 				i		(0)
@@ -44,16 +44,16 @@ struct  numeric_range {
 		
 
 		const_reference	operator*()	const	{ return   current; }
-		const_pointer	operator->()	const	{ return  &current; } // what is this for?
-		const_iterator&	operator++()		{ current+=range.step; ++i;  return *this; }
-		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range.step;  ++i; return tmp; }
+		//const_pointer	operator->()	const	{ return  &current; } // is this correct?
+		const_iterator&	operator++()		{ current+=range->step;  ++i;   return *this; }
+		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range->step;  ++i;  return tmp; }
 
 				// we make assumpation that comparission is done only with  end()
-		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.current-current) < sto::abs(range.step); }
+		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.current-current) < sto::abs(range->step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 
 	   private:
-		const numeric_range<T>&		range;
+		const numeric_range<T>*		range;
 		T				current;
 		size_t				i;	
 
@@ -67,8 +67,8 @@ struct  numeric_range {
 	numeric_range()  			: from(T()),  to(T()), step(T())  {};
 	numeric_range(T from, T to, T step=1)	: from(from), to(to),  step(step) {};
 
-	const_iterator	cbegin() const	{ return const_iterator(*this, from); };
-	const_iterator	cend()   const	{ return const_iterator(*this, to); };
+	const_iterator	cbegin() const	{ return const_iterator(this, from); };
+	const_iterator	cend()   const	{ return const_iterator(this, to); };
 	const_iterator	begin()	 const	{ return cbegin(); };
 	const_iterator	end()    const	{ return cend(); };
 

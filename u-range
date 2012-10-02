@@ -43,12 +43,15 @@ scc 'range(v9/5, v9/999) = v9;  v9'
 ################################################################# NUMERIC_RANGE
 # ctor
 scc '__ range(0,10,2),  range(10,0,-1.5);'
-#scc 'auto r=range(5); copy(+r, -r, back_inserter(v0));  v0 << range(5); v0'
+# iter
+scc 'auto ri = +range(0,21);  ri = +range(0,21);' 
 # loops
 scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
 scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
 # stl algorithms
 scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
+
+scc 'range(0,21) | is_even'
 
 # Ct * F 	################################################################ MAP
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
