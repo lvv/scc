@@ -11,8 +11,8 @@ is_pointer -- http://stackoverflow.com/questions/3177686/how-to-implement-is-poi
 using namespace std;
 
 
-template<typename Cl>
-using  rn_elem_fwd  =  typename  copy_rcv<Cl&&, rn_elem_type<Cl>>::type;
+template<typename Rn>
+using  rn_elem_fwd  =  typename  copy_rcv<Rn&&, rn_elem_type<Rn>>::type;
 
 
 int main() {

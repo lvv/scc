@@ -80,7 +80,7 @@ operator--      (Ct&& C)         { C.pop_front();   return  std::forward<Ct>(C);
 operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C); };
 
 
-//////  X >> Cl << X
+//////  X >> Rn << X
 
 	namespace detail {
 		template<class Ct, class X>  eIF<has_push_back  <Ct>(), Ct&&>  append_elem(Ct&& C1, X&& x)   { C1.push_back (std::forward<X>(x));  return std::forward<Ct>(C1); };
@@ -94,20 +94,20 @@ operator--      (Ct&& C, int)    { C.pop_back();    return  std::forward<Ct>(C);
 
 	}
 
-	// Cl << x
+	// Rn << x
 	template<class Ct, class X>
 	eIF <is_elem_of<X,Ct>(),  Ct&&>
 operator << (Ct&& C1, X&& x)            {  detail::append_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };
 
 
-	// Cl << Cl2
+	// Rn << Cl2
 	template<class Ct, class Ct2> 
 	eIF <have_same_elem<Ct,Ct2>(),  Ct&&>
 operator <<  (Ct&& C1, Ct2&& C2)         {  for (auto i=std::begin(C2);  i!=endz(C2);  ++i)  detail::append_elem(std::forward<Ct>(C1), rn_elem_fwd<Ct2>(*i));   return  std::forward<Ct>(C1); };
 
 
-//////  T >> Cl 
-	// x >> Cl 
+//////  T >> Rn 
+	// x >> Rn 
 	template<class X, class Ct>
 	eIF <is_elem_of<X,Ct>(),  Ct&&>
 operator >> (X&& x, Ct&& C1)            {  detail::prepend_elem(std::forward<Ct>(C1),  std::forward<X>(x));   return  std::forward<Ct>(C1); };

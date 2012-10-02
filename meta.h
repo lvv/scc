@@ -79,8 +79,8 @@ template<typename Ct>   using rn_reference      = typename rn_traits<Ct>::refere
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
-template<typename Cl>	                using  rn_elem_fwd         = typename  copy_rcv<Cl&&, rn_elem_type<Cl>>::type;
-template<typename Cl>	                using  rn_iterator_fwd     = typename  copy_rcv<Cl&&, rn_iterator<Cl>>::type;
+template<typename Rn>	                using  rn_elem_fwd         = typename  copy_rcv<Rn&&, rn_elem_type<Rn>>::type;
+template<typename Rn>	                using  rn_iterator_fwd     = typename  copy_rcv<Rn&&, rn_iterator<Rn>>::type;
 
 template<class T, class TT=rm_qualifier<T>>  constexpr bool 
 is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }

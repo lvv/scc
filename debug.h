@@ -93,7 +93,8 @@ const char		__attribute__((unused))		cc9[99]	{"abc-123"},  cc23[]{"bc"},  cc1='a
 std::string		__attribute__((unused))		s9	{"abc-123"},  s0, s23{"bc"},  s1="a";
 std::vector<std::string>__attribute__((unused))		vs9	{"", "a", "bb", "ccc", "dddd"};
 // rvalues
-static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  v9; };
+//static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  v9; };
+static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  vint{0,1,2,3,4,5,6,7,8,9}; };
 static std::vector<int>	__attribute__((unused))		mk_v23(){ return  v23; };
 static std::vector<int>	__attribute__((unused))		mk_v0()	{ return  v0; };
 static std::deque<int>	__attribute__((unused))		mk_d9()	{ return  d9; };
