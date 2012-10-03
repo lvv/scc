@@ -3,11 +3,6 @@ set -o errexit
 set -v
 
 ################################################################# RANGE
-# PIPE
-scc 'r9|is_even'
-scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
-scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
-scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
 
 ################################################################# CHAIN_RANGE
 # PRED CTOR
@@ -35,24 +30,6 @@ scc 'range(v0) = a9; v0'
 scc 'range(s) = cc9; s'
 scc 'range(v9) = range(5); v9'
 
-################################################################# ITERATOR_RANGE
-# op=(value_type)
-scc 'range(v9/2, v9/5)   = 42;  v9'
-scc 'range(v9/5, v9/999) = v9;  v9'
-
-################################################################# NUMERIC_RANGE
-# ctor
-scc '__ range(0,10,2),  range(10,0,-1.5);'
-# iter
-scc 'auto ri = +range(0,21);  ri = +range(0,21);' 
-# loops
-scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
-scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
-# stl algorithms
-scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
-
-scc 'range(0,21) | is_even'
-
 # Ct * F 	################################################################ MAP
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc '__ v9 * [](int x){return x+10;};'
@@ -71,4 +48,28 @@ scc '__ v9 || [](int a, int b){return min(a,b);};'
 scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
 #scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
 #scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
+
+# PIPE
+scc 'r9|is_even'
+scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
+scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
+scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
+################################################################# ITERATOR_RANGE
+# op=(value_type)
+scc 'range(v9/2, v9/5)   = 42;  v9'
+scc 'range(v9/5, v9/999) = v9;  v9'
+
+################################################################# NUMERIC_RANGE
+# ctor
+scc '__ range(0,10,2),  range(10,0,-1.5);'
+# iter
+scc 'auto ri = +range(0,21);  ri = +range(0,21);' 
+# loops
+scc 'numeric_range<int> r(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;""'
+scc 'numeric_range<int> r(0,10,2);  for(auto x:r) _ x;""'
+# stl algorithms
+scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
+
+scc 'range(0,21) | is_even'
+
 

@@ -269,86 +269,47 @@ operator /       (Ct& C1, const Ct& C2)    {  return  search(C1.begin(), C1.end(
 	};
 
 
-//  Ct * F   ---  transform(+C,-C,+D,F) -> D   (temporary demo, should really return  collection, not a container)
 //  Ct1 * Pred    --> range
-
-//template<class Rn /*,class ET=rn_elem_type<Rn>*/> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  std::function<rn_elem_type<Rn>(const rn_elem_type<Rn>&)> tran) { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,rn_elem_type<Rn>>::nop_pred, tran); };
-//template<class Rn /*,class ET=rn_elem_type<Rn>*/> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  std::function<rn_elem_type<Rn>(rn_elem_type<Rn>)> tran)        { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,rn_elem_type<Rn>>::nop_pred, tran); };
-//template<class Rn /*,class ET=rn_elem_type<Rn>*/> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  rn_elem_type<Rn>(*tran)(const rn_elem_type<Rn>&))              { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,rn_elem_type<Rn>>::nop_pred, tran); };
-//template<class Rn /*,class ET=rn_elem_type<Rn>*/> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  rn_elem_type<Rn>(*tran)(rm_ref<rn_elem_type<Rn>>))             { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,rn_elem_type<Rn>>::nop_pred, tran); };
-
-//template<class Rn, class T=rn_elem_type<Rn>> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  std::function<T(const T&)> tran) { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,T>::nop_pred, tran); };
-//template<class Rn, class T=rn_elem_type<Rn>> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  std::function<T(T)> tran)        { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,T>::nop_pred, tran); };
-//template<class Rn, class T=rn_elem_type<Rn>> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  T(*tran)(const T&))              { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,T>::nop_pred, tran); };
-//template<class Rn, class T=rn_elem_type<Rn>> eIF<is_range<Rn>(),  chain_range<Rn&&>>  operator*  (Rn&& rn,  identity<T>(*tran)(identity<T>))             { return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&,T>::nop_pred, tran); };
-
-
-/*
-	template<class Rn, class Tran>
-	eIF<is_range<Rn>()  && is_callable<Tran, rn_elem_type<Rn>(rn_elem_type<Rn>)>::value,  chain_range<Rn&&>> 
-operator*  (Rn&& rn,  Tran tran)  {
-	return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&>::nop_pred, tran);
-};
-*/
-
-	// overload for generic Ret (lambdas)
-	template<
-		typename Ct,
-		typename F,
-		typename T = rn_elem_type<Ct>,
-		//typename Ret=typename std::function<rm_qualifier<F>>::result_type,
-		typename Ret= decltype(std::declval<F>()(std::declval<T>()))
+	
+	template<				// overload for generic Ret (lambdas, other)
+		typename Rn,
+		typename Tran,
+		typename T = rn_elem_type<Rn>,
+		//typename Ret=typename std::function<rm_qualifier<Tran>>::result_type,
+		typename Ret= decltype(std::declval<Tran>()(std::declval<T>()))
 	> 
-	eIF <is_range<Ct>()  &&  is_callable<F, Ret(T)>::value, std::vector<Ret>>
-operator *       (Ct&& C, const F& f)    {
-	//std::vector<Ret> D;
-	//auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
-	//detail::cstr_zstop(ret);
-	std::vector<Ret> D;
-	auto ret = std::transform(std::begin(C), endz(C), back_inserter(D), f);
-	detail::cstr_zstop(ret);
-	return  D;
+	eIF <is_range<Rn>()  &&  is_callable<Tran, Ret(T)>::value,   chain_range<Rn&&>>
+operator *       (Rn&& rn, const Tran& tran)    {
+	return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&>::nop_pred, tran);
  };
-
-
-
-	// overload for :  Ret == T   (needed for oveloaded functions like abs)
-	template<
-		typename Ct,
-		typename T = rn_elem_type<Ct>,
+	
+	template<		// overload for :  Ret == T   (needed for oveloaded functions like abs)
+		typename Rn,
+		typename T = rn_elem_type<Rn>,
 		typename Ret = T
 	> 
-	eIF <is_range<Ct>(), std::vector<Ret>>
-operator *       (Ct&& C, T (*f)(T) )    {
-	std::vector<Ret> D;
-	auto ret = std::transform(std::begin(C), endz(C), std::back_inserter(D), f);
-	detail::cstr_zstop(ret);
-	return  D;
+	eIF <is_range<Rn>(),  chain_range<Rn&&>>
+operator *       (Rn&& rn, T (*tran)(T) )    {
+	return   chain_range<Rn&&> (std::forward<Rn>(rn),  chain_range<Rn&&>::nop_pred, tran);
  };
 
 
 //////////////////////////////////////////////////////////////////////  Ct || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
-	// overload for plain functions
 	template< typename Ct, typename T = rn_elem_type<Ct>, typename R = T > 
-	eIF <is_range<Ct>(), R>
+	eIF <is_range<Ct>(), R>							// overload for plain functions
 operator ||       (Ct&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::next(std::begin(C));
 	return  std::accumulate(i, endz(C), front(C), f);
  };
-
-
-	// overload for: lambda, std::plus
+	
 	template< typename Ct, typename T = rn_elem_type<Ct>, typename R = T > 
-	eIF <is_range<Ct>(), R>
+	eIF <is_range<Ct>(), R>							// overload for: lambda, std::plus
 operator ||       (Ct&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::next(std::begin(C));
 	const T init = front(C);
 	return  std::accumulate(i, endz(C), init, f);
  };
-/*
-*/
-
 
 						}; 
 						#endif //  STO_CHAIN_RANGE_H
