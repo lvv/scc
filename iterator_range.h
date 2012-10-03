@@ -38,8 +38,8 @@ struct  iterator_range {
 
 
 
-	//template<typename Ct>
-	//iterator_range( typename std::enable_if<std::is_same<I, typename Ct::iterator>::value, Ct>::type&  C)  : b_(begin(C)), e_(end(C)) {};
+	//template<typename Rg>
+	//iterator_range( typename std::enable_if<std::is_same<I, typename Rg::iterator>::value, Rg>::type&  C)  : b_(begin(C)), e_(end(C)) {};
 
 	iterator	begin()		{ return b_; };
 	iterator	end()		{ return e_; };

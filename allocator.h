@@ -1,10 +1,10 @@
 // TR http://stackoverflow.com/questions/12556638/stl-container-constructors-allocator-parameter-and-scoped-allocators
 // TR sample allocator -- http://stackoverflow.com/questions/8089850/how-to-overwrite-the-default-behavor-of-the-construct-method-in-the-allocator-cl/8090161#8090161
-// TR http://www2.research.att.com/~bs/C++0xFAQ.html#scoped-allocator
+// TR http://www2.research.att.com/~bs/rg++0xFAQ.html#scoped-allocator
 // TR http://stackoverflow.com/questions/11373796/custom-memory-allocator-for-stl-map
 // TR http://www.codeguru.com/cpp/cpp/cpp_mfc/stl/article.php/c4079/Allocators-STL.htm
 
-/* (from c++ now presentation) - A Minimal Allocator • Much of the C++03 boilerplate is now defaulted
+/* (from c++ now presentation) - A Minimal Allocator • Much of the rg++03 boilerplate is now defaulted
 
 	template <class T>
 	class MyAlloc {

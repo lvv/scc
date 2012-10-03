@@ -95,11 +95,11 @@ operator<<      (ostream& os, const IT&) { return os; };
 
 
 // SEQUANCE CONTAINTER or C-ARRAY
-	template<typename Ct >
-	eIF<is_range<Ct>()  &&  !is_ioable<Ct>(), std::ostream&>
-operator<<      (ostream& os, const Ct& C) {
+	template<typename Rg >
+	eIF<is_range<Rg>()  &&  !is_ioable<Rg>(), std::ostream&>
+operator<<      (ostream& os, const Rg& C) {
 
-	if (std::is_same<char, rn_elem_type<Ct>>::value)  {
+	if (std::is_same<char, rg_elem_type<Rg>>::value)  {
 		auto I=std::begin(C);
 		while (I != endz(C)) {
 			os  << *I;
@@ -120,11 +120,11 @@ operator<<      (ostream& os, const Ct& C) {
 
 
 // STACK
-	template<typename Ct >
-	eIF <is_stack<Ct>(), std::ostream> &
-operator<<      (ostream& os, Ct C) {
+	template<typename Rg >
+	eIF <is_stack<Rg>(), std::ostream> &
+operator<<      (ostream& os, Rg C) {
 
-	Ct CC; 
+	Rg CC; 
 	while(!C.empty()) { auto x = C.top();  C.pop();  CC.push(std::move(x)); }
 
 	cout << "[";
@@ -135,9 +135,9 @@ operator<<      (ostream& os, Ct C) {
 };
 
 // QUEUE
-	template<typename Ct >
-	eIF <is_queue<Ct>(), std::ostream> &
-operator<<      (ostream& os, Ct C) {
+	template<typename Rg >
+	eIF <is_queue<Rg>(), std::ostream> &
+operator<<      (ostream& os, Rg C) {
 	cout << "[";
 		if    ( !C.empty() )  { os         << C.front();  C.pop(); }
 		while ( !C.empty() )  { os << ", " << C.front();  C.pop(); }
@@ -210,9 +210,9 @@ namespace oi_space {
 	struct	oi_t  : std::ostream_iterator<oi_any_t> {
 		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
 
-			template<typename Ct >
-			eIF<is_range<Ct>(),  void>
-		operator=(const Ct& C)  {
+			template<typename Rg >
+			eIF<is_range<Rg>(),  void>
+		operator=(const Rg& C)  {
 			copy(std::begin(C),  endz(C),  *this);
 		}
 	};
@@ -251,31 +251,31 @@ struct in_t {
 	input(T& x)	{ std::cin >> x; }
 
 	// SEQ-CONT
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>(),  void>
-	input(Ct& C)	{
-		typename Ct::value_type t;
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>(),  void>
+	input(Rg& C)	{
+		typename Rg::value_type t;
 		if (n>0) C.resize(n);
-		if (!C.empty())		for (typename Ct::value_type&x : C)  { std::cin >> t;   if(!std::cin || n-- <= 0)  break;  x=t;}
+		if (!C.empty())		for (typename Rg::value_type&x : C)  { std::cin >> t;   if(!std::cin || n-- <= 0)  break;  x=t;}
 		else			{ C.clear();  while  (std::cin >> t, std::cin)  C.push_back(t);}
 	}
 
 	// SET
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_1arg_insert<Ct>()  &&  !has_mapped_type<Ct>(),  void>
-	input(Ct& C)	{
-		typename Ct::value_type t;
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>()  &&  !has_mapped_type<Rg>(),  void>
+	input(Rg& C)	{
+		typename Rg::value_type t;
 		C.clear(); 
 		n = n ? n : -1;
 		while  (std::cin >> t,  std::cin && n--)   C.insert(t);
 	}
 
 	// MAP
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_1arg_insert<Ct>()  &&  has_mapped_type<Ct>(),  void>
-	input(Ct& C)	{
-		typename Ct::key_type	  k;
-		typename Ct::mapped_type  m;
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>()  &&  has_mapped_type<Rg>(),  void>
+	input(Rg& C)	{
+		typename Rg::key_type	  k;
+		typename Rg::mapped_type  m;
 		C.clear(); 
 		n = n ? n : -1;
 		while(std::cin >> k >> m  && n--)  C[k] = m;
@@ -296,12 +296,12 @@ static in_t in;
 
 // SEQ-CONTAINER
 
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_push_back<Ct>()  &&  !is_ioable<Ct>(), std::istream& >
-operator>>      (std::istream& is, Ct& C)    {
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>(), std::istream& >
+operator>>      (std::istream& is, Rg& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
-	typename Ct::value_type c;
+	typename Rg::value_type c;
 	while(is>>c && n--)  C.push_back(c);
 	return is;
 };
@@ -370,21 +370,21 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 
 // SET
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_1arg_insert<Ct>() && !has_mapped_type<Ct>(), std::istream& >
-operator>>      (std::istream& is, Ct& C)    {
-	typename Ct::value_type c;
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>() && !has_mapped_type<Rg>(), std::istream& >
+operator>>      (std::istream& is, Rg& C)    {
+	typename Rg::value_type c;
 	while(is>>c)  C.insert(c);
 	return is;
 };
 
 
 // MAP
-		template<typename Ct>
-		eIF<is_range<Ct>()  &&  has_1arg_insert<Ct>() && has_mapped_type<Ct>(), std::istream& >
-operator>>      (std::istream& is, Ct& C)    {
-	typename Ct::key_type	  k;
-	typename Ct::mapped_type  m;
+		template<typename Rg>
+		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>() && has_mapped_type<Rg>(), std::istream& >
+operator>>      (std::istream& is, Rg& C)    {
+	typename Rg::key_type	  k;
+	typename Rg::mapped_type  m;
 	while(is >> k >> m)  C[k] = m;
 	return is;
 };

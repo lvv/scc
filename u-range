@@ -22,10 +22,10 @@ scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
 #scc 'chain_range<vint&>::iterator it=+r9;  chain_range<vint&>::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
 scc 'auto it=+r9;  decltype(r9)::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
 
-# op=(value_type)
+# rn = value_type
 scc 'range(a9)=42;  a9'
 
-# op=(range)
+# rn1 = rn2
 scc 'range(v0) = a9; v0'
 scc 'range(s) = cc9; s'
 scc 'range(v9) = range(5); v9'

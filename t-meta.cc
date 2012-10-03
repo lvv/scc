@@ -49,7 +49,7 @@ int main() {
 	//setw(20)<<""        <<   "\tCt\th_cIt\tIt\tinIt\tStack\tQueue\tIoable\tisF\trmpF\trmrF\tisPTR\tisREF\tisMFP\tiFCT\tiFN\n";
 	cout <<  endl <<   left 
 		<< setw(26)<<""        <<   " is  is  has  is  is      is      is     \n"
-		<< setw(26)<<""        <<   " Co  Ct  cns  IT inpt    Queue   call    \n"
+		<< setw(26)<<""        <<   " Co  Rg  cns  IT inpt    Queue   call    \n"
 		<< setw(26)<<""        <<   "         IT       IT  is      is  1   is \n"
 		<< setw(26)<<""        <<   "                     Stack    IO-    call\n"
 		<< setw(26)<<""        <<   "                             able     2  \n";

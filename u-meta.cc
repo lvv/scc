@@ -7,17 +7,17 @@
 
 
 //  CL_ELEM_TYPE
-CHECK_TYPES_ARE_SAME(   rn_elem_type<vint>        , int)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<vint&>       , int)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<vint&&>      , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<vint>        , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<vint&>       , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<vint&&>      , int)
 
-CHECK_TYPES_ARE_SAME(   rn_elem_type<const vint>  , int)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<const vint&> , int)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<const vint&&>, int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<const vint>  , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<const vint&> , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<const vint&&>, int)
 
-CHECK_TYPES_ARE_SAME(   rn_elem_type<int(&)[2]>   , int)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<int*(*)(int)>, no_type)
-CHECK_TYPES_ARE_SAME(   rn_elem_type<int>         , no_type)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<int(&)[2]>   , int)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<int*(*)(int)>, no_type)
+CHECK_TYPES_ARE_SAME(   rg_elem_type<int>         , no_type)
 
 
 //  IS_RANGE
@@ -82,13 +82,13 @@ CHECK( !(has_push_back<map<int,int>>())		)
 
 
 //  REFNESS
-CHECK_TYPES_ARE_SAME(    rn_traits<vint>::elem_type,		int	)
-CHECK_TYPES_ARE_SAME(    rn_traits<vint&>::elem_type,		int	)
-CHECK_TYPES_ARE_SAME(    rn_traits<vint&&>::elem_type,		int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<vint>::elem_type,		int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<vint&>::elem_type,		int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<vint&&>::elem_type,		int	)
 
-CHECK_TYPES_ARE_SAME(    rn_traits<const vint>::elem_type,	int	)
-CHECK_TYPES_ARE_SAME(    rn_traits<const vint&>::elem_type,	int	)
-CHECK_TYPES_ARE_SAME(    rn_traits<const vint&&>::elem_type,	int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<const vint>::elem_type,	int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<const vint&>::elem_type,	int	)
+CHECK_TYPES_ARE_SAME(    rg_traits<const vint&&>::elem_type,	int	)
 
 
 //  HAS_VALUE_TYPE

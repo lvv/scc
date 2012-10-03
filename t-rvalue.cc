@@ -11,8 +11,8 @@ is_pointer -- http://stackoverflow.com/questions/3177686/how-to-implement-is-poi
 using namespace std;
 
 
-template<typename Rn>
-using  rn_elem_fwd  =  typename  copy_rcv<Rn&&, rn_elem_type<Rn>>::type;
+template<typename Rg>
+using  rg_elem_fwd  =  typename  copy_rcv<Rg&&, rg_elem_type<Rg>>::type;
 
 
 int main() {
@@ -41,7 +41,7 @@ cout << "----------------------------------------------------------  NOP\n";
 	DO_NOP(int&)
 	DO_NOP(const int&)
 
-cout << "----------------------------------------------------------  Ct::value_type\n";
+cout << "----------------------------------------------------------  Rg::value_type\n";
 #define DO_NOP_V_VT(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
 	DO_NOP_V_VT(const vint::value_type)
 	DO_NOP_V_VT(volatile vint::value_type)
@@ -54,16 +54,16 @@ cout << "----------------------------------------------------------  Ct::value_t
 
 cout << "----------------------------------------------------------  CL_VALUE_TYPE\n";
 #define DO_CL_VALUE_TYPE(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_CL_VALUE_TYPE(rn_elem_type<vint>)
-	DO_CL_VALUE_TYPE(rn_elem_type<const vint>)
-	DO_CL_VALUE_TYPE(rn_elem_type<volatile vint>)
-	DO_CL_VALUE_TYPE(rn_elem_type<const volatile vint>)
-	DO_CL_VALUE_TYPE(rn_elem_type<vint>&&)
-	DO_CL_VALUE_TYPE(rn_elem_type<const vint>&&)
-	DO_CL_VALUE_TYPE(rn_elem_type<vint>&)
-	DO_CL_VALUE_TYPE(rn_elem_type<const vint>&)
+	DO_CL_VALUE_TYPE(rg_elem_type<vint>)
+	DO_CL_VALUE_TYPE(rg_elem_type<const vint>)
+	DO_CL_VALUE_TYPE(rg_elem_type<volatile vint>)
+	DO_CL_VALUE_TYPE(rg_elem_type<const volatile vint>)
+	DO_CL_VALUE_TYPE(rg_elem_type<vint>&&)
+	DO_CL_VALUE_TYPE(rg_elem_type<const vint>&&)
+	DO_CL_VALUE_TYPE(rg_elem_type<vint>&)
+	DO_CL_VALUE_TYPE(rg_elem_type<const vint>&)
 
-cout << "----------------------------------------------------------  Ct::iterator\n";
+cout << "----------------------------------------------------------  Rg::iterator\n";
 #define DO_ITERATOR(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
 	DO_ITERATOR(vector<int>::iterator)
 	DO_ITERATOR(vector<int>::const_iterator)
@@ -72,25 +72,25 @@ cout << "----------------------------------------------------------  Ct::iterato
 
 cout << "----------------------------------------------------------  CL_ITERATOR\n";
 #define DO_CL_ITERATOR(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_CL_ITERATOR(rn_iterator<vint>)
-	DO_CL_ITERATOR(rn_iterator<const vint>)
-	DO_CL_ITERATOR(rn_iterator<volatile vint>)
-	DO_CL_ITERATOR(rn_iterator<const volatile vint>)
-	DO_CL_ITERATOR(rn_iterator<vint&&>)
-	DO_CL_ITERATOR(rn_iterator<const vint&&>)
-	DO_CL_ITERATOR(rn_iterator<vint&>)
-	DO_CL_ITERATOR(rn_iterator<const vint&>)
+	DO_CL_ITERATOR(rg_iterator<vint>)
+	DO_CL_ITERATOR(rg_iterator<const vint>)
+	DO_CL_ITERATOR(rg_iterator<volatile vint>)
+	DO_CL_ITERATOR(rg_iterator<const volatile vint>)
+	DO_CL_ITERATOR(rg_iterator<vint&&>)
+	DO_CL_ITERATOR(rg_iterator<const vint&&>)
+	DO_CL_ITERATOR(rg_iterator<vint&>)
+	DO_CL_ITERATOR(rg_iterator<const vint&>)
 
 cout << "----------------------------------------------------------  CL_ELEM_FWD\n";
 #define DO_CL_ELEM_FWD(type)	 { typedef type  T;  for_T(LVV_STR(type));  }
-	DO_CL_ELEM_FWD(rn_elem_fwd<vint>)
-	DO_CL_ELEM_FWD(rn_elem_fwd<const vint>)
-	DO_CL_ELEM_FWD(rn_elem_fwd<volatile vint>)
-	DO_CL_ELEM_FWD(rn_elem_fwd<const volatile vint>)
-	DO_CL_ELEM_FWD(rn_elem_fwd<vint>&&)
-	DO_CL_ELEM_FWD(rn_elem_fwd<const vint>&&)
-	DO_CL_ELEM_FWD(rn_elem_fwd<vint>&)
-	DO_CL_ELEM_FWD(rn_elem_fwd<const vint>&)
+	DO_CL_ELEM_FWD(rg_elem_fwd<vint>)
+	DO_CL_ELEM_FWD(rg_elem_fwd<const vint>)
+	DO_CL_ELEM_FWD(rg_elem_fwd<volatile vint>)
+	DO_CL_ELEM_FWD(rg_elem_fwd<const volatile vint>)
+	DO_CL_ELEM_FWD(rg_elem_fwd<vint>&&)
+	DO_CL_ELEM_FWD(rg_elem_fwd<const vint>&&)
+	DO_CL_ELEM_FWD(rg_elem_fwd<vint>&)
+	DO_CL_ELEM_FWD(rg_elem_fwd<const vint>&)
 
 cout << "----------------------------------------------------------  DECL\n";
 #define DO_DECL(type)	 { typedef decltype((std::declval<type>()))  T;  for_T(LVV_STR(type));  }

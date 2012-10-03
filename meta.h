@@ -36,14 +36,14 @@ template<class From, class To> struct copy_rcv<From volatile&&       , To> { typ
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
 // shortcuts
-template<typename Ct>   	   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Ct>::type>::type;
-template<typename Ct>   	   using  rm_ref           = typename std::remove_reference<Ct>::type;
+template<typename Rg>   	   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Rg>::type>::type;
+template<typename Rg>   	   using  rm_ref           = typename std::remove_reference<Rg>::type;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////  CL_TRAITS
 
 
-template <typename T>		struct rn_traits      {
+template <typename T>		struct rg_traits      {
 		template <typename U, typename VT = typename rm_ref<U>::value_type>	static VT	vt(rm_ref<U>* u);
 		template <typename U>							static no_type	vt(...);
 	typedef   decltype(vt<T>(0))   elem_type ;
@@ -66,21 +66,21 @@ template <typename T>		struct rn_traits      {
 };
 
 
-template <typename T, size_t N> struct rn_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
-template <typename T, size_t N> struct rn_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct rg_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct rg_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
 
 
-template<typename Ct>   using rn_elem_type      = typename rn_traits<Ct>::elem_type;
-template<typename Ct>   using rn_iterator       = typename rn_traits<Ct>::iterator;
-template<typename Ct>   using rn_const_iterator = typename rn_traits<Ct>::const_iterator;
-template<typename Ct>   using rn_reference      = typename rn_traits<Ct>::reference;
+template<typename Rg>   using rg_elem_type      = typename rg_traits<Rg>::elem_type;
+template<typename Rg>   using rg_iterator       = typename rg_traits<Rg>::iterator;
+template<typename Rg>   using rg_const_iterator = typename rg_traits<Rg>::const_iterator;
+template<typename Rg>   using rg_reference      = typename rg_traits<Rg>::reference;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 
 template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
-template<typename Rn>	                using  rn_elem_fwd         = typename  copy_rcv<Rn&&, rn_elem_type<Rn>>::type;
-template<typename Rn>	                using  rn_iterator_fwd     = typename  copy_rcv<Rn&&, rn_iterator<Rn>>::type;
+template<typename Rg>	                using  rg_elem_fwd         = typename  copy_rcv<Rg&&, rg_elem_type<Rg>>::type;
+template<typename Rg>	                using  rg_iterator_fwd     = typename  copy_rcv<Rg&&, rg_iterator<Rg>>::type;
 
 template<class T, class TT=rm_qualifier<T>>  constexpr bool 
 is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
@@ -291,13 +291,13 @@ struct is_callable<F, R(Args...)> {
 
 /////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 
-template<typename Ct>	auto  endz(Ct&& C)                   -> decltype(std::end(C))     { return  std::end(C); };
+template<typename Rg>	auto  endz(Rg&& C)                   -> decltype(std::end(C))     { return  std::end(C); };
 template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 
 /////  SIZE
-template<class Ct> eIF<has_size<Ct>(),	  size_t>	size (const Ct& C)     { return C.size(); };
+template<class Rg> eIF<has_size<Rg>(),	  size_t>	size (const Rg& C)     { return C.size(); };
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
 template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
@@ -305,20 +305,20 @@ template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& 
 
 
 /////  EMPTY
-template<typename Rn>	eIF< has_empty<Rn>(), bool>	empty(const Rn& rn)	{ return  rn.empty(); }
-template<typename Rn>	eIF<!has_empty<Rn>(), bool>	empty(const Rn& rn)	{ return  (bool) sto::size(rn); }
+template<typename Rg>	eIF< has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  rg.empty(); }
+template<typename Rg>	eIF<!has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  (bool) sto::size(rg); }
 
 /////  CLEAR
-template<typename Rn>	eIF< has_clear<Rn>()>		clear(Rn&& rn) 		{ rn.clear(); }
-template<typename Rn>	eIF<!has_clear<Rn>()>		clear(Rn&& rn) 		{}
-                                              void	clear(char*rn) 		{ *rn = '\0'; }
+template<typename Rg>	eIF< has_clear<Rg>()>		clear(Rg&& rg) 		{ rg.clear(); }
+template<typename Rg>	eIF<!has_clear<Rg>()>		clear(Rg&& rg) 		{}
+                                              void	clear(char*rg) 		{ *rg = '\0'; }
 /////  RESIZE
-template<typename Rn>	eIF< has_resize<Rn>()>		resize(Rn&& rn, size_t n) 		{ rn.resize(n); }
-template<typename Rn>	eIF<!has_resize<Rn>()>		resize(Rn&& rn, size_t n) 		{}
-                                              void	resize(char*rn, size_t n) 		{ *(rn+n) = '\0'; }
+template<typename Rg>	eIF< has_resize<Rg>()>		resize(Rg&& rg, size_t n) 		{ rg.resize(n); }
+template<typename Rg>	eIF<!has_resize<Rg>()>		resize(Rg&& rg, size_t n) 		{}
+                                              void	resize(char*rg, size_t n) 		{ *(rg+n) = '\0'; }
 
 /////  FRONT/BACK
-//template<typename Rn>	eIF<!has_clear<Rn>(), rn_elem_type<Rn>>		front(Rn&& rn) 		{ return *std::begin(rn); }
+//template<typename Rg>	eIF<!has_clear<Rg>(), rg_elem_type<Rg>>		front(Rg&& rg) 		{ return *std::begin(rg); }
 
 	// TODO: spceialization for c-str, arrays
 
@@ -332,8 +332,8 @@ template<typename T>  constexpr bool   is_collection()     {
 	;
  };
 
-template<typename T, typename Ct>     constexpr bool   is_elem_of()        { return  is_collection<Ct>()  &&  std::is_same<rm_ref<T>, rm_ref<rn_elem_type<Ct>>>::value; }
-template<class Ct1, class Ct2>        constexpr bool   have_same_elem()    { return  is_range<Ct1>()  &&  is_range<Ct2>()  &&  std::is_convertible< rm_qualifier<rn_elem_type<Ct1>>,  rm_qualifier<rn_elem_type<Ct2>> >::value; }
+template<typename T, typename Rg>     constexpr bool   is_elem_of()        { return  is_collection<Rg>()  &&  std::is_same<rm_ref<T>, rm_ref<rg_elem_type<Rg>>>::value; }
+template<class Rg1, class Rg2>        constexpr bool   have_same_elem()    { return  is_range<Rg1>()  &&  is_range<Rg2>()  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
 					};
 
 					#endif

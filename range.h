@@ -12,35 +12,35 @@
 
 static  __attribute__((unused)) struct range_converter_t {} rng;
 
-	template<typename Ct>
+	template<typename Rg>
 	eIF<
-		is_range<Ct>(),
-		iterator_range<rn_iterator<Ct>>
+		is_range<Rg>(),
+		iterator_range<rg_iterator<Rg>>
 	>
-operator | (Ct& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
+operator | (Rg& C, range_converter_t r) { return range(std::begin(C), std::end(C)); };
 
 	template<typename T, size_t N>
 	iterator_range<T*>
 operator | (T (&C)[N], range_converter_t r) { return range(std::begin(C), std::end(C)); };
 
 
-	template<typename Ct>
+	template<typename Rg>
 	eIF<
-		is_range<Ct>(),
-		iterator_range<rn_iterator<Ct>>
+		is_range<Rg>(),
+		iterator_range<rg_iterator<Rg>>
 	>
-operator | (range_converter_t rng, Ct& C) { return range(std::begin(C), std::end(C)); };
+operator | (range_converter_t rng, Rg& C) { return range(std::begin(C), std::end(C)); };
 */
 
 /*
 static  __attribute__((unused)) struct iot_t {} iot;
 
-	template<typename Ct>
+	template<typename Rg>
 	typename std::enable_if<
-		is_range<Ct>(),
-		iterator_range<rn_iterator<Ct>>
+		is_range<Rg>(),
+		iterator_range<rg_iterator<Rg>>
 	>::type
-operator | (Ct& C, iot_t r) { return range(std::begin(C), std::end(C)); };
+operator | (Rg& C, iot_t r) { return range(std::begin(C), std::end(C)); };
 */
 
 /////////////////////////////////////////////////////////////////////////////////////  CL TRAITS 

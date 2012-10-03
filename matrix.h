@@ -30,7 +30,7 @@ struct	pt {
 std::ostream&   operator<<      (std::ostream& os, const pt& P) { os << "(" << P.x << "," << P.y << ")"; return os; };
 
 
-	template<typename T, template<typename T, typename Al=std::allocator<T> > class Ct=std::vector>
+	template<typename T, template<typename T, typename Al=std::allocator<T> > class Rg=std::vector>
 struct	matrix : vector<T> {
 			//typedef		typename vector<T>::iterator		iterator ;
 			//typedef		typename vector<T>::const_iterator	const_iterator ;
