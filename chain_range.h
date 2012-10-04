@@ -188,11 +188,18 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 	// ELEM ACCESS
-	value_type  	front()  const	{ return  *std::begin(rg); }
-	reference  	front()		{ return  *std::begin(rg); }
+	value_type  	front()  const	{ return  mapped(std::begin(rg)); }
+	reference  	front()		{ return  mapped(std::begin(rg)); }
 
-	value_type  	back()  const	{ return  *(std::prev(sto::endz(rg))); }  
-	reference  	back()		{ return  *(std::prev(sto::endz(rg))); } 
+	value_type  	back()  const	{ return  mapped(std::prev(sto::endz(rg))); }  
+	reference  	back()		{ return  mapped(std::prev(sto::endz(rg))); } 
+
+	//  FIXME for MAPPED
+	//template<class U=Rg>   eIF<has_back<U>(),        reference>	back()				{return rg.back();}
+	//template<class U=Rg>   eIF<has_back<U>(),  const_reference>	back()	const			{return rg.back();}
+
+	//template<class U=Rg>   eIF<has_front<U>(),       reference>	front()				{return rg.front();}
+	//template<class U=Rg>   eIF<has_front<U>(), const_reference>	front()	const			{return rg.front();}
 
 	// INPORTED RG METHODS
 	template<class U=Rg>   eIF<has_push_back<U>()>		push_back(const elem_type&  value)	{rg.push_back(value);}
@@ -207,13 +214,6 @@ struct  chain_range : ref_container<Rg&&> {
 	template<class U=Rg>   eIF<has_pop_back<U>()>		pop_back()				{rg.pop_back();}
 	template<class U=Rg>   eIF<has_pop_front<U>()>		pop_front()				{rg.pop_front();}
 
-
-	//  FIXME for MAPPED
-	//template<class U=Rg>   eIF<has_back<U>(),        reference>	back()				{return rg.back();}
-	//template<class U=Rg>   eIF<has_back<U>(),  const_reference>	back()	const			{return rg.back();}
-
-	//template<class U=Rg>   eIF<has_front<U>(),       reference>	front()				{return rg.front();}
-	//template<class U=Rg>   eIF<has_front<U>(), const_reference>	front()	const			{return rg.front();}
 
 	// ADDED RG METHODS
 		template<class U=Rg>  
