@@ -14,24 +14,27 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE_ITERATOR
 
-	template<class Rg, class O = rg_elem_type<Rg>> struct  chain_range;
+	template<class Rg, class O = rg_elem_type<Rg>, bool MAPPED = false> struct  chain_range;
 
-	template <class Rg, class O,  bool CONST_IT>
+
+	template <class Rg, class O,  bool RO, bool MAPPED>
 struct chain_range_iterator {
+				
+		//static_assert(!MAPPED || (RO && MAPPED), "bad combination of RO and MAPPED");
 
 
 		// TYPES
-		typedef    typename std::conditional<
-			CONST_IT,
+		typedef SEL <
+			RO,
 			rg_const_iterator<Rg>,
 			rg_iterator<Rg>
-		>::type   org_iterator;
+		>	org_iterator;
 
-		typedef typename std::conditional<
-			CONST_IT,
-			chain_range<Rg> const,
-			chain_range<Rg>
-		>::type*   parent_t;
+		typedef	SEL <
+			RO,
+			chain_range<Rg,O,MAPPED> const,
+			chain_range<Rg,O,MAPPED>
+		>*	parent_t;
 
 
 	// MEMBERS
@@ -40,20 +43,18 @@ struct chain_range_iterator {
 
 
 	// STL ITERATOR TYPES
-	typedef		std::forward_iterator_tag			iterator_category;
+	typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag>
+									iterator_category;
 
-	typedef		chain_range_iterator<Rg, O, false>		iterator;
-	typedef		chain_range_iterator<Rg, O, true>		const_iterator;
-	//typedef		rg_elem_type<Rg>				value_type;
+	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
+	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
 	typedef		O						value_type;
 
 	typedef		const value_type*				const_pointer;
-	typedef		typename std::conditional<CONST_IT, const_pointer, value_type*>::type
-									pointer;
+	typedef		SEL <RO, const_pointer, value_type*>   		pointer;
 
-	typedef		const value_type&				const_reference;
-	typedef		typename std::conditional<CONST_IT, const_reference, value_type&>::type
-									reference;
+	typedef		SEL <MAPPED, value_type, const value_type&>	const_reference;
+	typedef		SEL <RO, const_reference, value_type&>		reference;
 
 	typedef		size_t						size_type;
 	typedef		ptrdiff_t					difference_type;
@@ -61,19 +62,21 @@ struct chain_range_iterator {
 	typedef		chain_range_iterator				self;
 
 	////// CTOR
-	chain_range_iterator ()				: parent(0),      current()            {};	// default
+	chain_range_iterator ()				: parent(0)           			   {};	// default
 	chain_range_iterator ( const self& rhs)		: parent(rhs.parent), current(rhs.current) {};	// copy 
 	chain_range_iterator ( parent_t parent, const org_iterator& current) 
-							: parent(parent), current(current)     {};
+							: parent(parent), current(current)         {};
 
 	////// CONVERSION 
-	operator chain_range_iterator<Rg&&,O,true>() { return chain_range_iterator<Rg&&,O,true>(parent, current); };
+	operator chain_range_iterator<Rg&&,O,true,MAPPED>() { return chain_range_iterator<Rg&&,O,true,MAPPED>(parent, current); };
 
 	////// IFACE
-	reference	operator*()		{ return   *current; }
-	const_reference	operator*()	const	{ return   *current; }
-	//reference	operator*()		{ return   tran(*current); }
-	//const_reference	operator*()	const	{ return   tran(*current); }
+	
+	template<bool M=MAPPED>  eIF<M,O>  	operator*()  		{ return  parent->tran(*current); };
+	template<bool M=MAPPED>  eIF<M,O> operator*() const 	{ return  parent->tran(*current); };
+
+	template<bool M=MAPPED>  eIF<!M,reference>  	operator*()  		{ return  *current; };
+	template<bool M=MAPPED>  eIF<!M,const_reference>operator*() const  	{ return  *current; };
 
 	pointer		operator->()		{ return  &*current; }
 	const_pointer	operator->()	const	{ return  &*current; }
@@ -100,6 +103,7 @@ struct chain_range_iterator {
  };
 
 
+
 /////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER
 
 template<class T>	struct  ref_container;
@@ -107,13 +111,13 @@ template<class T>	struct  ref_container<T& >  { T& value;  explicit ref_containe
 template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_container(T&& x) : value(x) {} };
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
-	template<class Rg, class O /*= rg_elem_type<Rg>*/ >
+	template<class Rg, class O, bool MAPPED>
 struct  chain_range : ref_container<Rg&&> {
 
 		typedef		rg_elem_type<Rg>  						value_type;
 		typedef		value_type							T;
-		typedef		chain_range_iterator<Rg, O, false>     				iterator;
-		typedef		chain_range_iterator<Rg, O, true >				const_iterator;
+		typedef		chain_range_iterator<Rg, O, false, MAPPED>     			iterator;
+		typedef		chain_range_iterator<Rg, O, true,  MAPPED>			const_iterator;
 		typedef		size_t  							size_type;
 		typedef		typename std::iterator_traits<rg_iterator<Rg>>::difference_type	difference_type ;
 		typedef		typename std::iterator_traits<rg_iterator<Rg>>::pointer		pointer ;
@@ -142,8 +146,6 @@ struct  chain_range : ref_container<Rg&&> {
 		Rg&& rg,
 		Pred pred,
 		Tran tran
-		//eIF<is_callable<Pred, bool(value_type)>::value, int> unused=0
-		//eIF<is_callable<Tran, O(value_type)>::value  &&  ! std::is_same<bool, O>::value, int> unused=0
 	)
 	:  ref_container<Rg&&>(std::forward<Rg>(rg)),  rg(this->value),  pred(pred), tran(tran)
 	{};
@@ -171,9 +173,8 @@ struct  chain_range : ref_container<Rg&&> {
 	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), sto::endz(rg), pred)); };
 
 
-	// RG MANAGMENT
-	//size_t		size  () const	{ return  sto::size (rg); }	// TOFIX
-	size_t		size  () const	{ return  std::count_if(std::begin(rg), endz(rg), pred); }	// TOFIX
+	// RG PROPERTIES
+	size_t		size  () const	{ return  std::count_if(std::begin(rg), endz(rg), pred); }	
 	bool		empty () const	{ return  sto::empty(rg); }	// TOFIX
 	explicit operator bool() const	{ return !sto::empty(rg); }	// TOFIX
 
@@ -214,15 +215,15 @@ struct  chain_range : ref_container<Rg&&> {
 
  // CHAIN_RANGE  STATIC MEMBERS
 
-	template<class Rg, class O /*= rg_elem_type<Rg>*/ >
-	std::function<bool(typename chain_range<Rg,O>::value_type)>   
-	chain_range<Rg,O>::
-nop_pred = [](const typename chain_range<Rg,O>::value_type& x) -> bool  {return true;};
+	template<class Rg, class O, bool MAPPED >
+	std::function<bool(typename chain_range<Rg,O,MAPPED>::value_type)>   
+	chain_range<Rg,O,MAPPED>::
+nop_pred = [](const typename chain_range<Rg,O,MAPPED>::value_type& x) -> bool  {return true;};
 
-	template<class Rg, class O /*= rg_elem_type<Rg>*/ >
-	std::function<typename chain_range<Rg,O>::value_type(typename chain_range<Rg,O>::value_type)>
-	chain_range<Rg,O>::
-nop_tran =  [](typename chain_range<Rg,O>::value_type x)   {return x;};
+	template<class Rg, class O, bool MAPPED>
+	std::function<typename chain_range<Rg,O,MAPPED>::value_type(typename chain_range<Rg,O,MAPPED>::value_type)>
+	chain_range<Rg,O,MAPPED>::
+nop_tran =  [](typename chain_range<Rg,O,MAPPED>::value_type x)   {return x;};
 
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
@@ -278,9 +279,9 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 		//typename Ret=typename std::function<rm_qualifier<Tran>>::result_type,
 		typename Ret= decltype(std::declval<Tran>()(std::declval<T>()))
 	> 
-	eIF <is_range<Rg>()  &&  is_callable<Tran, Ret(T)>::value,   chain_range<Rg&&>>
-operator *       (Rg&& rg, const Tran& tran)    {
-	return   chain_range<Rg&&> (std::forward<Rg>(rg),  chain_range<Rg&&>::nop_pred, tran);
+	eIF <is_range<Rg>()  &&  is_callable<Tran, Ret(T)>::value,   chain_range<Rg&&, Ret, true>>
+operator *       (Rg&& rg,  const Tran& tran)    {
+	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
  };
 	
 	template<		// overload for :  Ret == T   (needed for oveloaded functions like abs)

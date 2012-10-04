@@ -78,9 +78,10 @@ template<typename Rg>   using rg_reference      = typename rg_traits<Rg>::refere
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 
-template<bool Cnd, typename T=void>     using  eIF                 = typename std::enable_if <Cnd,T>::type;
-template<typename Rg>	                using  rg_elem_fwd         = typename  copy_rcv<Rg&&, rg_elem_type<Rg>>::type;
-template<typename Rg>	                using  rg_iterator_fwd     = typename  copy_rcv<Rg&&, rg_iterator<Rg>>::type;
+template<bool Cnd, class T=void>     	using  eIF		= typename std::enable_if <Cnd,T>::type;
+template<bool Cnd, class T1, class T2>	using  SEL		= typename std::conditional <Cnd,T1,T2>::type;
+template<typename Rg>	                using  rg_elem_fwd	= typename  copy_rcv<Rg&&, rg_elem_type<Rg>>::type;
+template<typename Rg>	                using  rg_iterator_fwd	= typename  copy_rcv<Rg&&, rg_iterator<Rg>>::type;
 
 template<class T, class TT=rm_qualifier<T>>  constexpr bool 
 is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }

@@ -11,10 +11,10 @@ set -v
 #scc 'chain_range<string&>  r(s9, sto::isdigit); r'
 
 # CTOR
+scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
 scc 'auto r = range(range(v9));  _ r.front();  ++r=11;  auto rr=range(range(mk_v9()));  _ r, rr;'
 scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
-scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
 
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
@@ -36,6 +36,11 @@ scc '__ v9 * [](int x){return x+10;};'
 scc '__ v9 * bind(std::plus<int>(),10,_1);'
 scc 'vector<const char*> ss{"1","22","333"};  __ (ss * strlen);'
 # todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
+#
+# Ct * (R(*)(T))F    -- type convertion  
+scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
+#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
+#scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
 
 # Ct || F 	################################################################ FOLD
 scc '__ (v9 || min), (mk_v9()||min);'
@@ -44,10 +49,6 @@ scc '__ v9 || std::plus<int>();'
 scc '__ v9 || [](int a, int b){return min(a,b);};'
 
 
-# Ct * (R(*)(T))F    -- type convertion  
-scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
-#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
-#scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
 
 # PIPE
 scc 'r9|is_even'

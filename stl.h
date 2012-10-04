@@ -305,8 +305,8 @@ operator/       (It&& i, const typename std::iterator_traits<It>::value_type x) 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////  GENERICS 
 
-template<typename Rg>	auto operator++(Rg&& rg)      -> decltype(front(rg)) 			{ return front(rg); }
-template<typename Rg>	auto operator++(Rg&& rg, int) -> decltype(back (rg)) 			{ return back (rg); }
+template<typename Rg>	auto operator++(Rg&& rg)      -> decltype(front(rg)) 		{ return front(rg); }
+template<typename Rg>	auto operator++(Rg&& rg, int) -> decltype(back (rg)) 		{ return back (rg); }
 
 					};
 					#endif	// LVV_STL_H
