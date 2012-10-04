@@ -91,10 +91,11 @@ int			__attribute__((unused))		a9[]    {0,1,2,3,4,5,6,7,8,9},  a23[]{2,3};
 char			__attribute__((unused))		c9[99]	{"abc-123"},   c23[]{"bc"},   c1='a',  c0='\0';
 const char		__attribute__((unused))		cc9[99]	{"abc-123"},  cc23[]{"bc"},  cc1='a', cc0='\0';
 std::string		__attribute__((unused))		s9	{"abc-123"},  s0, s23{"bc"},  s1="a";
-std::vector<std::string>__attribute__((unused))		vs9	{"", "a", "bb", "ccc", "dddd"};
+std::vector<std::string>__attribute__((unused))		vs9	{"", "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh", "kkkkkkkkk"};
+std::vector<const char*>__attribute__((unused))		vc9	{"", "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh", "kkkkkkkkk"};
 // rvalues
 //static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  v9; };
-static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  vint{0,1,2,3,4,5,6,7,8,9}; };
+static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  std::vector<int>{0,1,2,3,4,5,6,7,8,9}; };
 static std::vector<int>	__attribute__((unused))		mk_v23(){ return  v23; };
 static std::vector<int>	__attribute__((unused))		mk_v0()	{ return  v0; };
 static std::deque<int>	__attribute__((unused))		mk_d9()	{ return  d9; };

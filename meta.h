@@ -66,14 +66,15 @@ template <typename T>		struct rg_traits      {
 };
 
 
-template <typename T, size_t N> struct rg_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
-template <typename T, size_t N> struct rg_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  };
+template <typename T, size_t N> struct rg_traits<T[N]>     { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  typedef  const T&  const_reference; };
+template <typename T, size_t N> struct rg_traits<T(&)[N]>  { typedef  T  elem_type;   typedef  T*  iterator;  typedef  const T*  const_iterator;   typedef  T&  reference;  typedef  const T&  const_reference; };
 
 
-template<typename Rg>   using rg_elem_type      = typename rg_traits<Rg>::elem_type;
-template<typename Rg>   using rg_iterator       = typename rg_traits<Rg>::iterator;
-template<typename Rg>   using rg_const_iterator = typename rg_traits<Rg>::const_iterator;
-template<typename Rg>   using rg_reference      = typename rg_traits<Rg>::reference;
+template<typename Rg>   using rg_elem_type      	= typename rg_traits<Rg>::elem_type;
+template<typename Rg>   using rg_iterator       	= typename rg_traits<Rg>::iterator;
+template<typename Rg>   using rg_const_iterator 	= typename rg_traits<Rg>::const_iterator;
+template<typename Rg>   using rg_reference      	= typename rg_traits<Rg>::reference;
+template<typename Rg>   using rg_const_reference	= typename rg_traits<Rg>::const_reference;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
