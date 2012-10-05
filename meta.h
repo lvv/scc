@@ -292,23 +292,20 @@ struct is_callable<F, R(Args...)> {
 // not really a meta functions
 
 /////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
-
-template<typename Rg>	auto  endz(Rg&& C)                   -> decltype(std::end(C))     { return  std::end(C); };
+template<typename Rg>	auto  endz(Rg&& rg)                  -> decltype(std::end(rg))    { return  std::end(rg); };
 template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
-
 /////  SIZE
-template<class Rg> eIF<has_size<Rg>(),	  size_t>	size (const Rg& C)     { return C.size(); };
+template<class Rg> eIF<has_size<Rg>(),	  size_t>	size (const Rg& rg)     { return rg.size(); };
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
 template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
 
-
 /////  EMPTY
 template<typename Rg>	eIF< has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  rg.empty(); }
-template<typename Rg>	eIF<!has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  (bool) sto::size(rg); }
+template<typename Rg>	eIF<!has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  sto::size(rg)==0; }
 
 /////  CLEAR
 template<typename Rg>	eIF< has_clear<Rg>()>		clear(Rg&& rg) 		{ rg.clear(); }

@@ -87,7 +87,7 @@ std::ostream& operator<<      (ostream& os, const out&)			{return os; };
 // NOP, but scc' print-last will send endl
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
 	std::ostream&
-operator<<      (ostream& os, const IT&) { return os; }; 
+operator<<      (ostream& os, const IT&) { std::cout << " <stl iterator> "; return os; };
 
 
 #define		_    out()   ,

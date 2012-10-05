@@ -44,8 +44,10 @@ struct chain_range_iterator {
 
 
 	// STL ITERATOR TYPES
-	typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag>
-									iterator_category;
+	//typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag> iterator_category;
+	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
+	//typedef		std::input_iterator_tag 			iterator_category;
+	
 
 	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
 	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
@@ -92,6 +94,7 @@ struct chain_range_iterator {
 
 	self&		operator++()		{
 		org_iterator e = endz(parent->rg);
+		assert(!empty(parent));
 		assert(current !=e);
 		current = std::find_if(++current, e, parent->pred);
 		return *this; 
