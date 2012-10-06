@@ -86,8 +86,8 @@ int main(int argc, char** argv) {
 	#ifndef NDEBUG
 	//  range
 	static 	auto __attribute__((unused))		r9	= range(d9); 
-	static 	auto __attribute__((unused))		rr9	= range(mk_d9()); 
-	static 	auto __attribute__((unused))		r_r9	= range(r9); 
+	static 	auto __attribute__((unused))		r9r	= range(mk_d9()); 
+	static 	auto __attribute__((unused))		rr9	= range(r9); 
 	#endif
 
 

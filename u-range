@@ -7,20 +7,25 @@ set -v
 ################################################################# CHAIN_RANGE
 
 # CTOR
-scc 'chain_range<vint&> lv(v9);  _ lv;   chain_range<vint&&> rv(mk_v9());  _ rv;'
-scc 'auto r = range(range(v9));  _ r.front();  ++r=11;  auto rr=range(range(mk_v9()));  _ r, rr;'
-scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
-scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
+scc 'chain_range<vint&> lv(v9);  chain_range<vint&&> rv(mk_v9());'
+scc 'auto r = range(range(v9));   auto rr=range(range(mk_v9()));'
+
+scc -A -DV=r9   "V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);"
+scc -A -DV=r9r  "V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);"
+scc -A -DV=rr9  "V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);"
 
 # access
 scc 'assert( r9++==9  &&  ++r9==0 );'
+
+scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
+scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
 
 
 # Imported methods
 scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
 
 # Iterators
-scc 'r9.begin(); rr9.begin(); 
+scc 'r9.begin(); rr9.begin(); '
 scc 'auto it=+r9;  decltype(r9)::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
 
 # rn = value_type

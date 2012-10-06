@@ -40,6 +40,10 @@ CHECK( ! is_range<int*(*)(int)>() )
 CHECK( ! is_range<int>()          ) 
 CHECK(   is_range<int(&)[2]>()    ) 
 
+CHECK(   is_range<decltype(range(v9))>()    ) 
+CHECK( ! is_range<decltype(+range(v9))>()    ) 
+
+
 //  IS_STRING
 CHECK(   is_string<decltype("abc")>()) 
 CHECK(   is_string<char[3]>()) 
@@ -52,6 +56,7 @@ CHECK(   is_string<char(&)[3]>())
 //CHECK(   is_string<const char*>()) 
 CHECK(   is_string<string>()) 
 CHECK(   is_string<const string&>()) 
+
 
 //  IS_C_STRING
 CHECK(   is_c_string<decltype("abc")>()) 

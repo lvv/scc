@@ -72,11 +72,13 @@ struct  numeric_range {
 	const_iterator	begin()	 const	{ return cbegin(); };
 	const_iterator	end()    const	{ return cend(); };
 
- };
-////////////////////////////////////////////////////////////////  TRAITS
+	size_t	size () { return (to - from)/step; };
 
-//template<typename T>	struct  is_range_t     <numeric_range<T>>	: std::true_type  {};
-template<typename T>	struct  is_range_t  <numeric_range<T>>	: std::true_type  {};
+
+ };
+////////////////////////////////////////////////////////////////  ADD-TO: TRAITS
+
+template<class T>	struct  is_range_t  <numeric_range<T>>	: std::true_type  {};
 
 
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker

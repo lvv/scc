@@ -49,7 +49,7 @@ usage_exit() {
 }
 
 ####################################################################################### OPTIONS 
-gch_dir=.gch
+gch_dir=$SCC_HOME/.gch
 
 
 [[  $1 ]]  ||  usage_exit
@@ -59,7 +59,7 @@ while getopts Anpf:vBi:F:o:x:OgHtbrD: opt;  do
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
 		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
 		A)	CXXFLAGS+=" -Dscc_NOAWK " ;;
-		D)	CXXFLAGS+=" -D $OPTARG " ;;
+		D)	CXXFLAGS+=" -D$OPTARG " ;;
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
 		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
@@ -86,7 +86,7 @@ while getopts Anpf:vBi:F:o:x:OgHtbrD: opt;  do
 	esac
 done
 
-[[ -d $gch_dir ]] && CXXFLAGS=" -include $SCC_HOME/$gch_dir/cj.h    -Winvalid-pch  $CXXFLAGS "
+[[ -d $gch_dir ]] && CXXFLAGS=" -include $gch_dir/cj.h    -Winvalid-pch  $CXXFLAGS "
 [[ -f .scc.h   ]] && CXXFLAGS+=" -include $PWD/.scc.h  "
 [[ $is_optimized  ]] || { CXXFLAGS+=$g_FLAGS;  gch_dir=.gch/g; }
 

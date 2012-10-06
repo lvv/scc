@@ -154,8 +154,8 @@ struct is_range_t {
 
 
 
-template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type { };
-template<typename T, size_t N>	struct  is_range_t <std::array<T,N>>	: std::true_type { };
+template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type {};
+template<typename T, size_t N>	struct  is_range_t <std::array<T,N>>	: std::true_type {};
 
 template<typename T>     constexpr bool   is_range()        { return  is_range_t<rm_qualifier<T>>::value; };
 
@@ -297,9 +297,12 @@ template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(arr
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 /////  SIZE
-template<class Rg> eIF<has_size<Rg>(),	  size_t>	size (const Rg& rg)     { return rg.size(); };
+//template<class Rg>    eIF<has_size<Rg>(), size_t>	size (const Rg& rg)     { return rg.size(); };
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
+
+template<class Rg>    			auto		size (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
+
 template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
 

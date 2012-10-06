@@ -45,9 +45,9 @@ struct chain_range_iterator {
 
 	// STL ITERATOR TYPES
 	//typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag> iterator_category;
-	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
-	//typedef		std::input_iterator_tag 			iterator_category;
-	
+
+	typedef		std::bidirectional_iterator_tag  	iterator_category;
+	//typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
 
 	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
 	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
@@ -65,10 +65,13 @@ struct chain_range_iterator {
 
 	typedef		chain_range_iterator				self;
 
+	// RANGE 
+	typedef		rg_elem_type<Rg>  				elem_type;
+
 	////// CTOR
 	chain_range_iterator ()				: parent(0)           			   {};	// default
 	chain_range_iterator ( const self& rhs)		: parent(rhs.parent), current(rhs.current) {};	// copy 
-	chain_range_iterator ( parent_t parent, const org_iterator& current) 
+	chain_range_iterator ( parent_t parent,  const org_iterator current) 
 							: parent(parent), current(current)         {};
 
 	////// CONVERSION 
@@ -94,7 +97,6 @@ struct chain_range_iterator {
 
 	self&		operator++()		{
 		org_iterator e = endz(parent->rg);
-		assert(!empty(parent));
 		assert(current !=e);
 		current = std::find_if(++current, e, parent->pred);
 		return *this; 
@@ -108,8 +110,15 @@ struct chain_range_iterator {
 		return std::move(tmp);
 	}
 
-	bool		operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
-	bool		operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
+	bool	operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
+	bool	operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
+
+	// INPORTED ORG_ITERATOR METHODS
+	auto  operator--()     -> decltype(--current, std::declval<self&>())   { --current;  return *this; }
+	auto  operator--(int)  -> decltype(current--, std::declval<self >())   { self tmp=*this;  --current;   return std::move(tmp); }
+	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(const elem_type&  value)	{rg.push_back(value);}
+	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
+
  };
 
 
@@ -124,8 +133,8 @@ template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_
 	template<class Rg, class O, bool MAPPED>
 struct  chain_range : ref_container<Rg&&> {
 
+		// STL IFACE
 		typedef		O  								value_type;
-		typedef		rg_elem_type<Rg>  						elem_type;
 		typedef		chain_range_iterator<Rg, O, false, MAPPED>     			iterator;
 		typedef		chain_range_iterator<Rg, O, true,  MAPPED>			const_iterator;
 		typedef		size_t  							size_type;
@@ -134,13 +143,17 @@ struct  chain_range : ref_container<Rg&&> {
 		typedef		rg_reference<Rg>						reference ;
 		typedef		rg_const_reference<Rg>						const_reference ;
 
+	
+		//
+		typedef		rg_elem_type<Rg>  						elem_type;
 		typedef		chain_range<Rg>							self_type;
+		typedef		void								range_category;
 
 	// MEMBERS
 	Rg& rg;
 
 	std::function<bool(elem_type)>	static  		nop_pred;	// predicate
-	std::function<bool(elem_type)>				pred = nop_tran;;
+	std::function<bool(elem_type)>				pred = nop_pred;;
 
 	//std::function<const value_type&(const value_type&)>  static	nop_tran;	// transform
 	std::function<value_type(elem_type)>  static		nop_tran;	// transform
@@ -177,11 +190,11 @@ struct  chain_range : ref_container<Rg&&> {
 	};
 
 	// ITERATOR
-	      iterator	end()		{ return       iterator(this, endz(rg)); }
-	const_iterator	end()   const	{ return const_iterator(this, endz(rg)); }
+	      iterator	end()		{ return        iterator(this, endz(rg)); }
+	const_iterator	end()   const	{ return  const_iterator(this, endz(rg)); }
 
-	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rg), sto::endz(rg), pred)); };
-	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), sto::endz(rg), pred)); };
+	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rg), endz(rg), pred)); };
+	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), pred)); };
 
 
 	// RG PROPERTIES
@@ -241,13 +254,20 @@ struct  chain_range : ref_container<Rg&&> {
 	template<class Rg, class O, bool MAPPED >
 	std::function<bool(rg_elem_type<Rg>)>   
 	chain_range<Rg,O,MAPPED>::
-nop_pred = [](rg_elem_type<Rg> x) -> bool  {return true;};
+nop_pred = [](rg_elem_type<Rg> x) -> bool  { return true; };
 
 	template<class Rg, class O, bool MAPPED>
 	std::function<O(rg_elem_type<Rg>)>
 	chain_range<Rg,O,MAPPED>::
-nop_tran =  [](rg_elem_type<Rg> x)   {return x;};
+nop_tran =  [](rg_elem_type<Rg> x)   { return x; };
 
+// TRAITS
+
+template<class Rg, class O, bool MAPPED >
+struct is_range_t<chain_range<Rg,O,MAPPED>>               : std::true_type  {};
+
+template <class Rg, class O,  bool RO, bool MAPPED>
+struct is_range_t<chain_range_iterator<Rg,O,RO,MAPPED>>   : std::false_type {};
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
