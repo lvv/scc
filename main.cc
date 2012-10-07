@@ -88,6 +88,7 @@ int main(int argc, char** argv) {
 	static 	auto __attribute__((unused))		r9	= range(d9); 
 	static 	auto __attribute__((unused))		r9r	= range(mk_d9()); 
 	static 	auto __attribute__((unused))		rr9	= range(r9); 
+	static 	auto __attribute__((unused))		n9	= range(10); 
 	#endif
 
 

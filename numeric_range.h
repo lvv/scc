@@ -14,13 +14,13 @@
 struct  numeric_range {
 
 
-			typedef		T		value_type;
+			typedef		rm_ref<T>	value_type;
 			typedef		size_t		difference_type ;
 			typedef		size_t		size_type;
 			typedef		const T*	const_pointer;
 			typedef		const_pointer	pointer;
-			typedef		const T&	const_reference;
-			typedef		const_reference	reference;
+			typedef		value_type	const_reference;
+			typedef		value_type	reference;
 
 	struct	const_iterator {
 		explicit const_iterator (const numeric_range<T>* range, T current)
@@ -34,17 +34,17 @@ struct  numeric_range {
 			typedef		std::input_iterator_tag		iterator_category;
 
 			
-			typedef		T		value_type;
+			typedef		rm_ref<T>	value_type;
 			typedef		size_t		difference_type ;
 			typedef		size_t		size_type;
 			typedef		const T*	const_pointer;
 			typedef		const_pointer	pointer;
-			typedef		const T&	const_reference;
-			typedef		const_reference	reference;
+			typedef		value_type	const_reference;
+			typedef		value_type	reference;
 		
 
 		const_reference	operator*()	const	{ return   current; }
-		//const_pointer	operator->()	const	{ return  &current; } // is this correct?
+		const_pointer	operator->()	const	{ return  &(operator*()); }
 		const_iterator&	operator++()		{ current+=range->step;  ++i;   return *this; }
 		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range->step;  ++i;  return tmp; }
 
@@ -72,7 +72,16 @@ struct  numeric_range {
 	const_iterator	begin()	 const	{ return cbegin(); };
 	const_iterator	end()    const	{ return cend(); };
 
-	size_t	size () { return (to - from)/step; };
+
+	// RG PROPERTIES
+	size_t		size  () const	{ return (to - from)/step; };
+	bool		empty () const	{ return size() == 0; }
+	explicit operator bool() const	{ return !empty(); }
+
+
+	// ELEM ACCESS
+	value_type  	front()  const	{ return  from; }
+	value_type  	back()   const	{ return  size() * step; }  
 
 
  };

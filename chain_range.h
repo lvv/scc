@@ -46,8 +46,8 @@ struct chain_range_iterator {
 	// STL ITERATOR TYPES
 	//typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag> iterator_category;
 
-	typedef		std::bidirectional_iterator_tag  	iterator_category;
-	//typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
+	//typedef		std::bidirectional_iterator_tag  	iterator_category;
+	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
 
 	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
 	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
@@ -63,7 +63,7 @@ struct chain_range_iterator {
 	typedef		size_t						size_type;
 	typedef		ptrdiff_t					difference_type;
 
-	typedef		chain_range_iterator				self;
+	typedef		rm_ref<chain_range_iterator<Rg,O,RO,MAPPED>>	self;
 
 	// RANGE 
 	typedef		rg_elem_type<Rg>  				elem_type;
@@ -73,27 +73,20 @@ struct chain_range_iterator {
 	chain_range_iterator ( const self& rhs)		: parent(rhs.parent), current(rhs.current) {};	// copy 
 	chain_range_iterator ( parent_t parent,  const org_iterator current) 
 							: parent(parent), current(current)         {};
+	// ASSIGNMENT
+		/* implicit */
 
 	////// CONVERSION 
 	operator chain_range_iterator<Rg&&,O,true,MAPPED>() { return chain_range_iterator<Rg&&,O,true,MAPPED>(parent, current); };
 
 	////// IFACE
 	
-	reference  		operator*()  		{ return  parent->mapped(current); };
-	const_reference 	operator*() const 	{ return  parent->mapped(current); };
+	reference	operator*()  		{ return  parent->mapped(current); };
+	const_reference operator*() const 	{ return  parent->mapped(current); };
 
-	/*
-	template<bool M=MAPPED>  eIF<M,O>  		operator*()  		{ return  parent->tran(*current); };
-	template<bool M=MAPPED>  eIF<M,O> 		operator*() const 	{ return  parent->tran(*current); };
+	pointer		operator->()		{ return  &(operator*()); }
+	const_pointer	operator->()	const	{ return  &(operator*()); }
 
-	template<bool M=MAPPED>  eIF<!M,reference>  	operator*()  		{ return  *current; };
-	template<bool M=MAPPED>  eIF<!M,const_reference>operator*() const  	{ return  *current; };
-	*/
-
-	pointer		operator->()		{ return  &*current; }
-	const_pointer	operator->()	const	{ return  &*current; }
-	//pointer		operator->()		{ return  &tran(*current); }
-	//const_pointer	operator->()	const	{ return  &tran(*current); }
 
 	self&		operator++()		{
 		org_iterator e = endz(parent->rg);
@@ -113,14 +106,37 @@ struct chain_range_iterator {
 	bool	operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
 	bool	operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
 
-	// INPORTED ORG_ITERATOR METHODS
+	////////////////////////////////////////////////////////////////////////// INPORTED ORG_ITERATOR METHODS
+	
+	//  bidiractional  (FIXME for pred)
 	auto  operator--()     -> decltype(--current, std::declval<self&>())   { --current;  return *this; }
 	auto  operator--(int)  -> decltype(current--, std::declval<self >())   { self tmp=*this;  --current;   return std::move(tmp); }
+
+	
+	// random access  (FIXME for pred)
+	       auto  operator+= (         difference_type n) -> decltype(   current+=n, std::declval<self&>())   {    current+=n;  return *this; }
+	       auto  operator-= (         difference_type n) -> decltype(   current-=n, std::declval<self&>())   {    current-=n;  return *this; }
+
+	       auto  operator[] (         difference_type n) -> decltype(current[n])   { return  *(current+n); }
+
+	       auto  operator<  (self other) -> decltype(current <  other.current, true)   { return current <  other.current; } 
+	       auto  operator<= (self other) -> decltype(current <= other.current, true)   { return current <= other.current; } 
+	       auto  operator>  (self other) -> decltype(current >  other.current, true)   { return current >  other.current; } 
+	       auto  operator>= (self other) -> decltype(current >= other.current, true)   { return current >= other.current; } 
+
 	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
 	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
 
  };
 
+template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>    { it.current+=n;  return std::move(it); }
+template <class RgI>  auto  operator-  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current-n, std::declval<RgI>())>   { it.current-=n;  return std::move(it); }
+template <class RgI>  auto  operator+  (typename RgI::difference_type n, RgI it) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
+
+// error: recursive template
+//template <class RgI>  auto  operator-  (RgI it1, RgI it2)                        -> rm_ref<decltype(it1.current-it2.current)>              { return it1.current-it2.current; }
+
+template <class RgI>  auto  operator-  (RgI it1, RgI it2)                        -> typename RgI::difference_type              { return it1.current-it2.current; }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER
@@ -204,10 +220,10 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 	// ELEM ACCESS
-	value_type  	front()  const	{ return  mapped(std::begin(rg)); }
+	const_reference	front()  const	{ return  mapped(std::begin(rg)); }
 	reference  	front()		{ return  mapped(std::begin(rg)); }
 
-	value_type  	back()  const	{ return  mapped(std::prev(sto::endz(rg))); }  
+	const_reference back()  const	{ return  mapped(std::prev(sto::endz(rg))); }  
 	reference  	back()		{ return  mapped(std::prev(sto::endz(rg))); } 
 
 	//  FIXME for MAPPED
@@ -224,12 +240,16 @@ struct  chain_range : ref_container<Rg&&> {
 	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(const elem_type&  value)	{rg.push_front(value);}
 	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(      elem_type&& value)	{rg.push_front(std::move(value));}
 
-	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(const elem_type&  value)		{rg.insert(value);}
-	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(      elem_type&& value)		{rg.insert(std::move(value));}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>		insert(const elem_type&  value)		{rg.insert(value);}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>		insert(      elem_type&& value)		{rg.insert(std::move(value));}
 
 	template<class U=Rg>   eIF<has_pop_back<U>::value>		pop_back()				{rg.pop_back();}
 	template<class U=Rg>   eIF<has_pop_front<U>::value>		pop_front()				{rg.pop_front();}
-
+	// why error ??? 
+	// template<class U=Rg>   auto  operator[] (difference_type n) -> decltype(rg[0])   { return  rg[n]; } // FIXME for pred
+	// auto  operator[] (difference_type n) -> decltype(std::declval<Rg>()[0])   { return  rg[n]; } // FIXME for pred
+	
+	template<class U=Rg>  auto  operator[] (difference_type n) -> decltype(std::declval<U>()[0])   { return  rg[n]; } // FIXME for pred
 
 	// ADDED RG METHODS
 		template<class U=Rg>  
@@ -247,10 +267,12 @@ struct  chain_range : ref_container<Rg&&> {
 	template<bool M=MAPPED>  eIF<M,O>  		 mapped(rg_iterator      <Rg> it)  	{ return  tran(*it); };
 	template<bool M=MAPPED>  eIF<M,O> 		 mapped(rg_const_iterator<Rg> it) const	{ return  tran(*it); };
 
-	template<bool M=MAPPED>  typename std::enable_if<!M,reference>::type 	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
+	//template<bool M=MAPPED>		eIF<M,reference> 	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
 	//template<bool M=MAPPED>  eIF<!M,reference>  	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
 	//template<bool M=MAPPED>  eIF<!M,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
-	template<bool NM=NOT_MAPPED>  eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	
+	//template<bool NM=NOT_MAPPED>	eIF<NM,const_reference> mapped(rg_iterator<Rg> it) 		{ return  *it; };
+	template<bool NM=NOT_MAPPED>	eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
  };
 
  // CHAIN_RANGE  STATIC MEMBERS
