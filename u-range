@@ -27,6 +27,8 @@ scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
 # Iterators
 scc 'r9.begin(); rr9.begin(); '
 scc 'auto it=+r9;  decltype(r9)::const_iterator cit=+r9; it!=cit; it=-r9; it=endz(r9);'
+scc 'assert( 1 == (*(+r9 += 1)  *  *(+r9 + 1)  *   *(1 + +r9)  *  *(-r9-size(r9)+1)  *  *(-r9 -= size(r9)-1)  *  (size(r9) == -r9 - +r9)  *  (+r9)[1]  *  r9[1]));'
+scc 'assert(+r9 < -r9  &&  !(+r9 < +r9)  &&  !(-r9 < +r9)  &&  -r9 >= +r9  &&  -r9 >= -r9  &&  !(+r9 >= -r9));'
 
 # rn = value_type
 scc 'range(a9)=42;  a9'
