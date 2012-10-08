@@ -175,11 +175,14 @@ template<class T>	struct  is_string { enum { value = is_string_t<rm_qualifier<T>
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
 template<typename T>	struct  is_ioable_t 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
-template<typename T,typename CT,typename AL>	struct  is_ioable_t <std::basic_string<T,CT,AL>>	: std::true_type  {};
+template<typename T,typename CT,typename AL>
+			struct  is_ioable_t <std::basic_string<T,CT,AL>>	: std::true_type  {};
 template<size_t N>	struct  is_ioable_t <char[N]>	: std::true_type  {};
 template<>		struct  is_ioable_t <char*>	: std::true_type  {};
 template<>		struct  is_ioable_t <const char*>	: std::true_type  {};
-template<typename T>     constexpr bool   is_ioable()        { return  is_ioable_t<rm_qualifier<T>>::value; };
+
+template<class T>	struct  is_ioable { enum { value = is_ioable_t<rm_qualifier<T>>::value };};
+//template<typename T>     constexpr bool   is_ioable()        { return  is_ioable_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_STACK
