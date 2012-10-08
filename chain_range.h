@@ -242,11 +242,15 @@ struct  chain_range : ref_container<Rg&&> {
 	}
 
 
+	enum { NOMAPPED = ! MAPPED };
+
 	template<bool M=MAPPED>  eIF<M,O>  		 mapped(rg_iterator      <Rg> it)  	{ return  tran(*it); };
 	template<bool M=MAPPED>  eIF<M,O> 		 mapped(rg_const_iterator<Rg> it) const	{ return  tran(*it); };
 
-	template<bool M=MAPPED>  eIF<!M,reference>  	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
-	template<bool M=MAPPED>  eIF<!M,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	template<bool M=MAPPED>  typename std::enable_if<!M,reference>::type 	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
+	//template<bool M=MAPPED>  eIF<!M,reference>  	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
+	//template<bool M=MAPPED>  eIF<!M,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	template<bool NM=NOMAPPED>  eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
  };
 
  // CHAIN_RANGE  STATIC MEMBERS
