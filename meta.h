@@ -84,8 +84,13 @@ template<bool Cnd, class T1, class T2>	using  SEL		= typename std::conditional <
 template<typename Rg>	                using  rg_elem_fwd	= typename  copy_rcv<Rg&&, rg_elem_type<Rg>>::type;
 template<typename Rg>	                using  rg_iterator_fwd	= typename  copy_rcv<Rg&&, rg_iterator<Rg>>::type;
 
-template<class T, class TT=rm_qualifier<T>>  constexpr bool 
-is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
+///template<class T, class TT=rm_qualifier<T>>  constexpr bool 
+///is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
+
+template<class T, class TT=rm_qualifier<T>>
+struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value }; };
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
