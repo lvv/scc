@@ -26,8 +26,8 @@
 { set<int>			v {};				_ "set{}    :  ", v, ";    ";  cout << v << "\n"; }
 { multiset<int>			v {1,2,3,3};			_ "multiset :  ", v, ";    ";  cout << v << "\n"; }
 { unordered_set<int>		v {1,2,3,3};			_ "multiset :  ", v, ";    ";  cout << v << "\n"; }
-{ stack<int>			v; v << 1 << 2;			_ "set      :  ", v, ";    ";  cout << v << "\n"; }
-{ queue<int>			v; v << 1 << 2;			_ "queue    :  ", v, ";    ";  cout << v << "\n"; }
+//{ stack<int>			v; v << 1 << 2;			_ "set      :  ", v, ";    ";  cout << v << "\n"; }
+//{ queue<int>			v; v << 1 << 2;			_ "queue    :  ", v, ";    ";  cout << v << "\n"; }
 
 { auto				v = make_tuple("aaa",2,make_tuple(3,4.5f));	_ "tuple<tu :  ", v, ";    ";  cout << v << "\n"; }
 { vector<int>			v {1,2,3};			_ "oi       :  "; std::copy(v.begin(), v.end(), oi);   _ endl; }

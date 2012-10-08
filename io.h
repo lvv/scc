@@ -52,11 +52,11 @@ operator<<      (ostream& os, const IT&) { std::cout << " <stl iterator> "; retu
 operator<<      (ostream& os, const Rg& C);
 
 	template<typename Rg >
-	eIF <is_stack<Rg>(), std::ostream> &
+	eIF <is_stack<Rg>::value, std::ostream> &
 operator<<      (ostream& os, Rg C);
 
 	template<typename Rg >
-	eIF <is_queue<Rg>(), std::ostream> &
+	eIF <is_queue<Rg>::value, std::ostream> &
 operator<<      (ostream& os, Rg C);
 
 		template<typename T, typename U>
@@ -95,7 +95,7 @@ operator<<      (ostream& os, const Rg& C) {
 
 // STACK
 	template<typename Rg >
-	eIF <is_stack<Rg>(), std::ostream> &
+	eIF <is_stack<Rg>::value, std::ostream> &
 operator<<      (ostream& os, Rg C) {
 
 	Rg CC; 
@@ -110,7 +110,7 @@ operator<<      (ostream& os, Rg C) {
 
 // QUEUE
 	template<typename Rg >
-	eIF <is_queue<Rg>(), std::ostream> &
+	eIF <is_queue<Rg>::value, std::ostream> &
 operator<<      (ostream& os, Rg C) {
 	cout << "[";
 		if    ( !C.empty() )  { os         << C.front();  C.pop(); }

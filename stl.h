@@ -253,7 +253,7 @@ operator~	(const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size
 
 //  Stack--
 	template<typename Rg>
-	eIF <is_stack<Rg>(), Rg>
+	eIF <is_stack<Rg>::value, Rg>
 operator--      (Rg&& C, int)    { C.pop();   return std::forward<Rg>(C); };
 
 //  Stack >> x
@@ -284,7 +284,7 @@ back      (Rg&& C)    { return C.top(); };
 
 //  --Queue
 	template<class Rg, class Xt>
-	eIF <is_queue<Rg>(), Rg&&> 
+	eIF <is_queue<Rg>::value, Rg&&> 
 operator--      (Rg&& C)    { C.pop();   return std::forward<Rg>(C); };
 
 //  x << Queue

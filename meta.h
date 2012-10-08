@@ -203,7 +203,7 @@ template<class T>	struct  is_ioable { enum { value = is_ioable_t<rm_qualifier<T>
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_STACK
 	template <typename T>
-struct is_stack_t {
+struct is_stack {
 
 		template <
 			typename U,
@@ -217,14 +217,14 @@ struct is_stack_t {
 		static int16_t
 	test(...);
 
-	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
+	enum { value = sizeof test<rm_qualifier<T>>(0) == 1 };
 };
-template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<rm_qualifier<T>>::value; };
+//template<typename T>     constexpr bool   is_stack()        { return  is_stack_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_QUEUE
 	template <typename T>
-struct is_queue_t {
+struct is_queue {
 
 		template <
 			typename U,
@@ -239,9 +239,9 @@ struct is_queue_t {
 		static int16_t
 	test(...);
 
-	enum { value = sizeof test<rm_ref<T>>(0) == 1 };
+	enum { value = sizeof test<rm_qualifier<T>>(0) == 1 };
 };
-template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<rm_qualifier<T>>::value; };
+//template<typename T>     constexpr bool   is_queue()        { return  is_queue_t<rm_qualifier<T>>::value; };
 
 
 
@@ -360,8 +360,8 @@ template<typename Rg>	eIF<!has_resize<Rg>::value>	resize(Rg&& rg, size_t n) 		{}
 /////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename T>  constexpr bool   is_collection()     {
 	return      is_range<T>::value 
-		||  is_stack<T>() 
-		||  is_queue<T>() 
+		||  is_stack<T>::value 
+		||  is_queue<T>::value 
 		||  is_range<T>::value
 	;
  };

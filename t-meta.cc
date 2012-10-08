@@ -60,8 +60,8 @@ int main() {
 		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
 		<<  "   " << (is_iterator<T>::value                                    ? "+" : "\u2219")\
 		<<  "   " << (is_input_iterator<T>()                              ? "+" : "\u2219")	/* incorrect*/ \
-		<<  "   " << (is_stack<T>()                                       ? "+" : "\u2219")\
-		<<  "   " << (is_queue<T>()                                       ? "+" : "\u2219")\
+		<<  "   " << (is_stack<T>::value                                       ? "+" : "\u2219")\
+		<<  "   " << (is_queue<T>::value                                       ? "+" : "\u2219")\
 		<<  "   " << (is_ioable_t<T>::value                                      ? "+" : "\u2219")\
 		<<  "   " << (is_callable<T, bool(int)>::value                         ? "+" : "\u2219")\
 		<<  "   " << (is_callable<T, bool(int, int)>::value                    ? "+" : "\u2219")\
