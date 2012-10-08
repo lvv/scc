@@ -680,7 +680,9 @@ Luckily, GCC team is pretty quick to fix things after you will file a but report
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54111[Bug 54111 -- function return type template deduction]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54538[Bug 54538 (fixed) -- (4.8 Regression) Getting assembler messages when compiling]
 - httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=53858[Bug 53858 (fixed)  -- (4.8 Regression) template aliases used in template parameters default expression]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54648[Bug 54648 - constexpr function rejected as non const]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54648[Bug 54648 -- constexpr function rejected as non const]
+- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54853[Bug 54853 -- (gcc4.7.2) internal compiler error: Segmentation fault]
+
 
 
 
@@ -799,6 +801,7 @@ FORMATS
 		http://zserge.bitbucket.org/jsmn.html
 
 	CSV
+		http://stackoverflow.com/questions/1120140/csv-parser-in-c/1120224#1120224
 		http://csvkit.readthedocs.org/en/latest/index.html
 		http://www.partow.net/programming/strtk/index.html
 	XML

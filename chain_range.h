@@ -63,7 +63,7 @@ struct chain_range_iterator {
 	typedef		size_t						size_type;
 	typedef		ptrdiff_t					difference_type;
 
-	typedef		rm_ref<chain_range_iterator>				self;
+	typedef		chain_range_iterator				self;
 
 	// RANGE 
 	typedef		rg_elem_type<Rg>  				elem_type;
@@ -114,13 +114,16 @@ struct chain_range_iterator {
 
 	
 	// random access  (FIXME for pred)
-	       auto  operator+= (         difference_type n) -> decltype(   current+=n, std::declval<self&>())   {    current+=n;  return *this; }
-	       auto  operator-= (         difference_type n) -> decltype(   current-=n, std::declval<self&>())   {    current-=n;  return *this; }
+	       auto  operator+= (         difference_type n) -> decltype(   current+=n, *this)   {    current+=n;  return *this; }
+	       auto  operator-= (         difference_type n) -> decltype(   current-=n, *this)   {    current-=n;  return *this; }
 
-	friend auto  operator+  (self it, difference_type n) -> rm_ref<decltype(it.current+ n, std::declval<self>())>   { it.current+=n;  return std::move(it); }
-	friend auto  operator-  (self it, difference_type n) -> rm_ref<decltype(it.current- n, std::declval<self>())>   { it.current-=n;  return std::move(it); }
-	friend auto  operator+  (difference_type n, self it) -> rm_ref<decltype(it.current+ n, std::declval<self>())>   { it.current+=n;  return std::move(it); }
-	friend auto  operator-  (self it1, self it2)         -> rm_ref<decltype(it1.current- it2.current)>   { return it1.current-it2.current; }
+	friend auto  operator+  (self it, difference_type n) -> decltype(it.current+ n, std::declval<self>())   { it.current+=n;  return std::move(it); }
+	friend auto  operator-  (self it, difference_type n) -> decltype(it.current- n, std::declval<self>())   { it.current-=n;  return std::move(it); }
+
+	friend auto  operator+  (difference_type n, self it) -> decltype(it.current+ n, std::declval<self>())   { it.current+=n;  return std::move(it); }
+	//template<class U=Rg> friend auto  operator+  (difference_type n, self it) -> decltype(it.current+ n, std::declval<self>())   { it.current+=n;  return std::move(it); }
+
+	friend auto  operator-  (self it1, self it2)         -> decltype(it1.current- it2.current)   { return it1.current-it2.current; }
 
 	       auto  operator[] (         difference_type n) -> decltype(current[n])   { return  *(current+n); }
 
@@ -128,10 +131,6 @@ struct chain_range_iterator {
 	       auto  operator<= (self other) -> decltype(current <= other.current, true)   { return current <= other.current; } 
 	       auto  operator>  (self other) -> decltype(current >  other.current, true)   { return current >  other.current; } 
 	       auto  operator>= (self other) -> decltype(current >= other.current, true)   { return current >= other.current; } 
-
-	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(const elem_type&  value)	{rg.push_back(value);}
-	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
-
  };
 
 
