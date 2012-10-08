@@ -242,7 +242,7 @@ struct  chain_range : ref_container<Rg&&> {
 	template<class U=Rg>   eIF<has_pop_back<U>()>		pop_back()				{rg.pop_back();}
 	template<class U=Rg>   eIF<has_pop_front<U>()>		pop_front()				{rg.pop_front();}
 
-       auto  operator[] (difference_type n) -> decltype(rg[n])   { return  rg[n]; } // FIXME for pred
+       template<class R=decltype(rg[0])>  R operator[] (difference_type n)  { return  rg[n]; } // FIXME for pred
 
 	// ADDED RG METHODS
 		template<class U=Rg>  
