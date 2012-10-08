@@ -337,7 +337,7 @@ As workaround STO put equivalent functions with correct signatures into `sto`
 namespace.
 
 Also note that we can not use POD types with operators (+++C++ +++ limitation). If it is binary op,
-with need to wrap at least one of operands in a class:
+we need to wrap at least one of operands in a class:
 
 -----------------------------------------
 scc 'char s[99]="abc";   s << "xyz"'  

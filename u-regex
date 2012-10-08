@@ -6,3 +6,5 @@ scc '
 	{ __ (strr("abc") == "a.."_R);  }
 	{ __ (strr("abc") ==  regex(str("a.*")));	}
 '
+
+#echo -e '  a : A\nb  :B\n:C:C  :   C:' |scc -i: -o: -p '_ F.size(), "!";'
