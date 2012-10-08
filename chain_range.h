@@ -116,8 +116,8 @@ struct chain_range_iterator {
 	// INPORTED ORG_ITERATOR METHODS
 	auto  operator--()     -> decltype(--current, std::declval<self&>())   { --current;  return *this; }
 	auto  operator--(int)  -> decltype(current--, std::declval<self >())   { self tmp=*this;  --current;   return std::move(tmp); }
-	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(const elem_type&  value)	{rg.push_back(value);}
-	//template<class U=Rg>   eIF<has_push_back<U>()>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
+	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
+	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
 
  };
 
@@ -179,7 +179,7 @@ struct  chain_range : ref_container<Rg&&> {
 	chain_range&   operator= (elem_type x) { std::fill(begin(), end(), x);  return *this; };
 
 		template<class Rg2>			// TODO specialize for seq containers self-assignemet
-		eIF <have_same_elem<Rg,Rg2>(), self_type&>
+		eIF <have_same_elem<Rg,Rg2>::value, self_type&>
 	operator= (const Rg2& rhs) {
 		sto::clear(rg);
 		auto e = endz(rhs);
@@ -211,24 +211,24 @@ struct  chain_range : ref_container<Rg&&> {
 	reference  	back()		{ return  mapped(std::prev(sto::endz(rg))); } 
 
 	//  FIXME for MAPPED
-	//template<class U=Rg>   eIF<has_back<U>(),        reference>	back()				{return rg.back();}
-	//template<class U=Rg>   eIF<has_back<U>(),  const_reference>	back()	const			{return rg.back();}
+	//template<class U=Rg>   eIF<has_back<U>::value,        reference>	back()				{return rg.back();}
+	//template<class U=Rg>   eIF<has_back<U>::value,  const_reference>	back()	const			{return rg.back();}
 
-	//template<class U=Rg>   eIF<has_front<U>(),       reference>	front()				{return rg.front();}
-	//template<class U=Rg>   eIF<has_front<U>(), const_reference>	front()	const			{return rg.front();}
+	//template<class U=Rg>   eIF<has_front<U>::value,       reference>	front()				{return rg.front();}
+	//template<class U=Rg>   eIF<has_front<U>::value, const_reference>	front()	const			{return rg.front();}
 
 	// INPORTED RG METHODS
-	template<class U=Rg>   eIF<has_push_back<U>()>		push_back(const elem_type&  value)	{rg.push_back(value);}
-	template<class U=Rg>   eIF<has_push_back<U>()>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
+	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
+	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
 
-	template<class U=Rg>   eIF<has_push_front<U>()>		push_front(const elem_type&  value)	{rg.push_front(value);}
-	template<class U=Rg>   eIF<has_push_front<U>()>		push_front(      elem_type&& value)	{rg.push_front(std::move(value));}
+	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(const elem_type&  value)	{rg.push_front(value);}
+	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(      elem_type&& value)	{rg.push_front(std::move(value));}
 
-	template<class U=Rg>   eIF<has_1arg_insert<U>()>	insert(const elem_type&  value)		{rg.insert(value);}
-	template<class U=Rg>   eIF<has_1arg_insert<U>()>	insert(      elem_type&& value)		{rg.insert(std::move(value));}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(const elem_type&  value)		{rg.insert(value);}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(      elem_type&& value)		{rg.insert(std::move(value));}
 
-	template<class U=Rg>   eIF<has_pop_back<U>()>		pop_back()				{rg.pop_back();}
-	template<class U=Rg>   eIF<has_pop_front<U>()>		pop_front()				{rg.pop_front();}
+	template<class U=Rg>   eIF<has_pop_back<U>::value>		pop_back()				{rg.pop_back();}
+	template<class U=Rg>   eIF<has_pop_front<U>::value>		pop_front()				{rg.pop_front();}
 
 
 	// ADDED RG METHODS
@@ -242,7 +242,7 @@ struct  chain_range : ref_container<Rg&&> {
 	}
 
 
-	enum { NOMAPPED = ! MAPPED };
+	enum { NOT_MAPPED = ! MAPPED };  // workaroung for gcc bug 54859
 
 	template<bool M=MAPPED>  eIF<M,O>  		 mapped(rg_iterator      <Rg> it)  	{ return  tran(*it); };
 	template<bool M=MAPPED>  eIF<M,O> 		 mapped(rg_const_iterator<Rg> it) const	{ return  tran(*it); };
@@ -250,7 +250,7 @@ struct  chain_range : ref_container<Rg&&> {
 	template<bool M=MAPPED>  typename std::enable_if<!M,reference>::type 	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
 	//template<bool M=MAPPED>  eIF<!M,reference>  	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
 	//template<bool M=MAPPED>  eIF<!M,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
-	template<bool NM=NOMAPPED>  eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	template<bool NM=NOT_MAPPED>  eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
  };
 
  // CHAIN_RANGE  STATIC MEMBERS

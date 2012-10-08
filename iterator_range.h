@@ -25,7 +25,7 @@ struct  iterator_range {
 	iterator_range& operator= (value_type x) { std::fill(b_, e_, x);  return *this; };
 
 		template<typename rhsRn>
-		eIF <is_elem_of<value_type, rhsRn>(), iterator_range&>
+		eIF <is_elem_of<value_type, rhsRn>::value, iterator_range&>
 	operator= (const rhsRn& rhs) {
 		auto it= b_;
 		for (const auto &x: rhs)  {
@@ -69,7 +69,7 @@ template<typename I>	struct  is_range_t	<iterator_range<I>>	: std::true_type { }
 ////////////////////////////////////////////////////////////////  RANGE() -- range maker
 
 	template<typename I>
-	eIF<is_iterator<I>(), iterator_range<I>>
+	eIF<is_iterator<I>::value, iterator_range<I>>
 range(I b, I e) { return iterator_range<I>(b,e); };
 
 

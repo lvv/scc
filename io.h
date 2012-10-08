@@ -51,7 +51,7 @@ struct  out {
 		out& 
 	operator,   (T x)	{
 		if (need_blank  &&  !is_string<T>::value)  std::cout << ' '; 
-		std::cout << x;  
+		::std::cout << x;  
 		need_blank =  ! is_string<T>::value; 
 		return *this;
 	};
@@ -252,7 +252,7 @@ struct in_t {
 
 	// SEQ-CONT
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value,  void>
+		eIF<is_range<Rg>::value  &&  has_push_back<Rg>::value  &&  !is_ioable<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::value_type t;
 		if (n>0) C.resize(n);
@@ -262,7 +262,7 @@ struct in_t {
 
 	// SET
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>()  &&  !has_mapped_type<Rg>(),  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  !has_mapped_type<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::value_type t;
 		C.clear(); 
@@ -272,7 +272,7 @@ struct in_t {
 
 	// MAP
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>()  &&  has_mapped_type<Rg>(),  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  has_mapped_type<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::key_type	  k;
 		typename Rg::mapped_type  m;
@@ -297,7 +297,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value, std::istream& >
+		eIF<is_range<Rg>::value  &&  has_push_back<Rg>::value  &&  !is_ioable<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
@@ -371,7 +371,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>() && !has_mapped_type<Rg>(), std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && !has_mapped_type<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::value_type c;
 	while(is>>c)  C.insert(c);
@@ -381,7 +381,7 @@ operator>>      (std::istream& is, Rg& C)    {
 
 // MAP
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>() && has_mapped_type<Rg>(), std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && has_mapped_type<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::key_type	  k;
 	typename Rg::mapped_type  m;

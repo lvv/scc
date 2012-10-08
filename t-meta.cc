@@ -58,7 +58,7 @@ int main() {
 		<<  "  " <<  (is_collection<T>()                                   ? "+" : "\u2219")\
 		<<  "  " <<  (is_range<T>::value                                   ? "+" : "\u2219")\
 		<<  "   " << (has_const_iterator<T>()                             ? "+" : "\u2219")\
-		<<  "   " << (is_iterator<T>()                                    ? "+" : "\u2219")\
+		<<  "   " << (is_iterator<T>::value                                    ? "+" : "\u2219")\
 		<<  "   " << (is_input_iterator<T>()                              ? "+" : "\u2219")	/* incorrect*/ \
 		<<  "   " << (is_stack<T>()                                       ? "+" : "\u2219")\
 		<<  "   " << (is_queue<T>()                                       ? "+" : "\u2219")\

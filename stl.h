@@ -30,14 +30,14 @@ operator-      (Rg&& C) { return  std::end(C); };
 
 
 	template<typename Rg>
-	eIF <has_size<Rg>(), size_t>
+	eIF <has_size<Rg>::value, size_t>
 operator~      (const Rg& C) { return size(C); };
 
 
 //  if(!Rg)  --- (!Rg.empty())
 //  if(Rg)   --- not implemented,  use  !!Rg instead
 	template<typename Rg>
-	eIF <has_empty<Rg>(), bool>
+	eIF <has_empty<Rg>::value, bool>
 operator!      (const Rg& C) { return C.empty(); };
 
 
@@ -48,23 +48,23 @@ operator!      (const Rg& C) { return C.empty(); };
 front    (Rg&& C)  -> decltype(*std::begin(C))  { return std::forward<rg_reference<Rg>>(*std::begin(C)); };
 
 	template<typename Rg>
-	//eIF <has_back<Rg>()  &&  !std::is_array<Rg>::value, rg_reference<Rg>>
-	eIF <has_back<Rg>(),  rg_reference<Rg>>
+	//eIF <has_back<Rg>::value  &&  !std::is_array<Rg>::value, rg_reference<Rg>>
+	eIF <has_back<Rg>::value,  rg_reference<Rg>>
 back      (Rg&& C) { return std::forward<rg_reference<Rg>>(C.back()); };
 
-	template<class Rg, class=eIF<!has_back<Rg>()>>
+	template<class Rg, class=eIF<!has_back<Rg>::value>>
 	auto
 back      (Rg&& C) -> decltype(endz(C))  { return std::forward<rg_reference<Rg>>(*std::prev(sto::endz(C))); };
 
 
 //  x << Rg >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 
 	template<typename Rg, typename T>
-	eIF <is_elem_of<T, Rg>() &&   has_pop_back<Rg>(),   Rg&&>
+	eIF <is_elem_of<T, Rg>::value &&   has_pop_back<Rg>::value,   Rg&&>
 operator>>      (Rg&& C, T&& x)    { x = C.back();   C.pop_back();   return  std::forward<Rg>(C); };
 
 
 	template<typename Rg, typename T>
-	eIF <is_elem_of<T,Rg>()  &&   has_pop_front<Rg>(),   Rg&&>
+	eIF <is_elem_of<T,Rg>::value  &&   has_pop_front<Rg>::value,   Rg&&>
 operator<<      (T& x, Rg&& C)    { x = C.front();  C.pop_front();  return  std::forward<Rg>(C); };
 
 
@@ -83,39 +83,39 @@ operator--      (Rg&& C, int)    { C.pop_back();    return  std::forward<Rg>(C);
 //////  X >> Rg << X
 
 	namespace detail {
-		template<class Rg, class X>  eIF<has_push_back  <Rg>(), Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push_back (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_push       <Rg>(), Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_1arg_insert<Rg>(), Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push_back  <Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push_back (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
 
-		template<class Rg, class X>  eIF<has_push_front <Rg>(), Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push_front(std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_push       <Rg>(), Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_1arg_insert<Rg>(), Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push_front <Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push_front(std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 
 	}
 
 	// Rg << x
 	template<class Rg, class X>
-	eIF <is_elem_of<X,Rg>(),  Rg&&>
+	eIF <is_elem_of<X,Rg>::value,  Rg&&>
 operator << (Rg&& rg1, X&& x)            {  detail::append_elem(std::forward<Rg>(rg1),  std::forward<X>(x));   return  std::forward<Rg>(rg1); };
 
 
 	// Rg << Cl2
 	template<class Rg, class Rg2> 
-	eIF <have_same_elem<Rg,Rg2>(),  Rg&&>
+	eIF <have_same_elem<Rg,Rg2>::value,  Rg&&>
 operator <<  (Rg&& rg1, Rg2&& rg2)         {  for (auto i=std::begin(rg2);  i!=endz(rg2);  ++i)  detail::append_elem(std::forward<Rg>(rg1), rg_elem_fwd<Rg2>(*i));   return  std::forward<Rg>(rg1); };
 
 
 //////  T >> Rg 
 	// x >> Rg 
 	template<class X, class Rg>
-	eIF <is_elem_of<X,Rg>(),  Rg&&>
+	eIF <is_elem_of<X,Rg>::value,  Rg&&>
 operator >> (X&& x, Rg&& rg1)            {  detail::prepend_elem(std::forward<Rg>(rg1),  std::forward<X>(x));   return  std::forward<Rg>(rg1); };
 
 
 	// sRn >> tRn
 	template<class sRn, class tRn> 
-	eIF <have_same_elem<tRn,sRn>(),  tRn&&>
+	eIF <have_same_elem<tRn,sRn>::value,  tRn&&>
 operator >>  (sRn&& src, tRn&& trg)  {
 
 	if (std::begin(src) == endz(src)) 
@@ -138,7 +138,7 @@ operator >>  (sRn&& src, tRn&& trg)  {
 
 		// Rg / x     usage: scc 'copy(v9/2, v9/5,oi)'
 			template<typename Rg, typename X>
-			eIF <is_elem_of<X, Rg>(), rg_iterator<Rg>>
+			eIF <is_elem_of<X, Rg>::value, rg_iterator<Rg>>
 		find_elem(Rg&& C, const X& x)   { return std::find(std::begin(C), endz(C), x); };
 
 
@@ -152,7 +152,7 @@ operator >>  (sRn&& src, tRn&& trg)  {
 			
 		//  Rg1 / Rg2   ---  search() --> it
 			template<typename Rg1, typename Rg2>
-			eIF <have_same_elem<Rg1, Rg2>(), rg_iterator<Rg1>>
+			eIF <have_same_elem<Rg1, Rg2>::value, rg_iterator<Rg1>>
 		find_elem(Rg1&& rg1, const Rg2& rg2)    {  return std::search(std::begin(rg1), endz(rg1), std::begin(rg2), endz(rg2)); }; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP-  (ERASE)
@@ -263,7 +263,7 @@ operator--      (Rg&& C, int)    { C.pop();   return std::forward<Rg>(C); };
 //	[1, 2] 3
 
 	template<typename Rg, typename Xt>
-	eIF <has_pop<Rg>()  &&  is_elem_of<Xt,Rg>(),  Rg>
+	eIF <has_pop<Rg>::value  &&  is_elem_of<Xt,Rg>::value,  Rg>
 operator>>      (Rg&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forward<Rg>(C); };
 
 
@@ -274,7 +274,7 @@ operator>>      (Rg&& C, Xt&& x)    { x = C.top();  C.pop();   return std::forwa
 //	3
 
 	template<typename Rg>
- 	eIF <has_top<Rg>(), rg_elem_type<Rg>>
+ 	eIF <has_top<Rg>::value, rg_elem_type<Rg>>
 back      (Rg&& C)    { return C.top(); };
 
 
@@ -289,7 +289,7 @@ operator--      (Rg&& C)    { C.pop();   return std::forward<Rg>(C); };
 
 //  x << Queue
 	template<class Rg, class Xt>
-	eIF <has_pop<Rg>()  &&  is_elem_of<Xt,Rg>(), Rg&&> &
+	eIF <has_pop<Rg>::value  &&  is_elem_of<Xt,Rg>::value, Rg&&> &
 operator<<      (Xt& x, Rg&& C)    { x = C.front();  C.pop();   return std::forward<Rg>(C); };
 
 
@@ -299,7 +299,7 @@ operator<<      (Xt& x, Rg&& C)    { x = C.front();  C.pop();   return std::forw
 
 //  It / x   ---  find() --> it	   usage: scc 'copy(+v9/2, +v9/5, oi),  does not work with pointers (C++ constrain)
 	template<typename It>
-	eIF <is_iterator<It>(),  It>
+	eIF <is_iterator<It>::value,  It>
 operator/       (It&& i, const typename std::iterator_traits<It>::value_type x)    {  while(*i != x) ++i;    return std::forward<It>(i); };
 
 

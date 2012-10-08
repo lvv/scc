@@ -96,7 +96,7 @@ struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same
 /////////////////////////////////////////////////////////////////////////////////////////////////  DEF_HAS_ ...
 
 
-
+/*
 #define DEF_HAS_MEMBER(NAME,MEMBER)										\
 	namespace detail {											\
 		template <class T>                                std::false_type	NAME##_ol(...);		\
@@ -114,11 +114,26 @@ struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same
 	}; 													\
 	template<class T> constexpr bool NAME(T t)   { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };\
 	template<class T> constexpr bool NAME()      { return  decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value; };
+*/
 
+#define DEF_HAS_MEMBER(NAME,MEMBER)										\
+	namespace detail {											\
+		template <class T>                                std::false_type	NAME##_ol(...);		\
+		template <class T, class M = typename T::MEMBER>  std::true_type	NAME##_ol(T* t);	\
+	}; 													\
+	template<class T> struct  NAME { enum { value = decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value }; };
+
+
+
+#define DEF_HAS_METHOD(NAME,METHOD)										\
+	namespace detail {											\
+		template <class T>					std::false_type	NAME##_ol(...);		\
+		template <class T, class F = decltype (((T*)0)->METHOD)>std::true_type	NAME##_ol(T* u);	\
+	}; 													\
+	template<class T> struct  NAME { enum { value = decltype(detail::NAME##_ol<rm_qualifier<T>>(0))::value }; };
 
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_iterator_category,iterator_category)
-DEF_HAS_MEMBER(has_value_type,value_type)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 
 DEF_HAS_METHOD(has_push_front,push_front(typename T::value_type()))
@@ -232,16 +247,23 @@ template<typename T>     constexpr bool   is_queue()        { return  is_queue_t
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_ITERATOR
 
+// TO CHECK: better(?) is_iterator --
+// 	http://stackoverflow.com/questions/12161109/stdenable-if-or-sfinae-for-iterator-or-pointer
+//	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=40497#c23
+
+/*
 	template<typename T>    
 	constexpr bool  
-	// TO CHECK: better(?) is_iterator --
-	// 	http://stackoverflow.com/questions/12161109/stdenable-if-or-sfinae-for-iterator-or-pointer
-	//	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=40497#c23
 is_iterator()        {
 	return  has_iterator_category<T>() 
 		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value);
-};
+};*/
 
+	template<typename T>    
+struct is_iterator   {
+	enum { value = has_iterator_category<T>::value 
+		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value) };
+};
 
 	template<typename T>
 struct is_input_iterator_t {
@@ -307,7 +329,7 @@ template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(arr
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 /////  SIZE
-//template<class Rg>    eIF<has_size<Rg>(), size_t>	size (const Rg& rg)     { return rg.size(); };
+//template<class Rg>    eIF<has_size<Rg>::value, size_t>	size (const Rg& rg)     { return rg.size(); };
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
 
@@ -317,20 +339,20 @@ template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types
 template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
 
 /////  EMPTY
-template<typename Rg>	eIF< has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  rg.empty(); }
-template<typename Rg>	eIF<!has_empty<Rg>(), bool>	empty(const Rg& rg)	{ return  sto::size(rg)==0; }
+template<typename Rg>	eIF< has_empty<Rg>::value,bool>	empty(const Rg& rg)	{ return  rg.empty(); }
+template<typename Rg>	eIF<!has_empty<Rg>::value,bool>	empty(const Rg& rg)	{ return  sto::size(rg)==0; }
 
 /////  CLEAR
-template<typename Rg>	eIF< has_clear<Rg>()>		clear(Rg&& rg) 		{ rg.clear(); }
-template<typename Rg>	eIF<!has_clear<Rg>()>		clear(Rg&& rg) 		{}
+template<typename Rg>	eIF< has_clear<Rg>::value>	clear(Rg&& rg) 		{ rg.clear(); }
+template<typename Rg>	eIF<!has_clear<Rg>::value>	clear(Rg&& rg) 		{}
                                               void	clear(char*rg) 		{ *rg = '\0'; }
 /////  RESIZE
-template<typename Rg>	eIF< has_resize<Rg>()>		resize(Rg&& rg, size_t n) 		{ rg.resize(n); }
-template<typename Rg>	eIF<!has_resize<Rg>()>		resize(Rg&& rg, size_t n) 		{}
+template<typename Rg>	eIF< has_resize<Rg>::value>	resize(Rg&& rg, size_t n) 		{ rg.resize(n); }
+template<typename Rg>	eIF<!has_resize<Rg>::value>	resize(Rg&& rg, size_t n) 		{}
                                               void	resize(char*rg, size_t n) 		{ *(rg+n) = '\0'; }
 
 /////  FRONT/BACK
-//template<typename Rg>	eIF<!has_clear<Rg>(), rg_elem_type<Rg>>		front(Rg&& rg) 		{ return *std::begin(rg); }
+//template<typename Rg>	eIF<!has_clear<Rg>::value, rg_elem_type<Rg>>		front(Rg&& rg) 		{ return *std::begin(rg); }
 
 	// TODO: spceialization for c-str, arrays
 
@@ -344,9 +366,13 @@ template<typename T>  constexpr bool   is_collection()     {
 	;
  };
 
-template<typename T, typename Rg>     constexpr bool   is_elem_of()        { return  is_collection<Rg>()  &&  std::is_same<rm_ref<T>, rm_ref<rg_elem_type<Rg>>>::value; }
-template<class Rg1, class Rg2>        constexpr bool   have_same_elem()    { return  is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
-					};
+//template<typename T, typename Rg>   constexpr bool   is_elem_of()        { return  is_collection<Rg>()  &&  std::is_same<rm_ref<T>, rm_ref<rg_elem_type<Rg>>>::value; }
+template<typename T, typename Rg>                 struct is_elem_of { enum { value = is_collection<Rg>()  &&  std::is_same<rm_ref<T>, rm_ref<rg_elem_type<Rg>>>::value }; };
 
+//template<class Rg1, class Rg2>      constexpr bool  have_same_elem()      { return  is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
+  template<class Rg1, class Rg2>              struct  have_same_elem { enum { value = is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value }; };
+
+
+					};
 					#endif
 
