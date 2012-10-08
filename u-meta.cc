@@ -21,27 +21,27 @@ CHECK_TYPES_ARE_SAME(   rg_elem_type<int>         , no_type)
 
 
 //  IS_RANGE
-CHECK(   is_range<vint>()         ) 
-CHECK(   is_range<vint&>()        ) 
-CHECK(   is_range<vint&&>()       ) 
+CHECK(   is_range<vint>::value         ) 
+CHECK(   is_range<vint&>::value        ) 
+CHECK(   is_range<vint&&>::value       ) 
 
-CHECK(   is_range<const vint>()   ) 
-CHECK(   is_range<const vint&>()  ) 
-CHECK(   is_range<const vint&&>() ) 
+CHECK(   is_range<const vint>::value   ) 
+CHECK(   is_range<const vint&>::value  ) 
+CHECK(   is_range<const vint&&>::value ) 
 
-CHECK(   is_range<decltype(range(1,2))>()   ) 
-CHECK(   is_range<decltype(range(v9))>()  ) 
-CHECK(   is_range<decltype(range(range(v9)))>()  ) 
-CHECK(   is_range<decltype(range(+v9,-v9))>() ) 
-CHECK(   is_range<sto::chain_range<vector<int>>&&>() )
-CHECK(   is_range<vector<int>&>())
+CHECK(   is_range<decltype(range(1,2))>::value   ) 
+CHECK(   is_range<decltype(range(v9))>::value  ) 
+CHECK(   is_range<decltype(range(range(v9)))>::value  ) 
+CHECK(   is_range<decltype(range(+v9,-v9))>::value ) 
+CHECK(   is_range<sto::chain_range<vector<int>>&&>::value )
+CHECK(   is_range<vector<int>&>::value)
 
-CHECK( ! is_range<int*(*)(int)>() ) 
-CHECK( ! is_range<int>()          ) 
-CHECK(   is_range<int(&)[2]>()    ) 
+CHECK( ! is_range<int*(*)(int)>::value ) 
+CHECK( ! is_range<int>::value          ) 
+CHECK(   is_range<int(&)[2]>::value    ) 
 
-CHECK(   is_range<decltype(range(v9))>()    ) 
-CHECK( ! is_range<decltype(+range(v9))>()    ) 
+CHECK(   is_range<decltype(range(v9))>::value    ) 
+CHECK( ! is_range<decltype(+range(v9))>::value    ) 
 
 
 //  IS_STRING

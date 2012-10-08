@@ -162,7 +162,8 @@ struct is_range_t {
 template<typename T, size_t N>	struct  is_range_t <T[N]>		: std::true_type {};
 template<typename T, size_t N>	struct  is_range_t <std::array<T,N>>	: std::true_type {};
 
-template<typename T>     constexpr bool   is_range()        { return  is_range_t<rm_qualifier<T>>::value; };
+template<class T>	struct  is_range { enum { value = is_range_t<rm_qualifier<T>>::value };};
+//template<typename T>     constexpr bool   is_range()        { return  is_range_t<rm_qualifier<T>>::value; };
 
 
 //////////////////////////////////////////////////////////////////////////////////////  IS STRING
@@ -336,15 +337,15 @@ template<typename Rg>	eIF<!has_resize<Rg>()>		resize(Rg&& rg, size_t n) 		{}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename T>  constexpr bool   is_collection()     {
-	return      is_range<T>() 
+	return      is_range<T>::value 
 		||  is_stack<T>() 
 		||  is_queue<T>() 
-		||  is_range<T>()
+		||  is_range<T>::value
 	;
  };
 
 template<typename T, typename Rg>     constexpr bool   is_elem_of()        { return  is_collection<Rg>()  &&  std::is_same<rm_ref<T>, rm_ref<rg_elem_type<Rg>>>::value; }
-template<class Rg1, class Rg2>        constexpr bool   have_same_elem()    { return  is_range<Rg1>()  &&  is_range<Rg2>()  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
+template<class Rg1, class Rg2>        constexpr bool   have_same_elem()    { return  is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
 					};
 
 					#endif

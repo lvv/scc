@@ -19,13 +19,13 @@
 //  +Rg   ---   begin(),  	(n/a for c-arrays, use std::begin)
 
 	template<typename Rg>		// do we need to care about r-value-ness here?
-	eIF <is_range<Rg>()  &&  !std::is_array<Rg>::value,  rg_iterator<Rg>>
+	eIF <is_range<Rg>::value  &&  !std::is_array<Rg>::value,  rg_iterator<Rg>>
 operator+      (Rg&& C) { return std::begin(C); };	// does not work with r-values
 
 
 //  -Rg   ---   end(),  	(n/a for c-arrays, use std::end)
 	template<typename Rg>
-	eIF <is_range<Rg>()  &&  !std::is_array<Rg>::value,  rg_iterator<Rg>>
+	eIF <is_range<Rg>::value  &&  !std::is_array<Rg>::value,  rg_iterator<Rg>>
 operator-      (Rg&& C) { return  std::end(C); };
 
 
@@ -71,12 +71,12 @@ operator<<      (T& x, Rg&& C)    { x = C.front();  C.pop_front();  return  std:
 
 // --Rg, Rg--  ---  pop_back/pop_front;     usage:   scc 'vint V{1,2}, W;  W << --V;  __ V, W;'   prints:    {2}, {1}
 	template<typename Rg>
-	eIF <is_range<Rg>(), Rg>
+	eIF <is_range<Rg>::value, Rg>
 operator--      (Rg&& C)         { C.pop_front();   return  std::forward<Rg>(C); };
 
 
 	template<typename Rg>
-	eIF <is_range<Rg>(), Rg>
+	eIF <is_range<Rg>::value, Rg>
 operator--      (Rg&& C, int)    { C.pop_back();    return  std::forward<Rg>(C); };
 
 
@@ -159,18 +159,18 @@ operator >>  (sRn&& src, tRn&& trg)  {
 ////////  Rg - T  
 // ---  non callable
 	template<typename Rg, typename T>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator - (Rg&& C, const T& t)                                { return  detail::find_elem(std::forward<Rg>(C), t); };
 
 /*
 // ---  plain func
 	template<typename Rg>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator / (Rg&& C, bool(*t)(rg_elem_type<Rg>))                { return  detail::find_elem(std::forward<Rg>(C), t); };
 
 // ---  func obj, lambda
 	template<typename Rg>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator / (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)   { return  detail::find_elem(std::forward<Rg>(C), t); };
 */
 
@@ -179,17 +179,17 @@ operator / (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)   { return  detail:
 ////////  Rg / T  
 // ---  non callable
 	template<typename Rg, typename T>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator / (Rg&& C, const T& t)                                { return  detail::find_elem(std::forward<Rg>(C), t); };
 
 // ---  plain func
 	template<typename Rg>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator / (Rg&& C, bool(*t)(rg_elem_type<Rg>))                { return  detail::find_elem(std::forward<Rg>(C), t); };
 
 // ---  func obj, lambda
 	template<typename Rg>
-	eIF <is_range<Rg>() , rg_iterator<Rg>>
+	eIF <is_range<Rg>::value , rg_iterator<Rg>>
 operator / (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)   { return  detail::find_elem(std::forward<Rg>(C), t); };
 
 
@@ -198,17 +198,17 @@ operator / (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)   { return  detail:
 
 //  ---  non callable
 	template<typename Rg, typename T>
-	eIF <is_range<Rg>(), bool>
+	eIF <is_range<Rg>::value, bool>
 operator % (Rg&& C, const T& t)                               { return  endz(C) != detail::find_elem(std::forward<Rg>(C), t); };
 
 //  ---  plain func
 	template<typename Rg>
-	eIF <is_range<Rg>(), bool>
+	eIF <is_range<Rg>::value, bool>
 operator % (Rg&& C, bool(*t)(rg_elem_type<Rg>))               { return  endz(C) != detail::find_elem(std::forward<Rg>(C), t); };
 
 //  ---  func obj, lambda
 	template<typename Rg>
-	eIF <is_range<Rg>(), bool>
+	eIF <is_range<Rg>::value, bool>
 operator % (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)  { return  endz(C) != detail::find_elem(std::forward<Rg>(C), t); };
 
 

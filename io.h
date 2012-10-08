@@ -96,7 +96,7 @@ operator<<      (ostream& os, const IT&) { std::cout << " <stl iterator> "; retu
 
 // SEQUANCE CONTAINTER or C-ARRAY
 	template<typename Rg >
-	eIF<is_range<Rg>()  &&  !is_ioable<Rg>::value, std::ostream&>
+	eIF<is_range<Rg>::value  &&  !is_ioable<Rg>::value, std::ostream&>
 operator<<      (ostream& os, const Rg& C) {
 
 	if (std::is_same<char, rg_elem_type<Rg>>::value)  {
@@ -211,7 +211,7 @@ namespace oi_space {
 		oi_t(): std::ostream_iterator<oi_any_t>(std::cout, " ") {};
 
 			template<typename Rg >
-			eIF<is_range<Rg>(),  void>
+			eIF<is_range<Rg>::value,  void>
 		operator=(const Rg& C)  {
 			copy(std::begin(C),  endz(C),  *this);
 		}
@@ -252,7 +252,7 @@ struct in_t {
 
 	// SEQ-CONT
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value,  void>
+		eIF<is_range<Rg>::value  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::value_type t;
 		if (n>0) C.resize(n);
@@ -262,7 +262,7 @@ struct in_t {
 
 	// SET
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>()  &&  !has_mapped_type<Rg>(),  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>()  &&  !has_mapped_type<Rg>(),  void>
 	input(Rg& C)	{
 		typename Rg::value_type t;
 		C.clear(); 
@@ -272,7 +272,7 @@ struct in_t {
 
 	// MAP
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>()  &&  has_mapped_type<Rg>(),  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>()  &&  has_mapped_type<Rg>(),  void>
 	input(Rg& C)	{
 		typename Rg::key_type	  k;
 		typename Rg::mapped_type  m;
@@ -297,7 +297,7 @@ static in_t in;
 // SEQ-CONTAINER
 
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value, std::istream& >
+		eIF<is_range<Rg>::value  &&  has_push_back<Rg>()  &&  !is_ioable<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	int n = C.size() ? C.size() : -1;
 	C.clear(); 
@@ -371,7 +371,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>() && !has_mapped_type<Rg>(), std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>() && !has_mapped_type<Rg>(), std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::value_type c;
 	while(is>>c)  C.insert(c);
@@ -381,7 +381,7 @@ operator>>      (std::istream& is, Rg& C)    {
 
 // MAP
 		template<typename Rg>
-		eIF<is_range<Rg>()  &&  has_1arg_insert<Rg>() && has_mapped_type<Rg>(), std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>() && has_mapped_type<Rg>(), std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::key_type	  k;
 	typename Rg::mapped_type  m;

@@ -272,7 +272,7 @@ struct is_range_t<chain_range_iterator<Rg,O,RO,MAPPED>>   : std::false_type {};
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
 	template<class Rg>   
-	eIF<is_range<Rg>(), chain_range<Rg&&>>   
+	eIF<is_range<Rg>::value, chain_range<Rg&&>>   
 range(Rg&& rg)  {
 	return  chain_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
  };
@@ -280,10 +280,10 @@ range(Rg&& rg)  {
 
 
 //  Rg1 | Pred    --> range
-template<class Rg> eIF<is_range<Rg>(),  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>(),  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)> pred)        { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>(),  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&))               { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>(),  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>))                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)> pred)        { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&))               { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>))                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
 		// Overload is better than SFINAE selection. With OL we do not need to specify functor template arguments
 
 
@@ -291,7 +291,7 @@ template<class Rg> eIF<is_range<Rg>(),  chain_range<Rg&&>>  operator|  (Rg&& rg,
 //  Rg1 | Rg2   ---  search() --> range	   
 /*
 	template<typename Rg>
-	typename std::enable_if <is_range<Rg>(),  iterator_range&>::type
+	typename std::enable_if <is_range<Rg>::value,  iterator_range&>::type
 operator |       (Rg& rg1, const Rg& rg2)    { 
 	auto it = search(rg1.begin(), rg1.end(), rg2.begin(), rg2.end());
 	return  iterator_range(it, advance(it, distance(rg2.end(), rg2.begin())));
@@ -299,7 +299,7 @@ operator |       (Rg& rg1, const Rg& rg2)    {
 
 //  Rg1 / Rg2   ---  search() --> it
 	template<typename Rg>
-	typename std::enable_if <is_range<Rg>(),  typename Rg::iterator>::type
+	typename std::enable_if <is_range<Rg>::value,  typename Rg::iterator>::type
 operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.end(), rg2.begin(), rg2.end()); };
 */
 
@@ -323,7 +323,7 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 		//typename Ret=typename std::function<rm_qualifier<Tran>>::result_type,
 		typename Ret= decltype(std::declval<Tran>()(std::declval<E>()))
 	> 
-	eIF <is_range<Rg>()  &&  is_callable<Tran, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
+	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
 operator*       (Rg&& rg,  const Tran& tran)    {
 	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
  };
@@ -333,7 +333,7 @@ operator*       (Rg&& rg,  const Tran& tran)    {
 		typename E = rg_elem_type<Rg>,
 		typename Ret = E
 	> 
-	eIF <is_range<Rg>(),  chain_range<Rg&&,E,true>>
+	eIF <is_range<Rg>::value,  chain_range<Rg&&,E,true>>
 operator *       (Rg&& rg, E (*tran)(E) )    {
 	return   chain_range<Rg&&, E, true> (std::forward<Rg>(rg),  chain_range<Rg&&, E, true>::nop_pred, tran);
  };
@@ -342,14 +342,14 @@ operator *       (Rg&& rg, E (*tran)(E) )    {
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
-	eIF <is_range<Rg>(), R>							// overload for plain functions
+	eIF <is_range<Rg>::value, R>							// overload for plain functions
 operator ||       (Rg&& C, const R& (*f)(const T&, const T&) )    {
 	auto i = std::next(std::begin(C));
 	return  std::accumulate(i, endz(C), front(C), f);
  };
 	
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
-	eIF <is_range<Rg>(), R>							// overload for: lambda, std::plus
+	eIF <is_range<Rg>::value, R>							// overload for: lambda, std::plus
 operator ||       (Rg&& C, identity<std::function<T(const T&, const T&)>> f )    {
 	auto i = std::next(std::begin(C));
 	const T init = front(C);
