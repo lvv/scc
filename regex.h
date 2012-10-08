@@ -24,7 +24,7 @@ std::regex operator "" _R (const char* p, size_t n)	{ return std::regex(p); };
 
 
 	template<typename S>
-	eIF<is_string<S>(), bool>
+	eIF<is_string<S>::value, bool>
 operator == (const S s,  const std::regex &e)		{ return std::regex_match(s.begin(), s.end(), e); };
 	// specialization  for c-string
 	bool  
@@ -33,7 +33,7 @@ operator == (const char  *p,  const std::regex &e)	{ return std::regex_match(p,e
 
 	// regex_search (does not work) - not yet implemented in LIBSTDC++
 	template<typename S>
-	eIF<is_string<S>(), bool>
+	eIF<is_string<S>::value, bool>
 operator %= (const S s,  const std::regex &e)		{ return std::regex_search(s.begin(), s.end(), e); };
 
 /*

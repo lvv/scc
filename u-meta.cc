@@ -45,17 +45,17 @@ CHECK( ! is_range<decltype(+range(v9))>()    )
 
 
 //  IS_STRING
-CHECK(   is_string<decltype("abc")>()) 
-CHECK(   is_string<char[3]>()) 
-CHECK( ! is_string<unsigned char[3]>()) 
-CHECK( ! is_string<signed char[3]>()) 
-CHECK( ! is_string<int[3]>()) 
-CHECK(   is_string<char(&)[3]>()) 
-//CHECK( ! is_string<const char[3]>()) 
-//CHECK( ! is_string<char*>()) 
+CHECK(   is_string<decltype("abc")>::value) 
+CHECK(   is_string<char[3]>::value) 
+CHECK( ! is_string<unsigned char[3]>::value) 
+CHECK( ! is_string<signed char[3]>::value) 
+CHECK( ! is_string<int[3]>::value) 
+CHECK(   is_string<char(&)[3]>::value) 
+//CHECK( ! is_string<const char[3]>::value) 
+//CHECK( ! is_string<char*>::value) 
 //CHECK(   is_string<const char*>()) 
-CHECK(   is_string<string>()) 
-CHECK(   is_string<const string&>()) 
+CHECK(   is_string<string>::value) 
+CHECK(   is_string<const string&>::value) 
 
 
 //  IS_C_STRING

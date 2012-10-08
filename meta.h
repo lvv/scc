@@ -169,8 +169,9 @@ template<typename T>     constexpr bool   is_range()        { return  is_range_t
 template<class T>	struct  is_string_t				: std::false_type {};
 template<class CharT>	struct  is_string_t <std::basic_string<CharT>>	: std::true_type  {};
 template<size_t N>	struct  is_string_t <char[N]>			: std::true_type  {};
+template<class T>	struct  is_string { enum { value = is_string_t<rm_qualifier<T>>::value };};
 
-template<class T>     constexpr bool   is_string()        { return  is_string_t<rm_qualifier<T>>::value; };
+//template<class T>     constexpr bool   is_string()        { return  is_string_t<rm_qualifier<T>>::value; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
 template<typename T>	struct  is_ioable_t 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
