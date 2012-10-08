@@ -9,7 +9,7 @@ CXXFLAGS+=" -std=gnu++11 -Wall -pipe "
 
 CXXFLAGS+=" -Wno-unused-function "
 O_FLAGS="-O3 -march=native"
-g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG  -fdelete-null-pointer-checks -ftrapv -fbounds-check "
+g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG   -ftrapv"           # -fbounds-check "
 
 #[[ -n $sT ]] && CXXFLGAS+=" -DsT=$sT "
 

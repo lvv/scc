@@ -31,54 +31,7 @@ bool set_out_file(const char* path) {
 }
 
 
-struct  out {
-
-	bool need_blank = false;
-	/*
-	bool  first_use;
-	const char*	sep;
-	const char*	paren;
-
-	out ()					      : first_use(true), sep(0),   paren(0)     {init(); };
-	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
-	void init() { if (sep   && !*sep)	sep   = 0; }
-
-	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
-	*/
-
-	
-		template<typename T>	
-		out& 
-	operator,   (T x)	{
-		if (need_blank  &&  !is_string<T>::value)  std::cout << ' '; 
-		::std::cout << x;  
-		need_blank =  ! is_string<T>::value; 
-		return *this;
-	};
-
-
-		template<typename T, size_t N> // we need this beacause of array decays to pointer
-		out& 
-	operator,   (T (&x)[N])	{
-		if (need_blank  &&  !is_string<T(&)[N]>::value)  std::cout << ' '; 
-		std::cout << x;
-		need_blank =  ! is_string<T(&)[N]>::value; 
-		return *this;
-	};
-
-
-	/* endl, hex, ..  */	out&  operator,  (std::ostream&  (*x) (std::ostream& ))	{ std::cout << x;		return *this; };
-				out&  operator,  (std::ios&      (*x) (std::ios&     ))	{ std::cout << x;		return *this; };
-				out&  operator,  (std::ios_base& (*x) (std::ios_base&))	{ std::cout << x;		return *this; };
-
-	operator bool   () {  return true; }
- };
-
-struct  outln : out  {
-	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
-	~outln()				{std::cout  << '\n'; }
- };
-
+struct out;
 
 // NOP, but scc's print-last will send endl
 std::ostream& operator<<      (ostream& os, const  ostream& )		{return os; };
@@ -93,8 +46,29 @@ operator<<      (ostream& os, const IT&) { std::cout << " <stl iterator> "; retu
 #define		_    out()   ,
 #define		__   outln() ,
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	template<typename Rg >
+	eIF<is_range<Rg>::value  &&  !is_ioable<Rg>::value, std::ostream&>
+operator<<      (ostream& os, const Rg& C);
 
-// SEQUANCE CONTAINTER or C-ARRAY
+	template<typename Rg >
+	eIF <is_stack<Rg>(), std::ostream> &
+operator<<      (ostream& os, Rg C);
+
+	template<typename Rg >
+	eIF <is_queue<Rg>(), std::ostream> &
+operator<<      (ostream& os, Rg C);
+
+		template<typename T, typename U>
+		std::ostream&
+operator<<      (ostream& os, const std::pair<T,U>& p);
+
+		template<typename... TT>
+		std::ostream&
+operator<<      (ostream& os, const std::tuple<TT...>& tup);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// RANGE
 	template<typename Rg >
 	eIF<is_range<Rg>::value  &&  !is_ioable<Rg>::value, std::ostream&>
 operator<<      (ostream& os, const Rg& C) {
@@ -389,6 +363,53 @@ operator>>      (std::istream& is, Rg& C)    {
 	return is;
 };
 
+struct  out {
+
+	bool need_blank = false;
+	/*
+	bool  first_use;
+	const char*	sep;
+	const char*	paren;
+
+	out ()					      : first_use(true), sep(0),   paren(0)     {init(); };
+	out (const char* sep, const char* paren=0) : first_use(true), sep(sep), paren(paren) {init();};
+	void init() { if (sep   && !*sep)	sep   = 0; }
+
+	void send_sep() { if (sep && !first_use) cout << sep;  first_use = false; };
+	*/
+
+	
+		template<typename T>	
+		out& 
+	operator,   (T x)	{
+		if (need_blank  &&  !is_string<T>::value)  std::cout << ' '; 
+		std::cout << x;  
+		need_blank =  ! is_string<T>::value; 
+		return *this;
+	};
+
+
+		template<typename T, size_t N> // we need this beacause of array decays to pointer
+		out& 
+	operator,   (T (&x)[N])	{
+		if (need_blank  &&  !is_string<T(&)[N]>::value)  std::cout << ' '; 
+		std::cout << x;
+		need_blank =  ! is_string<T(&)[N]>::value; 
+		return *this;
+	};
+
+
+	/* endl, hex, ..  */	out&  operator,  (std::ostream&  (*x) (std::ostream& ))	{ std::cout << x;		return *this; };
+				out&  operator,  (std::ios&      (*x) (std::ios&     ))	{ std::cout << x;		return *this; };
+				out&  operator,  (std::ios_base& (*x) (std::ios_base&))	{ std::cout << x;		return *this; };
+
+	operator bool   () {  return true; }
+ };
+
+struct  outln : out  {
+	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
+	~outln()				{std::cout  << '\n'; }
+ };
 					};
 					#endif	// SCC_IO_H
 
