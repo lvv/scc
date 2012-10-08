@@ -1,7 +1,6 @@
 					#ifndef  STO_REGEX_H
 					#define  STO_REGEX_H
 
-					#include "range.h"
 					#include <regex>
 						using std::regex;
 
@@ -16,6 +15,8 @@
 						using std::regex_token_iterator;
 						using std::sregex_token_iterator;
 						using std::cregex_token_iterator;
+
+					#include "scc/range.h"
 
 					namespace sto {
 
