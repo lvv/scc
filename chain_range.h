@@ -231,11 +231,11 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 	// ELEM ACCESS
-	const_reference	front()  const	{ return  get_value(std::begin(rg)); }
-	reference  	front()		{ return  get_value(std::begin(rg)); }
+	const_reference	front()  const	{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
+	reference  	front()		{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
 
-	const_reference back()  const	{ return  get_value(std::prev(sto::endz(rg))); }  
-	reference  	back()		{ return  get_value(std::prev(sto::endz(rg))); } 
+	const_reference back()  const	{ return  get_value(std::prev(sto::endz(rg)), std::integral_constant<bool,MAPPED>()); }  
+	reference  	back()		{ return  get_value(std::prev(sto::endz(rg)), std::integral_constant<bool,MAPPED>()); } 
 
 	//  FIXME for MAPPED
 	//template<class U=Rg>   eIF<has_back<U>::value,        reference>	back()				{return rg.back();}
