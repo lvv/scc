@@ -8,3 +8,4 @@ make -B u-meta && ./u-meta
 . u-in
 . u-regex
 scc -f u-print.h
+. u-range
