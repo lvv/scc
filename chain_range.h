@@ -57,13 +57,14 @@ struct chain_range_iterator {
 	typedef		SEL <RO, const_pointer, value_type*>   		pointer;
 
 	typedef		SEL <MAPPED, value_type, const value_type&>	const_reference;
-	typedef		SEL <MAPPED, const_reference, SEL<RO, const_reference, value_type&>>
+	typedef		SEL <MAPPED, value_type, SEL<RO, const_reference, value_type&>>
 									reference;
 
 	typedef		size_t						size_type;
 	typedef		ptrdiff_t					difference_type;
 
-	typedef		rm_ref<chain_range_iterator<Rg,O,RO,MAPPED>>	self;
+	//typedef		rm_ref<chain_range_iterator<Rg,O,RO,MAPPED>>	self;
+	typedef		rm_ref<chain_range_iterator>			self;
 
 	// RANGE 
 	typedef		rg_elem_type<Rg>  				elem_type;
@@ -81,8 +82,8 @@ struct chain_range_iterator {
 
 	////// IFACE
 	
-	reference	operator*()  		{ return  parent->mapped(current); };
-	const_reference operator*() const 	{ return  parent->mapped(current); };
+	reference	operator*()  		{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
+	const_reference operator*() const 	{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
 
 	pointer		operator->()		{ return  &(operator*()); }
 	const_pointer	operator->()	const	{ return  &(operator*()); }
@@ -114,15 +115,25 @@ struct chain_range_iterator {
 
 	
 	// random access  (FIXME for pred)
-	       auto  operator+= (         difference_type n) -> decltype(   current+=n, std::declval<self&>())   {    current+=n;  return *this; }
-	       auto  operator-= (         difference_type n) -> decltype(   current-=n, std::declval<self&>())   {    current-=n;  return *this; }
+	template<class R=decltype(current+=1)>		R  operator+= (difference_type n)	{ current+=n;  return *this; }
+	template<class R=decltype(current-=1)>		R  operator-= (difference_type n)	{ current-=n;  return *this; }
+	template<class R=decltype(current[1])>		R  operator[] (difference_type n)	{ return current[n]; }
+	template<class R=decltype(current <  current)>	R  operator<  (self other)		{ return current <  other.current; } 
+	template<class R=decltype(current <= current)>	R  operator<= (self other)		{ return current <= other.current; } 
+	template<class R=decltype(current >  current)>	R  operator>  (self other)		{ return current >  other.current; } 
+	template<class R=decltype(current >= current)>	R  operator>= (self other)		{ return current >= other.current; } 
 
-	       auto  operator[] (         difference_type n) -> decltype(current[n])   { return  *(current+n); }
-
-	       auto  operator<  (self other) -> decltype(current <  other.current, true)   { return current <  other.current; } 
-	       auto  operator<= (self other) -> decltype(current <= other.current, true)   { return current <= other.current; } 
-	       auto  operator>  (self other) -> decltype(current >  other.current, true)   { return current >  other.current; } 
-	       auto  operator>= (self other) -> decltype(current >= other.current, true)   { return current >= other.current; } 
+	/*
+	auto  operator+= (difference_type n)	-> decltype(current+=n, std::declval<self&>())	{ current+=n;  return *this; }
+	auto  operator-= (difference_type n)	-> decltype(current-=n, std::declval<self&>())	{ current-=n;  return *this; }
+	
+	auto  operator[] (difference_type n)	-> decltype(current[n])   			{ return  *(current+n); }
+	
+	auto  operator<  (self other)		-> decltype(current <  other.current, true)	{ return current <  other.current; } 
+	auto  operator<= (self other)		-> decltype(current <= other.current, true)	{ return current <= other.current; } 
+	auto  operator>  (self other)		-> decltype(current >  other.current, true)	{ return current >  other.current; } 
+	auto  operator>= (self other)		-> decltype(current >= other.current, true)	{ return current >= other.current; } 
+	*/
 
 	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
 	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
@@ -220,11 +231,11 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 	// ELEM ACCESS
-	const_reference	front()  const	{ return  mapped(std::begin(rg)); }
-	reference  	front()		{ return  mapped(std::begin(rg)); }
+	const_reference	front()  const	{ return  get_value(std::begin(rg)); }
+	reference  	front()		{ return  get_value(std::begin(rg)); }
 
-	const_reference back()  const	{ return  mapped(std::prev(sto::endz(rg))); }  
-	reference  	back()		{ return  mapped(std::prev(sto::endz(rg))); } 
+	const_reference back()  const	{ return  get_value(std::prev(sto::endz(rg))); }  
+	reference  	back()		{ return  get_value(std::prev(sto::endz(rg))); } 
 
 	//  FIXME for MAPPED
 	//template<class U=Rg>   eIF<has_back<U>::value,        reference>	back()				{return rg.back();}
@@ -262,17 +273,18 @@ struct  chain_range : ref_container<Rg&&> {
 	}
 
 
-	enum { NOT_MAPPED = ! MAPPED };  // workaroung for gcc bug 54859
+	//enum { NOT_MAPPED = ! MAPPED };  // workaroung for gcc bug 54859
 
-	template<bool M=MAPPED>  eIF<M,O>  		 mapped(rg_iterator      <Rg> it)  	{ return  tran(*it); };
-	template<bool M=MAPPED>  eIF<M,O> 		 mapped(rg_const_iterator<Rg> it) const	{ return  tran(*it); };
+	O		get_value(rg_iterator      <Rg> it, std::integral_constant<bool,true> )		{ return  tran(*it); };
+	O		get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,true> ) const	{ return  tran(*it); };
+	reference	get_value(rg_iterator      <Rg> it, std::integral_constant<bool,false>) 	{ return  *it; };
+	const_reference	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
 
-	//template<bool M=MAPPED>		eIF<M,reference> 	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
-	//template<bool M=MAPPED>  eIF<!M,reference>  	 mapped(rg_iterator      <Rg> it) 	{ return  *it; };
-	//template<bool M=MAPPED>  eIF<!M,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	//template<bool M=MAPPED>		eIF<M,reference> 	 get_value(rg_iterator      <Rg> it) 	{ return  *it; };
+	//template<bool M=MAPPED>  eIF<!M,reference>  	 get_value(rg_iterator      <Rg> it) 	{ return  *it; };
+	//template<bool M=MAPPED>  eIF<!M,const_reference> get_value(rg_const_iterator<Rg> it) const	{ return  *it; };
 	
-	//template<bool NM=NOT_MAPPED>	eIF<NM,const_reference> mapped(rg_iterator<Rg> it) 		{ return  *it; };
-	template<bool NM=NOT_MAPPED>	eIF<NM,const_reference> mapped(rg_const_iterator<Rg> it) const	{ return  *it; };
+	//template<bool NM=NOT_MAPPED>	eIF<NM,const_reference> get_value(rg_iterator<Rg> it) 		{ return  *it; };
  };
 
  // CHAIN_RANGE  STATIC MEMBERS

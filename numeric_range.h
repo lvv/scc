@@ -23,9 +23,9 @@ struct  numeric_range {
 			typedef		value_type	reference;
 
 	struct	const_iterator {
-		explicit const_iterator (const numeric_range<T>* range, T current)
+		explicit const_iterator (const numeric_range<T>* range, T cur)
 			:	range		(range), 
-				current		(current),
+				cur		(cur),
 				i		(0)
 		{};
 
@@ -43,18 +43,18 @@ struct  numeric_range {
 			typedef		value_type	reference;
 		
 
-		const_reference	operator*()	const	{ return   current; }
+		const_reference	operator*()	const	{ return   cur; }
 		const_pointer	operator->()	const	{ return  &(operator*()); }
-		const_iterator&	operator++()		{ current+=range->step;  ++i;   return *this; }
-		const_iterator&	operator++(int)		{ auto tmp=*this;  current+=range->step;  ++i;  return tmp; }
+		const_iterator&	operator++()		{ cur+=range->step;  ++i;   return *this; }
+		const_iterator&	operator++(int)		{ auto tmp=*this;  cur+=range->step;  ++i;  return tmp; }
 
 				// we make assumpation that comparission is done only with  end()
-		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.current-current) < sto::abs(range->step); }
+		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.cur-cur) < sto::abs(range->step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 
 	   private:
 		const numeric_range<T>*		range;
-		T				current;
+		T				cur;
 		size_t				i;	
 
 	};
