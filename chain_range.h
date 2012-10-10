@@ -49,35 +49,35 @@ struct chain_range_iterator {
 	//typedef		std::bidirectional_iterator_tag  	iterator_category;
 	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
 
+	typedef		O						value_type;
 	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
 	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
-	typedef		O						value_type;
 
-	typedef		const value_type*				const_pointer;
-	typedef		SEL <RO, const_pointer, value_type*>   		pointer;
+	typedef		size_t  					size_type;
+	typedef		ptrdiff_t 					difference_type ;
+	//typedef		const value_type*			const_pointer;  // non-STL, not-used?
+	typedef		SEL <RO, const value_type*, value_type*>   	pointer;
 
 
+	typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;	// non-STL
 	//typedef		SEL <MAPPED, value_type, SEL<RO, const reference, value_type&>> reference;
 	typedef		SEL <
 				MAPPED,
 				value_type,
 				SEL <
 					RO,
-					typename std::iterator_traits<org_iterator>::reference const,
-					typename std::iterator_traits<org_iterator>::reference
+					//typename std::iterator_traits<rg_const_iterator<Rg>>::reference,
+					//typename std::iterator_traits<rg_iterator<Rg>>::reference
+					rg_const_reference<Rg>,
+					rg_reference<Rg>
 				>
 			>  reference;
 	/*
 	*/
 
-	typedef		size_t						size_type;
-	typedef		ptrdiff_t					difference_type;
-
-	//typedef		rm_ref<chain_range_iterator<Rg,O,RO,MAPPED>>	self_type;
-	typedef		rm_ref<chain_range_iterator>			self_type;
-
-	// RANGE 
+	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
+	typedef		rm_ref<chain_range_iterator>			self_type;
 
 	////// CTOR
 	chain_range_iterator ()				: parent(0)           			   {};	// default
@@ -93,10 +93,10 @@ struct chain_range_iterator {
 	////// IFACE
 	
 	reference	operator*()  		{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
-	reference const operator*() const 	{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
+	const_reference operator*() const 	{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
 
 	pointer		operator->()		{ return  &(operator*()); }
-	const_pointer	operator->()	const	{ return  &(operator*()); }
+	pointer	const 	operator->() const	{ return  &(operator*()); }
 
 
 	self_type&		operator++()		{
@@ -170,20 +170,37 @@ template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_
 	template<class Rg, class O, bool MAPPED>
 struct  chain_range : ref_container<Rg&&> {
 
+
 		// STL IFACE
-		typedef		O  								value_type;
-		typedef		chain_range_iterator<Rg, O, false, MAPPED>     			iterator;
-		typedef		chain_range_iterator<Rg, O, true,  MAPPED>			const_iterator;
-		typedef		size_t  							size_type;
-		typedef		typename std::iterator_traits<rg_iterator<Rg>>::difference_type	difference_type ;
-		typedef		typename std::iterator_traits<rg_iterator<Rg>>::pointer		pointer ;
-		typedef		rg_reference<Rg>						reference ;
+		typedef		O  						value_type;
+		typedef		chain_range_iterator<Rg, O, false, MAPPED>     	iterator;
+		typedef		chain_range_iterator<Rg, O, true,  MAPPED>	const_iterator;
+
+		typedef		size_t  					size_type;
+		typedef		ptrdiff_t 					difference_type ;
+		typedef		value_type*					pointer;
+		//typedef		const value_type*				const_pointer; // non-stl, not-used?
+
+		typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;  // non-STL
+		//typedef		rg_reference<Rg>				reference ;
+		typedef		SEL <
+					MAPPED,
+					value_type,
+					SEL <
+						//RO,
+						//typename std::iterator_traits<rg_const_iterator<Rg>>::reference,
+						//typename std::iterator_traits<rg_iterator<Rg>>::reference
+						std::is_const<Rg>::value,
+						rg_const_reference<Rg>,
+						rg_reference<Rg>
+					>
+				>  reference;
 
 	
-		//
-		typedef		rg_elem_type<Rg>  						elem_type;
-		typedef		chain_range<Rg>							self_type;
-		typedef		void								range_category;
+		// non-STL
+		typedef		rg_elem_type<Rg>  				elem_type;
+		typedef		chain_range<Rg>					self_type;
+		typedef		void						range_category;
 
 	// MEMBERS
 	Rg& rg;
@@ -193,7 +210,7 @@ struct  chain_range : ref_container<Rg&&> {
 
 	//std::function<const value_type&(const value_type&)>  static	nop_tran;	// transform
 	std::function<value_type(elem_type)>  static		nop_tran;	// transform
-	std::function<value_type(elem_type)>			tran = nop_tran;
+	std::function<value_type(elem_type)>			tran; // = nop_tran;
 
 	// default CTOR
 	explicit chain_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
@@ -275,10 +292,10 @@ struct  chain_range : ref_container<Rg&&> {
 		*++e='\0';
 	}
 
-	O		get_value(rg_iterator      <Rg> it, std::integral_constant<bool,true> )		{ return  tran(*it); };
-	O		get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,true> ) const	{ return  tran(*it); };
-	reference	get_value(rg_iterator      <Rg> it, std::integral_constant<bool,false>) 	{ return  *it; };
-	reference const	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
+	O			get_value(rg_iterator      <Rg> it, std::integral_constant<bool,true> )		{ return  tran(*it); };
+	O			get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,true> ) const	{ return  tran(*it); };
+	reference		get_value(rg_iterator      <Rg> it, std::integral_constant<bool,false>) 	{ return  *it; };
+	rg_const_reference<Rg>	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
  };
 
  // CHAIN_RANGE  STATIC MEMBERS
@@ -288,9 +305,14 @@ struct  chain_range : ref_container<Rg&&> {
 	chain_range<Rg,O,MAPPED>::
 nop_pred = [](rg_elem_type<Rg> x) -> bool  { return true; };
 
+
+template<class T>  T nop_tran(T x) { return x; }
+
 	template<class Rg, class O, bool MAPPED>
 	std::function<O(rg_elem_type<Rg>)>
 	chain_range<Rg,O,MAPPED>::
+//nop_tran =  (O(*)(rg_elem_type<Rg>)) (nop_tran<rg_elem_type<Rg>);
+//nop_tran =  std::function<O(rg_elem_type<Rg>)> (nop_tran<rg_elem_type<Rg>>);
 nop_tran =  [](rg_elem_type<Rg> x)   { return x; };
 
 // TRAITS
