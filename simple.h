@@ -263,6 +263,12 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	// meta
 	using	std::is_same;
 	using	std::enable_if;
+	using	std::declval;
+	using	std::input_iterator_tag;
+	using	std::output_iterator_tag;
+	using	std::forward_iterator_tag;
+	using	std::bidirectional_iterator_tag;
+	using	std::random_access_iterator_tag;
 
 using namespace sto;
 

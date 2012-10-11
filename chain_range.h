@@ -155,9 +155,9 @@ template <class RgI>  auto  operator-  (RgI it, typename RgI::difference_type n)
 template <class RgI>  auto  operator+  (typename RgI::difference_type n, RgI it) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
 
 // error: recursive template
-//template <class RgI>  auto  operator-  (RgI it1, RgI it2)                        -> rm_ref<decltype(it1.current-it2.current)>              { return it1.current-it2.current; }
+//template <class RgI>  auto  operator-  (RgI it1, RgI it2)    -> rm_ref<decltype(it1.current-it2.current)>              { return it1.current-it2.current; }
 
-template <class RgI>  auto  operator-  (RgI it1, RgI it2)                        -> typename RgI::difference_type              { return it1.current-it2.current; }
+template <class RgI>  auto  operator-  (RgI it1, RgI it2)	-> typename RgI::difference_type	{ return it1.current-it2.current; }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER

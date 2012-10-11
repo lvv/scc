@@ -261,8 +261,10 @@ is_iterator()        {
 
 	template<typename T>    
 struct is_iterator   {
-	enum { value = has_iterator_category<T>::value 
-		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value) };
+	enum { value =
+		has_iterator_category<T>::value 
+		|| (std::is_pointer<T>::value  &&  ! std::is_function<typename std::remove_pointer<T>::type>::value)
+	};
 };
 
 	template<typename T>
@@ -277,7 +279,19 @@ struct is_input_iterator_t {
 	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == 1;
 };
 
-template<typename T>     constexpr bool   is_input_iterator()        { return  is_input_iterator_t<T>::value; };
+// stl obj
+
+template<class T>		struct  category_base		{ typedef T iterator_category; };
+
+template<class T>		struct  add_iterator_tag	: T {};
+template<class T, size_t N>	struct  add_iterator_tag<T[N]>	: category_base<std::random_access_iterator_tag>  {};
+
+template<class IT, class TAG>	struct  is_iterator_of		: std::is_base_of<TAG, typename add_iterator_tag<rm_qualifier<IT>>::iterator_category> {};
+
+// string
+//template<class CharT>	struct  is_random_access_iterator_t <std::basic_string<CharT>>	: std::true_type  {};
+
+//template<typename T>     constexpr bool   is_input_iterator()        { return  is_input_iterator_t<T>::value; };
 
 
 

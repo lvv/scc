@@ -13,7 +13,7 @@
 	template<typename T>
 struct  numeric_range {
 
-
+			// stl types
 			typedef		rm_ref<T>	value_type;
 			typedef		size_t		difference_type ;
 			typedef		size_t		size_type;
@@ -28,11 +28,11 @@ struct  numeric_range {
 				cur		(cur),
 				i		(0)
 		{};
+			typedef		const_iterator		self_type;
 
-
-
-			typedef		std::input_iterator_tag		iterator_category;
-
+			// stl types
+			typedef		std::input_iterator_tag			iterator_category;
+			//typedef	std::random_access_iterator_tag		iterator_category;
 			
 			typedef		rm_ref<T>	value_type;
 			typedef		size_t		difference_type ;
@@ -41,8 +41,11 @@ struct  numeric_range {
 			typedef		const_pointer	pointer;
 			typedef		value_type	const_reference;
 			typedef		value_type	reference;
+
+			// 
 		
 
+		// forward  iter
 		const_reference	operator*()	const	{ return   cur; }
 		const_pointer	operator->()	const	{ return  &(operator*()); }
 		const_iterator&	operator++()		{ cur+=range->step;  ++i;   return *this; }
@@ -51,6 +54,20 @@ struct  numeric_range {
 				// we make assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.cur-cur) < sto::abs(range->step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
+
+		// bidi iter 
+		const_iterator&	operator--()		{ cur-=range->step;  --i;  assert(i>0); return *this; }
+		const_iterator&	operator--(int)		{ auto tmp=*this;  cur-=range->step;  --i;  assert(i>0); return tmp; }
+
+		// random access iter
+		const_iterator	operator+= (difference_type n)	{ cur+=n*range->step;  return *this; }
+		const_iterator	operator-= (difference_type n)	{ cur-=n*range->step;  return *this; }
+		value_type	operator[] (difference_type n)	{ return range->from+range->step*n; }
+		bool		operator<  (self_type other)	{ return cur <  other.cur; } 
+		bool		operator<= (self_type other)	{ return cur <= other.cur; } 
+		bool		operator>  (self_type other)	{ return cur >  other.cur; } 
+		bool		operator>= (self_type other)	{ return cur >= other.cur; } 
+
 
 	   private:
 		const numeric_range<T>*		range;
@@ -82,6 +99,7 @@ struct  numeric_range {
 	// ELEM ACCESS
 	value_type  	front()  const	{ return  from; }
 	value_type  	back()   const	{ return  size() * step; }  
+	value_type	operator[] (difference_type n)	{ return from+step*n; }
 
 
  };
