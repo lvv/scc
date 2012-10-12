@@ -279,14 +279,27 @@ struct is_input_iterator_t {
 	static const bool value = sizeof(test((typename std::remove_reference<T>::type*)nullptr)) == 1;
 };
 
-// stl obj
+	template<class T, class TAG> 	
+struct is_iterator_of {
+				static int16_t	test (...);					// no match
+	template<typename U>	static eIF<std::is_pointer<U>::value && ! std::is_function<typename std::remove_pointer<T>::type>::value,
+										std::random_access_iterator_tag>	test (U*);	// Pointer
+	template<typename U>	static eIF<std::is_array<U>::value,		std::random_access_iterator_tag>	test (U*);	// C-array
+	template<typename U>	static eIF<has_iterator_category<U>::value,	typename U::iterator_category>		test (U*);	// Iterator 
 
-template<class T>		struct  category_base		{ typedef T iterator_category; };
+	enum { value = std::is_base_of<TAG, decltype(test((rm_ref<T>*)nullptr))>::value };
+	typedef is_iterator_of	type;
+};
 
-template<class T>		struct  add_iterator_tag	: T {};
-template<class T, size_t N>	struct  add_iterator_tag<T[N]>	: category_base<std::random_access_iterator_tag>  {};
+template<class T> using  is_input_iterator		= typename is_iterator_of<T,std::input_iterator_tag>::type;
+template<class T> using  is_output_iterator		= typename is_iterator_of<T,std::output_iterator_tag>::type;
+template<class T> using  is_forward_iterator		= typename is_iterator_of<T,std::forward_iterator_tag>::type;
+template<class T> using  is_bidirectional_iterator	= typename is_iterator_of<T,std::bidirectional_iterator_tag>::type;
+template<class T> using  is_random_access_iterator	= typename is_iterator_of<T,std::random_access_iterator_tag>::type;
 
-template<class IT, class TAG>	struct  is_iterator_of		: std::is_base_of<TAG, typename add_iterator_tag<rm_qualifier<IT>>::iterator_category> {};
+
+
+//std::is_base_of<std::input_iterator_tag, typename U::iterator_category>::value
 
 // string
 //template<class CharT>	struct  is_random_access_iterator_t <std::basic_string<CharT>>	: std::true_type  {};

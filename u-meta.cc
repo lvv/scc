@@ -113,11 +113,24 @@ CHECK(   (have_same_elem<vint, chain_range<vint&>&>::value)	)
 CHECK(   (have_same_elem<vint, chain_range<vint&>&>::value)	)
 
 // ITERATORS
-CHECK(   is_input_iterator<vint::const_iterator>()	)
-CHECK( ! is_input_iterator<void>()			)
-CHECK( ! is_input_iterator<char*>() 			)
-CHECK( ! is_input_iterator<char[]>() 			)
-CHECK( ! is_input_iterator<std::true_type>()		)
+CHECK(   is_input_iterator<vint::const_iterator>::value	)
+
+CHECK( ! is_input_iterator<void>::value			)
+CHECK(   is_input_iterator<char*>::value 		)
+CHECK(   is_input_iterator<char[]>::value 		)
+CHECK( ! is_input_iterator<std::true_type>::value	)
+CHECK( ! is_input_iterator<int(*)(int)>::value	)
+
+CHECK( ! is_input_iterator<int>::value				)
+CHECK(   is_input_iterator<vint::iterator>::value		)
+CHECK(   is_bidirectional_iterator<vint::iterator>::value	)
+CHECK(   is_input_iterator<lint::iterator>::value		)
+CHECK(   is_forward_iterator<lint::iterator>::value		)
+CHECK(   is_bidirectional_iterator<lint::iterator>::value		)
+CHECK( ! is_random_access_iterator<lint::iterator>::value	)
+CHECK(   is_random_access_iterator<vint::iterator>::value	)
+CHECK(   is_random_access_iterator<int*>::value			)
+CHECK(   is_random_access_iterator<int[3]>::value		)
 
 // constess of iterator
 CHECK(   is_const_iterator<vint::const_iterator>()	)
