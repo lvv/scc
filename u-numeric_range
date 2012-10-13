@@ -1,0 +1,27 @@
+
+
+set -o errexit
+set -v
+
+
+################################################################# NUMERIC_RANGE
+
+# ctor
+scc '__ range(0,10,2),  range(10,0,-1.5);'
+
+# iter
+scc 'auto ri = +range(0,21);  ri = +range(0,21);' 
+
+# loops
+scc 'auto  r=range(0,10);  for(auto i=r.begin();  i!=r.end();  ++i) _ *i;'
+scc 'for(auto x: range(0,10,2)) _ x;'
+
+# stl algorithms
+scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x){return x<0.5;});'
+
+scc 'range(0,10) | is_even'
+
+# random access
+#scc                       'auto nr=range(10);auto i=+nr;  nr[0], nr[1], *(i+=3), i[3]'
+
+: '- - - - - - - - - - - - - - - - - - - - - -  U-NUMERIC_RANGE passed   - -- - - - - - - - - - - - - - - - - - - - -'

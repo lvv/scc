@@ -122,22 +122,22 @@ struct chain_range_iterator {
 	#define dcv(x)   std::declval<x>()
 	
 	//  bidiractional  (FIXME for pred)
-	template<class U=org_iterator, class R=decltype(std::declval<U>()--)> 				self_type&	operator--()			{ --current;  return *this; }
-	template<class U=org_iterator, class R=decltype(std::declval<U>()--)> 				self_type	operator--(int)			{ self_type tmp=*this;  --current;   return std::move(tmp); }
-                                                                     
-	                                                            
-	// random access  (FIXME for pred)                         
-	template<class U=org_iterator, class R=decltype(std::declval<U>()+=1)>				iterator	operator+= (difference_type n)	{ current+=n;  return *this; }
-	template<class U=org_iterator, class R=decltype(std::declval<U>()-=1)>				iterator	operator-= (difference_type n)	{ current-=n;  return *this; }
-	template<class U=org_iterator, class R=decltype(std::declval<U>()[1])>				reference	operator[] (difference_type n)	{ return current[n]; }
-	template<class U=org_iterator, class R=decltype(std::declval<U>() <  std::declval<U>())>	bool		operator<  (self_type other)	{ return current <  other.current; } 
-	template<class U=org_iterator, class R=decltype(std::declval<U>() <= std::declval<U>())>	bool		operator<= (self_type other)	{ return current <= other.current; } 
-	template<class U=org_iterator, class R=decltype(std::declval<U>() >  std::declval<U>())>	bool		operator>  (self_type other)	{ return current >  other.current; } 
-	template<class U=org_iterator, class R=decltype(std::declval<U>() >= std::declval<U>())>	bool		operator>= (self_type other)	{ return current >= other.current; } 
+	template<class U=org_iterator, class=decltype(std::declval<U>()--)> 			self_type&	operator--()			{ --current;  return *this; }
+	template<class U=org_iterator, class=decltype(std::declval<U>()--)> 			self_type	operator--(int)			{ self_type tmp=*this;  --current;   return std::move(tmp); }
+                                                                   
+	                                                          
+	// random access  (FIXME for pred)                       
+	template<class U=org_iterator, class=decltype(std::declval<U>()+=1)>			iterator	operator+= (difference_type n)	{ current+=n;  return *this; }
+	template<class U=org_iterator, class=decltype(std::declval<U>()-=1)>			iterator	operator-= (difference_type n)	{ current-=n;  return *this; }
+	template<class U=org_iterator, class=decltype(std::declval<U>()[1])>			reference	operator[] (difference_type n)	{ return current[n]; }
+	template<class U=org_iterator, class=decltype(std::declval<U>() <  std::declval<U>())>	bool		operator<  (self_type other)	{ return current <  other.current; } 
+	template<class U=org_iterator, class=decltype(std::declval<U>() <= std::declval<U>())>	bool		operator<= (self_type other)	{ return current <= other.current; } 
+	template<class U=org_iterator, class=decltype(std::declval<U>() >  std::declval<U>())>	bool		operator>  (self_type other)	{ return current >  other.current; } 
+	template<class U=org_iterator, class=decltype(std::declval<U>() >= std::declval<U>())>	bool		operator>= (self_type other)	{ return current >= other.current; } 
  };
 
-template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>    { it.current+=n;  return std::move(it); }
 template <class RgI>  auto  operator-  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current-n, std::declval<RgI>())>   { it.current-=n;  return std::move(it); }
+template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
 template <class RgI>  auto  operator+  (typename RgI::difference_type n, RgI it) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
 
 // error: recursive template
