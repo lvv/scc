@@ -117,37 +117,23 @@ struct chain_range_iterator {
 	bool	operator==(const_iterator rhs)	const	{ return   current == rhs.current; }
 	bool	operator!=(const_iterator rhs)	const	{ return   current != rhs.current; }
 
-	////////////////////////////////////////////////////////////////////////// INPORTED ORG_ITERATOR METHODS
+	///////////////////////////////////////////////////////////////////// INPORT ORG_ITERATOR METHODS
+	
+	#define dcv(x)   std::declval<x>()
 	
 	//  bidiractional  (FIXME for pred)
-	auto  operator--()     -> decltype(--current, std::declval<self_type&>())   { --current;  return *this; }
-	auto  operator--(int)  -> decltype(current--, std::declval<self_type >())   { self_type tmp=*this;  --current;   return std::move(tmp); }
-
-	
-	// random access  (FIXME for pred)
-	template<class R=decltype(current+=1)>		iterator	operator+= (difference_type n)	{ current+=n;  return *this; }
-	template<class R=decltype(current-=1)>		iterator	operator-= (difference_type n)	{ current-=n;  return *this; }
-	template<class R=decltype(current[1])>		reference	operator[] (difference_type n)	{ return current[n]; }
-	template<class R=decltype(current <  current)>	bool		operator<  (self_type other)		{ return current <  other.current; } 
-	template<class R=decltype(current <= current)>	bool		operator<= (self_type other)		{ return current <= other.current; } 
-	template<class R=decltype(current >  current)>	bool		operator>  (self_type other)		{ return current >  other.current; } 
-	template<class R=decltype(current >= current)>	bool		operator>= (self_type other)		{ return current >= other.current; } 
-
-	/*
-	auto  operator+= (difference_type n)	-> decltype(current+=n, std::declval<self_type&>())	{ current+=n;  return *this; }
-	auto  operator-= (difference_type n)	-> decltype(current-=n, std::declval<self_type&>())	{ current-=n;  return *this; }
-	
-	auto  operator[] (difference_type n)	-> decltype(current[n])   			{ return  *(current+n); }
-	
-	auto  operator<  (self_type other)		-> decltype(current <  other.current, true)	{ return current <  other.current; } 
-	auto  operator<= (self_type other)		-> decltype(current <= other.current, true)	{ return current <= other.current; } 
-	auto  operator>  (self_type other)		-> decltype(current >  other.current, true)	{ return current >  other.current; } 
-	auto  operator>= (self_type other)		-> decltype(current >= other.current, true)	{ return current >= other.current; } 
-	*/
-
-	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
-	//template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
-
+	template<class U=org_iterator, class R=decltype(std::declval<U>()--)> 				self_type&	operator--()			{ --current;  return *this; }
+	template<class U=org_iterator, class R=decltype(std::declval<U>()--)> 				self_type	operator--(int)			{ self_type tmp=*this;  --current;   return std::move(tmp); }
+                                                                     
+	                                                            
+	// random access  (FIXME for pred)                         
+	template<class U=org_iterator, class R=decltype(std::declval<U>()+=1)>				iterator	operator+= (difference_type n)	{ current+=n;  return *this; }
+	template<class U=org_iterator, class R=decltype(std::declval<U>()-=1)>				iterator	operator-= (difference_type n)	{ current-=n;  return *this; }
+	template<class U=org_iterator, class R=decltype(std::declval<U>()[1])>				reference	operator[] (difference_type n)	{ return current[n]; }
+	template<class U=org_iterator, class R=decltype(std::declval<U>() <  std::declval<U>())>	bool		operator<  (self_type other)	{ return current <  other.current; } 
+	template<class U=org_iterator, class R=decltype(std::declval<U>() <= std::declval<U>())>	bool		operator<= (self_type other)	{ return current <= other.current; } 
+	template<class U=org_iterator, class R=decltype(std::declval<U>() >  std::declval<U>())>	bool		operator>  (self_type other)	{ return current >  other.current; } 
+	template<class U=org_iterator, class R=decltype(std::declval<U>() >= std::declval<U>())>	bool		operator>= (self_type other)	{ return current >= other.current; } 
  };
 
 template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>    { it.current+=n;  return std::move(it); }

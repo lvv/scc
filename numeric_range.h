@@ -31,16 +31,13 @@ struct  numeric_range {
 			typedef		const_iterator		self_type;
 
 			// stl types
-			typedef		std::input_iterator_tag			iterator_category;
-			//typedef	std::random_access_iterator_tag		iterator_category;
-			
-			typedef		rm_ref<T>	value_type;
-			typedef		size_t		difference_type ;
-			typedef		size_t		size_type;
-			typedef		const T*	const_pointer;
-			typedef		const_pointer	pointer;
-			typedef		value_type	const_reference;
-			typedef		value_type	reference;
+			typedef		rm_ref<T>		value_type;
+			typedef		size_t			difference_type ;
+			typedef		size_t			size_type;
+			typedef		const value_type*	const_pointer;
+			typedef		const_pointer		pointer;
+			typedef		value_type		const_reference;
+			typedef		value_type		reference;
 
 			// 
 		
@@ -51,10 +48,14 @@ struct  numeric_range {
 		const_iterator&	operator++()		{ cur+=range->step;  ++i;   return *this; }
 		const_iterator&	operator++(int)		{ auto tmp=*this;  cur+=range->step;  ++i;  return tmp; }
 
-				// we make assumpation that comparission is done only with  end()
 		bool		operator==(const const_iterator &rhs)	const	{ return   sto::abs(rhs.cur-cur) < sto::abs(range->step); }
 		bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 
+		#ifndef NR_INPUT_ITERATOR
+			typedef		std::input_iterator_tag			iterator_category;
+		#else 
+			typedef		std::random_access_iterator_tag		iterator_category;
+				// we make assumpation that comparission is done only with  end()
 		// bidi iter 
 		const_iterator&	operator--()		{ cur-=range->step;  --i;  assert(i>0); return *this; }
 		const_iterator&	operator--(int)		{ auto tmp=*this;  cur-=range->step;  --i;  assert(i>0); return tmp; }
@@ -67,6 +68,7 @@ struct  numeric_range {
 		bool		operator<= (self_type other)	{ return cur <= other.cur; } 
 		bool		operator>  (self_type other)	{ return cur >  other.cur; } 
 		bool		operator>= (self_type other)	{ return cur >= other.cur; } 
+		#endif
 
 
 	   private:

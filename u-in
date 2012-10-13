@@ -24,3 +24,4 @@ echo 1 2 3 4| scc 'map<int,int>    C;     cin >> C;   C'
 echo 1 2 3 4| scc 'map<int,int>    C = in(1);         C'
 echo 1 2 3 4| scc 'map<int,int>    C = in;            C'
 
+: '- - - - - - - - - - - - - - - - - - - - - - - -  U-IN passed   - - - - - - - - - - - - - - - - - - - - - - - - -'

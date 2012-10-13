@@ -86,4 +86,6 @@ scc 'auto r = range(0,1.0,0.01); __ count(+r,-r,0), count_if(+r,-r, [](double x)
 scc 'range(0,21) | is_even'
 
 # random access
-scc 'auto nr=range(10);auto i=+nr;  nr[0], nr[1], *(i+=3), i[3]'
+#scc                       'auto nr=range(10);auto i=+nr;  nr[0], nr[1], *(i+=3), i[3]'
+
+: '- - - - - - - - - - - - - - - - - - - - - - - -  U-RANGE passed   - - - - - - - - - - - - - - - - - - - - - - - - -'
