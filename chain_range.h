@@ -44,9 +44,6 @@ struct chain_range_iterator {
 
 
 	// STL ITERATOR TYPES
-	//typedef		SEL <MAPPED, std::input_iterator_tag, std::forward_iterator_tag> iterator_category;
-
-	//typedef		std::bidirectional_iterator_tag  	iterator_category;
 	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
 
 	typedef		O						value_type;
@@ -60,14 +57,11 @@ struct chain_range_iterator {
 
 
 	typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;	// non-STL
-	//typedef		SEL <MAPPED, value_type, SEL<RO, const reference, value_type&>> reference;
 	typedef		SEL <
 				MAPPED,
 				value_type,
 				SEL <
 					RO,
-					//typename std::iterator_traits<rg_const_iterator<Rg>>::reference,
-					//typename std::iterator_traits<rg_iterator<Rg>>::reference
 					rg_const_reference<Rg>,
 					rg_reference<Rg>
 				>
@@ -139,9 +133,6 @@ struct chain_range_iterator {
 template <class RgI>  auto  operator-  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current-n, std::declval<RgI>())>   { it.current-=n;  return std::move(it); }
 template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
 template <class RgI>  auto  operator+  (typename RgI::difference_type n, RgI it) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
-
-// error: recursive template
-//template <class RgI>  auto  operator-  (RgI it1, RgI it2)    -> rm_ref<decltype(it1.current-it2.current)>              { return it1.current-it2.current; }
 
 template <class RgI>  auto  operator-  (RgI it1, RgI it2)	-> typename RgI::difference_type	{ return it1.current-it2.current; }
 
@@ -301,13 +292,18 @@ template<class T>  T nop_tran(T x) { return x; }
 //nop_tran =  std::function<O(rg_elem_type<Rg>)> (nop_tran<rg_elem_type<Rg>>);
 nop_tran =  [](rg_elem_type<Rg> x)   { return x; };
 
-// TRAITS
+////////////////////////////////////////////////////////////////  TRAITS
 
-template<class Rg, class O, bool MAPPED >
-struct is_range_t<chain_range<Rg,O,MAPPED>>               : std::true_type  {};
+template<class Rg, class O, bool MAPPED>		struct is_range_t<chain_range<Rg,O,MAPPED>>		: std::true_type  {};
+template<class Rg, class O, bool RO, bool MAPPED>	struct is_range_t<chain_range_iterator<Rg,O,RO,MAPPED>>	: std::false_type {};
 
-template <class Rg, class O,  bool RO, bool MAPPED>
-struct is_range_t<chain_range_iterator<Rg,O,RO,MAPPED>>   : std::false_type {};
+
+template<class Rg>					struct is_chain_range               			: std::false_type {};
+template<class Rg, class O, bool MAPPED>		struct is_chain_range<chain_range<Rg,O,MAPPED>>		: std::true_type {};
+
+template<class It>					struct is_chain_range_iterator      			: std::false_type {};
+template<class Rg, class O, bool RO, bool MAPPED>	struct is_chain_range_iterator <chain_range_iterator<Rg,O,RO,MAPPED>> 		: std::true_type {};
+
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 

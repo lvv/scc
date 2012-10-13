@@ -140,5 +140,11 @@ CHECK( ! is_const_iterator<int*>()			)
 CHECK(   (is_const_iterator<std::array<int,3>::const_iterator>()))
 CHECK( ! (is_const_iterator<std::array<int,3>::iterator>()))
 
+// chain_range
+CHECK(   (is_chain_range_iterator<decltype(+range(vint{1}))>()))
+CHECK( ! (is_chain_range_iterator<decltype( range(vint{1}))>()))
+CHECK( ! (is_chain_range<decltype(+range(vint{1}))>()))
+CHECK(   (is_chain_range<decltype( range(vint{1}))>()))
+
 					CHECK_EXIT;
 					}
