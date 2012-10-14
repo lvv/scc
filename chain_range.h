@@ -143,37 +143,34 @@ template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_
 struct  chain_range : ref_container<Rg&&> {
 
 
-		// STL IFACE
-		typedef		O  						value_type;
-		typedef		chain_range_iterator<Rg, O, false, MAPPED>     	iterator;
-		typedef		chain_range_iterator<Rg, O, true,  MAPPED>	const_iterator;
+	// STL IFACE
+	typedef		O  						value_type;
+	typedef		chain_range_iterator<Rg, O, false, MAPPED>     	iterator;
+	typedef		chain_range_iterator<Rg, O, true,  MAPPED>	const_iterator;
 
-		typedef		size_t  					size_type;
-		typedef		ptrdiff_t 					difference_type ;
-		typedef		value_type*					pointer;
-		//typedef		const value_type*				const_pointer; // non-stl, not-used?
+	typedef		size_t  					size_type;
+	typedef		ptrdiff_t 					difference_type ;
+	typedef		value_type*					pointer;
 
-		typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;  // non-STL
-		//typedef		rg_reference<Rg>				reference ;
-		typedef		SEL <
-					MAPPED,
-					value_type,
-					SEL <
-						//RO,
-						//typename std::iterator_traits<rg_const_iterator<Rg>>::reference,
-						//typename std::iterator_traits<rg_iterator<Rg>>::reference
-						std::is_const<Rg>::value,
-						rg_const_reference<Rg>,
-						rg_reference<Rg>
-					>
-				>  reference;
+	typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;  // non-STL
+	//typedef		rg_reference<Rg>				reference ;
+	typedef		SEL <
+				MAPPED,
+				value_type,
+				SEL <
+					std::is_const<Rg>::value,
+					rg_const_reference<Rg>,
+					rg_reference<Rg>
+				>
+			>  reference;
 
-	
-		// non-STL
-		typedef		rg_elem_type<Rg>  				elem_type;
-		typedef		chain_range<Rg>					self_type;
-		typedef		self_type					type;
-		typedef		void						range_category;
+
+	// non-STL
+	typedef		rg_elem_type<Rg>  				elem_type;
+	typedef		chain_range<Rg>					self_type;
+	typedef		self_type					type;
+	typedef		void						range_category;
+
 
 	// MEMBERS
 	Rg& rg;
@@ -249,9 +246,6 @@ struct  chain_range : ref_container<Rg&&> {
 
 	template<class U=Rg>   eIF<has_pop_back<U>::value>		pop_back()				{rg.pop_back();}
 	template<class U=Rg>   eIF<has_pop_front<U>::value>		pop_front()				{rg.pop_front();}
-	// why error ??? 
-	// template<class U=Rg>   auto  operator[] (difference_type n) -> decltype(rg[0])   { return  rg[n]; } // FIXME for pred
-	// auto  operator[] (difference_type n) -> decltype(std::declval<Rg>()[0])   { return  rg[n]; } // FIXME for pred
 	
 	template<class U=Rg>  auto  operator[] (difference_type n) -> decltype(std::declval<U>()[0])   { return  rg[n]; } // FIXME for pred
 

@@ -50,9 +50,9 @@ struct	numeric_range_iterator {
 	bool		operator!=(const const_iterator &rhs)	const	{ return   ! (*this == rhs); }
 
 	#ifdef NR_INPUT_ITERATOR
-		typedef		std::input_iterator_tag			iterator_category;
+	typedef		std::input_iterator_tag			iterator_category;
 	#else 
-		typedef		std::random_access_iterator_tag		iterator_category;
+	typedef		std::random_access_iterator_tag		iterator_category;
 			// we make assumpation that comparission is done only with  end()
 	// bidi iter 
 	const_iterator&	operator--()					{ --current;   assert(current>=0); return *this; }
@@ -104,7 +104,7 @@ struct  numeric_range {
 
 	// CTOR
 	numeric_range()  			: from(T()),  to(T()), step(T())  {};
-	numeric_range(T from, T to, T step)	: from(from), to(to),  step(step),  range_end((to-from)/step)  { assert((to-from)*step > 0);};
+	numeric_range(T from, T to, T step)	: from(from), to(to),  step(step),  range_end((to-from)/step+1)  { assert((to-from)*step >= 0);};
 
 	// ITERATOR
 	const_iterator	cbegin() const	{ return const_iterator(this, 0); };
