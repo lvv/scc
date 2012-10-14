@@ -85,12 +85,12 @@ int main(int argc, char** argv) {
 	// non static debug vars
 	#ifndef NDEBUG
 	//  range
-	static 	auto __attribute__((unused))		r9	= range(d9); 
+	static 	auto __attribute__((unused))		rv9	= range(v9); 
 	static 	auto __attribute__((unused))		rd9	= range(d9); 
 	static 	auto __attribute__((unused))		rl9	= range(l9); 
-	static 	auto __attribute__((unused))		r9r	= range(mk_d9()); 
-	static 	auto __attribute__((unused))		rr9	= range(r9); 
-	static 	auto __attribute__((unused))		n9	= range(10); 
+	static 	auto __attribute__((unused))		rd9r	= range(mk_d9()); 
+	static 	auto __attribute__((unused))		rrd9	= range(rd9); 
+	static 	auto __attribute__((unused))		n9	= range(9); 
 	#endif
 
 

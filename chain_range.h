@@ -199,7 +199,9 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 	// ASSIGNMENT
+	
 	chain_range&   operator= (elem_type x) { std::fill(begin(), end(), x);  return *this; };
+
 
 		template<class Rg2>			// TODO specialize for seq containers self-assignemet
 		eIF <have_same_elem<Rg,Rg2>::value, self_type&>
@@ -209,8 +211,9 @@ struct  chain_range : ref_container<Rg&&> {
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
 			detail::append_elem(std::forward<Rg>(rg), *it);
 		}
-		return *this;
+		return std::move(*this);
 	};
+
 
 	// ITERATOR
 	      iterator	end()		{ return        iterator(this, endz(rg)); }
