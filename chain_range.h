@@ -204,14 +204,14 @@ struct  chain_range : ref_container<Rg&&> {
 
 
 		template<class Rg2>			// TODO specialize for seq containers self-assignemet
-		eIF <have_same_elem<Rg,Rg2>::value, self_type&>
+		eIF <have_same_elem<Rg,Rg2>::value, self_type>
 	operator= (const Rg2& rhs) {
 		sto::clear(rg);
 		auto e = endz(rhs);
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
 			detail::append_elem(std::forward<Rg>(rg), *it);
 		}
-		return std::move(*this);
+		return *this;
 	};
 
 
@@ -309,10 +309,12 @@ range(Rg&& rg)  {
 
 
 //  Rg1 | Pred    --> range
-template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)> pred)        { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&))               { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg> eIF<is_range<Rg>::value,  chain_range<Rg&&>>  operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>))                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)> pred)        { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&))               { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>))                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg, class F>	eIF<is_range<Rg>::value && is_callable<F, bool(rg_elem_type<Rg>)>::value,  chain_range<Rg&&>> 
+								 		operator|  (Rg&& rg,  F pred)                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
 		// Overload is better than SFINAE selection. With OL we do not need to specify functor template arguments
 
 

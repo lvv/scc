@@ -30,6 +30,14 @@ template<class T> 	T abs(T t) { return  t > 0 ?  t : -t; }
 template<class T> 	bool is_odd (const T& t) { return  t%2; }
 template<class T> 	bool is_even(const T& t) { return  !bool(t%2); }
 
+// equal, less, greater
+template<class T> 	struct  eq_t { T t; eq_t (const T& t):t(t){};  bool operator()(const T& x) { return  x==t; } };
+template<class T> 	struct  gt_t { T t; gt_t (const T& t):t(t){};  bool operator()(const T& x) { return  x>t; } };
+template<class T> 	struct  ls_t { T t; ls_t (const T& t):t(t){};  bool operator()(const T& x) { return  x<t; } };
+template<class T> 	eq_t<T> eq(T t)  { return eq_t<T>(t); } 
+template<class T> 	gt_t<T> gt(T t)  { return gt_t<T>(t); } 
+template<class T> 	ls_t<T> ls(T t)  { return ls_t<T>(t); } 
+
 				};
 
 				#endif
