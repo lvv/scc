@@ -72,6 +72,7 @@ struct chain_range_iterator {
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
 	typedef		rm_ref<chain_range_iterator>			self_type;
+	typedef		self_type					type;
 
 	////// CTOR
 	chain_range_iterator ()				: parent(0)           			   {};	// default
@@ -130,12 +131,6 @@ struct chain_range_iterator {
 	template<class U=org_iterator, class=decltype(std::declval<U>() >= std::declval<U>())>	bool		operator>= (self_type other)	{ return current >= other.current; } 
  };
 
-template <class RgI>  auto  operator-  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current-n, std::declval<RgI>())>   { it.current-=n;  return std::move(it); }
-template <class RgI>  auto  operator+  (RgI it, typename RgI::difference_type n) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
-template <class RgI>  auto  operator+  (typename RgI::difference_type n, RgI it) -> rm_ref<decltype(it.current+n, std::declval<RgI>())>   { it.current+=n;  return std::move(it); }
-
-template <class RgI>  auto  operator-  (RgI it1, RgI it2)	-> typename RgI::difference_type	{ return it1.current-it2.current; }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////  REF CONTAINER
 
@@ -177,6 +172,7 @@ struct  chain_range : ref_container<Rg&&> {
 		// non-STL
 		typedef		rg_elem_type<Rg>  				elem_type;
 		typedef		chain_range<Rg>					self_type;
+		typedef		self_type					type;
 		typedef		void						range_category;
 
 	// MEMBERS
@@ -275,7 +271,7 @@ struct  chain_range : ref_container<Rg&&> {
 	rg_const_reference<Rg>	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
  };
 
- // CHAIN_RANGE  STATIC MEMBERS
+// CHAIN_RANGE  STATIC MEMBERS
 
 	template<class Rg, class O, bool MAPPED >
 	std::function<bool(rg_elem_type<Rg>)>   
@@ -391,6 +387,8 @@ operator ||       (Rg&& C, identity<std::function<T(const T&, const T&)>> f )   
 	const T init = front(C);
 	return  std::accumulate(i, endz(C), init, f);
  };
+
+
 
 						}; 
 						#endif //  STO_CHAIN_RANGE_H
