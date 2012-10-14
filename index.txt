@@ -298,10 +298,10 @@ Numeric range is simple numeric sequence generator :
 
 -----------------------------------
  scc 'range(0,10)'
- {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+ {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10}
 
  scc 'range(10,0,-1.5)'
- {10, 8.5, 7, 5.5, 4, 2.5}
+ {10, 8.5, 7, 5.5, 4, 2.5, 1}
 -----------------------------------
 
 Iterator and chain ranges do not contain data, they refer to an existing STL container.
@@ -309,20 +309,42 @@ Iterator range: assign 42 to values from 2 to 5:
 
 ------------------------------------
 scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
-{0, 1, 2, 3, 4, 5, 6, 7, 8}
-{0, 1, 42, 42, 42, 5, 6, 7, 8}
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+{0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 ------------------------------------
 
-Chain range - references other range or container:
+Chain range - references other range or container and provide some capabilities
+that standard containers do not have.  For example, STL containers do not have
+assignment operator for containers of different types and it does not recognize
+c-string as a container. 
+Ranges do not have such limitations.  Below is  assignment to vector from
+numeric range:
 
 ------------------------------------------
 scc  'vint v;  auto r=range(v);  r = range(0,9);  r'
-{0, 1, 2, 3, 4, 5, 6, 7, 8}
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+-------------------------------------------------
 
-scc 'char s[99];  range(s) = "abc-123";  __ s;   range(s) << " XYZ"'
-abc-123
-abc-123 XYZ
+He we first assign a c-string and then append another:
+
+-----------------------------------------
+scc 'char s[99];  range(s) = "abc";  __ s;   range(s) << " XYZ"'
+abc
+abc XYZ
 ------------------------------------------
+
+Note that we can not define overloaded operations for POD types (like c-string).
++++C++ +++ do not allow this. This is a reason why we have to wrap `s` with `range()`. For binary
+ops, we need to wrap at least one of operands in a class.
+
+Same exaple, but for `str::string` (without range-wrapping):
+
+-----------------------------------------
+scc 'str s;  s = "abc";  __ s;   s << " XYZ"'
+abc
+abc XYZ
+------------------------------------------
+
 
 Pipe, Map, Reduce
 ~~~~~~~~~~~~~~~~~
@@ -331,22 +353,10 @@ We will use a lot of functors here. Functors are function object, lambdas and
 plain functions. Unfortunately many functions inherited from C are not usable
 with STO.  STO relies on fact that functor have argument of the same type as
 range element type.  But for examples `ctype.h` functions, which work with
-c-strings, take not `char` but `int` and thay can be defined as macros.  And
+c-strings, have not `char` but `int` as parameter and thay can be defined as macros.  And
 what makes it even worse,  they are randomly injected into default namespace.
 As workaround STO put equivalent functions with correct signatures into `sto`
 namespace.
-
-Also note that we can not use POD types with operators (+++C++ +++ limitation). If it is binary op,
-we need to wrap at least one of operands in a class:
-
------------------------------------------
-scc 'char s[99]="abc";   s << "xyz"'  
-// compile error
-
-scc 'char s[99]="abc";   range(s) << "xyz"'
-abcxyz
------------------------------------------
-
 
 
 Map/Transform
@@ -355,12 +365,14 @@ Map/Transform
 Operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`:
 
 ------------------------------------------
-scc 'char s[]="abc-123";  range(s) * sto::toupper'
-ABC-123
+scc 'range("abc") * toupper'
+ABC
 
-scc '__ vint{2,-1,3} * std::abs;'
+scc '__ vint{2,-1,3} * abs;'
 {2, 1, 3}
 ------------------------------------------
+
+In above, `toupper` is defined in `functor.h`,  `abs` is taken from `std::`.
 
 
 Pipe
@@ -370,15 +382,17 @@ Pipe have much more freedom on what it can do with range. It can filter out,
 add, reoder and convert to different type:
 
 ------------------------------------------
-scc 'char s[]="abc-123";  range(s) | sto::isdigit'
+scc 'range("abc-123") | isdigit'
 123
 
-scc 'char s[]="abc-123, xyz/";  (range(s) | sto::isalnum) * sto::toupper'
+scc '(range("abc-123, xyz/") | isalnum) * toupper'
 ABC123XYZ
 ------------------------------------------
 
-Range expression are lazy evaluated. In above explae there are no temporary
-strings.  It should be as efficient as manually writen for loop.
+Range expression are lazy evaluated - value is computed only when needed. 
+In above axamples there was no dinamic memory or stack  space allocation. 
+It should be as efficient as manually writen `for` loop.
+
 
 
 Reduce/Fold
@@ -404,7 +418,7 @@ scc '__ range(2, 20, 0.01) * [](double x){return cos(x)/x;} || max;'
 0.161228
 ------------------------------------------
 
-THIS DOC SECTION IS INCOMPLETE
+--- THIS SECTION IS INCOMPLETE ---
 
 ///////////////////////////////////////////////
 Rn / x		-> it		// find(+Ct, -Ct, x)
@@ -547,7 +561,7 @@ SCC supports following AWK's global variables:
 * `$`	-  derived from  `std::deque<fld>` — line's fields
 * `NF`	-  `long`,  number of fields (set after read_line())
 * `NR` 	-  `long`,  number of records (set after read_line())
-* `OFS`	-  `strr`, output field separator 
+* `OFS`	-  `strr`, output field separator (another special type - string reference).
 * `FS` 	-  `strr`, input field separator.  
 * `ORS`	-  `strr`, output record separator 
 * `RS` 	-  `strr`, input record separator.  
