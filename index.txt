@@ -216,8 +216,8 @@ Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-STO defines operators to work with containers and ranges.  Initally it was simple compendium  
-of sortcuts, but now it probably deserve seperate project status.
+STO defines operators to work with containers and ranges.  Initially it was simple compendium  
+of shortcuts, but now it probably deserve separate project status.
 
 ///////////////////////////////////////////////////////////
 Below is string manipulation example.   Given `Thello?` string, it
@@ -313,8 +313,10 @@ scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
 {0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 ------------------------------------
 
-Chain range - references other range or container and provide some capabilities
-that standard containers do not have.  For example, STL containers do not have
+Chain range - references other range or container
+and is result of pipe/map/reduce operations or `range(vec)` -like wrapper.
+
+It provides some capabilities that standard containers do not have.  For example, STL containers do not have
 assignment operator for containers of different types and it does not recognize
 c-string as a container. 
 Ranges do not have such limitations.  Below is  assignment to vector from
@@ -325,25 +327,36 @@ scc  'vint v;  auto r=range(v);  r = range(0,9);  r'
 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 -------------------------------------------------
 
-He we first assign a c-string and then append another:
+Now we first assign a c-string and then append another:
 
 -----------------------------------------
-scc 'char s[99];  range(s) = "abc";  __ s;   range(s) << " XYZ"'
+scc 'char S[99];  range(S) = "abc";  __ S;   range(S) << " XYZ"'
 abc
 abc XYZ
 ------------------------------------------
 
 Note that we can not define overloaded operations for POD types (like c-string).
-+++C++ +++ do not allow this. This is a reason why we have to wrap `s` with `range()`. For binary
++++C++ +++ do not allow this. This is a reason why we have to wrap `S` with `range()`. For binary
 ops, we need to wrap at least one of operands in a class.
 
-Same exaple, but for `str::string` (without range-wrapping):
+Same example, but for `str::string` (without range-wrapping):
 
 -----------------------------------------
 scc 'str s;  s = "abc";  __ s;   s << " XYZ"'
 abc
 abc XYZ
 ------------------------------------------
+
+Here we `std::string` assignment operator was used to append, and  STO `<<` op was used to append.
+
+---------------------------------------------------------------------
+scc 'str S="John Q Public  (650)1234567";  S|isdigit=*"X";  S'
+John Q Public  (XXX)XXXXXXX
+-----------------------------------------------------------------
+
+Above,  `*"X"` is the same thing as `'X'`. We just don't have enough quotes, we
+need pair for string, pair for char and pair for bash snipped quoting.
+
 
 
 Pipe, Map, Reduce
@@ -353,7 +366,7 @@ We will use a lot of functors here. Functors are function object, lambdas and
 plain functions. Unfortunately many functions inherited from C are not usable
 with STO.  STO relies on fact that functor have argument of the same type as
 range element type.  But for examples `ctype.h` functions, which work with
-c-strings, have not `char` but `int` as parameter and thay can be defined as macros.  And
+c-strings, have not `char` but `int` as parameter and they can be defined as macros.  And
 what makes it even worse,  they are randomly injected into default namespace.
 As workaround STO put equivalent functions with correct signatures into `sto`
 namespace.
@@ -368,18 +381,29 @@ Operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`:
 scc 'range("abc") * toupper'
 ABC
 
-scc '__ vint{2,-1,3} * abs;'
-{2, 1, 3}
+scc '__ vint v{-1,0,1};  v * abs;'
+{1, 0, 1}
 ------------------------------------------
 
 In above, `toupper` is defined in `functor.h`,  `abs` is taken from `std::`.
+
+Expression `v * abs` is equivalent to:
+
+----------------------------------------------
+std::transform(v.begin(), v.end(), v.begin(), std::abs<int>)'
+----------------------------------------------
 
 
 Pipe
 ~~~~
 
-Pipe have much more freedom on what it can do with range. It can filter out,
-add, reoder and convert to different type:
+Pipe operator have much more freedom on what it can do with range. It can filter out,
+add, reorder and convert to different type.
+
+What pipe operator does depends on right hand side argument type.
+Predicate is functor with signature `bool(*)(range_elem_type)`. If such is used
+with pipe operator, all elements which evaluate to `false` with predicate - are
+filtered out:
 
 ------------------------------------------
 scc 'range("abc-123") | isdigit'
@@ -398,24 +422,36 @@ It should be as efficient as manually writen `for` loop.
 Reduce/Fold
 ~~~~~~~~~~~
 
-Operator `sto::operator|| (Range,Functor)` is somewhat equivalent to `std::accumulate`
+Operator `sto::operator|| (Range,Functor)` is equivalent to `std::accumulate`
 
 ------------------------------------------
-scc 'vint v{2,1,3};  v || plus<int>()'
+scc 'vint V{1,2,3};  V || plus<int>()'
 6
 
-scc 'vint v{2,1,3};  v || multiplies<int>()'
+scc 'vint V{1,2,3};  V || multiplies<int>()'
 6
 
-scc 'vint v{2,1,3};  v || min'
+scc 'vint V{1,2,3};  V || min'
 1
 ------------------------------------------
 
-Find (brute force) maximum of  `cos(x)/x` for `2 < x < 20`:
+Expression  `V || min` is equavalent to:
+
+-------------------------------------------------
+std::accumulate (
+	std::next(V.begin()),
+	V.end(),
+	V.front(),
+	static_cast<const int& (*)(const int&, const int&)>(std::min<int>)
+);
+------------------------------------------------
+
+
+Find (brute force algorithm) maximum of  `cos(x)` for `8 <= x <= 9`:
 
 ------------------------------------------
-scc '__ range(2, 20, 0.01) * [](double x){return cos(x)/x;} || max;'
-0.161228
+scc 'range(8, 9, 0.01) * cos  || max'
+-0.1455
 ------------------------------------------
 
 --- THIS SECTION IS INCOMPLETE ---

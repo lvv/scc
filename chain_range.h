@@ -198,14 +198,14 @@ struct  chain_range : ref_container<Rg&&> {
 	{};
 
 
-	// ASSIGNMENT
+	////  ASSIGNMENT
 	
-	chain_range&   operator= (elem_type x) { std::fill(begin(), end(), x);  return *this; };
+	self_type&   operator= (elem_type x) { std::fill(begin(), end(), x);  return *this; };
 
 
 		template<class Rg2>			// TODO specialize for seq containers self-assignemet
 		eIF <have_same_elem<Rg,Rg2>::value, self_type>
-	operator= (const Rg2& rhs) {
+	operator= (const Rg2& rhs) { 			std:: cout << " SSIGNMENT \n";
 		sto::clear(rg);
 		auto e = endz(rhs);
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
@@ -215,7 +215,7 @@ struct  chain_range : ref_container<Rg&&> {
 	};
 
 
-	// ITERATOR
+	////  ITERATOR
 	      iterator	end()		{ return        iterator(this, endz(rg)); }
 	const_iterator	end()   const	{ return  const_iterator(this, endz(rg)); }
 
@@ -223,13 +223,13 @@ struct  chain_range : ref_container<Rg&&> {
 	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), pred)); };
 
 
-	// RG PROPERTIES
+	////  RG PROPERTIES
 	size_t		size  () const	{ return  std::count_if(std::begin(rg), endz(rg), pred); }	
 	bool		empty () const	{ return  sto::empty(rg); }
 	explicit operator bool() const	{ return !sto::empty(rg); }
 
 
-	// ELEM ACCESS
+	////  ELEM ACCESS
 	reference const	front()  const	{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
 	reference  	front()		{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
 
@@ -237,7 +237,7 @@ struct  chain_range : ref_container<Rg&&> {
 	reference  	back()		{ return  get_value(std::prev(sto::endz(rg)), std::integral_constant<bool,MAPPED>()); } 
 
 
-	// INPORTED RG METHODS
+	////  INPORTED RG METHODS
 	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
 	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
 
@@ -252,7 +252,7 @@ struct  chain_range : ref_container<Rg&&> {
 	
 	template<class U=Rg>  auto  operator[] (difference_type n) -> decltype(std::declval<U>()[0])   { return  rg[n]; } // FIXME for pred
 
-	// ADDED RG METHODS
+	////  ADDED RG METHODS
 		template<class U=Rg>  
 		eIF<is_c_string_t<U>::value>	
 	push_back(char value)			{
@@ -268,7 +268,7 @@ struct  chain_range : ref_container<Rg&&> {
 	rg_const_reference<Rg>	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
  };
 
-// CHAIN_RANGE  STATIC MEMBERS
+////  CHAIN_RANGE  STATIC MEMBERS
 
 	template<class Rg, class O, bool MAPPED >
 	std::function<bool(rg_elem_type<Rg>)>   

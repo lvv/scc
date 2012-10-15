@@ -2,8 +2,6 @@
 				#define  SCC_FUNCTOR_H
 
 
-
-
 				namespace sto {
 
 //  CTYPE.H
