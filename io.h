@@ -31,16 +31,16 @@ bool set_out_file(const char* path) {
 }
 
 
-struct out;
 
-// NOP, but scc's print-last will send endl
-std::ostream& operator<<      (ostream& os, const  ostream& )		{return os; };
-std::ostream& operator<<      (ostream& os, const out&)			{return os; };
+// Iterators
+#ifndef __clang__
 
-// NOP, but scc' print-last will send endl
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
+	//eIF<is_input_iterator<rm_ref<IT>>::value, std::ostream&>
 	std::ostream&
 operator<<      (ostream& os, const IT& it) { std::cout << &*it << " "; return os; };
+
+#endif
 
 
 #define		_    out()   ,
@@ -170,6 +170,8 @@ oi_print(const CL<U,V>& v) { std::cout << v; };
 
 namespace oi_space {
 
+		struct oi_t;
+
 		struct	oi_any_t {
 				template<typename T>								// POD
 			oi_any_t (const T& v)				{ std::cout << v; };
@@ -195,9 +197,6 @@ namespace oi_space {
 
 static oi_space::oi_t  oi;
 
-		// NOP 
-		// gcc error: void*
-// std::ostream& operator<<      (ostream& os, oi_space::oi_t&)	{return os; };
 
 ///////////////////////////////////////////////////////////////////////////////  INPUT
 
@@ -410,6 +409,13 @@ struct  outln : out  {
 	//outln(const char* sep=0, const char* paren=0)	:out(sep, paren)	{};
 	~outln()				{std::cout  << '\n'; }
  };
+
+
+// NOP op<<  (so if last semicolon is fogoten, it is not an error)
+std::ostream& operator<<      (ostream& os, const  ostream& )		{return os; };
+std::ostream& operator<<      (ostream& os, const out&)			{return os; };
+//std::ostream& operator<<      (ostream& os, const oi_space::oi_t &)	{return os; };
+
 					};
 					#endif	// SCC_IO_H
 
