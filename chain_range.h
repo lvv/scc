@@ -345,29 +345,47 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 	};*/
 
 
-//  Rg1 * F    --> range
-	
-	template<				// overload for generic Ret (lambdas, other)
-		typename Rg,
-		typename Tran,
-		typename E = rg_elem_type<Rg>,
+////////////////////////////////////////////////////////////////////////////////  Rg1 * F    --> range
+
+//// generic overload (O!=E) (lambdas, other)
+	template<			
+		class Rg,
+		class Tran,
+		class E = rg_elem_type<Rg>,
 		//typename Ret=typename std::function<rm_qualifier<Tran>>::result_type,
-		typename Ret= decltype(std::declval<Tran>()(std::declval<E>()))
+		class Ret= decltype(std::declval<Tran>()(std::declval<E>()))
 	> 
 	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
 operator*       (Rg&& rg,  const Tran& tran)    {
 	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
  };
-	
-	template<		// overload for :  Ret == E   (needed for oveloaded functions like abs)
-		typename Rg,
-		typename E = rg_elem_type<Rg>,
-		typename Ret = E
+
+//// non-converting overload  (O == E),   needed for functions like std::abs()
+	template<	
+		class Rg,
+		class E = rg_elem_type<Rg>,
+		class Ret = E
 	> 
 	eIF <is_range<Rg>::value,  chain_range<Rg&&,E,true>>
 operator *       (Rg&& rg, E (*tran)(E) )    {
 	return   chain_range<Rg&&, E, true> (std::forward<Rg>(rg),  chain_range<Rg&&, E, true>::nop_pred, tran);
  };
+
+
+/*
+//// overload for tuple * get<N>
+	template<	
+		class Rg,
+		class E = rg_elem_type<Rg>,
+		size_t   N,
+		class... Ts,
+		class Ret = typename std::tuple_element<N, E>::type const&
+	> 
+	eIF <is_range<Rg>::value  &&  is_callable<Tran<N,E>, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
+operator*       (Rg&& rg,  const Tran<N,E>& tran)    {
+	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
+ };
+*/
 
 
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
