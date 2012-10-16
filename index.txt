@@ -347,7 +347,7 @@ abc
 abc XYZ
 ------------------------------------------
 
-Here we `std::string` assignment operator was used to append, and  STO `<<` op was used to append.
+Here we use `std::string` assignment operator to append, and  STO `<<` op to append.
 
 ---------------------------------------------------------------------
 scc 'str S="John Q Public  (650)1234567";  S|isdigit=*"X";  S'
@@ -355,7 +355,7 @@ John Q Public  (XXX)XXXXXXX
 -----------------------------------------------------------------
 
 Above,  `*"X"` is the same thing as `'X'`. We just don't have enough quotes, we
-need pair for string, pair for char and pair for bash snipped quoting.
+need pair for string, pair for char and pair for bash snipped quoting - and we have only single and double quotes.
 
 
 
@@ -381,16 +381,16 @@ Operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`:
 scc 'range("abc") * toupper'
 ABC
 
-scc '__ vint v{-1,0,1};  v * abs;'
+scc 'vint V{-1,0,1};  __ V * abs;'
 {1, 0, 1}
 ------------------------------------------
 
 In above, `toupper` is defined in `functor.h`,  `abs` is taken from `std::`.
 
-Expression `v * abs` is equivalent to:
+Expression `V * abs` is equivalent to:
 
 ----------------------------------------------
-std::transform(v.begin(), v.end(), v.begin(), std::abs<int>)'
+std::transform(V.begin(), V.end(), V.begin(), std::abs<int>)'
 ----------------------------------------------
 
 
