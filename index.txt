@@ -3,7 +3,7 @@ include::/tmp/t.ad[]
 +++ <small> +++
 
 * Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
-* Requires:  +++ C++11 +++   compiler.  Works with GCC-4.7 and CLANG-3.2 or later +
+* Requires:  +++ C++11 +++   compiler.  Tested with GCC-4.7.2, GCC-4.8(pre release), CLANG-3.2(pre release) +
 * License:  httpx://en.wikipedia.org/wiki/Boost_Software_License[Boost Software License]
 
 +++ </small> +++
@@ -73,6 +73,10 @@ __ x, y;               //  cout << x << " " << y << endl;
 
 On last line `" "` will not be printed if at leas one of `x`, `y` is strings.
 
+On exit, SCC also checks if last output was unterminated  with linefead.  If
+true, it will add a linefead.  Let say if last statement was `cout << x;`, SCC
+will add `cout << endl;`.
+
 
 OI - Generic ostream_iterator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,7 +90,7 @@ Let say we have `vector<int> V;` and `set<string> S;` and we want
 to print these.  With `std::ostream_iterator`:
 
 ------------------------------------------------------------------
-copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+copy(V.begin(), V.end(), ostream_iterator<int>   (cout, " "));
 copy(S.begin(), S.end(), ostream_iterator<string>(cout, " "));
 -------------------------------------------------------------------
 
@@ -98,7 +102,7 @@ copy(V.begin(), V.end(), oi);
 copy(S.begin(), S.end(), oi);
 -------------------------------------------------------------------
 
-Same using container operators (more about these later): 
+Same using STO (container operators), more about these later: 
 
 -------------------------------------------------------------------
 copy(+V, -V, oi);
@@ -313,6 +317,8 @@ scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
 {0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 ------------------------------------
 
+In above, `v/2` returns pointer to 1st element with value `2`. 
+
 Chain range - references other range or container
 and is result of pipe/map/reduce operations or `range(vec)` -like wrapper.
 
@@ -323,8 +329,8 @@ Ranges do not have such limitations.  Below is  assignment to vector from
 numeric range:
 
 ------------------------------------------
-scc  'vint v;  auto r=range(v);  r = range(0,9);  r'
-{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+scc  'vint v;  auto r=range(v);  r = range(0,9);  r, v'
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 -------------------------------------------------
 
 Now we first assign a c-string and then append another:
@@ -354,8 +360,7 @@ scc 'str S="John Q Public  (650)1234567";  S|isdigit=*"X";  S'
 John Q Public  (XXX)XXXXXXX
 -----------------------------------------------------------------
 
-Above,  `*"X"` is the same thing as `'X'`. We just don't have enough quotes, we
-need pair for string, pair for char and pair for bash snipped quoting - and we have only single and double quotes.
+In above,  `*"X"` is the same thing as `'X'`.
 
 
 
@@ -367,7 +372,7 @@ plain functions. Unfortunately many functions inherited from C are not usable
 with STO.  STO relies on fact that functor have argument of the same type as
 range element type.  But for examples `ctype.h` functions, which work with
 c-strings, have not `char` but `int` as parameter and they can be defined as macros.  And
-what makes it even worse,  they are randomly injected into default namespace.
+what makes it even worse,  they are randomly injected into default namespace by +++ LIBSTDC++ +++.
 As workaround STO put equivalent functions with correct signatures into `sto`
 namespace.
 
@@ -398,9 +403,11 @@ Pipe
 ~~~~
 
 Pipe operator have much more freedom on what it can do with range. It can filter out,
-add, reorder and convert to different type.
+add, reorder and convert to different type. It is oveloaded for differenet right-hand-side objects.
 
-What pipe operator does depends on right hand side argument type.
+Pipe:  range | predicate
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 Predicate is functor with signature `bool(*)(range_elem_type)`. If such is used
 with pipe operator, all elements which evaluate to `false` with predicate - are
 filtered out:
@@ -447,7 +454,7 @@ std::accumulate (
 ------------------------------------------------
 
 
-Find (brute force algorithm) maximum of  `cos(x)` for `8 <= x <= 9`:
+Find (brute force algorithm) maximum of  `cos(x)` for `8 < x < 9`:
 
 ------------------------------------------
 scc 'range(8, 9, 0.01) * cos  || max'

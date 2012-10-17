@@ -37,9 +37,11 @@ bool set_out_file(const char* path) {
 #endif
 
 	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
-	//eIF<is_input_iterator<rm_ref<IT>>::value, std::ostream&>
 	std::ostream&
 operator<<      (ostream& os, const IT& it) { std::cout << &*it << " "; return os; };
+
+//	template<typename IT, typename Unused = typename IT::iterator_category >  // for stl::containers::iterator
+//	eIF<is_input_iterator<rm_ref<IT>>::value, std::ostream&>
 //operator<<      (ostream& os, const IT&) { std::cout << " <stl iterator> "; return os; };
 
 
