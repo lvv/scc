@@ -86,8 +86,8 @@ struct  numeric_range {
 	typedef		rm_ref<T>				value_type;
 	typedef		size_t					difference_type;
 	typedef		size_t					size_type;
-	typedef		const value_type*			const_pointer;
-	typedef		const_pointer				pointer;
+	typedef		void					const_pointer;
+	typedef		void					pointer;
 	typedef		value_type				const_reference;
 	typedef		value_type				reference;
 	typedef		numeric_range_iterator<value_type>	const_iterator;
