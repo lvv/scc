@@ -220,8 +220,11 @@ Includes `simple.h`, `cj.h` and `stl.h` can also be used independently.
 STL Containers Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-STO defines operators to work with containers and ranges.  Initially it was simple compendium  
-of shortcuts, but now it probably deserve separate project status.
+STO defines operators to work with containers and ranges.  It have two groups
+of operations.  First is shortcuts for container member functions.  Second is
+more coplex operators allowing function stile containers expression. STO also
+defines container like structures - ranges.
+
 
 ///////////////////////////////////////////////////////////
 Below is string manipulation example.   Given `Thello?` string, it
@@ -251,7 +254,7 @@ oi = S;
 ------------------------------------------------------
 ////////////////////////////////////////////////////////////////
 
-In table below are mundane shortcuts for container member functions.
+In table below are shortcuts for container member functions.
 Unlike STL member functions they usually return result of operation (so it can be used in container expressions).
 
 ----------------------------------------------------------------
@@ -274,7 +277,6 @@ Pair++			//  Pair.second
 
 ++Tuple			//  get\<0>(Tuple)
 Tuple++			//  get<tuple_size<tuple<Types...> >::value-1>(Tuple)
-size(Tuple)		//  tuple_size<decltype(Tuple) >::value
 
 			//  STACK
 S << x			//  S.push(x)
@@ -312,8 +314,7 @@ Iterator and chain ranges do not contain data, they refer to an existing STL con
 Iterator range: assign 42 to values from 2 to 5:
 
 ------------------------------------
-scc 'vint v;  v << range(0,9);  __ v;  range(v/2, v/5) = 42;  v'
-{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+scc 'vint v;  v << range(0,9);   range(v/2, v/5) = 42;  v'
 {0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 ------------------------------------
 
@@ -333,7 +334,7 @@ scc  'vint v;  auto r=range(v);  r = range(0,9);  r, v'
 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 -------------------------------------------------
 
-Now we first assign a c-string and then append another:
+Operation with c-strings. We first assign a c-string and then append another:
 
 -----------------------------------------
 scc 'char S[99];  range(S) = "abc";  __ S;   range(S) << " XYZ"'
@@ -386,7 +387,7 @@ Operator `sto::operator* (Range,Functor)` is equivalent to `std::transform`:
 scc 'range("abc") * toupper'
 ABC
 
-scc 'vint V{-1,0,1};  __ V * abs;'
+scc 'vint V{-1,0,1};  V * abs'
 {1, 0, 1}
 ------------------------------------------
 
@@ -403,7 +404,7 @@ Pipe
 ~~~~
 
 Pipe operator have much more freedom on what it can do with range. It can filter out,
-add, reorder and convert to different type. It is oveloaded for differenet right-hand-side objects.
+add, reorder and convert to different type. It is overloaded for different right-hand-side objects.
 
 Pipe:  range | predicate
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -421,8 +422,8 @@ ABC123XYZ
 ------------------------------------------
 
 Range expression are lazy evaluated - value is computed only when needed. 
-In above axamples there was no dinamic memory or stack  space allocation. 
-It should be as efficient as manually writen `for` loop.
+In above examples there was no dynamic memory or stack  space allocation. 
+It should be as efficient as manually written `for` loop.
 
 
 
@@ -442,7 +443,7 @@ scc 'vint V{1,2,3};  V || min'
 1
 ------------------------------------------
 
-Expression  `V || min` is equavalent to:
+Expression  `V || min` is equivalent to:
 
 -------------------------------------------------
 std::accumulate (

@@ -111,8 +111,17 @@ if [[ -z $snippet_file ]] ;  then
 	shift 1
 fi
 
+
 # wrap last statment into "cout << (last_statement) << endl;"
-cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out(), \2 ; is_print_last=true;/' > $snippet_cc
+#cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out(), \2 ; is_print_last=true;/' > $snippet_cc
+
+cat  $snippet_file |
+sed  -r  '
+	s/.*;;//
+	s/$//;
+	s/[ \t]*$//;
+	s/(.*[;])*([^;]+$)/ \1out(), \2; is_print_last=true; /
+' > $snippet_cc
 
 # split file scope part
 cat  $snippet_file | sed  -n 's/\(;;\).*//p'  > $snippet_h

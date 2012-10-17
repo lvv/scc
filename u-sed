@@ -1,5 +1,16 @@
 
-cat  <<END  | sed    's/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\0	==>>  \1   PRINT(\2);/'
+#cat  <<END  | sed    's/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\0	==>>  \1   PRINT(\2);/'
+
+#cat  <<END  | sed    '
+#	s/[ \t]*$//;
+#	s/\(.*[;]\)*\([^;]\+$\)/\0	==>>  \1   PRINT(\2);/
+#'
+
+cat  <<END  | sed  -r  '
+	s/$//;
+	s/[ \t]*$//;
+	s/(.*[;])*([^;]+$)/\0	==>>  \1   PRINT(\2);/
+'
 
  
 print
@@ -7,16 +18,19 @@ no-print;
 OK;  print 
 OK;  no-print;
 OK;  no-print;  print
-FAIL;	while(a){b;}  no-print
-FAIL;	while(a)  no-print
-OK;	for(a;b;c) {no-print}
-FAIL;	for(a;b;c) no-print
 OK;	{}
 OK;	{code-block;}
-FAIL;  print_rvalue_t{1}
-FAIL;	f(int{1})
-FAIL;	f(";")
-FAIL;	f(';')
-FAIL;	f("}")
+OK;  print_rvalue_t{1}
+OK;	f(int{1})
+OK;   vint{1,2};  f()
+OK;   vint{1,2}*1
 END
 
+# 
+#FAIL;	f(";")
+#FAIL;	f(';')
+#FAIL;	f("}")
+#FAIL;	while(a){b;}  no-print
+#FAIL;	while(a)  no-print
+#OK;	for(a;b;c) {no-print}
+#FAIL;	for(a;b;c) no-print

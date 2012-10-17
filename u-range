@@ -19,7 +19,7 @@ scc -A -DV=n9   'V.begin(); +V; V.end(); end(V); endz(V);   ; _ ++V, V.front(), 
 # access
 scc 'assert( rd9++==9  &&  ++rd9==0 );'
 
-scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; }'
+scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; };'
 scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
 
 
