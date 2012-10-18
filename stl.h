@@ -83,14 +83,17 @@ operator--      (Rg&& C, int)    { C.pop_back();    return  std::forward<Rg>(C);
 //////  X >> Rg << X
 
 	namespace detail {
-		template<class Rg, class X>  eIF<has_push_back  <Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push_back (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>  append_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push_back  <Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.push_back (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
 
-		template<class Rg, class X>  eIF<has_push_front <Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push_front(std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&> prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push_front <Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.push_front(std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		template<class Rg, class X>  eIF<!has_push_front<Rg>::value && has_insert<Rg>::value, Rg&&>
+											prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::begin(rg1), std::forward<X>(x));  return std::forward<Rg>(rg1); };
+		//template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
 
 	}
 
