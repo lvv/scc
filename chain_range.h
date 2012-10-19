@@ -348,17 +348,19 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 ////////////////////////////////////////////////////////////////////////////////  Rg1 * F    --> range
 
 //// generic overload (O!=E) (lambdas, other)
-	template<			
+
+
+	template<			// non const&		
 		class Rg,
 		class Tran,
 		class E = rg_elem_type<Rg>,
-		//typename Ret=typename std::function<rm_qualifier<Tran>>::result_type,
-		class Ret= decltype(std::declval<Tran>()(std::declval<E>()))
+		class Ret= rm_ref<decltype(std::declval<Tran>()(std::declval<E>()))>
 	> 
 	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
-operator*       (Rg&& rg,  const Tran& tran)    {
+operator*       (Rg&& rg,  Tran tran)    {
 	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
  };
+
 
 //// non-converting overload  (O == E),   needed for functions like std::abs()
 	template<	

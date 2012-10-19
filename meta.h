@@ -35,6 +35,10 @@ template<class From, class To> struct copy_rcv<From const&&          , To> { typ
 template<class From, class To> struct copy_rcv<From volatile&&       , To> { typedef typename copy_rcv<From, To> ::type volatile&&      type; };
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
+
+template< class T >
+const typename std::add_lvalue_reference<T>::type decllval();
+
 // shortcuts
 template<typename Rg>   	   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Rg>::type>::type;
 template<typename Rg>   	   using  rm_ref           = typename std::remove_reference<Rg>::type;
@@ -358,10 +362,10 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 /////  SIZE
 //template<class Rg>    eIF<has_size<Rg>::value, size_t>	size (const Rg& rg)     { return rg.size(); };
+template<class Rg>   			auto		size (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
+
 template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
 template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
-
-template<class Rg>    			auto		size (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
 
 template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
 template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
