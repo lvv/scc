@@ -36,8 +36,7 @@ template<class From, class To> struct copy_rcv<From volatile&&       , To> { typ
 template<class From, class To> struct copy_rcv<From const volatile&& , To> { typedef typename copy_rcv<From, To> ::type const volatile&& type; };
 
 
-template< class T >
-const typename std::add_lvalue_reference<T>::type decllval();
+template<class T>     typename std::add_lvalue_reference<const T>::type const   decllval();
 
 // shortcuts
 template<typename Rg>   	   using  rm_qualifier     = typename std::remove_cv<typename std::remove_reference<Rg>::type>::type;
@@ -195,6 +194,7 @@ template<class T>	struct  is_string { enum { value = is_string_t<rm_qualifier<T>
 //template<class T>     constexpr bool   is_string()        { return  is_string_t<rm_qualifier<T>>::value; };
 
 //////////////////////////////////////////////////////////////////////////////////////  IS_IOABLE
+			// alt impl:  http://stackoverflow.com/questions/257288/is-it-possible-to-write-a-c-template-to-check-for-a-functions-existence/9154394#9154394
 template<typename T>	struct  is_ioable_t 		: std::conditional<std::is_arithmetic<T>::value, std::true_type, std::false_type>::type  {};
 template<typename T,typename CT,typename AL>
 			struct  is_ioable_t <std::basic_string<T,CT,AL>>	: std::true_type  {};
@@ -362,13 +362,18 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 /////  SIZE
 //template<class Rg>    eIF<has_size<Rg>::value, size_t>	size (const Rg& rg)     { return rg.size(); };
-template<class Rg>   			auto		size (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
 
-template<class T, size_t N>	constexpr size_t	size (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
-template<class T, size_t N>	constexpr size_t	size (const std::array<T,N>& A) { return N; };
+template<class Rg>   			auto		size_impl (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
 
-template<class... Types>	constexpr size_t 	size (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
-template<class U, class V>   	constexpr size_t     	size (const std::pair<U,V>& P) { return 2; };
+template<class T, size_t N>	constexpr size_t	size_impl (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
+template<class T, size_t N>	constexpr size_t	size_impl (const std::array<T,N>& A) { return N; };
+
+template<class... Types>	constexpr size_t 	size_impl (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
+template<class U, class V>   	constexpr size_t     	size_impl (const std::pair<U,V>& P) { return 2; };
+
+template<class X>   		size_t			size 	(const X& x)  { return size_impl(x); };
+
+
 
 /////  EMPTY
 template<typename Rg>	eIF< has_empty<Rg>::value,bool>	empty(const Rg& rg)	{ return  rg.empty(); }

@@ -76,7 +76,7 @@ struct chain_range_iterator {
 
 	////// CTOR
 	chain_range_iterator ()				: parent(0)           			   {};	// default
-	chain_range_iterator ( const self_type& rhs)		: parent(rhs.parent), current(rhs.current) {};	// copy 
+	chain_range_iterator ( const self_type& rhs)	: parent(rhs.parent), current(rhs.current) {};	// copy 
 	chain_range_iterator ( parent_t parent,  const org_iterator current) 
 							: parent(parent), current(current)         {};
 	// ASSIGNMENT
@@ -345,11 +345,38 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 	};*/
 
 
-////////////////////////////////////////////////////////////////////////////////  Rg1 * F    --> range
+////////////////////////////////////////////////////////////////////////////////  Rg<T> * F    --> Rg<U>
 
 //// generic overload (O!=E) (lambdas, other)
 
+/*
+	template<			// No Ret - broken
+		class Rg,
+		class E = rg_elem_type<Rg>
+	> 
+	auto
+operator*       (const Rg& rg,  auto (*tran)(E e) -> decltype(tran(std::declval<E>())))    
+	//-> eIF <is_range<Rg>::value,   chain_range<const Rg&, decltype(tran(std::declval<E>()), true>>
+	->  chain_range<const Rg&, decltype(tran(std::declval<E>()), true>
+{
+	//typedef decltype(tran(e)) 	Ret;
+	//return   chain_range<const Rg&, Ret, true> (rg,  chain_range<const Rg&, Ret, true>::nop_pred, tran);
+	return   chain_range<const Rg&, decltype(tran(e)), true> (rg,  chain_range<const Rg&, decltype(tran(e)), true>::nop_pred, tran);
+ };
 
+
+	template<			// non const&		
+		class Rg,
+		class Tran,
+		class E = rg_elem_type<Rg>,
+		class Ret= rm_ref<decltype(std::declval<Tran>()(std::declval<E>()))>
+	> 
+	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<const Rg&, Ret, true>>
+operator*       (const Rg& rg,  Tran tran)    {
+	return   chain_range<const Rg&, Ret, true> (rg,  chain_range<const Rg&, Ret, true>::nop_pred, tran);
+ };
+
+*/
 	template<			// non const&		
 		class Rg,
 		class Tran,
