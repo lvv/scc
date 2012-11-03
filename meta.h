@@ -374,7 +374,6 @@ template<class U, class V>   	constexpr size_t     	size_impl (const std::pair<U
 template<class X>   		size_t			size 	(const X& x)  { return size_impl(x); };
 
 
-
 /////  EMPTY
 template<typename Rg>	eIF< has_empty<Rg>::value,bool>	empty(const Rg& rg)	{ return  rg.empty(); }
 template<typename Rg>	eIF<!has_empty<Rg>::value,bool>	empty(const Rg& rg)	{ return  sto::size(rg)==0; }
