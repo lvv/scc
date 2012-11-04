@@ -176,7 +176,7 @@ struct  chain_range : ref_container<Rg&&> {
 	Rg& rg;
 
 	std::function<bool(elem_type)>	static  		nop_pred;	// predicate
-	std::function<bool(elem_type)>				pred = nop_pred;;
+	std::function<bool(elem_type)>				pred; // = nop_pred;;
 
 	//std::function<const value_type&(const value_type&)>  static	nop_tran;	// transform
 	std::function<value_type(elem_type)>  static		nop_tran;	// transform
@@ -338,55 +338,23 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 ////////////////////////////////////////////////////////////////////////////////////////////////// MAP / TRANSFORM
 	
 	
-	/*
-	namespace detail {
-		template<typename T>	static void	cstr_zstop(const T&    ret) {};
-		__attribute__((unused))	static void	cstr_zstop(      char* ret) { *++ret = '\0'; };
-	};*/
-
 
 ////////////////////////////////////////////////////////////////////////////////  Rg<T> * F    --> Rg<U>
 
 //// generic overload (O!=E) (lambdas, other)
 
-/*
-	template<			// No Ret - broken
-		class Rg,
-		class E = rg_elem_type<Rg>
-	> 
-	auto
-operator*       (const Rg& rg,  auto (*tran)(E e) -> decltype(tran(std::declval<E>())))    
-	//-> eIF <is_range<Rg>::value,   chain_range<const Rg&, decltype(tran(std::declval<E>()), true>>
-	->  chain_range<const Rg&, decltype(tran(std::declval<E>()), true>
-{
-	//typedef decltype(tran(e)) 	Ret;
-	//return   chain_range<const Rg&, Ret, true> (rg,  chain_range<const Rg&, Ret, true>::nop_pred, tran);
-	return   chain_range<const Rg&, decltype(tran(e)), true> (rg,  chain_range<const Rg&, decltype(tran(e)), true>::nop_pred, tran);
- };
 
-
-	template<			// non const&		
+	template<
 		class Rg,
 		class Tran,
 		class E = rg_elem_type<Rg>,
 		class Ret= rm_ref<decltype(std::declval<Tran>()(std::declval<E>()))>
 	> 
-	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<const Rg&, Ret, true>>
-operator*       (const Rg& rg,  Tran tran)    {
-	return   chain_range<const Rg&, Ret, true> (rg,  chain_range<const Rg&, Ret, true>::nop_pred, tran);
- };
-
-*/
-	template<			// non const&		
-		class Rg,
-		class Tran,
-		class E = rg_elem_type<Rg>,
-		class Ret= rm_ref<decltype(std::declval<Tran>()(std::declval<E>()))>
-	> 
-	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
+	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value  /*&&  !std::is_same<Ret,E>::value*/,   chain_range<Rg&&, Ret, true>>
 operator*       (Rg&& rg,  Tran tran)    {
 	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
  };
+
 
 
 //// non-converting overload  (O == E),   needed for functions like std::abs()
@@ -396,7 +364,7 @@ operator*       (Rg&& rg,  Tran tran)    {
 		class Ret = E
 	> 
 	eIF <is_range<Rg>::value,  chain_range<Rg&&,E,true>>
-operator *       (Rg&& rg, E (*tran)(E) )    {
+operator *       (Rg&& rg, Ret (*tran)(E) )    {
 	return   chain_range<Rg&&, E, true> (std::forward<Rg>(rg),  chain_range<Rg&&, E, true>::nop_pred, tran);
  };
 
