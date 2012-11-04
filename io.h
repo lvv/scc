@@ -76,7 +76,7 @@ operator<<      (ostream& os, const std::tuple<TT...>& tup);
 	eIF<is_range<Rg>::value  &&  !is_ioable<Rg>::value, std::ostream&>
 operator<<      (ostream& os, const Rg& C) {
 
-	if (std::is_same<char, rg_elem_type<Rg>>::value)  {
+	if (is_elem_of<char,Rg>::value)  {
 		auto I=std::begin(C);
 		while (I != endz(C)) {
 			os  << *I;
@@ -388,7 +388,7 @@ struct  out {
 	
 		template<typename T>	
 		out& 
-	operator,   (T x)	{
+	operator,   (const T& x)	{
 		if (need_blank  &&  !is_string<T>::value)  std::cout << ' '; 
 		std::cout << x;  
 		need_blank =  ! is_string<T>::value; 

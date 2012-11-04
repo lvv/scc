@@ -15,14 +15,15 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE_ITERATOR
 
-	template<class Rg, class O = rg_elem_type<Rg>, bool MAPPED = false> struct  chain_range;
+	enum { NO_F = 0, MAPPED = 1,  PREDICATED = 2,  BAD_F = MAPPED | PREDICATED };
+
+	template< class Rg, int FTP=NO_F, class F = void*, class O = rg_elem_type<Rg> > struct  chain_range;
 
 
-	template <class Rg, class O,  bool RO, bool MAPPED>
+	template <class Rg, int FTP, class F, class O, bool RO>
 struct chain_range_iterator {
 				
-		//static_assert(!MAPPED || (RO && MAPPED), "bad combination of RO and MAPPED");
-
+		static_assert(FTP != BAD_F, "bad F");
 
 		// TYPES
 		typedef SEL <
@@ -33,8 +34,8 @@ struct chain_range_iterator {
 
 		typedef	SEL <
 			RO,
-			chain_range<Rg,O,MAPPED> const,
-			chain_range<Rg,O,MAPPED>
+			chain_range<Rg,FTP,F,O> const,
+			chain_range<Rg,FTP,F,O>
 		>*	parent_t;
 
 
@@ -46,28 +47,26 @@ struct chain_range_iterator {
 	// STL ITERATOR TYPES
 	typedef		typename std::iterator_traits<org_iterator>::iterator_category 	iterator_category;
 
-	typedef		O						value_type;
-	typedef		chain_range_iterator<Rg, O, RO,   MAPPED>	iterator;
-	typedef		chain_range_iterator<Rg, O, true, MAPPED>	const_iterator;
+	typedef		O					value_type;
+	typedef		chain_range_iterator<Rg,FTP,F,O,RO  >	iterator;
+	typedef		chain_range_iterator<Rg,FTP,F,O,true>	const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
 	//typedef		const value_type*			const_pointer;  // non-STL, not-used?
 	typedef		SEL <RO, const value_type*, value_type*>   	pointer;
 
-
-	typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;	// non-STL
-	typedef		SEL <
-				MAPPED,
+	typedef         typename std::conditional <FTP & MAPPED, value_type, rg_const_reference<Rg>>::type     const_reference;  // non-STL
+	typedef		typename std::conditional <
+				FTP & MAPPED,
 				value_type,
-				SEL <
-					RO,
+				typename std::conditional <
+					std::is_const<Rg>::value || RO,
 					rg_const_reference<Rg>,
 					rg_reference<Rg>
-				>
-			>  reference;
-	/*
-	*/
+				>::type
+			>::type reference;
+
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
@@ -82,30 +81,36 @@ struct chain_range_iterator {
 	// ASSIGNMENT
 		/* implicit */
 
-	////// CONVERSION 
-	operator chain_range_iterator<Rg&&,O,true,MAPPED>() { return chain_range_iterator<Rg&&,O,true,MAPPED>(parent, current); };
+	////// CONVERSION  non-const --> const
+	operator chain_range_iterator<Rg&&,FTP,F,O,true>() { return chain_range_iterator<Rg&&,FTP,F,O,true>(parent, current); };
 
 	////// IFACE
-	
-	reference	operator*()  		{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
-	const_reference operator*() const 	{ return  parent->get_value(current, std::integral_constant<bool,MAPPED>()); };
+	reference	operator*()  		{ return  parent->get_value(current, mk_type(FTP)() ); };
+	const_reference operator*() const 	{ return  parent->get_value(current, mk_type(FTP)() ); };
 
 	pointer		operator->()		{ return  &(operator*()); }
 	pointer	const 	operator->() const	{ return  &(operator*()); }
 
+	// ++ It
 
-	self_type&		operator++()		{
+	self_type&	operator++()		{ next_impl( mk_type(FTP & PREDICATED)() );  return *this; }
+
+	self_type&	next_impl(...)		{ ++current; return *this; }
+
+	self_type&	next_impl(mk_type(PREDICATED))	{
 		org_iterator e = endz(parent->rg);
 		assert(current !=e);
-		current = std::find_if(++current, e, parent->pred);
+		current = std::find_if(++current, e, parent->f);
 		return *this; 
 	}
 
-	self_type		operator++(int)		{
+	// ++ It
+
+	self_type	operator++(int)		{
 		org_iterator e = endz(parent->rg);
 		assert(current !=e);
 		self_type tmp=*this;
-		current = std::find_if(++current, e, parent->pred);
+		current = std::find_if(++current, e, parent->f);
 		return std::move(tmp);
 	}
 
@@ -139,54 +144,63 @@ template<class T>	struct  ref_container<T& >  { T& value;  explicit ref_containe
 template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_container(T&& x) : value(x) {} };
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
-	template<class Rg, class O, bool MAPPED>
+	template<class Rg, int FTP, class F, class O>
 struct  chain_range : ref_container<Rg&&> {
 
 
 	// STL IFACE
 	typedef		O  						value_type;
-	typedef		chain_range_iterator<Rg, O, false, MAPPED>     	iterator;
-	typedef		chain_range_iterator<Rg, O, true,  MAPPED>	const_iterator;
+	typedef		chain_range_iterator<Rg,FTP,F,O,false>     	iterator;
+	typedef		chain_range_iterator<Rg,FTP,F,O,true>		const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
 	typedef		value_type*					pointer;
 
-	typedef         SEL <MAPPED, value_type, const value_type&>     const_reference;  // non-STL
-	//typedef		rg_reference<Rg>				reference ;
-	typedef		SEL <
-				MAPPED,
+	typedef         typename std::conditional <FTP & MAPPED, value_type, rg_const_reference<Rg>>::type     const_reference;  // non-STL
+	typedef		typename std::conditional <
+				FTP & MAPPED,
 				value_type,
-				SEL <
-					std::is_const<Rg>::value,
+				typename std::conditional <
+					std::is_const<Rg>::value /* || RO*/,      // <-- different from interator
 					rg_const_reference<Rg>,
 					rg_reference<Rg>
-				>
-			>  reference;
+				>::type
+			>::type  reference;
 
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
-	typedef		chain_range<Rg>					self_type;
-	typedef		self_type					type;
+	typedef		chain_range					self_type;
 	typedef		void						range_category;
 
 
 	// MEMBERS
-	Rg& rg;
+	Rg&	rg;
+	F	f;
 
+	/*
 	std::function<bool(elem_type)>	static  		nop_pred;	// predicate
 	std::function<bool(elem_type)>				pred; // = nop_pred;;
 
 	//std::function<const value_type&(const value_type&)>  static	nop_tran;	// transform
 	std::function<value_type(elem_type)>  static		nop_tran;	// transform
 	std::function<value_type(elem_type)>			tran; // = nop_tran;
+	*/
+
+	////////////////////////////////////////////////////////////////  CTOR SPECIALIZATION
 
 	// default CTOR
 	explicit chain_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
 
+	// full
+	explicit chain_range (Rg&& rg, F f)
+		:  ref_container<Rg&&>(std::forward<Rg>(rg)),  rg(this->value),  f(f)
+	{};
+
 	// full CTOR
 	
+	/*
 		template <class Pred, class Tran>
 		explicit 
 	chain_range (
@@ -196,6 +210,7 @@ struct  chain_range : ref_container<Rg&&> {
 	)
 	:  ref_container<Rg&&>(std::forward<Rg>(rg)),  rg(this->value),  pred(pred), tran(tran)
 	{};
+	*/
 
 
 	////  ASSIGNMENT
@@ -219,22 +234,41 @@ struct  chain_range : ref_container<Rg&&> {
 	      iterator	end()		{ return        iterator(this, endz(rg)); }
 	const_iterator	end()   const	{ return  const_iterator(this, endz(rg)); }
 
-	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rg), endz(rg), pred)); };
-	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), pred)); };
+
+	      iterator	begin()		{ return  begin_impl(mk_type(FTP & PREDICATED)()); };
+
+		      iterator	begin_impl(...)	                { return  iterator(this, std::begin(rg)); };
+		      iterator	begin_impl(mk_type(PREDICATED))	{ return  iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+
+	//const_iterator	begin()	const	{ return  begin_impl(this, std::find_if(std::begin(rg), endz(rg), f)); };
+	const_iterator	begin()	const	{ return  begin_impl(mk_type(FTP & PREDICATED)()); };
+
+		      const_iterator	begin_impl(...)			const { return  const_iterator(this, std::begin(rg)); };
+		      const_iterator	begin_impl(mk_type(PREDICATED))	const { return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+
+
+	/*
+	      iterator	begin()		{ return        iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+	*/
 
 
 	////  RG PROPERTIES
-	size_t		size  () const	{ return  std::count_if(std::begin(rg), endz(rg), pred); }	
+	//size_t		size  () const	{ return  std::count_if(std::begin(rg), endz(rg), f); }	
+	size_t		size() const	{ return  size_impl(mk_type(FTP & PREDICATED)()); }	
+		size_t		size_impl(...) 			const { return  sto::size(rg); }	
+		size_t		size_impl(mk_type(PREDICATED))  const { return  std::count_if(std::begin(rg), endz(rg), f); }	
+
 	bool		empty () const	{ return  sto::empty(rg); }
 	explicit operator bool() const	{ return !sto::empty(rg); }
 
 
 	////  ELEM ACCESS
-	reference const	front()  const	{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
-	reference  	front()		{ return  get_value(std::begin(rg), std::integral_constant<bool,MAPPED>()); }
+	reference const	front()  const	{ return  get_value(std::begin(rg),           mk_type(FTP & MAPPED)()); }
+	reference  	front()		{ return  get_value(std::begin(rg),           mk_type(FTP & MAPPED)()); }
 
-	reference const back()  const	{ return  get_value(std::prev(sto::endz(rg)), std::integral_constant<bool,MAPPED>()); }  
-	reference  	back()		{ return  get_value(std::prev(sto::endz(rg)), std::integral_constant<bool,MAPPED>()); } 
+	reference const back()  const	{ return  get_value(std::prev(sto::endz(rg)), mk_type(FTP & MAPPED)()); }  
+	reference  	back()		{ return  get_value(std::prev(sto::endz(rg)), mk_type(FTP & MAPPED)()); } 
 
 
 	////  INPORTED RG METHODS
@@ -262,40 +296,53 @@ struct  chain_range : ref_container<Rg&&> {
 		*++e='\0';
 	}
 
-	O			get_value(rg_iterator      <Rg> it, std::integral_constant<bool,true> )		{ return  tran(*it); };
-	O			get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,true> ) const	{ return  tran(*it); };
-	reference		get_value(rg_iterator      <Rg> it, std::integral_constant<bool,false>) 	{ return  *it; };
-	rg_const_reference<Rg>	get_value(rg_const_iterator<Rg> it, std::integral_constant<bool,false>) const	{ return  *it; };
+	//reference		get_value(rg_iterator      <Rg> it, ...) 			{ return  *it; };
+	//const_reference		get_value(rg_const_iterator<Rg> it, ...) 		const	{ return  *it; };
+
+	reference		get_value(rg_iterator      <Rg> it, ...) 		{ return  *it; };
+	const_reference		get_value(rg_const_iterator<Rg> it, ...) 	const	{ return  *it; };
+
+	reference		get_value(rg_iterator      <Rg> it, mk_type(MAPPED))		{ return  f(*it); };
+	const_reference		get_value(rg_const_iterator<Rg> it, mk_type(MAPPED))	const	{ return  f(*it); };
  };
 
+/*
+template<class Rg, int FTP, class F, class O> 	      iterator	chain_range<Rg,FTP,F,O>::begin()		{ return        iterator(this, std::begin(rg)); };
+template<class Rg,          class F, class O> 	      iterator	chain_range<Rg,PREDICATED,F,O>::begin()		{ return        iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+template<>	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
+*/
+
+/*
 ////  CHAIN_RANGE  STATIC MEMBERS
 
-	template<class Rg, class O, bool MAPPED >
+	template <class Rg, class O, bool MAPPED, bool PREDICATED>
 	std::function<bool(rg_elem_type<Rg>)>   
-	chain_range<Rg,O,MAPPED>::
+	chain_range<Rg,O,MAPPED,PREDICATED>::
 nop_pred = [](rg_elem_type<Rg> x) -> bool  { return true; };
 
 
 template<class T>  T nop_tran(T x) { return x; }
 
-	template<class Rg, class O, bool MAPPED>
+	template<class Rg, class O, bool MAPPED, bool PREDICATED>
 	std::function<O(rg_elem_type<Rg>)>
-	chain_range<Rg,O,MAPPED>::
+	chain_range<Rg,O,MAPPED,PREDICATED>::
 //nop_tran =  (O(*)(rg_elem_type<Rg>)) (nop_tran<rg_elem_type<Rg>);
 //nop_tran =  std::function<O(rg_elem_type<Rg>)> (nop_tran<rg_elem_type<Rg>>);
 nop_tran =  [](rg_elem_type<Rg> x)   { return x; };
+*/
+
 
 ////////////////////////////////////////////////////////////////  TRAITS
 
-template<class Rg, class O, bool MAPPED>		struct is_range_t<chain_range<Rg,O,MAPPED>>		: std::true_type  {};
-template<class Rg, class O, bool RO, bool MAPPED>	struct is_range_t<chain_range_iterator<Rg,O,RO,MAPPED>>	: std::false_type {};
+template<class Rg, int FTP, class F, class O>		struct is_range_t<chain_range<Rg,FTP,F,O>>		: std::true_type  {};
+template<class Rg, int FTP, class F, class O, bool RO>	struct is_range_t<chain_range_iterator<Rg,FTP,F,O,RO>>	: std::false_type {};
 
 
 template<class Rg>					struct is_chain_range               			: std::false_type {};
-template<class Rg, class O, bool MAPPED>		struct is_chain_range<chain_range<Rg,O,MAPPED>>		: std::true_type {};
+template<class Rg, int FTP, class F, class O>		struct is_chain_range<chain_range<Rg,FTP,F,O>>		: std::true_type {};
 
 template<class It>					struct is_chain_range_iterator      			: std::false_type {};
-template<class Rg, class O, bool RO, bool MAPPED>	struct is_chain_range_iterator <chain_range_iterator<Rg,O,RO,MAPPED>> 		: std::true_type {};
+template<class Rg, int FTP, class F, class O, bool RO>	struct is_chain_range_iterator <chain_range_iterator<Rg,FTP,F,O,RO>> 		: std::true_type {};
 
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
@@ -309,12 +356,12 @@ range(Rg&& rg)  {
 
 
 //  Rg1 | Pred    --> range
-template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)> pred)        { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&))               { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&>>	operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>))                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
-template<class Rg, class F>	eIF<is_range<Rg>::value && is_callable<F, bool(rg_elem_type<Rg>)>::value,  chain_range<Rg&&>> 
-								 		operator|  (Rg&& rg,  F pred)                      { return   chain_range<Rg&&> (std::forward<Rg>(rg),  pred,  chain_range<Rg&&>::nop_tran); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&,PREDICATED,std::function<bool(const rg_elem_type<Rg>&)> >>	operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred) { return   chain_range<Rg&&,PREDICATED,std::function<bool(const rg_elem_type<Rg>&)>> (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&,PREDICATED,std::function<bool(rg_elem_type<Rg>)>        >>	operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)>        pred) { return   chain_range<Rg&&,PREDICATED,std::function<bool(rg_elem_type<Rg>)>       > (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&,PREDICATED,bool(*)(const rg_elem_type<Rg>&)             >>	operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&)              ) { return   chain_range<Rg&&,PREDICATED,bool(*)(const rg_elem_type<Rg>&)            > (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  chain_range<Rg&&,PREDICATED,bool(*)(rg_elem_type<Rg>)                    >>	operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>)                     ) { return   chain_range<Rg&&,PREDICATED,bool(*)(rg_elem_type<Rg>)                   > (std::forward<Rg>(rg),  pred); };
+template<class Rg, class F>	eIF<is_range<Rg>::value && is_callable<F, bool(rg_elem_type<Rg>)>::value,  chain_range<Rg&&,PREDICATED,F>> 
+								 		operator|  (Rg&& rg,  F pred)                      { return   chain_range<Rg&&,PREDICATED,F> (std::forward<Rg>(rg),  pred); };
 		// Overload is better than SFINAE selection. With OL we do not need to specify functor template arguments
 
 
@@ -346,27 +393,29 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 
 	template<
 		class Rg,
-		class Tran,
+		class F,
 		class E = rg_elem_type<Rg>,
-		class Ret= rm_ref<decltype(std::declval<Tran>()(std::declval<E>()))>
+		class O= rm_ref<decltype(std::declval<F>()(std::declval<E>()))>
 	> 
-	eIF <is_range<Rg>::value  &&  is_callable<Tran, Ret(E)>::value  /*&&  !std::is_same<Ret,E>::value*/,   chain_range<Rg&&, Ret, true>>
-operator*       (Rg&& rg,  Tran tran)    {
-	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
+	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value,   chain_range<Rg&&,MAPPED,F,O>>
+operator*       (Rg&& rg,  F f)    {
+	return   chain_range<Rg&&,MAPPED,F,O> (std::forward<Rg>(rg),  f);
  };
 
 
 
 //// non-converting overload  (O == E),   needed for functions like std::abs()
+
 	template<	
 		class Rg,
 		class E = rg_elem_type<Rg>,
-		class Ret = E
+		class O = E
 	> 
-	eIF <is_range<Rg>::value,  chain_range<Rg&&,E,true>>
-operator *       (Rg&& rg, Ret (*tran)(E) )    {
-	return   chain_range<Rg&&, E, true> (std::forward<Rg>(rg),  chain_range<Rg&&, E, true>::nop_pred, tran);
+	eIF <is_range<Rg>::value  &&  std::is_same<rm_qualifier<O>,rm_qualifier<E>>::value,  chain_range<Rg&&,MAPPED, O(*)(E), E>>
+operator *       (Rg&& rg, O (*f)(E) )    {
+	return   chain_range<Rg&&,MAPPED, O(*)(E), E>  (std::forward<Rg>(rg), f);
  };
+
 
 
 /*
@@ -389,17 +438,17 @@ operator*       (Rg&& rg,  const Tran<N,E>& tran)    {
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
 	eIF <is_range<Rg>::value, R>							// overload for plain functions
-operator ||       (Rg&& C, const R& (*f)(const T&, const T&) )    {
-	auto i = std::next(std::begin(C));
-	return  std::accumulate(i, endz(C), front(C), f);
+operator ||       (Rg&& rg, const R& (*f)(const T&, const T&) )    {
+	auto i = std::next(std::begin(rg));
+	return  std::accumulate(i, endz(rg), front(rg), f);
  };
 	
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
 	eIF <is_range<Rg>::value, R>							// overload for: lambda, std::plus
-operator ||       (Rg&& C, identity<std::function<T(const T&, const T&)>> f )    {
-	auto i = std::next(std::begin(C));
-	const T init = front(C);
-	return  std::accumulate(i, endz(C), init, f);
+operator ||       (Rg&& rg, identity<std::function<T(const T&, const T&)>> f )    {
+	auto i = std::next(std::begin(rg));
+	const T init = front(rg);
+	return  std::accumulate(i, endz(rg), init, f);
  };
 
 
