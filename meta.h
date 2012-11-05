@@ -139,6 +139,7 @@ struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_iterator_category,iterator_category)
 DEF_HAS_MEMBER(has_mapped_type,mapped_type)
+DEF_HAS_MEMBER(has_result_type,result_type)
 
 DEF_HAS_METHOD(has_push_front,push_front(typename T::value_type()))
 DEF_HAS_METHOD(has_push_back,push_back(typename T::value_type()))
@@ -362,17 +363,34 @@ template<size_t N>	auto  endz( const char (&array)[N] ) -> decltype(std::end(arr
 template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(array)) { return  std::find(std::begin(array), std::end(array),'\0'); };
 
 /////  SIZE
+
+/*
 //template<class Rg>    eIF<has_size<Rg>::value, size_t>	size (const Rg& rg)     { return rg.size(); };
+template<class Rg>		auto	size_impl (const Rg& rg) ->decltype(rg.size())         { return rg.size(); };
+template<class T, size_t N>	 size_t	size_impl (const T (&C)[N])                            { return sto::endz(C) - std::begin(C); };
+template<class T, size_t N>	 size_t	size_impl (const std::array<T,N>& A)                   { return N; };
+template<class... Types>	 size_t size_impl (const typename std::tuple<Types...>& Tpl)   { return  std::tuple_size<std::tuple<Types...> >::value; };
+template<class U, class V>	 size_t size_impl (const std::pair<U,V>& P)                    { return 2; };
+template<class X>		 size_t	size (const X& x)                                      { return size_impl(x); };
+*/
 
-template<class Rg>   			auto		size_impl (const Rg& rg) ->decltype(rg.size())  { return rg.size(); };
 
-template<class T, size_t N>	constexpr size_t	size_impl (const T (&C)[N]) { return sto::endz(C) - std::begin(C); };
-template<class T, size_t N>	constexpr size_t	size_impl (const std::array<T,N>& A) { return N; };
+struct size_fo {
+		typedef 	size_t 	result_type;
 
-template<class... Types>	constexpr size_t 	size_impl (const typename std::tuple<Types...>& Tpl)  {  return  std::tuple_size<std::tuple<Types...> >::value; };
-template<class U, class V>   	constexpr size_t     	size_impl (const std::pair<U,V>& P) { return 2; };
+	template<class Rg>    eIF<has_size<Rg>::value, size_t>	size_impl (const Rg& rg)  const		   { return rg.size(); };
+	//template<class Rg>		auto	size_impl (const Rg& rg) ->decltype(rg.size())  const      { return rg.size(); };
+	template<class T, size_t N>	size_t	size_impl (const T (&C)[N]) const                          { return sto::endz(C) - std::begin(C); };
+	template<class T, size_t N>	size_t	size_impl (const std::array<T,N>& A) const                 { return N; };
+	template<class... Types>	size_t	size_impl (const typename std::tuple<Types...>& Tpl) const { return  std::tuple_size<std::tuple<Types...> >::value; };
+	template<class U, class V>	size_t	size_impl (const std::pair<U,V>& P) const                  { return 2; };
 
-template<class X>   		size_t			size 	(const X& x)  { return size_impl(x); };
+	template<class X>		size_t	operator() (const X& x)  const                             { return size_impl(x); };
+};
+
+size_fo  size;
+
+//template<class X>   		size_t			size 	(const X& x)  { return size_impl(x); };
 
 
 /////  EMPTY
@@ -409,7 +427,5 @@ template<typename T, typename Rg>                 struct is_elem_of { enum { val
 //template<class Rg1, class Rg2>      constexpr bool  have_same_elem()      { return  is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value; }
   template<class Rg1, class Rg2>              struct  have_same_elem { enum { value = is_range<Rg1>::value  &&  is_range<Rg2>::value  &&  std::is_convertible< rm_qualifier<rg_elem_type<Rg1>>,  rm_qualifier<rg_elem_type<Rg2>> >::value }; };
 
-
 					};
 					#endif
-

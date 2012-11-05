@@ -306,30 +306,6 @@ struct  chain_range : ref_container<Rg&&> {
 	const_reference		get_value(rg_const_iterator<Rg> it, mk_type(MAPPED))	const	{ return  f(*it); };
  };
 
-/*
-template<class Rg, int FTP, class F, class O> 	      iterator	chain_range<Rg,FTP,F,O>::begin()		{ return        iterator(this, std::begin(rg)); };
-template<class Rg,          class F, class O> 	      iterator	chain_range<Rg,PREDICATED,F,O>::begin()		{ return        iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
-template<>	const_iterator	begin()	const	{ return  const_iterator(this, std::find_if(std::begin(rg), endz(rg), f)); };
-*/
-
-/*
-////  CHAIN_RANGE  STATIC MEMBERS
-
-	template <class Rg, class O, bool MAPPED, bool PREDICATED>
-	std::function<bool(rg_elem_type<Rg>)>   
-	chain_range<Rg,O,MAPPED,PREDICATED>::
-nop_pred = [](rg_elem_type<Rg> x) -> bool  { return true; };
-
-
-template<class T>  T nop_tran(T x) { return x; }
-
-	template<class Rg, class O, bool MAPPED, bool PREDICATED>
-	std::function<O(rg_elem_type<Rg>)>
-	chain_range<Rg,O,MAPPED,PREDICATED>::
-//nop_tran =  (O(*)(rg_elem_type<Rg>)) (nop_tran<rg_elem_type<Rg>);
-//nop_tran =  std::function<O(rg_elem_type<Rg>)> (nop_tran<rg_elem_type<Rg>>);
-nop_tran =  [](rg_elem_type<Rg> x)   { return x; };
-*/
 
 
 ////////////////////////////////////////////////////////////////  TRAITS
@@ -393,15 +369,41 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 
 	template<
 		class Rg,
-		class F,
 		class E = rg_elem_type<Rg>,
+		class F,
 		class O= rm_ref<decltype(std::declval<F>()(std::declval<E>()))>
 	> 
-	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value,   chain_range<Rg&&,MAPPED,F,O>>
+	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && !has_result_type<F>::value,   chain_range<Rg&&,MAPPED,F,O>>
 operator*       (Rg&& rg,  F f)    {
 	return   chain_range<Rg&&,MAPPED,F,O> (std::forward<Rg>(rg),  f);
  };
 
+/* BAD template template 
+	template<
+		class Rg,
+		class E = rg_elem_type<Rg>,
+		template<class> class F,
+		class O= rm_ref<decltype(std::declval<F<E>>()(std::declval<E>()))>
+	> 
+	eIF <is_range<Rg>::value  &&  is_callable<F<E>, O(E)>::value  && !has_result_type<F<E>>::value,   chain_range<Rg&&,MAPPED,F<E>,O>>
+operator*       (Rg&& rg,  F<E> f)    {
+	return   chain_range<Rg&&,MAPPED,F<E>,O> (std::forward<Rg>(rg),  f);
+ };
+ */
+
+
+//// FO BAD
+
+	template<
+		class Rg,
+		class F,
+		class E = rg_elem_type<Rg>,
+		class O = typename F::result_type
+	> 
+	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && has_result_type<F>::value,   chain_range<Rg&&,MAPPED,F,O>>
+operator*       (Rg&& rg,  F f)    {
+	return   chain_range<Rg&&,MAPPED,F,O> (std::forward<Rg>(rg),  f);
+ };
 
 
 //// non-converting overload  (O == E),   needed for functions like std::abs()
