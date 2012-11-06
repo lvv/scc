@@ -364,17 +364,6 @@ template<size_t N>	auto  endz(       char (&array)[N] ) -> decltype(std::end(arr
 
 /////  SIZE
 
-/*
-//template<class Rg>    eIF<has_size<Rg>::value, size_t>	size (const Rg& rg)     { return rg.size(); };
-template<class Rg>		auto	size_impl (const Rg& rg) ->decltype(rg.size())         { return rg.size(); };
-template<class T, size_t N>	 size_t	size_impl (const T (&C)[N])                            { return sto::endz(C) - std::begin(C); };
-template<class T, size_t N>	 size_t	size_impl (const std::array<T,N>& A)                   { return N; };
-template<class... Types>	 size_t size_impl (const typename std::tuple<Types...>& Tpl)   { return  std::tuple_size<std::tuple<Types...> >::value; };
-template<class U, class V>	 size_t size_impl (const std::pair<U,V>& P)                    { return 2; };
-template<class X>		 size_t	size (const X& x)                                      { return size_impl(x); };
-*/
-
-
 struct size_fo {
 		typedef 	size_t 	result_type;
 

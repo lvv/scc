@@ -409,22 +409,6 @@ operator *       (Rg&& rg, O (*f)(E) )    {
 
 
 
-/*
-//// overload for tuple * get<N>
-	template<	
-		class Rg,
-		class E = rg_elem_type<Rg>,
-		size_t   N,
-		class... Ts,
-		class Ret = typename std::tuple_element<N, E>::type const&
-	> 
-	eIF <is_range<Rg>::value  &&  is_callable<Tran<N,E>, Ret(E)>::value,   chain_range<Rg&&, Ret, true>>
-operator*       (Rg&& rg,  const Tran<N,E>& tran)    {
-	return   chain_range<Rg&&, Ret, true> (std::forward<Rg>(rg),  chain_range<Rg&&, Ret, true>::nop_pred, tran);
- };
-*/
-
-
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
