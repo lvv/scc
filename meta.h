@@ -379,6 +379,7 @@ struct size_fo {
 
 size_fo  size;
 
+
 //template<class X>   		size_t			size 	(const X& x)  { return size_impl(x); };
 
 
