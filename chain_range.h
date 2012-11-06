@@ -5,10 +5,12 @@
 						#include "scc/meta.h"
 						#include "scc/stl.h"
 
+						/*
 						#ifndef NDEBUG
 						#include <iostream>
 						#include <scc/debug.h>
 						#endif
+						*/
 
 						namespace sto {
 						//template<class Ch> class basic_string<Ch>;
@@ -220,7 +222,7 @@ struct  chain_range : ref_container<Rg&&> {
 
 		template<class Rg2>			// TODO specialize for seq containers self-assignemet
 		eIF <have_same_elem<Rg,Rg2>::value, self_type>
-	operator= (const Rg2& rhs) { 			std:: cout << " SSIGNMENT \n";
+	operator= (const Rg2& rhs) { 			//std:: cout << " SSIGNMENT \n";
 		sto::clear(rg);
 		auto e = endz(rhs);
 		for (auto it = std::begin(rhs);   it != e;  ++it)  {
@@ -362,7 +364,7 @@ operator /       (Rg& rg1, const Rg& rg2)    {  return  search(rg1.begin(), rg1.
 	
 	
 
-////////////////////////////////////////////////////////////////////////////////  Rg<T> * F    --> Rg<U>
+////////////////////////////////////////////////////////////////////////////////  MAP:  Rg<T> * F    --> Rg<U>
 
 //// generic overload (O!=E) (lambdas, other)
 
@@ -378,21 +380,8 @@ operator*       (Rg&& rg,  F f)    {
 	return   chain_range<Rg&&,MAPPED,F,O> (std::forward<Rg>(rg),  f);
  };
 
-/* BAD template template 
-	template<
-		class Rg,
-		class E = rg_elem_type<Rg>,
-		template<class> class F,
-		class O= rm_ref<decltype(std::declval<F<E>>()(std::declval<E>()))>
-	> 
-	eIF <is_range<Rg>::value  &&  is_callable<F<E>, O(E)>::value  && !has_result_type<F<E>>::value,   chain_range<Rg&&,MAPPED,F<E>,O>>
-operator*       (Rg&& rg,  F<E> f)    {
-	return   chain_range<Rg&&,MAPPED,F<E>,O> (std::forward<Rg>(rg),  f);
- };
- */
 
-
-//// FO BAD
+//// FO 
 
 	template<
 		class Rg,
