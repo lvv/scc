@@ -56,7 +56,7 @@ struct chain_range_iterator {
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
 	//typedef		const value_type*			const_pointer;  // non-STL, not-used?
-	typedef		SEL <RO, const value_type*, value_type*>   	pointer;
+	typedef		SEL <RO, const rm_ref<value_type>*, rm_ref<value_type>*>   	pointer;
 
 	typedef         typename std::conditional <FTP & MAPPED, value_type, rg_const_reference<Rg>>::type     const_reference;  // non-STL
 	typedef		typename std::conditional <
@@ -157,7 +157,7 @@ struct  chain_range : ref_container<Rg&&> {
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
-	typedef		value_type*					pointer;
+	typedef		rm_ref<value_type>*					pointer;
 
 	typedef         typename std::conditional <FTP & MAPPED, value_type, rg_const_reference<Rg>>::type     const_reference;  // non-STL
 	typedef		typename std::conditional <
