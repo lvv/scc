@@ -396,36 +396,17 @@ operator*       (Rg&& rg,  F f)    {
 
 ///////////////////////////////////  TUPLES
 
-/*
-/////  Tuple 0 for &
-	template<
-		class Rg,
-		class E = rg_elem_type<Rg>,
-		class O = typename std::tuple_element<0,E>::type
-	> 
-	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, O&(*)(E&), O>>
-operator*       (Rg&& rg,   typename std::tuple_element<0,E>::type&(*f)(E&))    {
-	return   chain_range<Rg&&,MAPPED, O&(*)(E&), O> (std::forward<Rg>(rg),  f);
- };
+#define MK_TUPLE_OVERLOAD(N,CONST)       	                                                              	\
+		template<class Rg, class E=rg_elem_type<Rg>, class O=typename std::tuple_element<N,E>::type>	\
+		eIF <is_range<Rg>::value, chain_range<Rg&&,MAPPED, O CONST&(*)(E CONST&), O>>              	\
+	operator*	(Rg&& rg, typename std::tuple_element<N,E>::type CONST &(*f)(E CONST &))    { 		\
+		return   chain_range<Rg&&,MAPPED, O CONST& (*)(E CONST&), O> (std::forward<Rg>(rg), f);		\
+	};
 
-/////  Tuple 0 for const&
-	template<
-		class Rg,
-		class E = rg_elem_type<Rg>,
-		class O = typename std::tuple_element<0,E>::type
-	> 
-	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, const O&(*)(const E&), O>>
-operator*       (Rg&& rg,   typename std::tuple_element<0,E>::type const &(*f)(const E&))    {
-	return   chain_range<Rg&&,MAPPED, const O&(*)(const E&), O> (std::forward<Rg>(rg),  f);
- };
-*/
-
-template<class Rg, class E = rg_elem_type<Rg>, class O = typename std::tuple_element<0,E>::type>	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, O      &(*)(E      &), O>>		operator*	(Rg&& rg, typename std::tuple_element<0,E>::type       &(*f)(E       &))    { return   chain_range<Rg&&,MAPPED, O      & (*)(E      &), O> (std::forward<Rg>(rg), f); };
-template<class Rg, class E = rg_elem_type<Rg>, class O = typename std::tuple_element<0,E>::type>	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, O const&(*)(E const&), O>>		operator*	(Rg&& rg, typename std::tuple_element<0,E>::type const &(*f)(E const &))    { return   chain_range<Rg&&,MAPPED, O const& (*)(E const&), O> (std::forward<Rg>(rg), f); };
-
-template<class Rg, class E = rg_elem_type<Rg>, class O = typename std::tuple_element<1,E>::type>	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, O      &(*)(E      &), O>>		operator*	(Rg&& rg, typename std::tuple_element<1,E>::type       &(*f)(E       &))    { return   chain_range<Rg&&,MAPPED, O      & (*)(E      &), O> (std::forward<Rg>(rg), f); };
-template<class Rg, class E = rg_elem_type<Rg>, class O = typename std::tuple_element<1,E>::type>	eIF <is_range<Rg>::value,   chain_range<Rg&&,MAPPED, O const&(*)(E const&), O>>		operator*	(Rg&& rg, typename std::tuple_element<1,E>::type const &(*f)(E const &))    { return   chain_range<Rg&&,MAPPED, O const& (*)(E const&), O> (std::forward<Rg>(rg), f); };
-
+MK_TUPLE_OVERLOAD(0,)
+MK_TUPLE_OVERLOAD(0,const)
+MK_TUPLE_OVERLOAD(1,)
+MK_TUPLE_OVERLOAD(1,const)
 
 
 //// non-converting overload  (O == E),   needed for functions like std::abs()
