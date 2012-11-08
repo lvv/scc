@@ -8,7 +8,7 @@ set -v
 
 # CTOR
 scc 'chain_range<vint&> lv(v9);  chain_range<vint&&> rv(mk_v9());'
-scc 'auto r = range(range(v9));   auto rr=range(range(mk_v9()));'
+scc 'auto r = range(range(v9));   auto rr=range(range(mk_v9()));  assert(r.size()==rr.size());'
 
 scc -A -DV=rl9  'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
 scc -A -DV=rd9   'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
@@ -34,32 +34,42 @@ scc 'assert(+rd9 < -rd9  &&  !(+rd9 < +rd9)  &&  !(-rd9 < +rd9)  &&  -rd9 >= +rd
 scc 'vector<pair<int,double>>  V={{1,11.},{2,22}}; auto r=range(V); _ (-- ++ (+r +=1))->second;'
 scc 'auto i=+rd9, ii=i+1; *i, *ii'
 
-# rn = value_type
+# rg = value_type
 scc 'range(a9)=42;  a9'
 
-# rn1 = rn2
+# rg1 = rg2
 scc 'range(v0) = a9; v0'
 scc 'range(s) = cc9; s'
 scc 'range(v9) = range(5); v9'
 
-# Ct * F 	################################################################ MAP
+# Rg * F   ################################################################ MAP
+
+# O == E
 scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
 scc '__ v9 * [](int x){return x+10;};'
-scc '__ v9 * bind(std::plus<int>(),10,_1);'
-scc 'vector<const char*> ss{"1","22","333"};  __ (ss * strlen);'
-# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
+scc 'v9 * bind(std::plus<int>(),10,_1)'
+scc 'v9 * bind((const int& (*)(const int&, const int&))min, 5, _1)'
 #
-# Ct * (R(*)(T))F    -- type convertion  
-scc 'vector<const char*> v{"a", "bb", "ccc"}; v*std::strlen'
-#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
-#scc ' __ v9 * bind((const int& (*)(const int&, const int&))min, 0, _1);'
+# O != E    -- map with type convertion  
+scc 'vc9 * strlen || plus<int>()'
+scc 'vs9 * size   || plus<int>()'
 
-# Ct || F 	################################################################ FOLD
+# tuple  get<N>
+if [[ $CXX =~ cl ]]; then 
+	scc  'vt9 * get<0>'
+	scc  'vt9 * get<1>'
+fi
+# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
+#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
+
+# 
+
+# Rg || F 	################################################################ FOLD
 scc '__ (v9 || min), (mk_v9()||min);'
 scc '__ (vint{1,5} || function<int(int,int)>(std::plus<int>()));'
 scc '__ v9 || std::plus<int>();'
 scc '__ v9 || [](int a, int b){return min(a,b);};'
-
+scc 'vs9 * size || plus<int>()'
 
 
 # PIPE
