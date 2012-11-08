@@ -396,12 +396,27 @@ operator*       (Rg&& rg,  F f)    {
 
 ///////////////////////////////////  TUPLES
 
+
+						// limitation: max N must equal 2, used tuple-arg N's must be >= 2
 #define MK_TUPLE_OVERLOAD(N,CONST)       	                                                              	\
-		template<class Rg, class E=rg_elem_type<Rg>, class O=typename std::tuple_element<N,E>::type>	\
-		eIF <is_range<Rg>::value, chain_range<Rg&&,MAPPED, O CONST&(*)(E CONST&), O>>              	\
-	operator*	(Rg&& rg, typename std::tuple_element<N,E>::type CONST &(*f)(E CONST &))    { 		\
-		return   chain_range<Rg&&,MAPPED, O CONST& (*)(E CONST&), O> (std::forward<Rg>(rg), f);		\
+													\
+	template<											\
+		class Rg,										\
+		class E=rg_elem_type<Rg>,								\
+		class O=typename std::tuple_element<N,E>::type						\
+	>												\
+													\
+	eIF <												\
+		is_range<Rg>::value  &&  ( N==0  || 							\
+			!std::is_same<typename std::tuple_element<0,E>::type, typename std::tuple_element<N,E>::type>::value  \
+		), 											\
+		chain_range<Rg&&,MAPPED, O CONST&(*)(E CONST&), O>					\
+	>												\
+													\
+	operator*	(Rg&& rg, typename std::tuple_element<N,E>::type CONST &(*f)(E CONST &))    { 	\
+		return   chain_range<Rg&&,MAPPED, O CONST& (*)(E CONST&), O> (std::forward<Rg>(rg), f);	\
 	};
+
 
 MK_TUPLE_OVERLOAD(0,)
 MK_TUPLE_OVERLOAD(0,const)

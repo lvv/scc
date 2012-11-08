@@ -58,6 +58,7 @@ scc 'vs9 * size   || plus<int>()'
 if [[ $CXX =~ cl ]]; then 
 	scc  'vt9 * get<0>'
 	scc  'vt9 * get<1>'
+	scc  'vector<tuple<int,int>> VT{MT(1,11),MT(2,22)};  VT * get<1>'
 fi
 # todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
 #scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
