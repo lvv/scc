@@ -441,8 +441,15 @@ operator *       (Rg&& rg, O (*f)(E) )    {
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
-	eIF <is_range<Rg>::value, R>							// overload for plain functions
+	eIF <is_range<Rg>::value, R>					// const T&(cont T&,cont T&) -- plain functions
 operator ||       (Rg&& rg, const R& (*f)(const T&, const T&) )    {
+	auto i = std::next(std::begin(rg));
+	return  std::accumulate(i, endz(rg), front(rg), f);
+ };
+	
+	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
+	eIF <is_range<Rg>::value, R>					// T(cont T&,cont T&) -- plain functions
+operator ||       (Rg&& rg, R (*f)(const T&, const T&) )    {
 	auto i = std::next(std::begin(rg));
 	return  std::accumulate(i, endz(rg), front(rg), f);
  };

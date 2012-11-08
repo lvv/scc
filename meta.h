@@ -305,25 +305,6 @@ template<class T> using  is_bidirectional_iterator	= typename is_iterator_of<T,s
 template<class T> using  is_random_access_iterator	= typename is_iterator_of<T,std::random_access_iterator_tag>::type;
 
 
-
-//std::is_base_of<std::input_iterator_tag, typename U::iterator_category>::value
-
-// string
-//template<class CharT>	struct  is_random_access_iterator_t <std::basic_string<CharT>>	: std::true_type  {};
-
-//template<typename T>     constexpr bool   is_input_iterator()        { return  is_input_iterator_t<T>::value; };
-
-
-
-/* TODO
- 
-template<typename T> struct is_input_iterator:         is_iterator<T> { template<typename U>  static typename U::input_iterator*          test (U*); };
-template<typename T> struct is_output_iterator:        is_iterator<T> { template<typename U>  static typename U::output_iterator*         test (U*); };
-template<typename T> struct is_forward_iterator:       is_iterator<T> { template<typename U>  static typename U::forward_iterator*        test (U*); };
-template<typename T> struct is_bidirectional_iterator: is_iterator<T> { template<typename U>  static typename U::bidirectional_iterator*  test (U*); };
-template<typename T> struct is_random_access_iterator: is_iterator<T> { template<typename U>  static typename U::random_access_iterator*  test (U*); };
-*/
-
 	template<class IT, class T=decltype(*std::declval<IT>())>    
 	constexpr bool  
 is_const_iterator() {	// does not answer if this is CI, but if IT is const or not

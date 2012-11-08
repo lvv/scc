@@ -58,6 +58,7 @@ scc 'vs9 * size   || plus<int>()'
 if [[ $CXX =~ cl ]]; then 
 	scc  'vt9 * get<0>'
 	scc  'vt9 * get<1>'
+	scc  'm9  * get<1>'
 	scc  'vector<tuple<int,int>> VT{MT(1,11),MT(2,22)};  VT * get<1>'
 fi
 # todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
@@ -82,6 +83,13 @@ scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
 # op=(value_type)
 scc 'range(v9/2, v9/5)   = 42;  v9'
 scc 'range(v9/5, v9/999) = v9;  v9'
+
+
+#######################################   FUNCTORS
+scc 'v9||add'
+scc 'vfloat v{1,5,9}; v||add'
+scc 'v9|gt(5)'
+
 
 
 : '- - - - - - - - - - - - - - - - - - - - - - - -  U-RANGE passed   - - - - - - - - - - - - - - - - - - - - - - - - -'

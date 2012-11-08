@@ -6,6 +6,7 @@
 				#include <deque>
 				#include <stack>
 				#include <set>
+				#include <map>
 				#include <tuple>
 				#include <list>
 				#include <forward_list>
@@ -95,6 +96,7 @@ std::string		__attribute__((unused))		s9	{"abc-123"},  s0, s23{"bc"},  s1="a";
 std::vector<std::string>__attribute__((unused))		vs9	{"", "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh", "kkkkkkkkk"};
 std::vector<const char*>__attribute__((unused))		vc9	{"", "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh", "kkkkkkkkk"};
 vector<tuple<int,str>>  __attribute__((unused))		vt9	{MT(1, "a"), MT(2,"bb"), MT(3,"ccc"), MT(4,"dddd"), MT(5,"eeeee"), MT(6,"ffffff"), MT(7,"ggggggg"), MT(8,"hhhhhhhh"), MT(9,"kkkkkkkkk")};
+std::map<int,str>  __attribute__((unused))		m9	{MP(1, "a"), MP(2,"bb"), MP(3,"ccc"), MP(4,"dddd"), MP(5,"eeeee"), MP(6,"ffffff"), MP(7,"ggggggg"), MP(8,"hhhhhhhh"), MP(9,"kkkkkkkkk")};
 // rvalues
 //static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  v9; };
 static std::vector<int>	__attribute__((unused))		mk_v9()	{ return  std::vector<int>{0,1,2,3,4,5,6,7,8,9}; };
