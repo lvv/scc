@@ -2,94 +2,10 @@
 set -o errexit
 set -v
 
-################################################################# RANGE
-
-################################################################# CHAIN_RANGE
-
-# CTOR
-scc 'basic_range<vint&> lv(v9);  basic_range<vint&&> rv(mk_v9());'
-scc 'auto r = range(range(v9));   auto rr=range(range(mk_v9()));  assert(r.size()==rr.size());'
-
-scc -A -DV=rl9  'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
-scc -A -DV=rd9   'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
-scc -A -DV=rd9r  'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
-scc -A -DV=rrd9  'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
-scc -A -DV=n9   'V.begin(); +V; V.end(); end(V); endz(V);   ; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'
-
-# access
-scc 'assert( rd9++==9  &&  ++rd9==0 );'
-
-scc 'auto r = range(v9);  while(r) {  _ v9++; v9--; };'
-scc 'auto r = range(v9);  __ r.back(),  r++; r.back() =99; r'
-
-
-# Imported methods
-scc 'auto r=range(v9); r.push_back(99); r << 999;  (range(v9) << 9999)'
-
-# Iterators
-scc 'rd9.begin(); rrd9.begin(); '
-scc 'auto it=+rd9;  decltype(rd9)::const_iterator cit=+rd9;  assert( it==cit  &&  ++it != cit  && -rd9 == endz(rd9));'
-scc 'assert( 1 == (*(+rd9 += 1)  *  *(+rd9 + 1)  *   *(1 + +rd9)  *  *(-rd9-size(rd9)+1)  *  *(-rd9 -= size(rd9)-1)  *  (size(rd9) == -rd9 - +rd9)  *  (+rd9)[1]  *  rd9[1]));'
-scc 'assert(+rd9 < -rd9  &&  !(+rd9 < +rd9)  &&  !(-rd9 < +rd9)  &&  -rd9 >= +rd9  &&  -rd9 >= -rd9  &&  !(+rd9 >= -rd9));'
-scc 'vector<pair<int,double>>  V={{1,11.},{2,22}}; auto r=range(V); _ (-- ++ (+r +=1))->second;'
-scc 'auto i=+rd9, ii=i+1; *i, *ii'
-
-# rg = value_type
-scc 'range(a9)=42;  a9'
-
-# rg1 = rg2
-scc 'range(v0) = a9; v0'
-scc 'range(s) = cc9; s'
-scc 'range(v9) = range(5); v9'
-
-# Rg * F   ################################################################ MAP
-
-# O == E
-scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
-scc '__ v9 * [](int x){return x+10;};'
-scc 'v9 * bind(std::plus<int>(),10,_1)'
-scc 'v9 * bind((const int& (*)(const int&, const int&))min, 5, _1)'
-#
-# O != E    -- map with type convertion  
-scc 'vc9 * strlen || plus<int>()'
-scc 'vs9 * size   || plus<int>()'
-
-# tuple  get<N>
-if [[ $CXX =~ cl ]]; then 
-	scc  'vt9 * get<0>'
-	scc  'vt9 * get<1>'
-	scc  'm9  * get<1>'
-	scc  'vector<tuple<int,int>> VT{MT(1,11),MT(2,22)};  VT * get<1>'
-fi
-# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
-#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
-
-# 
-
-# Rg || F 	################################################################ FOLD
-scc '__ (v9 || min), (mk_v9()||min);'
-scc '__ (vint{1,5} || function<int(int,int)>(std::plus<int>()));'
-scc '__ v9 || std::plus<int>();'
-scc '__ v9 || [](int a, int b){return min(a,b);};'
-scc 'vs9 * size || plus<int>()'
-
-
-# PIPE
-scc 'rd9|is_even'
-scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
-scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
-scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
-################################################################# ITERATOR_RANGE
-# op=(value_type)
-scc 'range(v9/2, v9/5)   = 42;  v9'
-scc 'range(v9/5, v9/999) = v9;  v9'
-
-
-#######################################   FUNCTORS
-scc 'v9||add'
-scc 'vfloat v{1,5,9}; v||add'
-scc 'v9|gt(5)'
-
-
+. u-basic-range
+. u-iterator-range
+. u-mapped-range
+. u-numeric-range
+. u-pipe-range
 
 : '- - - - - - - - - - - - - - - - - - - - - - - -  U-RANGE passed   - - - - - - - - - - - - - - - - - - - - - - - - -'

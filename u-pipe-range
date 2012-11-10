@@ -1,0 +1,13 @@
+
+set -o errexit
+set -v
+
+#################################################################  PIPE RANGE
+scc 'rd9|is_even'
+scc 'for(auto c: range(v9)|sto::is_odd)  _ c;'
+scc 'for(auto c: range(s9)|sto::isdigit) _ c;'
+scc 'for(auto c: range(c9)|sto::isdigit) _ c;'
+
+#################################################################   FUNCTORS
+scc 'v9|gt(5)'
+
