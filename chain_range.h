@@ -250,6 +250,9 @@ template<class Rg, bool RO>	struct is_chain_range_iterator <chain_range_iterator
 range(Rg&& rg)  {
 	return  chain_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
  };
+
+#include "scc/cr_mapped.h"
+
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
@@ -277,6 +280,5 @@ operator ||       (Rg&& rg, identity<std::function<T(const T&, const T&)>> f )  
 
 						
 
-						#include "scc/cr_mapped.h"
 						}; 
 						#endif //  STO_CHAIN_RANGE_H

@@ -10,7 +10,7 @@ struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
 		RO,
 		cr_mapped<Rg,F,O> const,
 		cr_mapped<Rg,F,O>
-	>*  parent_t;
+	>  parent_t;
 
 	// STL ITERATOR TYPES
 				typedef		typename b::iterator_category 	iterator_category;
@@ -30,20 +30,21 @@ struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
 				using 							b::elem_type;
 				typedef		rm_ref<cr_mapped_iterator>		self_type;
 
+	////// MEMBERS
 
 	
 	////// CTOR
 	//cr_mapped_iterator ()							: b()    		{};  // default
 	cr_mapped_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
-	cr_mapped_iterator (parent_t parent,  const org_iterator current)	: b(parent,current)	{};
+	cr_mapped_iterator (parent_t* parent,  const org_iterator current)	: b(parent, current)	{};
 
 
 	////// CONVERSION  non-const --> const
-	operator cr_mapped_iterator<Rg&&,F,O,true>() { return cr_mapped_iterator<Rg&&,F,O,true>(b::parent, b::current); };
+	operator cr_mapped_iterator<Rg&&,F,O,true>() { return cr_mapped_iterator<Rg&&,F,O,true>((parent_t*)b::parent, b::current); };
 
 	////// IFACE
-	reference	operator*()  		{ return  b::parent->f(*b::current); };
-	const_reference operator*() const 	{ return  b::parent->f(*b::current); };
+	reference	operator*()  		{ return  ((parent_t*)b::parent)->f(*b::current); };
+	const_reference operator*() const 	{ return  ((parent_t*)b::parent)->f(*b::current); };
 
 				pointer		operator->()		{ return  &(operator*()); }
 				pointer	const 	operator->() const	{ return  &(operator*()); }
@@ -117,8 +118,13 @@ struct  cr_mapped : chain_range<Rg> {
 
 
 	////  ITERATOR
-	using b::end;
-	using b::begin;
+	      iterator	end()		{ return        iterator(this, endz(b::rg)); }
+	const_iterator	end()   const	{ return  const_iterator(this, endz(b::rg)); }
+
+
+	      iterator	begin()		{ return        iterator(this, std::begin(b::rg)); };
+	const_iterator	begin()	const	{ return  const_iterator(this, std::begin(b::rg)); };
+
 
 	////  RG PROPERTIES
 	using b::size;
