@@ -7,7 +7,7 @@ set -v
 ################################################################# CHAIN_RANGE
 
 # CTOR
-scc 'chain_range<vint&> lv(v9);  chain_range<vint&&> rv(mk_v9());'
+scc 'basic_range<vint&> lv(v9);  basic_range<vint&&> rv(mk_v9());'
 scc 'auto r = range(range(v9));   auto rr=range(range(mk_v9()));  assert(r.size()==rr.size());'
 
 scc -A -DV=rl9  'V.begin(); +V; V.end(); end(V); endz(V); -V; _ ++V, V.front(), front(V), V++, V.back(), back(V), V.size(), size(V), V.empty(), empty(V), bool(V);'

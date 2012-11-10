@@ -16,10 +16,10 @@
 						//template<class Ch> class basic_string<Ch>;
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE_ITERATOR
-	template<class Rg>  struct  chain_range;
+	template<class Rg>  struct  basic_range;
 
 	template <class Rg, bool RO>
-struct chain_range_iterator {
+struct basic_range_iterator {
 				
 
 		// TYPES
@@ -31,8 +31,8 @@ struct chain_range_iterator {
 
 		typedef	SEL <
 			RO,
-			chain_range<Rg> const,
-			chain_range<Rg>
+			basic_range<Rg> const,
+			basic_range<Rg>
 		>  parent_t;
 
 
@@ -46,7 +46,7 @@ struct chain_range_iterator {
 
 	typedef		typename parent_t::value_type			value_type;
 	typedef		typename parent_t::const_iterator		const_iterator;
-	typedef		chain_range_iterator<Rg,RO>			iterator;
+	typedef		basic_range_iterator<Rg,RO>			iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
@@ -62,19 +62,19 @@ struct chain_range_iterator {
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
-	typedef		rm_ref<chain_range_iterator>			self_type;
+	typedef		rm_ref<basic_range_iterator>			self_type;
 	typedef		self_type					type;
 
 	////// CTOR
-	chain_range_iterator ()				: parent(0)           			   {};	// default
-	chain_range_iterator ( const self_type& rhs)	: parent(rhs.parent), current(rhs.current) {};	// copy 
-	chain_range_iterator ( parent_t* parent,  const org_iterator current) 
+	basic_range_iterator ()				: parent(0)           			   {};	// default
+	basic_range_iterator ( const self_type& rhs)	: parent(rhs.parent), current(rhs.current) {};	// copy 
+	basic_range_iterator ( parent_t* parent,  const org_iterator current) 
 							: parent(parent), current(current)         {};
 	// ASSIGNMENT
 		/* implicit */
 
 	////// CONVERSION  non-const --> const
-	operator chain_range_iterator<Rg&&,true>() { return chain_range_iterator<Rg&&,true>(parent, current); };
+	operator basic_range_iterator<Rg&&,true>() { return basic_range_iterator<Rg&&,true>(parent, current); };
 
 	////// IFACE
 	reference	operator*()  		{ return  *current; };
@@ -125,13 +125,13 @@ template<class T>	struct  ref_container<T&&>  { rm_ref<T>  value;  explicit ref_
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 	template<class Rg>
-struct  chain_range : ref_container<Rg&&> {
+struct  basic_range : ref_container<Rg&&> {
 
 
 	// STL IFACE
 	typedef		rg_elem_type<Rg>  				value_type;	// post-f type
-	typedef		chain_range_iterator<Rg,false>     		iterator;
-	typedef		chain_range_iterator<Rg,true>			const_iterator;
+	typedef		basic_range_iterator<Rg,false>     		iterator;
+	typedef		basic_range_iterator<Rg,true>			const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
@@ -147,13 +147,13 @@ struct  chain_range : ref_container<Rg&&> {
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;	// pre-f type
-	typedef		chain_range					self_type;
+	typedef		basic_range					self_type;
 
 	// MEMBERS
 	Rg&	rg;
 
 	////  CTOR
-	explicit chain_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
+	explicit basic_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
 
 	////  ASSIGNMENT
 	self_type&   operator= (elem_type x) { std::fill(begin(), end(), x);  return *this; };
@@ -225,33 +225,33 @@ struct  chain_range : ref_container<Rg&&> {
 
 ////////////////////////////////////////////////////////////////  TRAITS
 /*
-template<class Rg>		struct is_range_t<chain_range<Rg>>		: std::true_type  {};
-template<class Rg, bool RO>	struct is_range_t<chain_range_iterator<Rg,RO>>	: std::false_type {};
+template<class Rg>		struct is_range_t<basic_range<Rg>>		: std::true_type  {};
+template<class Rg, bool RO>	struct is_range_t<basic_range_iterator<Rg,RO>>	: std::false_type {};
 
 template<class Rg>		struct is_chain_range               		: std::false_type {};
-template<class Rg>		struct is_chain_range<chain_range<Rg>>		: std::true_type {};
+template<class Rg>		struct is_chain_range<basic_range<Rg>>		: std::true_type {};
 
 template<class It>		struct is_chain_range_iterator      		: std::false_type {};
-template<class Rg, bool RO>	struct is_chain_range_iterator <chain_range_iterator<Rg,RO>> 	: std::true_type {};
+template<class Rg, bool RO>	struct is_chain_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
 */
 
-template<class Rg>		struct is_range_t<chain_range<Rg>>		: std::true_type  {};
-template<class Rg, bool RO>	struct is_range_t<chain_range_iterator<Rg,RO>>	: std::false_type {};
+template<class Rg>		struct is_range_t<basic_range<Rg>>		: std::true_type  {};
+template<class Rg, bool RO>	struct is_range_t<basic_range_iterator<Rg,RO>>	: std::false_type {};
 
 template<class It>		struct is_chain_range_iterator      		: std::false_type {};
-template<class Rg, bool RO>	struct is_chain_range_iterator <chain_range_iterator<Rg,RO>> 	: std::true_type {};
+template<class Rg, bool RO>	struct is_chain_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
 
 
 
 ////////////////////////////////////////////////////////////////  FUNCTION RANGE() -- range maker
 
 	template<class Rg>   
-	eIF<is_range<Rg>::value, chain_range<Rg&&>>   
+	eIF<is_range<Rg>::value, basic_range<Rg&&>>   
 range(Rg&& rg)  {
-	return  chain_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
+	return  basic_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
  };
 
-#include "scc/cr_mapped.h"
+#include "scc/mapped_range.h"
 
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 

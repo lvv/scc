@@ -3,7 +3,7 @@
 
 						#include "scc/numeric_range.h"
 						#include "scc/iterator_range.h"
-						#include "scc/chain_range.h"
+						#include "scc/basic_range.h"
 
 						namespace sto {
 

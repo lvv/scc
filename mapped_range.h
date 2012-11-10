@@ -1,24 +1,24 @@
 
 	// forward dcl
-	template< class Rg, class F = void*, class O = rg_elem_type<Rg> >  struct  cr_mapped;
+	template< class Rg, class F = void*, class O = rg_elem_type<Rg> >  struct  mapped_range;
 
 	template <class Rg, class F, class O, bool RO>
-struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
+struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 
-	typedef   chain_range_iterator<Rg,RO>  b;
+	typedef   basic_range_iterator<Rg,RO>  b;
 
 	typedef	SEL <
 		RO,
-		cr_mapped<Rg,F,O> const,
-		cr_mapped<Rg,F,O>
+		mapped_range<Rg,F,O> const,
+		mapped_range<Rg,F,O>
 	>  parent_t;
 
 	// STL ITERATOR TYPES
 				typedef		typename b::iterator_category 	iterator_category;
 				typedef		typename b::org_iterator 		org_iterator;
 				typedef		O					value_type;
-	typedef		cr_mapped_iterator<Rg,F,O,RO>		iterator;
-	typedef		cr_mapped_iterator<Rg,F,O,true>		const_iterator;
+	typedef		mapped_range_iterator<Rg,F,O,RO>		iterator;
+	typedef		mapped_range_iterator<Rg,F,O,true>		const_iterator;
 
 				using							typename b::size_type;
 				using							typename b::difference_type;
@@ -29,19 +29,19 @@ struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
 
 				// non-STL
 				using 							typename b::elem_type;
-	typedef		rm_ref<cr_mapped_iterator>		self_type;
+	typedef		rm_ref<mapped_range_iterator>		self_type;
 
 	////// MEMBERS
 
 	
 	////// CTOR
-	//cr_mapped_iterator ()							: b()    		{};  // default
-	cr_mapped_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
-	cr_mapped_iterator (parent_t* parent,  const org_iterator current)	: b(parent, current)	{};
+	//mapped_range_iterator ()							: b()    		{};  // default
+	mapped_range_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
+	mapped_range_iterator (parent_t* parent,  const org_iterator current)	: b(parent, current)	{};
 
 
 	////// CONVERSION  non-const --> const
-	operator cr_mapped_iterator<Rg&&,F,O,true>() { return cr_mapped_iterator<Rg&&,F,O,true>((parent_t*)b::parent, b::current); };
+	operator mapped_range_iterator<Rg&&,F,O,true>() { return mapped_range_iterator<Rg&&,F,O,true>((parent_t*)b::parent, b::current); };
 
 	////// IFACE
 	reference	operator*()  		{ return  ((parent_t*)b::parent)->f(*b::current); };
@@ -76,14 +76,14 @@ struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
 
 /////////////////////////////////////////////////////////////////////////////////////////  CHAIN_RANGE
 	template<class Rg, class F, class O>
-struct  cr_mapped : chain_range<Rg> {
+struct  mapped_range : basic_range<Rg> {
 
-	typedef   chain_range<Rg>  b;
+	typedef   basic_range<Rg>  b;
 
 	// STL IFACE
 	typedef		O  						value_type;
-	typedef		cr_mapped_iterator<Rg,F,O,false>     		iterator;
-	typedef		cr_mapped_iterator<Rg,F,O,true>			const_iterator;
+	typedef		mapped_range_iterator<Rg,F,O,false>     		iterator;
+	typedef		mapped_range_iterator<Rg,F,O,true>			const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
@@ -99,7 +99,7 @@ struct  cr_mapped : chain_range<Rg> {
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
-	typedef		cr_mapped					self_type;
+	typedef		mapped_range					self_type;
 	typedef		void						range_category;
 
 
@@ -109,10 +109,10 @@ struct  cr_mapped : chain_range<Rg> {
 	////////////////////////////////////////////////////////////////  CTOR SPECIALIZATION
 
 	// default CTOR
-	//explicit chain_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
+	//explicit basic_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
 
 	// full
-	explicit cr_mapped (Rg&& rg, F f) :   b(std::forward<Rg>(rg)),   f(f) {};
+	explicit mapped_range (Rg&& rg, F f) :   b(std::forward<Rg>(rg)),   f(f) {};
 
 	////  ASSIGNMENT
 	using b::operator=;
@@ -153,10 +153,10 @@ struct  cr_mapped : chain_range<Rg> {
 
 ////////////////////////////////////////////////////////////////  TRAITS
 
-template<class Rg, class F, class O>		struct is_range_t<cr_mapped<Rg,F,O>>			: std::true_type  {};
-template<class Rg, class F, class O, bool RO>	struct is_range_t<cr_mapped_iterator<Rg,F,O,RO>>	: std::false_type {};
+template<class Rg, class F, class O>		struct is_range_t<mapped_range<Rg,F,O>>			: std::true_type  {};
+template<class Rg, class F, class O, bool RO>	struct is_range_t<mapped_range_iterator<Rg,F,O,RO>>	: std::false_type {};
 
-template<class Rg, class F, class O, bool RO>	struct is_chain_range_iterator <cr_mapped_iterator<Rg,F,O,RO>> 		: std::true_type {};
+template<class Rg, class F, class O, bool RO>	struct is_chain_range_iterator <mapped_range_iterator<Rg,F,O,RO>> 		: std::true_type {};
 
 
 ////////////////////////////////////////////////////////////////////////////////  MAP:  Rg<T> * F    --> Rg<U>
@@ -170,9 +170,9 @@ template<class Rg, class F, class O, bool RO>	struct is_chain_range_iterator <cr
 		class F,
 		class O= rm_ref<decltype(std::declval<F>()(std::declval<E>()))>
 	> 
-	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && !has_result_type<F>::value,   cr_mapped<Rg&&,F,O>>
+	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && !has_result_type<F>::value,   mapped_range<Rg&&,F,O>>
 operator*       (Rg&& rg,  F f)    {
-	return   cr_mapped<Rg&&,F,O> (std::forward<Rg>(rg),  f);
+	return   mapped_range<Rg&&,F,O> (std::forward<Rg>(rg),  f);
  };
 
 
@@ -184,9 +184,9 @@ operator*       (Rg&& rg,  F f)    {
 		class E = rg_elem_type<Rg>,
 		class O = typename F::result_type
 	> 
-	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && has_result_type<F>::value,   cr_mapped<Rg&&,F,O>>
+	eIF <is_range<Rg>::value  &&  is_callable<F, O(E)>::value  && has_result_type<F>::value,   mapped_range<Rg&&,F,O>>
 operator*       (Rg&& rg,  F f)    {
-	return   cr_mapped<Rg&&,F,O> (std::forward<Rg>(rg),  f);
+	return   mapped_range<Rg&&,F,O> (std::forward<Rg>(rg),  f);
  };
 
 ///////////////////////////////////  TUPLES
@@ -205,11 +205,11 @@ operator*       (Rg&& rg,  F f)    {
 		is_range<Rg>::value  &&  ( N==0  || 							\
 			!std::is_same<typename std::tuple_element<0,E>::type, typename std::tuple_element<N,E>::type>::value  \
 		), 											\
-		cr_mapped<Rg&&, O CONST&(*)(E CONST&), O>					\
+		mapped_range<Rg&&, O CONST&(*)(E CONST&), O>					\
 	>												\
 													\
 	operator*	(Rg&& rg, typename std::tuple_element<N,E>::type CONST &(*f)(E CONST &))    { 	\
-		return   cr_mapped<Rg&&, O CONST& (*)(E CONST&), O> (std::forward<Rg>(rg), f);	\
+		return   mapped_range<Rg&&, O CONST& (*)(E CONST&), O> (std::forward<Rg>(rg), f);	\
 	};
 
 
@@ -226,8 +226,8 @@ MK_TUPLE_OVERLOAD(1,const)
 		class E = rg_elem_type<Rg>,
 		class O = E
 	> 
-	eIF <is_range<Rg>::value  &&  std::is_same<rm_qualifier<O>,rm_qualifier<E>>::value,  cr_mapped<Rg&&, O(*)(E), E>>
+	eIF <is_range<Rg>::value  &&  std::is_same<rm_qualifier<O>,rm_qualifier<E>>::value,  mapped_range<Rg&&, O(*)(E), E>>
 operator *       (Rg&& rg, O (*f)(E) )    {
-	return   cr_mapped<Rg&&, O(*)(E), E>  (std::forward<Rg>(rg), f);
+	return   mapped_range<Rg&&, O(*)(E), E>  (std::forward<Rg>(rg), f);
  };
 
