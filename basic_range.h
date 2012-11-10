@@ -37,7 +37,7 @@ struct basic_range_iterator {
 
 
 	// MEMBERS
-	parent_t*	parent;
+	parent_t*	parent_p;
 	org_iterator	current;
 
 
@@ -66,15 +66,13 @@ struct basic_range_iterator {
 	typedef		self_type					type;
 
 	////// CTOR
-	basic_range_iterator ()				: parent(0)           			   {};	// default
-	basic_range_iterator ( const self_type& rhs)	: parent(rhs.parent), current(rhs.current) {};	// copy 
-	basic_range_iterator ( parent_t* parent,  const org_iterator current) 
-							: parent(parent), current(current)         {};
-	// ASSIGNMENT
-		/* implicit */
+	basic_range_iterator ()				: parent_p(0)           			   {};	// default
+	basic_range_iterator ( const self_type& rhs)	: parent_p(rhs.parent_p), current(rhs.current) {};	// copy 
+	basic_range_iterator ( parent_t* parent_p,  const org_iterator current) 
+							: parent_p(parent_p), current(current)         {};
 
 	////// CONVERSION  non-const --> const
-	operator basic_range_iterator<Rg&&,true>() { return basic_range_iterator<Rg&&,true>(parent, current); };
+	operator basic_range_iterator<Rg&&,true>() { return basic_range_iterator<Rg&&,true>(parent_p, current); };
 
 	////// IFACE
 	reference	operator*()  		{ return  *current; };
@@ -89,7 +87,7 @@ struct basic_range_iterator {
 
 	// ++ It
 	self_type	operator++(int)		{
-		org_iterator e = endz(parent->rg);
+		org_iterator e = endz(parent_p->rg);
 		assert(current !=e);
 		self_type tmp=*this;
 		++current;

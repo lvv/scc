@@ -14,62 +14,62 @@ struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 	>  parent_t;
 
 	// STL ITERATOR TYPES
-				typedef		typename b::iterator_category 	iterator_category;
-				typedef		typename b::org_iterator 		org_iterator;
-				typedef		O					value_type;
-	typedef		mapped_range_iterator<Rg,F,O,RO>		iterator;
-	typedef		mapped_range_iterator<Rg,F,O,true>		const_iterator;
-
-				using							typename b::size_type;
-				using							typename b::difference_type;
-				using							typename b::pointer;
-
-				typedef         value_type				const_reference;  // non-STL
-				typedef		value_type				reference;
-
-				// non-STL
-				using 							typename b::elem_type;
+	
+	// to edit
+	typedef		mapped_range_iterator<Rg,F,O,RO>	iterator;
+	typedef		mapped_range_iterator<Rg,F,O,true>	const_iterator;
 	typedef		rm_ref<mapped_range_iterator>		self_type;
+
+	typedef		typename b::iterator_category 		iterator_category;
+	typedef		typename b::org_iterator 		org_iterator;
+	typedef		O					value_type;
+
+	using							typename b::size_type;
+	using							typename b::difference_type;
+	using							typename b::pointer;
+
+	typedef         value_type				const_reference;  // non-STL
+	typedef		value_type				reference;
+
+	// non-STL
+	using 							typename b::elem_type;
 
 	////// MEMBERS
 
 	
 	////// CTOR
-	//mapped_range_iterator ()							: b()    		{};  // default
 	mapped_range_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
-	mapped_range_iterator (parent_t* parent,  const org_iterator current)	: b(parent, current)	{};
+	mapped_range_iterator (parent_t* parent_p,  const org_iterator current)	: b(parent_p, current)	{};
 
 
 	////// CONVERSION  non-const --> const
-	operator mapped_range_iterator<Rg&&,F,O,true>() { return mapped_range_iterator<Rg&&,F,O,true>((parent_t*)b::parent, b::current); };
+	operator mapped_range_iterator<Rg&&,F,O,true>() { return mapped_range_iterator<Rg&&,F,O,true>((parent_t*)b::parent_p, b::current); };
 
 	////// IFACE
-	reference	operator*()  		{ return  ((parent_t*)b::parent)->f(*b::current); };
-	const_reference operator*() const 	{ return  ((parent_t*)b::parent)->f(*b::current); };
+	reference	operator*()  		{ return  ((parent_t*)b::parent_p)->f(*b::current); };
+	const_reference operator*() const 	{ return  ((parent_t*)b::parent_p)->f(*b::current); };
 
-				pointer		operator->()		{ return  &(operator*()); }
-				pointer	const 	operator->() const	{ return  &(operator*()); }
+	pointer		operator->()		{ return  &(operator*()); }
+	pointer	const 	operator->() const	{ return  &(operator*()); }
 	// ++ It
-				using 	b::operator++;
+	using 		b::operator++;
 
-	bool	operator==(const_iterator rhs)	const	{ return   b::current == rhs.current; }
-	bool	operator!=(const_iterator rhs)	const	{ return   b::current != rhs.current; }
-				//using	b::operator==;
-				//using	b::operator!=;
+	bool		operator==(const_iterator rhs)	const	{ return   b::current == rhs.current; }
+	bool		operator!=(const_iterator rhs)	const	{ return   b::current != rhs.current; }
 
 	///////////////////////////////////////////////////////////////////// INPORT ORG_ITERATOR METHODS
 	
 	//  bidiractional 
-				using 	b::operator--;
+	using 		b::operator--;
 	                                                          
 	// random access
-				using	b::operator+=;
-				using	b::operator-=;
-				using	b::operator[];
-				using	b::operator<;
-				using	b::operator<=;
-				using	b::operator>;
-				using	b::operator>=;
+	using		b::operator+=;
+	using		b::operator-=;
+	using		b::operator[];
+	using		b::operator<;
+	using		b::operator<=;
+	using		b::operator>;
+	using		b::operator>=;
  };
 
 
@@ -82,8 +82,8 @@ struct  mapped_range : basic_range<Rg> {
 
 	// STL IFACE
 	typedef		O  						value_type;
-	typedef		mapped_range_iterator<Rg,F,O,false>     		iterator;
-	typedef		mapped_range_iterator<Rg,F,O,true>			const_iterator;
+	typedef		mapped_range_iterator<Rg,F,O,false>    		iterator;
+	typedef		mapped_range_iterator<Rg,F,O,true>		const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
@@ -96,7 +96,6 @@ struct  mapped_range : basic_range<Rg> {
 				rg_reference<Rg>
 			 >::type  reference;
 
-
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
 	typedef		mapped_range					self_type;
@@ -106,13 +105,9 @@ struct  mapped_range : basic_range<Rg> {
 	// MEMBERS
 	F f;
 
-	////////////////////////////////////////////////////////////////  CTOR SPECIALIZATION
-
-	// default CTOR
-	//explicit basic_range(Rg&& rg)  : ref_container<Rg&&>(std::forward<Rg>(rg)), rg(this->value)  {};
-
-	// full
+	////  CTOR 
 	explicit mapped_range (Rg&& rg, F f) :   b(std::forward<Rg>(rg)),   f(f) {};
+
 
 	////  ASSIGNMENT
 	using b::operator=;
@@ -121,7 +116,6 @@ struct  mapped_range : basic_range<Rg> {
 	////  ITERATOR
 	      iterator	end()		{ return        iterator(this, endz(b::rg)); }
 	const_iterator	end()   const	{ return  const_iterator(this, endz(b::rg)); }
-
 
 	      iterator	begin()		{ return        iterator(this, std::begin(b::rg)); };
 	const_iterator	begin()	const	{ return  const_iterator(this, std::begin(b::rg)); };
