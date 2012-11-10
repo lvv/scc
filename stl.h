@@ -45,16 +45,17 @@ operator!      (const Rg& C) { return C.empty(); };
 
 	template<typename Rg>
 	auto
-front    (Rg&& C)  -> decltype(*std::begin(C))  { return std::forward<rg_reference<Rg>>(*std::begin(C)); };
+front    (Rg&& C)  -> decltype(*std::begin(C))  { return std::forward<decltype(*std::begin(C))>(*std::begin(C)); };
 
+/*
 	template<typename Rg>
-	//eIF <has_back<Rg>::value  &&  !std::is_array<Rg>::value, rg_reference<Rg>>
 	eIF <has_back<Rg>::value,  rg_reference<Rg>>
 back      (Rg&& C) { return std::forward<rg_reference<Rg>>(C.back()); };
+*/
 
 	template<class Rg, class=eIF<!has_back<Rg>::value>>
 	auto
-back      (Rg&& C) -> decltype(endz(C))  { return std::forward<rg_reference<Rg>>(*std::prev(sto::endz(C))); };
+back      (Rg&& C) -> decltype(endz(C))  { return std::forward<decltype(endz(C))>(*std::prev(sto::endz(C))); };
 
 
 //  x << Rg >> x   ---  remove head / tail;   usage: scc 'dlong V{1,2,3};  i << V >> j; __ i, V, j;'   prints: 1 {2} 3 

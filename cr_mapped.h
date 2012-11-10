@@ -1,4 +1,5 @@
 
+	// forward dcl
 	template< class Rg, class F = void*, class O = rg_elem_type<Rg> >  struct  cr_mapped;
 
 	template <class Rg, class F, class O, bool RO>
@@ -19,16 +20,16 @@ struct cr_mapped_iterator : chain_range_iterator<Rg,RO> {
 	typedef		cr_mapped_iterator<Rg,F,O,RO>		iterator;
 	typedef		cr_mapped_iterator<Rg,F,O,true>		const_iterator;
 
-				using							b::size_type;
-				using							b::difference_type;
+				using							typename b::size_type;
+				using							typename b::difference_type;
 				using							typename b::pointer;
 
 				typedef         value_type				const_reference;  // non-STL
 				typedef		value_type				reference;
 
 				// non-STL
-				using 							b::elem_type;
-				typedef		rm_ref<cr_mapped_iterator>		self_type;
+				using 							typename b::elem_type;
+	typedef		rm_ref<cr_mapped_iterator>		self_type;
 
 	////// MEMBERS
 
@@ -132,8 +133,12 @@ struct  cr_mapped : chain_range<Rg> {
 	using b::operator bool;
 
 	////  ELEM ACCESS
-	using b::front;
-	using b::back;
+	reference const	front()  const	{ return  *std::begin(b::rg); }
+	reference  	front()		{ return  *std::begin(b::rg); }
+
+	reference const back()  const	{ return  *std::prev(sto::endz(b::rg)); }  
+	reference  	back()		{ return  *std::prev(sto::endz(b::rg)); } 
+
 
 	////  INPORTED RG METHODS
 	using b::push_front;
