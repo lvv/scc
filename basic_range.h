@@ -178,9 +178,8 @@ struct  basic_range : ref_container<Rg&&> {
 	const_iterator	begin()	const	{ return  const_iterator(this, std::begin(rg)); };
 
 
-
 	////  RG PROPERTIES
-	size_t		size() const	{ return  sto::size (rg); };
+	size_t		size  () const	{ return  sto::size (rg); };
 	bool		empty () const	{ return  sto::empty(rg); }
 	explicit operator bool() const	{ return !sto::empty(rg); }
 
@@ -226,18 +225,21 @@ struct  basic_range : ref_container<Rg&&> {
 template<class Rg>		struct is_range_t<basic_range<Rg>>		: std::true_type  {};
 template<class Rg, bool RO>	struct is_range_t<basic_range_iterator<Rg,RO>>	: std::false_type {};
 
-template<class Rg>		struct is_chain_range               		: std::false_type {};
-template<class Rg>		struct is_chain_range<basic_range<Rg>>		: std::true_type {};
+template<class Rg>		struct is_sto_range               		: std::false_type {};
+template<class Rg>		struct is_sto_range<basic_range<Rg>>		: std::true_type {};
 
-template<class It>		struct is_chain_range_iterator      		: std::false_type {};
-template<class Rg, bool RO>	struct is_chain_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
+template<class It>		struct is_sto_range_iterator      		: std::false_type {};
+template<class Rg, bool RO>	struct is_sto_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
 */
 
 template<class Rg>		struct is_range_t<basic_range<Rg>>		: std::true_type  {};
 template<class Rg, bool RO>	struct is_range_t<basic_range_iterator<Rg,RO>>	: std::false_type {};
 
-template<class It>		struct is_chain_range_iterator      		: std::false_type {};
-template<class Rg, bool RO>	struct is_chain_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
+template<class Rg>		struct is_sto_range               		: std::false_type {};
+template<class Rg>		struct is_sto_range<basic_range<Rg>>		: std::true_type {};
+
+template<class It>		struct is_sto_range_iterator      		: std::false_type {};
+template<class Rg, bool RO>	struct is_sto_range_iterator <basic_range_iterator<Rg,RO>> 	: std::true_type {};
 
 
 
@@ -248,8 +250,6 @@ template<class Rg, bool RO>	struct is_chain_range_iterator <basic_range_iterator
 range(Rg&& rg)  {
 	return  basic_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
  };
-
-#include "scc/mapped_range.h"
 
 //////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
@@ -274,9 +274,6 @@ operator ||       (Rg&& rg, identity<std::function<T(const T&, const T&)>> f )  
 	const T init = front(rg);
 	return  std::accumulate(i, endz(rg), init, f);
  };
-
-
-						
 
 						}; 
 						#endif //  STO_CHAIN_RANGE_H

@@ -1,4 +1,11 @@
 
+						#ifndef  STO_MAPPED_RANGE_H
+						#define  STO_MAPPED_RANGE_H
+
+						#include "scc/basic_range.h"
+
+						namespace sto {
+
 	// forward dcl
 	template< class Rg, class F = void*, class O = rg_elem_type<Rg> >  struct  mapped_range;
 
@@ -12,6 +19,8 @@ struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 		mapped_range<Rg,F,O> const,
 		mapped_range<Rg,F,O>
 	>  parent_t;
+
+	parent_t * const & parent_p = (parent_t*)(b::parent_p);
 
 	// STL ITERATOR TYPES
 	
@@ -43,9 +52,12 @@ struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 
 
 	////// CONVERSION  non-const --> const
+	//operator mapped_range_iterator<Rg&&,F,O,true>() { return mapped_range_iterator<Rg&&,F,O,true>(parent_p, b::current); };
 	operator mapped_range_iterator<Rg&&,F,O,true>() { return mapped_range_iterator<Rg&&,F,O,true>((parent_t*)b::parent_p, b::current); };
 
 	////// IFACE
+	//reference	operator*()  		{ return  (parent_p->f)(*b::current); };
+	//const_reference operator*() const 	{ return  (parent_p->f)(*b::current); };
 	reference	operator*()  		{ return  ((parent_t*)b::parent_p)->f(*b::current); };
 	const_reference operator*() const 	{ return  ((parent_t*)b::parent_p)->f(*b::current); };
 
@@ -94,12 +106,11 @@ struct  mapped_range : basic_range<Rg> {
 				std::is_const<Rg>::value /* || RO*/,      // <-- different from interator
 				rg_const_reference<Rg>,
 				rg_reference<Rg>
-			 >::type  reference;
+			 >::type					reference;
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
 	typedef		mapped_range					self_type;
-	typedef		void						range_category;
 
 
 	// MEMBERS
@@ -150,7 +161,9 @@ struct  mapped_range : basic_range<Rg> {
 template<class Rg, class F, class O>		struct is_range_t<mapped_range<Rg,F,O>>			: std::true_type  {};
 template<class Rg, class F, class O, bool RO>	struct is_range_t<mapped_range_iterator<Rg,F,O,RO>>	: std::false_type {};
 
-template<class Rg, class F, class O, bool RO>	struct is_chain_range_iterator <mapped_range_iterator<Rg,F,O,RO>> 		: std::true_type {};
+template<class Rg, class F, class O>		struct is_sto_range<mapped_range<Rg,F,O>>		: std::true_type {};
+
+template<class Rg, class F, class O, bool RO>	struct is_sto_range_iterator <mapped_range_iterator<Rg,F,O,RO>> 		: std::true_type {};
 
 
 ////////////////////////////////////////////////////////////////////////////////  MAP:  Rg<T> * F    --> Rg<U>
@@ -225,3 +238,5 @@ operator *       (Rg&& rg, O (*f)(E) )    {
 	return   mapped_range<Rg&&, O(*)(E), E>  (std::forward<Rg>(rg), f);
  };
 
+						};
+						#endif //  STO_MAPPED_RANGE_H

@@ -6,6 +6,6 @@ set -v
 . u-iterator-range
 . u-mapped-range
 . u-numeric-range
-. u-pipe-range
+. u-predicated-range
 
 : '- - - - - - - - - - - - - - - - - - - - - - - -  U-RANGE passed   - - - - - - - - - - - - - - - - - - - - - - - - -'

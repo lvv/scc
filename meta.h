@@ -336,7 +336,7 @@ struct is_callable<F, R(Args...)> {
 	// can not make is_foo<R<Args...>()  constexpr func - needs partial specialization
 
 /////////////////////////////////////////////////////////////////// RANGE GENERICS: ENDZ, SIZE, CLEAR
-// not really a meta functions
+									// not really a meta functions
 
 /////  ENDZ - like std::end() but type const char[] is assumed to be C-string and its corresponding correct end (at '\0') is returned
 template<typename Rg>	auto  endz(Rg&& rg)                  -> decltype(std::end(rg))    { return  std::end(rg); };

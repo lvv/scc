@@ -142,13 +142,13 @@ CHECK(   (is_const_iterator<std::array<int,3>::const_iterator>()))
 CHECK( ! (is_const_iterator<std::array<int,3>::iterator>()))
 
 // basic_range
-CHECK(   (is_chain_range_iterator	<decltype(+range(vint{1}))>::value))
-CHECK( ! (is_chain_range_iterator	<decltype( range(vint{1}))>::value))
+CHECK(   (is_sto_range_iterator	<decltype(+range(vint{1}))>::value))
+CHECK( ! (is_sto_range_iterator	<decltype( range(vint{1}))>::value))
 CHECK(   (is_random_access_iterator	<decltype(+range(vint{1}))>::value))
 CHECK( ! (is_random_access_iterator	<decltype(+range(lint{1}))>::value))
 CHECK(   (is_bidirectional_iterator	<decltype(+range(vint{1}))>::value))
-CHECK( ! (is_chain_range		<decltype(+range(vint{1}))>::value))
-CHECK(   (is_chain_range		<decltype( range(vint{1}))>::value))
+CHECK( ! (is_sto_range		<decltype(+range(vint{1}))>::value))
+CHECK(   (is_sto_range		<decltype( range(vint{1}))>::value))
 CHECK(   (is_range			<decltype( range(vint{1}))>::value))
 CHECK( ! (is_range			<decltype(+range(vint{1}))>::value))
 
