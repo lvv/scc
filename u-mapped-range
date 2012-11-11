@@ -16,6 +16,7 @@ scc 'vs9 * size   || plus<int>()'
 
 # tuple  get<N>
 if [[ $CXX =~ cl ]]; then 
+	echo CLANG
 	scc  'vt9 * get<0>'
 	scc  'vt9 * get<1>'
 	scc  'm9  * get<1>'
