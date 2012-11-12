@@ -251,7 +251,9 @@ range(Rg&& rg)  {
 	return  basic_range<Rg&&>(std::forward<Rg>(rg));  // there is no copy on return
  };
 
-//////////////////////////////////////////////////////////////////////  Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
+//////////////////////////////////////////////////////////////////////  SIMPLE FOLD
+
+// Rg || F   ---  accumulate(+C+1,-C, ++C, F) -> D  		 
 
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
 	eIF <is_range<Rg>::value, R>					// const T&(cont T&,cont T&) -- plain functions
@@ -265,7 +267,7 @@ operator ||       (Rg&& rg, const R& (*f)(const T&, const T&) )    {
 operator ||       (Rg&& rg, R (*f)(const T&, const T&) )    {
 	auto i = std::next(std::begin(rg));
 	return  std::accumulate(i, endz(rg), front(rg), f);
- };
+ }
 	
 	template< typename Rg, typename T = rg_elem_type<Rg>, typename R = T > 
 	eIF <is_range<Rg>::value, R>							// overload for: lambda, std::plus
@@ -273,18 +275,18 @@ operator ||       (Rg&& rg, identity<std::function<T(const T&, const T&)>> f )  
 	auto i = std::next(std::begin(rg));
 	const T init = front(rg);
 	return  std::accumulate(i, endz(rg), init, f);
- };
+ }
 
- //////////////////////////////////////////////////////////////////   Rg | f(it,it) 
+//////////////////////////////////////////////////////////////////////////////////////////  SIMPLE PIPE
+
+//   Rg  |  void f(it,it) 		-- for std::sort, reverse, random_shuffle, ...
 
 	template<class Rg> 
-	//eIF <is_elem_of<decltype(*std::declval<It>()), Rg>::value,  Rg&&>					// const T&(cont T&,cont T&) -- plain functions
-	Rg&&
-//operator* (Rg&& rg, void (*f)(It b, It e) )    {
+	eIF <is_range<Rg>::value,  Rg&&>
 operator| (Rg&& rg, void (*f)(rg_iterator<Rg> b, rg_iterator<Rg> e) )    {
 	f(std::begin(rg),std::end(rg));
-	return  std::move(rg);
- };
+	return  std::forward<Rg>(rg);
+ }
 	
 						}; 
 						#endif //  STO_CHAIN_RANGE_H

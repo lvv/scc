@@ -11,7 +11,7 @@
 struct  iterator_range {
 		typedef		      I							iterator;
 		typedef		const I							const_iterator;
-		typedef		typename std::iterator_traits<I>::value_type		value_type;
+		typedef		typename std::iterator_traits<rm_ref<I>>::value_type		value_type;
 		typedef		typename std::iterator_traits<I>::difference_type	difference_type ;
 		typedef		typename std::iterator_traits<I>::pointer		pointer ;
 		typedef		typename std::iterator_traits<I>::reference		reference ;
@@ -72,6 +72,17 @@ template<typename I>	struct  is_range_t	<iterator_range<I>>	: std::true_type { }
 	eIF<is_iterator<I>::value, iterator_range<I>>
 range(I b, I e) { return iterator_range<I>(b,e); };
 
+	
+////////////////////////////////////////////////////////////////  SIMPLE PIPE
+
+	template<class Rg> 					// for std::unique
+	eIF <is_range<Rg>::value,  iterator_range<rg_iterator<Rg>>>
+operator| (Rg&& rg, rg_iterator<Rg> (*f)(rg_iterator<Rg> b, rg_iterator<Rg> e) )    {
+	auto b     = std::begin(rg);
+	auto new_e = f(b,std::end(rg));
+	// TODO: add erase	
+	return iterator_range<rg_iterator<Rg>>(b,new_e);
+ }
 
 						};
 						#endif //  STO_ITERATOR_RANGE_H

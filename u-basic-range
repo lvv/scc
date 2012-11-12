@@ -50,3 +50,10 @@ scc 'vs9 * size || plus<int>()'
 #######################################   FUNCTORS
 scc 'v9||add'
 scc 'vfloat v{1,5,9}; v||add'
+
+# stl algorithms
+scc 'vint{3,1,2} | sort | reverse'
+scc 'str s("HELLOW WORLD 321"); s | isalpha | sort ; s' 	# TOFIX
+scc 'v9 | random_shuffle'
+
+
