@@ -1,5 +1,5 @@
-					#ifndef  LVV_STL_H
-					#define  LVV_STL_H
+					#ifndef  STO_STL_H
+					#define  STO_STL_H
 
 					#include <stddef.h>
 
@@ -314,4 +314,4 @@ template<class Rg>	auto operator++(Rg&& rg)      -> decltype(front(rg)) 		{ retu
 template<class Rg>	auto operator++(Rg&& rg, int) -> decltype(back (rg)) 		{ return back (rg); }
 
 					};
-					#endif	// LVV_STL_H
+					#endif	// STO_STL_H
