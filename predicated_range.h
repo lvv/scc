@@ -1,25 +1,25 @@
 
-						#ifndef  STO_FILTER_RANGE_H
-						#define  STO_FILTER_RANGE_H
+						#ifndef  STO_PREDICATED_RANGE_H
+						#define  STO_PREDICATED_RANGE_H
 
 						#include "scc/basic_range.h"
 
 						namespace sto {
 
 	// forward dcl
-	template< class Rg, class F = void*>  struct  filter_range;
+	template< class Rg, class F = void*>  struct  predicated_range;
 
-/////////////////////////////////////////////////////////////////////////////////////////  FILTER_RANGE_ITERATOR
+/////////////////////////////////////////////////////////////////////////////////////////  PREDICATED_RANGE_ITERATOR
 
 	template <class Rg, class F, bool RO>
-struct filter_range_iterator : basic_range_iterator<Rg,RO> {
+struct predicated_range_iterator : basic_range_iterator<Rg,RO> {
 
 	typedef   basic_range_iterator<Rg,RO>  b;
 
 	typedef	SEL <
 		RO,
-		filter_range<Rg,F> const,
-		filter_range<Rg,F>
+		predicated_range<Rg,F> const,
+		predicated_range<Rg,F>
 	>  parent_t;
 
 	//parent_t * const & parent_p = (parent_t*)(b::parent_p);
@@ -27,7 +27,7 @@ struct filter_range_iterator : basic_range_iterator<Rg,RO> {
 	// STL ITERATOR TYPES
 	typedef		typename parent_t::iterator		iterator;
 	typedef		typename parent_t::const_iterator	const_iterator;
-	typedef		rm_ref<filter_range_iterator>		self_type;
+	typedef		rm_ref<predicated_range_iterator>		self_type;
 
 	typedef		typename b::iterator_category 		iterator_category;
 	typedef		typename b::org_iterator 		org_iterator;
@@ -53,13 +53,13 @@ struct filter_range_iterator : basic_range_iterator<Rg,RO> {
 
 	
 	////// CTOR
-	filter_range_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
-	filter_range_iterator (parent_t* parent_p,  const org_iterator current)	: b(parent_p, current)	{};
+	predicated_range_iterator (const self_type& rhs)				: b(rhs)  		{};  // copy 
+	predicated_range_iterator (parent_t* parent_p,  const org_iterator current)	: b(parent_p, current)	{};
 
 
 	////// CONVERSION  non-const --> const
-	//operator filter_range_iterator<Rg&&,F,true>() { return filter_range_iterator<Rg&&,F,true>(parent_p, b::current); };
-	operator filter_range_iterator<Rg&&,F,true>() { return filter_range_iterator<Rg&&,F,true>((parent_t*)b::parent_p, b::current); };
+	//operator predicated_range_iterator<Rg&&,F,true>() { return predicated_range_iterator<Rg&&,F,true>(parent_p, b::current); };
+	operator predicated_range_iterator<Rg&&,F,true>() { return predicated_range_iterator<Rg&&,F,true>((parent_t*)b::parent_p, b::current); };
 
 	////// IFACE
 	reference	operator*()  		{ return  *b::current; };
@@ -112,16 +112,16 @@ struct filter_range_iterator : basic_range_iterator<Rg,RO> {
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////  FILTER_RANGE
+/////////////////////////////////////////////////////////////////////////////////////////  PREDICATED_RANGE
 	template<class Rg, class F>
-struct  filter_range : basic_range<Rg> {
+struct  predicated_range : basic_range<Rg> {
 
 	typedef   basic_range<Rg>  b;
 
 	// STL IFACE
 	typedef		rg_elem_type<Rg>				value_type;
-	typedef		filter_range_iterator<Rg,F,false>    		iterator;
-	typedef		filter_range_iterator<Rg,F,true>		const_iterator;
+	typedef		predicated_range_iterator<Rg,F,false>    		iterator;
+	typedef		predicated_range_iterator<Rg,F,true>		const_iterator;
 
 	typedef		size_t  					size_type;
 	typedef		ptrdiff_t 					difference_type ;
@@ -136,14 +136,14 @@ struct  filter_range : basic_range<Rg> {
 
 	// non-STL
 	typedef		rg_elem_type<Rg>  				elem_type;
-	typedef		filter_range					self_type;
+	typedef		predicated_range					self_type;
 
 
 	// MEMBERS
 	F f;
 
 	////  CTOR 
-	explicit filter_range (Rg&& rg, F f) :   b(std::forward<Rg>(rg)),   f(f) {};
+	explicit predicated_range (Rg&& rg, F f) :   b(std::forward<Rg>(rg)),   f(f) {};
 
 
 	////  ASSIGNMENT
@@ -185,23 +185,23 @@ struct  filter_range : basic_range<Rg> {
 
 
 ////////////////////////////////////////////////////////////////  TRAITS
-template<class Rg, class F>		struct is_range_t<filter_range<Rg,F>>			: std::true_type  {};
-template<class Rg, class F, bool RO>	struct is_range_t<filter_range_iterator<Rg,F,RO>>	: std::false_type {};
+template<class Rg, class F>		struct is_range_t<predicated_range<Rg,F>>			: std::true_type  {};
+template<class Rg, class F, bool RO>	struct is_range_t<predicated_range_iterator<Rg,F,RO>>	: std::false_type {};
 
-template<class Rg, class F>		struct is_sto_range<filter_range<Rg,F>>			: std::true_type {};
+template<class Rg, class F>		struct is_sto_range<predicated_range<Rg,F>>			: std::true_type {};
 
-template<class Rg, class F, bool RO>	struct is_sto_range_iterator <filter_range_iterator<Rg,F,RO>> : std::true_type  {};
+template<class Rg, class F, bool RO>	struct is_sto_range_iterator <predicated_range_iterator<Rg,F,RO>> : std::true_type  {};
 
 ////////////////////////////////////////////////////////////////  PREDICATED
 
 
 //  Rg1 | Pred    --> range
-template<class Rg>		eIF<is_range<Rg>::value,  filter_range<Rg&&,std::function<bool(const rg_elem_type<Rg>&)> >>	operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred){ return   filter_range<Rg&&,std::function<bool(const rg_elem_type<Rg>&)>> (std::forward<Rg>(rg),  pred); };
-template<class Rg>		eIF<is_range<Rg>::value,  filter_range<Rg&&,std::function<bool(rg_elem_type<Rg>)>        >>	operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)>        pred){ return   filter_range<Rg&&,std::function<bool(rg_elem_type<Rg>)>       > (std::forward<Rg>(rg),  pred); };
-template<class Rg>		eIF<is_range<Rg>::value,  filter_range<Rg&&,bool(*)(const rg_elem_type<Rg>&)             >>	operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&)              ){ return   filter_range<Rg&&,bool(*)(const rg_elem_type<Rg>&)            > (std::forward<Rg>(rg),  pred); };
-template<class Rg>		eIF<is_range<Rg>::value,  filter_range<Rg&&,bool(*)(rg_elem_type<Rg>)                    >>	operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>)                     ){ return   filter_range<Rg&&,bool(*)(rg_elem_type<Rg>)                   > (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  predicated_range<Rg&&,std::function<bool(const rg_elem_type<Rg>&)> >>	operator|  (Rg&& rg,  std::function<bool(const rg_elem_type<Rg>&)> pred){ return   predicated_range<Rg&&,std::function<bool(const rg_elem_type<Rg>&)>> (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  predicated_range<Rg&&,std::function<bool(rg_elem_type<Rg>)>        >>	operator|  (Rg&& rg,  std::function<bool(rg_elem_type<Rg>)>        pred){ return   predicated_range<Rg&&,std::function<bool(rg_elem_type<Rg>)>       > (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  predicated_range<Rg&&,bool(*)(const rg_elem_type<Rg>&)             >>	operator|  (Rg&& rg,  bool(pred)(const rg_elem_type<Rg>&)              ){ return   predicated_range<Rg&&,bool(*)(const rg_elem_type<Rg>&)            > (std::forward<Rg>(rg),  pred); };
+template<class Rg>		eIF<is_range<Rg>::value,  predicated_range<Rg&&,bool(*)(rg_elem_type<Rg>)                    >>	operator|  (Rg&& rg,  bool(pred)(rg_elem_type<Rg>)                     ){ return   predicated_range<Rg&&,bool(*)(rg_elem_type<Rg>)                   > (std::forward<Rg>(rg),  pred); };
 template<class Rg, class F>	eIF<is_range<Rg>::value && is_callable<F, bool(rg_elem_type<Rg>)>::value, 
-							  filter_range<Rg&&, F>>						operator|  (Rg&& rg,  F pred)						{ return   filter_range<Rg&&,F> (std::forward<Rg>(rg),  pred); };
+							  predicated_range<Rg&&, F>>						operator|  (Rg&& rg,  F pred)						{ return   predicated_range<Rg&&,F> (std::forward<Rg>(rg),  pred); };
 		// Overload is better than SFINAE selection. With OL we do not need to specify functor template arguments
 						};
 						#endif //  STO_MAPPED_RANGE_H

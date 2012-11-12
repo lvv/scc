@@ -4,7 +4,7 @@
 						#include "scc/numeric_range.h"
 						#include "scc/iterator_range.h"
 						#include "scc/mapped_range.h"
-						#include "scc/filter_range.h"
+						#include "scc/predicated_range.h"
 
 						namespace sto {
 
