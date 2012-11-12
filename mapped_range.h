@@ -20,7 +20,8 @@ struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 		mapped_range<Rg,F,O>
 	>  parent_t;
 
-	//parent_t * const & parent_p = (parent_t*)(b::parent_p);
+	// if this line is uncommented - clang ICE.  Make const ref to cast pointer (temporary?)
+	parent_t * const & parent_p = (parent_t*)(b::parent_p);
 
 	// STL ITERATOR TYPES
 	
