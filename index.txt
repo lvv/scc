@@ -713,22 +713,22 @@ documented features are more stable.
 
 SCC uses +++ C++11 +++ extensively.  Because no complier yet
 implemented +++ C++11 +++ fully and each implemented different subset, 
-SCC very picky compiler.  See GCC, CLANG sections below. 
+SCC very picky about compiler.  See GCC, CLANG sections below. 
 
 Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
 Parser which extracts last +++ C++ +++ statement from snippet is semi-broken.
 It sometimes incorrectly parse (to extract last expression) multi-line scripts
 or expressions with "{}". See `u-sed` file for details.  As workaround
-terminate every line with semicolon (even for comment-line) and do not use
+terminate every line with semicolon (even comment-line) and do not use
 print-if-not-terminated-with-semicolon feature.
 
 
 GCC 
 ~~~
  
-SCC was mostly tested with 4.7.2/4.8-pre-release.
-If you need to use SCC with older GCC - use commit tagged as `v0.1`.
+SCC was mostly tested with GCC-4.7.2/4.8-pre-release and CLANG-3.2-pre-release.
+If you need to use SCC with older compiler - use commit tagged as `v0.1`.
 
 In course of development several GCC bugs were encountered.
 Luckily, GCC team is pretty quick to fix things after you will file a but report.
