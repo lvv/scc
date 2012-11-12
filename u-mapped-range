@@ -1,0 +1,29 @@
+
+set -o errexit
+set -v
+
+# Rg * F   ################################################################ MAPPPED
+
+# O == E
+scc '__ vint{-3,3} * abs,  str("Hello") * toupper, vint{-3,0,3,-1,10} * [](int x){return abs(x);};'
+scc '__ v9 * [](int x){return x+10;};'
+scc 'v9 * bind(std::plus<int>(),10,_1)'
+scc 'v9 * bind((const int& (*)(const int&, const int&))min, 5, _1)'
+#
+# O != E    -- map with type convertion  
+scc 'vc9 * strlen || plus<int>()'
+scc 'vs9 * size   || plus<int>()'
+
+# tuple  get<N>
+if [[ $CXX =~ cl ]]; then 
+	echo CLANG
+	scc  'vt9 * get<0>'
+	scc  'vt9 * get<1>'
+	scc  'm9  * get<1>'
+	scc  'vector<tuple<int,int>> VT{MT(1,11),MT(2,22)};  VT * get<1>'
+fi
+# todo scc '__ map<int,str>{{1,"aa"},{2,"bb"}} * std::get<0,int,str>;'
+#scc 'vector<tuple<int,int>> v{{1,11}, {2,22}};   v * get<1,int,int>'
+
+# 
+

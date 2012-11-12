@@ -1,0 +1,9 @@
+
+set -o errexit
+set -v
+
+################################################################# ITERATOR_RANGE
+# op=(value_type)
+scc 'range(v9/2, v9/5)   = 42;  v9'
+scc 'range(v9/5, v9/999) = v9;  v9'
+

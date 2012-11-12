@@ -3,7 +3,8 @@
 
 						#include "scc/numeric_range.h"
 						#include "scc/iterator_range.h"
-						#include "scc/chain_range.h"
+						#include "scc/mapped_range.h"
+						#include "scc/filter_range.h"
 
 						namespace sto {
 
@@ -15,7 +16,7 @@
 ////  it - n
 	template <class RgI>
 	eIF<
-		( is_numeric_range_iterator<RgI>::value  ||  is_chain_range_iterator<RgI>::value )
+		( is_numeric_range_iterator<RgI>::value  ||  is_sto_range_iterator<RgI>::value )
 		&&  is_random_access_iterator<RgI>::value
 		, rm_ref<decltype(std::declval<RgI>().current-1, std::declval<RgI>())> 
 	>  
@@ -27,7 +28,7 @@ operator-  (RgI it, typename RgI::difference_type n) {
 ////  it + n
 	template <class RgI>
 	eIF<
-		( is_numeric_range_iterator<RgI>::value  ||  is_chain_range_iterator<RgI>::value )
+		( is_numeric_range_iterator<RgI>::value  ||  is_sto_range_iterator<RgI>::value )
 		&&  is_random_access_iterator<RgI>::value
 		, rm_ref<decltype(std::declval<RgI>().current+1, std::declval<RgI>())> 
 	>  
@@ -39,7 +40,7 @@ operator+  (RgI it, typename RgI::difference_type n) {
 ////  n + it
 	template <class RgI>
 	eIF<
-		( is_numeric_range_iterator<RgI>::value  ||  is_chain_range_iterator<RgI>::value )
+		( is_numeric_range_iterator<RgI>::value  ||  is_sto_range_iterator<RgI>::value )
 		&&  is_random_access_iterator<RgI>::value
 		, rm_ref<decltype(1 + std::declval<RgI>().current,  std::declval<RgI>())> 
 	>  
@@ -51,7 +52,7 @@ operator+  (typename RgI::difference_type n,  RgI it) {
 ////  it - it
 	template <class RgI>
 	eIF <
-		( is_numeric_range_iterator<RgI>::value  ||  is_chain_range_iterator<RgI>::value )
+		( is_numeric_range_iterator<RgI>::value  ||  is_sto_range_iterator<RgI>::value )
 		&&  is_random_access_iterator<RgI>::value
 		, rm_ref<decltype(std::declval<RgI>().current - std::declval<RgI>().current,  typename RgI::difference_type())> 
 	>  
