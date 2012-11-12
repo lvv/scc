@@ -275,5 +275,16 @@ operator ||       (Rg&& rg, identity<std::function<T(const T&, const T&)>> f )  
 	return  std::accumulate(i, endz(rg), init, f);
  };
 
+ //////////////////////////////////////////////////////////////////   Rg | f(it,it) 
+
+	template<class Rg> 
+	//eIF <is_elem_of<decltype(*std::declval<It>()), Rg>::value,  Rg&&>					// const T&(cont T&,cont T&) -- plain functions
+	Rg&&
+//operator* (Rg&& rg, void (*f)(It b, It e) )    {
+operator| (Rg&& rg, void (*f)(rg_iterator<Rg> b, rg_iterator<Rg> e) )    {
+	f(std::begin(rg),std::end(rg));
+	return  std::move(rg);
+ };
+	
 						}; 
 						#endif //  STO_CHAIN_RANGE_H
