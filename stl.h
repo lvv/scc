@@ -180,10 +180,18 @@ operator >>  (sRn&& src, tRn&& trg)  {
 		return  std::forward<Rg>(rg);
 	 };
 
-	// map
+	// set
 		template<typename Rg>
 		Rg&&
 	erase_value_impl (Rg&& rg, rg_elem_type<Rg> value, map_erasable) {
+		rg.erase(value);
+		return  std::forward<Rg>(rg);
+	 };
+
+	// map
+		template<typename Rg>
+		Rg&&
+	erase_value_impl (Rg&& rg, typename Rg::key_type value, map_erasable) {
 		rg.erase(value);
 		return  std::forward<Rg>(rg);
 	 };
@@ -193,6 +201,15 @@ operator >>  (sRn&& src, tRn&& trg)  {
 operator- (Rg&& rg, rg_elem_type<Rg> value)    {
 	return  erase_value_impl(std::forward<Rg>(rg), value, erasable_category(rg));
  };
+
+	
+	// special case for map
+		template<class Rg>
+		eIF <is_range<Rg>::value , Rg>
+	operator- (Rg&& rg, typename rm_qualifier<Rg>::key_type value)    {
+		rg.erase(value);
+		return  std::forward<Rg>(rg);
+	 };
 
 
 //// Rg - pred

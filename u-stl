@@ -85,6 +85,10 @@ scc  'v9 - is_odd; v9'
 scc  'v9 - 2; v9'
 scc  'l9 - 2'
 scc  'l9 - is_even'
+scc 'set<int>{1,2,3} - 2'
+scc 'm9 - 2'
+
+
 
 
 
