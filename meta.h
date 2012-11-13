@@ -81,6 +81,8 @@ template<typename Rg>   using rg_reference      	= typename rg_traits<Rg>::refer
 template<typename Rg>   using rg_const_reference	= typename rg_traits<Rg>::const_reference;
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////  ERASABPLE_CATET
+
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 
 template<bool Cnd, class T=void>     	using  eIF		= typename std::enable_if <Cnd,T>::type;

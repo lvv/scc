@@ -49,10 +49,10 @@ struct basic_range_iterator {
 	typedef		basic_range_iterator<Rg,RO>			iterator;
 
 	typedef		size_t  					size_type;
-	typedef		ptrdiff_t 					difference_type ;
+	typedef		ptrdiff_t 					difference_type;
 	typedef		SEL <RO, const rm_ref<value_type>*, rm_ref<value_type>*>   	pointer;
 
-	typedef         rg_const_reference<Rg>     			const_reference;  // non-STL
+	typedef         rg_const_reference<Rg>     			const_reference;
 	typedef		typename std::conditional <
 				std::is_const<Rg>::value || RO,
 				rg_const_reference<Rg>,

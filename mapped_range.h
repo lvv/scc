@@ -38,7 +38,7 @@ struct mapped_range_iterator : basic_range_iterator<Rg,RO> {
 	using							typename b::difference_type;
 	using							typename b::pointer;
 
-	typedef         value_type				const_reference;  // non-STL
+	typedef         value_type				const_reference;
 	typedef		value_type				reference;
 
 	// non-STL

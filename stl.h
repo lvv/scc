@@ -164,19 +164,12 @@ operator >>  (sRn&& src, tRn&& trg)  {
 // ---  non callable
 	template<typename Rg, typename T>
 	eIF <is_range<Rg>::value , rg_iterator<Rg>>
-operator - (Rg&& C, const T& t)                                { return  detail::find_elem(std::forward<Rg>(C), t); };
+operator - (Rg&& C, const T& t)                                { return  erase_impl(C, t); };
 
-/*
-// ---  plain func
-	template<typename Rg>
-	eIF <is_range<Rg>::value , rg_iterator<Rg>>
-operator / (Rg&& C, bool(*t)(rg_elem_type<Rg>))                { return  detail::find_elem(std::forward<Rg>(C), t); };
+	template<typename Rg, typename T>
+	rg_iterator<Rg>
+erase_impl (Rg&& C, const T& t)                                { return  detail::find_elem(std::forward<Rg>(C), t); };
 
-// ---  func obj, lambda
-	template<typename Rg>
-	eIF <is_range<Rg>::value , rg_iterator<Rg>>
-operator / (Rg&& C, std::function<bool(rg_elem_type<Rg>)> t)   { return  detail::find_elem(std::forward<Rg>(C), t); };
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP/  (SEARCH)
 

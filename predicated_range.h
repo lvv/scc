@@ -37,7 +37,7 @@ struct predicated_range_iterator : basic_range_iterator<Rg,RO> {
 	using							typename b::difference_type;
 	using							typename b::pointer;
 
-	typedef         rg_const_reference<Rg>			const_reference;  // non-STL
+	typedef         rg_const_reference<Rg>			const_reference;
 
 	typedef		typename std::conditional <
 				std::is_const<Rg>::value || RO,
