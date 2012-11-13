@@ -83,6 +83,8 @@ scc '__ ++MT(1,2), MT(1,2)++;'
 # ERASE
 scc  'v9 - is_odd; v9'
 scc  'v9 - 2; v9'
+scc  'l9 - 2'
+scc  'l9 - is_even'
 
 
 
