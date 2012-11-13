@@ -184,7 +184,7 @@ operator >>  (sRn&& src, tRn&& trg)  {
 		template<typename Rg>
 		Rg&&
 	erase_value_impl (Rg&& rg, rg_elem_type<Rg> value, map_erasable) {
-		rg.remove(value);
+		rg.erase(value);
 		return  std::forward<Rg>(rg);
 	 };
 
