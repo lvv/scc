@@ -161,29 +161,23 @@ operator >>  (sRn&& src, tRn&& trg)  {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP-  (ERASE)
 
-////////  Rg - T  
-	// vector_erasable
+////  Rg - value  
 	
 		template<typename Rg>
-		Rg
-	erase_impl (Rg&& rg, rg_iterator<Rg> it, vector_erasable) {
-		rg.erase(it);
+		Rg&&
+	erase_value_impl (Rg&& rg, rg_elem_type<Rg> el, vector_erasable) {
+		rg.erase(std::remove(rg.begin(), rg.end(), el), rg.end());
 		return  std::forward<Rg>(rg);
 	 };
 
-		template<typename Rg>
-		Rg
-	erase_impl (Rg&& rg, rg_elem_type<Rg> x, vector_erasable) {
-		rg.erase(std::remove(rg.begin(), rg.end(), x), rg.end());
-		return  std::forward<Rg>(rg);
-	 };
-
-	template<class Rg, class X>
+	template<class Rg>
 	eIF <is_range<Rg>::value , Rg>
-operator% (Rg&& rg, X x)    { return  erase_impl(std::forward<Rg>(rg), x, erasable_category(rg)); };
+operator- (Rg&& rg, rg_elem_type<Rg> el)    {
+	return  erase_value_impl(std::forward<Rg>(rg), el, erasable_category(rg));
+ };
 
 
-////////////////////////////////////////////////////////
+//// Rg - pred
 		template<class Rg>
 		Rg&&
 	erase_predicate_impl(Rg&& rg,  bool(*f)(const rg_elem_type<Rg>&), vector_erasable) {
