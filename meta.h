@@ -173,8 +173,8 @@ struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same
 
 DEF_HAS_MEMBER(has_iterator,iterator)
 DEF_HAS_MEMBER(has_iterator_category,iterator_category)
-DEF_HAS_MEMBER(has_mapped_type,mapped_type)
 DEF_HAS_MEMBER(has_result_type,result_type)
+DEF_HAS_MEMBER(is_map,mapped_type)
 
 DEF_HAS_METHOD(has_push_front,push_front(typename T::value_type()))
 DEF_HAS_METHOD(has_push_back,push_back(typename T::value_type()))

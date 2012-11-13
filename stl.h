@@ -188,16 +188,9 @@ operator >>  (sRn&& src, tRn&& trg)  {
 		return  std::forward<Rg>(rg);
 	 };
 
-	// map
-		template<typename Rg>
-		Rg&&
-	erase_value_impl (Rg&& rg, typename Rg::key_type value, map_erasable) {
-		rg.erase(value);
-		return  std::forward<Rg>(rg);
-	 };
 
 	template<class Rg>
-	eIF <is_range<Rg>::value , Rg>
+	eIF <is_range<Rg>::value   &&  !is_map<Rg>::value, Rg>
 operator- (Rg&& rg, rg_elem_type<Rg> value)    {
 	return  erase_value_impl(std::forward<Rg>(rg), value, erasable_category(rg));
  };
@@ -205,7 +198,7 @@ operator- (Rg&& rg, rg_elem_type<Rg> value)    {
 	
 	// special case for map
 		template<class Rg>
-		eIF <is_range<Rg>::value , Rg>
+		eIF <is_range<Rg>::value   &&  is_map<Rg>::value, Rg>
 	operator- (Rg&& rg, typename rm_qualifier<Rg>::key_type value)    {
 		rg.erase(value);
 		return  std::forward<Rg>(rg);
@@ -232,11 +225,21 @@ operator- (Rg&& rg, rg_elem_type<Rg> value)    {
 
 
 	template<class Rg>
-	eIF<is_range<Rg>::value, Rg>
+	eIF<is_range<Rg>::value  &&  ! is_map<Rg>::value, Rg>
 operator-(Rg&& rg, bool(*f)(const rg_elem_type<Rg>&)) {
 	return  erase_predicate_impl(std::forward<Rg>(rg), f, erasable_category(rg));
  };
 
+	// special case for map
+		template<class Rg>
+		eIF<is_range<Rg>::value  &&  is_map<Rg>::value, Rg>
+	operator-(Rg&& rg, bool(*f)(const typename rm_qualifier<Rg>::key_type&)) {
+		for (auto i = rg.begin();  i != rg.end(); ) {
+			if (f(i->first))	rg.erase(i++);
+			else		++i;
+		}
+		return  std::forward<Rg>(rg);
+	 };
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  OP/  (SEARCH)

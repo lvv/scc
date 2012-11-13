@@ -238,7 +238,7 @@ struct in_t {
 
 	// SET
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  !has_mapped_type<Rg>::value,  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  !is_map<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::value_type t;
 		C.clear(); 
@@ -248,7 +248,7 @@ struct in_t {
 
 	// MAP
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  has_mapped_type<Rg>::value,  void>
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value  &&  is_map<Rg>::value,  void>
 	input(Rg& C)	{
 		typename Rg::key_type	  k;
 		typename Rg::mapped_type  m;
@@ -347,7 +347,7 @@ operator>>      (std::istream& is, std::tuple<TT...>& tup) {
 
 // SET
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && !has_mapped_type<Rg>::value, std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && !is_map<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::value_type c;
 	while(is>>c)  C.insert(c);
@@ -357,7 +357,7 @@ operator>>      (std::istream& is, Rg& C)    {
 
 // MAP
 		template<typename Rg>
-		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && has_mapped_type<Rg>::value, std::istream& >
+		eIF<is_range<Rg>::value  &&  has_1arg_insert<Rg>::value && is_map<Rg>::value, std::istream& >
 operator>>      (std::istream& is, Rg& C)    {
 	typename Rg::key_type	  k;
 	typename Rg::mapped_type  m;
