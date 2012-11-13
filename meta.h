@@ -5,6 +5,12 @@
 					#include <functional>
 					#include <iterator>
 					#include <array>
+					#include <list>
+					#include <forward_list>
+					#include <map>
+					#include <set>
+					#include <unordered_set>
+					#include <unordered_map>
 					#include <stack>
 					#include <queue>
 					#include <tuple>
@@ -81,7 +87,34 @@ template<typename Rg>   using rg_reference      	= typename rg_traits<Rg>::refer
 template<typename Rg>   using rg_const_reference	= typename rg_traits<Rg>::const_reference;
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////  ERASABPLE_CATET
+/////////////////////////////////////////////////////////////////////////////////////////////////  ERASABPLE_CATEGORY
+
+struct non_erasable{};
+struct cstr_erasable{};
+struct vector_erasable{};
+struct list_erasable{};
+struct map_erasable{};
+
+								non_erasable		erasable_category(...);	
+
+template<size_t N>						cstr_erasable		erasable_category(char(&)[N]);	
+
+template<class T, class A>					vector_erasable		erasable_category(std::vector<T,A>);	
+template<class T, class A>					vector_erasable		erasable_category(std::deque<T,A>);	
+
+template<class T, class A>					list_erasable		erasable_category(std::list<T,A>);	
+template<class T, class A>					list_erasable		erasable_category(std::forward_list<T,A>);	
+
+template<class T, class C, class A>				map_erasable		erasable_category(std::set<T,C,A>);
+template<class T, class C, class A>				map_erasable		erasable_category(std::multiset<T,C,A>);
+template<class T, class C, class A>				map_erasable		erasable_category(std::unordered_set<T,C,A>);
+template<class T, class C, class A>				map_erasable		erasable_category(std::unordered_multiset<T,C,A>);
+
+template<class K, class V, class C, class A>			map_erasable		erasable_category(std::map<K,V,C,A>);
+template<class K, class V, class C, class A>			map_erasable		erasable_category(std::multimap<K,V,C,A>);
+template<class K, class V, class H, class KE, class A>		map_erasable		erasable_category(std::unordered_map<K,V,H,KE,A>);
+template<class K, class V, class H, class KE, class A>		map_erasable		erasable_category(std::unordered_multimap<K,V,H,KE,A>);
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////  STD SHORTCUTS
 

@@ -161,5 +161,11 @@ CHECK(   (is_random_access_iterator	<decltype(+range(2))>::value))
 CHECK(   (is_range			<decltype( range(2))>::value))
 CHECK( ! (is_range			<decltype(+range(2))>::value))
 
+// erasable_category
+CHECK(   (is_same<non_erasable,decltype(erasable_category(1))>::value))
+CHECK(   (is_same<non_erasable,decltype(erasable_category("abc"))>::value))
+CHECK(   (is_same<cstr_erasable,decltype(erasable_category(c9))>::value))
+CHECK(   (is_same<vector_erasable,decltype(erasable_category(v9))>::value))
+
 					CHECK_EXIT;
 					}
