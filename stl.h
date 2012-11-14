@@ -243,15 +243,23 @@ operator-(Rg&& rg, bool(*f)(const typename rm_qualifier<Rg>::key_type&)) {
 
 // rg - it
 	template<typename Rg>
-	Rg&&
+	eIF<is_range<Rg>::value  &&  !is_cstr<Rg>::value,  Rg&&>
 operator-(Rg&& rg,  rg_iterator<Rg> it) {
 	rg.erase(it);
 	return  std::forward<Rg>(rg);
  };
 
+// cstr - it
+	template<typename Rg>
+	eIF<is_range<Rg>::value  &&  is_cstr<Rg>::value,  Rg&&>
+operator-(Rg&& rg,  rg_iterator<Rg> it) {
+	std::copy(it+1, endz(rg), it);
+	return  std::forward<Rg>(rg);
+ };
+
 // rg - sub_rg
 	template<class Rg, class sub_Rg>
-	eIF<is_range<Rg&>::value  &&  is_range<sub_Rg>::value  &&  have_same_elem<Rg,sub_Rg>::value,  Rg&&>
+	eIF<is_range<Rg>::value  &&  !is_cstr<Rg>::value &&  is_range<sub_Rg>::value  &&  have_same_elem<Rg,sub_Rg>::value,  Rg&&>
 operator-(Rg&& rg,  sub_Rg&& sub_rg) {
 	auto rg_e = endz(rg);
 	auto b    = std::search(std::begin(rg), rg_e, std::begin(sub_rg), endz(sub_rg));
@@ -259,6 +267,19 @@ operator-(Rg&& rg,  sub_Rg&& sub_rg) {
 	auto e = b;
 	std::advance(e,size(sub_rg));
 	rg.erase(b,e); 
+	return  std::forward<Rg>(rg);
+ };
+
+// cstr - sub_rg
+	template<class Rg, class sub_Rg>
+	eIF<is_cstr<Rg>::value &&  is_range<sub_Rg>::value  &&  have_same_elem<Rg,sub_Rg>::value,  Rg&&>
+operator-(Rg&& rg,  sub_Rg&& sub_rg) {
+	auto rg_e = endz(rg);
+	auto b    = std::search(std::begin(rg), rg_e, std::begin(sub_rg), endz(sub_rg));
+	if (b==rg_e)  return  std::forward<Rg>(rg);
+	auto e = b;
+	//rg.erase(b,e); 
+	std::copy(e,rg_e+1,b);
 	return  std::forward<Rg>(rg);
  };
 
