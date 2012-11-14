@@ -89,6 +89,9 @@ scc 'set<int>{1,2,3} - 2'
 scc 'm9 - 2'
 scc 'm9 - is_odd'
 scc 'l9-+l9, v9-+v9, m9-+m9, st9-+st9'
+scc 'str("abcd") - "bc"'
+scc 'v9 - v23' 
+
 
 
 
