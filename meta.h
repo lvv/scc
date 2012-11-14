@@ -124,10 +124,10 @@ template<typename Rg>	                using  rg_elem_fwd	= typename  copy_rcv<Rg
 template<typename Rg>	                using  rg_iterator_fwd	= typename  copy_rcv<Rg&&, rg_iterator<Rg>>::type;
 
 ///template<class T, class TT=rm_qualifier<T>>  constexpr bool 
-///is_c_string() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
+///is_cstr() { return std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value; }
 
 template<class T, class TT=rm_qualifier<T>>
-struct is_c_string_t { enum { value = std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value }; };
+struct is_cstr { enum { value = std::is_array<TT>::value  &&  std::is_same<char, typename std::remove_extent<TT>::type>::value }; };
 
 
 

@@ -209,7 +209,7 @@ struct  basic_range : ref_container<Rg&&> {
 
 	////  ADDED RG METHODS
 		template<class U=Rg>  
-		eIF<is_c_string_t<U>::value>	
+		eIF<is_cstr<U>::value>	
 	push_back(char value)			{
 		auto e=endz(rg);  
 		assert(e < (rg + std::extent<rm_qualifier<U>>::value-1)); 

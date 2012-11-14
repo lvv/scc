@@ -59,17 +59,17 @@ CHECK(   is_string<const string&>::value)
 
 
 //  IS_C_STRING
-CHECK   ( is_c_string_t<decltype( "abc")>   ::value)
-CHECK   ( is_c_string_t<char[3]>            ::value)
-CHECK   ( ! is_c_string_t<unsigned char[3]> ::value)
-CHECK   ( ! is_c_string_t<signed char[3]>   ::value)
-CHECK   ( ! is_c_string_t<int[3]>           ::value)
-CHECK   ( is_c_string_t<char(&)[3]>         ::value)
-CHECK   ( is_c_string_t<const char[3]>      ::value)
-//CHECK ( ! is_c_string_t<char*>            ::value)
-//CHECK ( is_c_string_t<const char*>        ::value)
-CHECK   ( ! is_c_string_t<string>           ::value)
-CHECK   ( ! is_c_string_t<const string&>    ::value)
+CHECK   ( is_cstr<decltype( "abc")>   ::value)
+CHECK   ( is_cstr<char[3]>            ::value)
+CHECK   ( ! is_cstr<unsigned char[3]> ::value)
+CHECK   ( ! is_cstr<signed char[3]>   ::value)
+CHECK   ( ! is_cstr<int[3]>           ::value)
+CHECK   ( is_cstr<char(&)[3]>         ::value)
+CHECK   ( is_cstr<const char[3]>      ::value)
+//CHECK ( ! is_cstr<char*>            ::value)
+//CHECK ( is_cstr<const char*>        ::value)
+CHECK   ( ! is_cstr<string>           ::value)
+CHECK   ( ! is_cstr<const string&>    ::value)
 
 //  HAS_PUSH_BACK
 CHECK(   has_push_back<vint>::value			)
