@@ -193,29 +193,33 @@ struct  basic_range : ref_container<Rg&&> {
 
 
 	////  INPORTED RG METHODS
-	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(const elem_type&  value)	{rg.push_back(value);}
-	template<class U=Rg>   eIF<has_push_back<U>::value>		push_back(      elem_type&& value)	{rg.push_back(std::move(value));}
+	template<class U=Rg>   eIF<has_push_back<U>::value>	push_back(const elem_type&  value)	{ rg.push_back(value);}
+	template<class U=Rg>   eIF<has_push_back<U>::value>	push_back(      elem_type&& value)	{ rg.push_back(std::move(value));}
 
-	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(const elem_type&  value)	{rg.push_front(value);}
-	template<class U=Rg>   eIF<has_push_front<U>::value>		push_front(      elem_type&& value)	{rg.push_front(std::move(value));}
+	template<class U=Rg>   eIF<has_push_front<U>::value>	push_front(const elem_type&  value)	{ rg.push_front(value);}
+	template<class U=Rg>   eIF<has_push_front<U>::value>	push_front(      elem_type&& value)	{ rg.push_front(std::move(value));}
 
-	template<class U=Rg>   eIF<has_1arg_insert<U>::value>		insert(const elem_type&  value)		{rg.insert(value);}
-	template<class U=Rg>   eIF<has_1arg_insert<U>::value>		insert(      elem_type&& value)		{rg.insert(std::move(value));}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(const elem_type&  value)		{ rg.insert(value);}
+	template<class U=Rg>   eIF<has_1arg_insert<U>::value>	insert(      elem_type&& value)		{ rg.insert(std::move(value));}
 
-	template<class U=Rg>   eIF<has_pop_back<U>::value>		pop_back()				{rg.pop_back();}
-	template<class U=Rg>   eIF<has_pop_front<U>::value>		pop_front()				{rg.pop_front();}
+	template<class U=Rg>   eIF<has_pop_back<U>::value>	pop_back()				{ rg.pop_back();}
+	template<class U=Rg>   eIF<has_pop_front<U>::value>	pop_front()				{ rg.pop_front();}
+
+	// erase
+	template<class U=Rg>   eIF<has_erase2<U>::value>	erase(rg_iterator<Rg> b, rg_iterator<Rg> e)	{ rg.erase(b,e);}
+	template<class U=Rg>   eIF<has_erase1<U>::value>	erase(rg_iterator<Rg> p)			{ rg.erase(p);  }
+
+	// cstr
+	template<class U=Rg>   eIF<is_cstr<U>::value>		push_back(const elem_type&  value)	{ auto e=endz(rg);  *e=value; *++e='\0';}
+	template<class U=Rg>   eIF<is_cstr<U>::value>		push_front(const elem_type&  value)	{ std::copy(rg, endz(rg)+1, rg+1); *rg=value;}
+	template<class U=Rg>   eIF<is_cstr<U>::value>		pop_back()				{ *(endz(rg)-1) = '\0';}
+	template<class U=Rg>   eIF<is_cstr<U>::value>		pop_front()				{ std::copy((rg+1), endz(rg)+1, rg);}
+	template<class U=Rg>   eIF<is_cstr<U>::value>		erase(rg_iterator<Rg> b, rg_iterator<Rg> e)	{ std::copy(e,endz(rg)+1,b); }
+	template<class U=Rg>   eIF<is_cstr<U>::value>		erase(rg_iterator<Rg> p)			{ std::copy(p+1,endz(rg)+1,p); }
+
+
 	
-	template<class U=Rg>  auto  operator[] (difference_type n) -> decltype(std::declval<U>()[0])   { return  rg[n]; } // FIXME for pred
-
-	////  ADDED RG METHODS
-		template<class U=Rg>  
-		eIF<is_cstr<U>::value>	
-	push_back(char value)			{
-		auto e=endz(rg);  
-		assert(e < (rg + std::extent<rm_qualifier<U>>::value-1)); 
-		*e = value; 
-		*++e='\0';
-	}
+	template<class U=Rg>  auto  operator[] (difference_type n) -> decltype(std::declval<U>()[0])   		{ return  rg[n]; } // FIXME for pred
  };
 
 

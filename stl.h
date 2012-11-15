@@ -87,14 +87,15 @@ operator--      (Rg&& C, int)    { C.pop_back();    return  std::forward<Rg>(C);
 		template<class Rg, class X>  eIF<has_push_back  <Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.push_back (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>	append_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
+		//template<class Rg, class X>  eIF<is_cstr<Rg>::value, Rg&&>		append_elem(Rg&& rg1, X&& x)   { auto e=endz(rg1); *e=x; *(e+1)='\0'; return std::forward<Rg>(rg1); };
+		//template<size_t N>                           char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
 
 		template<class Rg, class X>  eIF<has_push_front <Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.push_front(std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<class Rg, class X>  eIF<has_push       <Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.push      (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<class Rg, class X>  eIF<has_1arg_insert<Rg>::value, Rg&&>	prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::forward<X>(x));  return std::forward<Rg>(rg1); };
 		template<class Rg, class X>  eIF<!has_push_front<Rg>::value && has_insert<Rg>::value, Rg&&>
 											prepend_elem(Rg&& rg1, X&& x)   { rg1.insert    (std::begin(rg1), std::forward<X>(x));  return std::forward<Rg>(rg1); };
-		//template<size_t N>                                char (&append_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  *e=c;  *++e='\0';  return S; };
+		//template<size_t N>                                               char (&prepend_elem(char (&S)[N], char c))[N]  { char* e=endz(S);  assert((e-S)<N);  std::copy(S,e+1, S+1); *S=c;  return S; };
 
 	}
 
@@ -250,12 +251,14 @@ operator-(Rg&& rg,  rg_iterator<Rg> it) {
  };
 
 // cstr - it
+/*
 	template<typename Rg>
 	eIF<is_range<Rg>::value  &&  is_cstr<Rg>::value,  Rg&&>
 operator-(Rg&& rg,  rg_iterator<Rg> it) {
 	std::copy(it+1, endz(rg), it);
 	return  std::forward<Rg>(rg);
  };
+ */
 
 // rg - sub_rg
 	template<class Rg, class sub_Rg>

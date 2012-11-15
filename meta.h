@@ -191,6 +191,8 @@ DEF_HAS_METHOD(has_back,back())
 DEF_HAS_METHOD(has_front,front())
 DEF_HAS_METHOD(has_top,top())
 DEF_HAS_METHOD(has_clear,clear())
+DEF_HAS_METHOD(has_erase2,erase(rg_iterator<T>(), rg_iterator<T>()))
+DEF_HAS_METHOD(has_erase1,erase(rg_iterator<T>()))
 
 
 //////////////////////////////////////////////////////////////////////////////////////// IS_ITERABLE
