@@ -10,7 +10,7 @@
 					#include <tuple>
 					#include <cassert>
 
-					#include "meta.h"
+					#include <sto/meta.h>
 
 					namespace sto {
 

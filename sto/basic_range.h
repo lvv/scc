@@ -2,13 +2,13 @@
 						#ifndef  STO_CHAIN_RANGE_H
 						#define  STO_CHAIN_RANGE_H
 
-						#include "scc/meta.h"
-						#include "scc/stl.h"
+						#include <sto/meta.h>
+						#include <sto/stl.h>
 
 						/*
 						#ifndef NDEBUG
 						#include <iostream>
-						#include <scc/debug.h>
+						#include <sto/debug.h>
 						#endif
 						*/
 

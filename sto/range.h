@@ -1,10 +1,10 @@
 						#ifndef  STO_RANGE_H
 						#define  STO_RANGE_H
 
-						#include "scc/numeric_range.h"
-						#include "scc/iterator_range.h"
-						#include "scc/mapped_range.h"
-						#include "scc/predicated_range.h"
+						#include <sto/numeric_range.h>
+						#include <sto/iterator_range.h>
+						#include <sto/mapped_range.h>
+						#include <sto/predicated_range.h>
 
 						namespace sto {
 

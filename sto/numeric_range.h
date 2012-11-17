@@ -1,9 +1,9 @@
 						#ifndef  STO_NUMERIC_RANGE_H
 						#define  STO_NUMERIC_RANGE_H
 
-						#include "scc/meta.h"
-						#include "scc/functor.h"
-						// why we need this? #include "scc/iterator_range.h"
+						#include <sto/meta.h>
+						#include <sto/functor.h>
+						// why we need this? #include <sto/iterator_range.h>
 
 						namespace sto {
 

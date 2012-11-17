@@ -16,7 +16,7 @@
 						using std::sregex_token_iterator;
 						using std::cregex_token_iterator;
 
-					#include "scc/range.h"
+					#include <sto/range.h>
 
 					namespace sto {
 

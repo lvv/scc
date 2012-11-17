@@ -1,5 +1,5 @@
 				#include <scc/simple.h>
-				#include <scc/debug.h>
+				#include <sto/debug.h>
 				#include <lvv/check.h>
 				using namespace sto;
 

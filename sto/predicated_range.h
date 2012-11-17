@@ -2,7 +2,7 @@
 						#ifndef  STO_PREDICATED_RANGE_H
 						#define  STO_PREDICATED_RANGE_H
 
-						#include "scc/basic_range.h"
+						#include <sto/basic_range.h>
 
 						namespace sto {
 

@@ -7,7 +7,7 @@
 
 
 #ifndef NDEBUG
-#include "scc/debug.h"
+#include "sto/debug.h"
 #endif
 
 

@@ -17,7 +17,7 @@
 						using	std::endl;
 						using	std::ostream;
 
-					#include "scc/range.h"
+					#include <sto/range.h>
 
 					namespace sto {
 

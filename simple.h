@@ -1,10 +1,11 @@
 #ifndef  SCC_SIMPLE_H
 #define  SCC_SIMPLE_H
 
-#include "scc/stl.h"
-#include "scc/range.h"
-#include "scc/io.h"
-#include "scc/regex.h"
+// STO
+#include "sto/stl.h"
+#include "sto/range.h"
+#include "sto/io.h"
+#include "sto/regex.h"
 
 
 // list af all C/C++ headers --- http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c
@@ -14,7 +15,7 @@
 #include <cstdlib>
 //#include <cstddef>
 
-#include "scc/functor.h" 	// complement for <cctype>
+#include <sto/functor.h> 
 	using namespace sto;
 
 #include <cstring>
