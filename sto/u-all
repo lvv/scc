@@ -1,0 +1,12 @@
+
+set -o errexit
+set -v 
+
+make -B u-meta && ./u-meta
+. u-stl
+. u-in
+. u-regex
+scc -f u-print.h
+. u-range
+
+: '= = = = = = = = = = = = = = = = = = = = = = = = ALL PASS = = = = = = = = = = = = = = = = = = = = = = = = ='

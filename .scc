@@ -1,0 +1,4 @@
+
+### Default SCC config
+
+CXXFLAGS+=" -I $PWD/sto "
