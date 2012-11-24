@@ -864,6 +864,7 @@ FORMATS
 	CSV
 		http://csvkit.readthedocs.org/en/latest/index.html
 		http://www.partow.net/programming/strtk/index.html
+		http://blog.johantibell.com/2012/11/streaming-and-incremental-csv-parsing.html
 	XML
 		xml parser in spirit
 			-- http://boost-spirit.com/repository/applications/xml.zip
