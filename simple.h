@@ -10,6 +10,10 @@
 
 // list af all C/C++ headers --- http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c
 
+//////////////////////////////////////////////////////////////////// NUMERIC CONSTANTS
+const double e      = 2.7182818284590452354;
+const double pi     = 3.14159265358979323846;
+
 //////////////////////////////////////////////////////////////////// C
 
 #include <cstdlib>
