@@ -3,5 +3,6 @@ set -o errexit
 set -v 
 
 . u-scc
+. u-strr
 
 : '= = = = = = = = = = = = = = = = = = = = = = = = ALL PASS = = = = = = = = = = = = = = = = = = = = = = = = ='

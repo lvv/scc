@@ -60,7 +60,7 @@ while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: opt;  do
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
 		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
 
-		a)	scc_NOAWK=1 ;;
+		a)	scc_AWK=1 ;;
 		A)	unset scc_AWK ;;
 
 		s)	scc_STO=1 ;;
@@ -96,7 +96,7 @@ done
 #### CONFIG
 
 [[ $scc_STO ]] && CXXFLAGS+=" -Dscc_STO "
-[[ $scc_AWK ]] && CXXFLAGS+=" -Dscc_AWk "
+[[ $scc_AWK ]] && CXXFLAGS+=" -Dscc_AWK "
 default_CXX="${default_CXX-g++}"
 
 

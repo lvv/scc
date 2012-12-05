@@ -2,7 +2,6 @@
 
 					#ifndef  SCC_AWK_H
 					#define  SCC_AWK_H
-					using namespace sto;
 
 
 struct strr {         ///////////////////////////////////////////////////////  STRR
@@ -25,10 +24,12 @@ struct strr {         ///////////////////////////////////////////////////////  S
  };
 
 
+#ifdef scc_STO
 namespace sto {
 template<>		struct  is_ioable_t    <strr>:   std::true_type  {};
 template<>		struct  is_range_t <strr>:   std::false_type  {};
 };
+#endif
 
 	std::ostream&
 operator<<      (std::ostream& os, const strr& sr) {
@@ -67,6 +68,7 @@ struct	fld : strr {
 
 	// CONVERT FROM T
 	explicit fld(const char*   s)			: strr(s)	{};
+	template<size_t N> fld(const char   (&s)[N])			: strr(s)	{};
 	explicit fld(const std::string& s)	{ assign (s.begin(), s.end()); };
 	explicit fld(int           i)	{*this = (long)i;};
 	explicit fld(long          i)	{*this = (long)i;};
@@ -165,10 +167,12 @@ struct	fld : strr {
 	long				operator% (const fld& s1, const fld& s2){  return  long(s1) * long(s2); }
 
 
+#ifdef scc_STO
 namespace sto {
 template<>		struct  is_ioable_t <fld>	        : std::true_type  {};
 template<>		struct  is_range_t <fld>	: std::false_type  {};
 };
+#endif
 ///////////////////////////////////////////////////////////////////////////////  R_t
 
 		template<typename T>
@@ -419,9 +423,11 @@ struct buf_t {
 
 
 // traits
+#ifdef scc_STO
 namespace sto {
 template<>	struct  is_string_t    <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 template<>	struct  is_string_t    <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
 };
+#endif
 
 					#endif // SCC_AWK

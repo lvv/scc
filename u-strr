@@ -2,57 +2,56 @@
 set -o errexit
 set -v
 
-scc 'auto P = pair<int,float>{1,3.3};  __ P, ++P, P++'
 
 scc '
-	//{ strr f("abc");  fld f2 (f);	__ f2; }
+	//{ strr f("abc");  fld f2 (f);	__ f2; };
+	{ fld f; string s("abc"); f.assign(s.begin(), s.end()); 	__ f;  };
+
+	{ fld f("abc");			__ f;  };
+	{ fld f = "abc";		__ f;  };
+	{ fld f("abc");  fld f2 (f);	__ f2; };
+
+
+
+	{ fld f("abc");  fld f2 = f;	__ f2; };
+
+	{ fld s("1.23");	__ (double)s; };
+	{ fld s("1.23");	__ (float)s; };
+	{ fld s("1.23");	__ (int)s; };
+	{ fld s("1.23");	__ (long)s; };
+	{ fld s("1.23");	__ (int)(char)s; };
+
+	{ fld s("3.33"); s=1; 	__ s; };
+	{ fld s("3.33"); s=1l; 	__ s; };
+	{ fld s("3.33"); s=1.f;	__ s; };
+
+	{ fld s("3.33");  	__ s+7; };
+	{ fld s("3.33");  	__ 7+s; };
+	{ fld s("3.33");  	__ s+6.67; };
+	{ fld s("3.33");  	__ 6.67+s; };
+	{ fld s("3.33");   	__ fld("6.67")+s; };
+
+	{ fld s("3.33");  	__ (s+=7); };
+	{ fld s("3.33");  	__ (s+=6.67); };
+
+	{ fld s("22.22");  	__ (s-=12); };
+	{ fld s("22.22");  	__ (s-=12.22); };
 
 '
 exit
-	{ fld f; str s("abc"); f.assign(s.bb, s.ee); 	__ f;  }
-
-	{ fld f("abc");			__ f;  }
-	{ fld f = "abc";		__ f;  }
-	{ fld f("abc");  fld f2 (f);	__ f2; }
 
 
+scc 'fld s("1.11"); s+1'
+scc 'fld s("1.11"); s+1l'
 
-	{ fld f("abc");  fld f2 = f;	__ f2; }
-
-	{ fld s("1.23");	__ (double)s; }
-	{ fld s("1.23");	__ (float)s; }
-	{ fld s("1.23");	__ (int)s; }
-	{ fld s("1.23");	__ (long)s; }
-	{ fld s("1.23");	__ (int)(char)s; }
-
-	{ fld s("3.33"); s=1; 	__ s; }
-	{ fld s("3.33"); s=1l; 	__ s; }
-	{ fld s("3.33"); s=1.f;	__ s; }
-
-	{ fld s("3.33");  	__ s+7; }
-	{ fld s("3.33");  	__ 7+s; }
-	{ fld s("3.33");  	__ s+6.67; }
-	{ fld s("3.33");  	__ 6.67+s; }
-	{ fld s("3.33");   	__ fld("6.67")+s; }
-
-	{ fld s("3.33");  	__ (s+=7); }
-	{ fld s("3.33");  	__ (s+=6.67); }
-
-	{ fld s("22.22");  	__ (s-=12); }
-	{ fld s("22.22");  	__ (s-=12.22); }
-
-
-scc 'field s("1.11"); s+1'
-scc 'field s("1.11"); s+1l'
-
-scc 'field s("1.11"); s+1'
-scc 'field s("1.11"); s=1.1'
-scc 'field s("1.11"); s=1.1'
-scc 'field s("1.11"); s+1.1'
-scc 'field s("1.11"); s+2.22'
-scc 'field s("1.11"); s+=2.22'
-scc 'field s("1.11"); s=2.22'
-scc 'field s("1.11"); s=1+2.22'
-scc 'field s("1.11"); s+1.11'
+scc 'fld s("1.11"); s+1'
+scc 'fld s("1.11"); s=1.1'
+scc 'fld s("1.11"); s=1.1'
+scc 'fld s("1.11"); s+1.1'
+scc 'fld s("1.11"); s+2.22'
+scc 'fld s("1.11"); s+=2.22'
+scc 'fld s("1.11"); s=2.22'
+scc 'fld s("1.11"); s=1+2.22'
+scc 'fld s("1.11"); s+1.11'
 
 : '- - - - - - - - - - - - - - - - - - - - - - - -  U-STR passed   - - - - - - - - - - - - - - - - - - - - - - - - -'

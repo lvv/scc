@@ -379,5 +379,12 @@ typedef		std::list<std::string>		lstr;
 #define		xALL(C)		for (auto x:C)
 
 
+#ifndef STO_H
+	#undef 		_
+	#define		_    std::cout<< 
+	#undef 		__
+	#define		__   std::cout<< 
+#endif 
+
 
 #endif	// SCC_SIMPLE_H
