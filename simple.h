@@ -1,12 +1,6 @@
 #ifndef  SCC_SIMPLE_H
 #define  SCC_SIMPLE_H
 
-// STO
-#include "sto/stl.h"
-#include "sto/range.h"
-#include "sto/io.h"
-#include "sto/regex.h"
-
 
 // list af all C/C++ headers --- http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c
 
@@ -19,8 +13,6 @@ const double pi     = 3.14159265358979323846;
 #include <cstdlib>
 //#include <cstddef>
 
-#include <sto/functor.h> 
-	using namespace sto;
 
 #include <cstring>
 extern "C"  void *memcpy(void *dest, const void *src, size_t n);
@@ -277,7 +269,6 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::bidirectional_iterator_tag;
 	using	std::random_access_iterator_tag;
 
-using namespace sto;
 
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 

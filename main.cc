@@ -2,13 +2,18 @@
 # define __NO_CTYPE 1
 
 #include "scc/cj.h"
+
+#ifndef scc_NOSTO
+#include <sto/sto.h>
+	using namespace sto;
+#endif
+	
+#include <scc/simple.h>
+
 #include "scc/scc.h"
 //#define MAP(expr)   [](any){ return expr; }
 
 
-#ifndef NDEBUG
-#include "sto/debug.h"
-#endif
 
 
 //#include "scc/matrix.h"

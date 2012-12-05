@@ -2,9 +2,6 @@
 #ifndef  LVV_CODEJAM_H
 #define  LVV_CODEJAM_H
 
-#ifndef LVV_SIMPLE_H
-#include "scc/simple.h"
-#endif
 
 //#ifndef LVV_MATRIX_H
 //#include "scc/matrix.h"
@@ -22,6 +19,7 @@ T gcd(T a, T b) {
     if (a > b) return gcd(b, a);
     return gcd(b % a, a);
 }
+	// to check http://stackoverflow.com/questions/110344/algorithm-to-calculate-the-number-of-divisors-of-a-given-number
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
