@@ -1,0 +1,51 @@
+#!/bin/sh
+
+
+set -o errexit
+set -v
+
+: ---------------------------------------------------------     PARSER
+echo -n '  11 : 12!21  :22!31:32  :   33:' | PAD=' ' RS='!'  scc -F:  -p ; echo -e "\n11:12!21:22!31:32:33:!"
+
+: ---------------------------------------------------------  FIELD
+echo -en '\n1 2\n11 22\n'    | ORS=' / ' scc -p '$1=9;' ;  echo -e "\n9 / 9 2 / 9 22"
+
+: ---------------------------------------------------------	STREAM
+command df | scc 'WRL n+=$3;  n'
+command df | awk '{n+=$3;};  END{print n}'
+
+: ---------------------------------------------------------  SEPERATORS
+echo  -n 11,,-,22--111,,222 |  RS=-- ORS="(NL) " scc -p -i,, -o:   '';  echo -e "\n11:-,22(NL) 111:222(NL)"
+
+#)
+#echo ---------------------------------------------------------  REGEX
+#echo "echo -e \"1 -\n2\n3 none\n4 abc\"   | scc -p 'F(1)=RR(F(1),R(\"^(none|-)?$\"),"n/a");'"
+#      echo -e  "1 -\n2\n3 none\n4 abc"    | scc -p 'F(1)=RR(F(1),R( "^(none|-)?$" ),"n/a");'  &&
+#echo -e '\n1 n/a\n2 n/a\n3 n/a\n4 abc'
+
+#echo ---------------------------------------------------------
+#echo "echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'"
+#      echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'F.push_front(NR+1);'  &&
+#echo -e '\n1 aaa bbb\n2 ccc ddd'
+
+#echo --------------------------------------------------------- FIELD
+#echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'field(NR+1)+" "'  &&
+#echo -e 'aaa bbb\nccc ddd'   |  scc  -p 'field(NR+1)+" "'  &&
+#echo -e '\n1  aaa bbb\n2  ccc ddd'
+
+#echo ---------------------------------------------------------
+#echo -e "AA\nBB\nCC"  | scc 'WRL  if (RS(line, R(argv[1])))  cout << line << endl;'  'A|B'  &&
+#echo -e "\nAA\nBB"
+
+# ---------------------------------------------------------
+#scc 'str s="aa bb"; RR(s, R("(\\w+)"),"*\\1*")'   &&
+#echo -e "\n*aa* *bb*"
+
+#echo ---------------------------------------------------------
+#echo '"aa",  "bb\"-, bb",  "cc"' | scc 'IFS=CSV ; WRL for (str f:F) cout << f << endl;'  &&
+#echo -e "\naa\nbb\"-, bb\ncc"
+
+#echo ---------------------------------------------------------
+#echo 1:2:3 |  scc  -i:  -o '","'  -p
+#echo 1 2 3 |  scc  -I '"(\\S+)(\\s+|$)"' -o '","'  -p
+
