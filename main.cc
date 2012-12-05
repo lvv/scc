@@ -3,8 +3,8 @@
 
 #include "scc/cj.h"
 
-#ifndef scc_NOSTO
-#include <sto/sto.h>
+#ifdef scc_STO
+	#include <sto/sto.h>
 	using namespace sto;
 #endif
 	
@@ -21,7 +21,7 @@
 	#include "lvv/timer.h"
 #endif
 
-#ifndef scc_NOAWK
+#ifdef scc_AWK
 	void  print_line() {
 		if (!F.empty()) cout  << F[0];
 		for(int i=1;   i < (int)F.size();  i++)
@@ -84,22 +84,24 @@ int main(int argc, char** argv) {
 	std::string s	__attribute__((unused));
 	std::string w	__attribute__((unused));
 	char  c      	__attribute__((unused));
-	char *p		__attribute__((unused)) = nullptr;
-	char *q		__attribute__((unused)) = nullptr;
+	char *p		__attribute__((unused)) = 0;
+	char *q		__attribute__((unused)) = 0;
 
 	// non static debug vars
 	#ifndef NDEBUG
-	//  range
-	static 	auto __attribute__((unused))		rv9	= range(v9); 
-	static 	auto __attribute__((unused))		rd9	= range(d9); 
-	static 	auto __attribute__((unused))		rl9	= range(l9); 
-	static 	auto __attribute__((unused))		rd9r	= range(mk_d9()); 
-	static 	auto __attribute__((unused))		rrd9	= range(rd9); 
-	static 	auto __attribute__((unused))		n9	= range(9); 
+	#ifdef scc_STO
+		//  range
+		static 	auto __attribute__((unused))		rv9	= range(v9); 
+		static 	auto __attribute__((unused))		rd9	= range(d9); 
+		static 	auto __attribute__((unused))		rl9	= range(l9); 
+		static 	auto __attribute__((unused))		rd9r	= range(mk_d9()); 
+		static 	auto __attribute__((unused))		rrd9	= range(rd9); 
+		static 	auto __attribute__((unused))		n9	= range(9); 
+	#endif
 	#endif
 
 
-	#ifndef scc_NOAWK
+	#ifdef scc_AWK
 		char	**first_file_argv = argv+1;
 
 		buf = new buf_t(first_file_argv, argv+argc);	// stdio
@@ -155,7 +157,7 @@ int main(int argc, char** argv) {
 
 
 		#ifdef scc_IS_STREAM
-		#ifndef scc_NOAWK
+		#ifdef scc_AWK
 		if (is_header) {
 			read_line();
 			for (size_t i = 0;  i<F.size();  i++)
@@ -189,7 +191,7 @@ int main(int argc, char** argv) {
 	if ( ! tracking_buf.terminated_line()) 	 cout << '\n';
 	std::cout.rdbuf(org_cout_buf);
 
-	#ifndef scc_NOAWK
+	#ifdef scc_AWK
 	delete buf;
 	#endif
 }

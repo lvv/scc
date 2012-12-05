@@ -44,8 +44,8 @@
 			false;
 		#endif
 
-#ifndef 	scc_NOAWK 
-#include <scc/awk.h>
+#ifdef 	scc_AWK 
+	#include <scc/awk.h>
 #endif
 
 

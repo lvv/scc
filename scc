@@ -1,15 +1,11 @@
 #!/bin/bash
 
 
-CXXFLAGS+=" -std=gnu++11 -Wall -pipe "
 
 [ -f /etc/scc ]  && . /etc/scc
 [ -f   ~/.scc ]  && .   ~/.scc
 [ -f     .scc ]  && .     .scc
 
-CXXFLAGS+=" -Wno-unused-function "
-O_FLAGS="-O3 -march=native"
-g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG   -ftrapv"           # -fbounds-check "
 
 #[[ -n $sT ]] && CXXFLGAS+=" -DsT=$sT "
 
@@ -39,11 +35,16 @@ usage_exit() {
 		-F ifs 		- sets simple (not regex)  IFS (input field separator).
 		-o ofs 		- sets OFS (output field separator) 
 		-x filename	- save executable to file and do not execute it
+
 		-D macro	- adds macro: CXXFLAGS+=" -Dmacro "
 		-O 		- optimized compile
 		-g 		- debug compile
 		-H 		- read header 
 		-r 		- regenerate GCH (gcc precompiled headers) 
+		-a		- with    AWK module
+		-A		- without AWK module
+		-s		- with    STO module
+		-S		- without STO module
 	"
 	exit 0
 }
@@ -54,11 +55,17 @@ gch_dir=$SCC_HOME/.gch
 
 [[  $1 ]]  ||  usage_exit
 
-while getopts Anpf:vBi:F:o:x:OgHtbrD: opt;  do
+while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: opt;  do
 	case $opt in
 		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
 		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
-		A)	CXXFLAGS+=" -Dscc_NOAWK " ;;
+
+		a)	scc_NOAWK=1 ;;
+		A)	unset scc_AWK ;;
+
+		s)	scc_STO=1 ;;
+		S)	unset scc_STO ;;
+
 		D)	CXXFLAGS+=" -D$OPTARG " ;;
 		f)	snippet_file=$OPTARG;;
 		v)	verbose=1;;
@@ -86,6 +93,22 @@ while getopts Anpf:vBi:F:o:x:OgHtbrD: opt;  do
 	esac
 done
 
+#### CONFIG
+
+[[ $scc_STO ]] && CXXFLAGS+=" -Dscc_STO "
+[[ $scc_AWK ]] && CXXFLAGS+=" -Dscc_AWk "
+default_CXX="${default_CXX-g++}"
+
+
+if [[ $scc_STO ]];  then 
+	scc_PRINTER="${scc_PRINTER:-out(),}"
+else
+	scc_PRINTER="${scc_PRINTER:-std::cout<<}"
+fi
+
+
+
+####
 [[ -d $gch_dir ]] && CXXFLAGS=" -include $gch_dir/cj.h    -Winvalid-pch  $CXXFLAGS "
 [[ -f .scc.h   ]] && CXXFLAGS+=" -include $PWD/.scc.h  "
 [[ $is_optimized  ]] || { CXXFLAGS+=$g_FLAGS;  gch_dir=.gch/g; }
@@ -120,7 +143,7 @@ sed  -r  '
 	s/.*;;//
 	s/$//;
 	s/[ \t]*$//;
-	s/(.*[;])*([^;]+$)/ \1out(), \2; is_print_last=true; /
+	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' \2; is_print_last=true; /
 ' > $snippet_cc
 
 # split file scope part
@@ -130,7 +153,8 @@ cat  $snippet_file | sed  -n 's/\(;;\).*//p'  > $snippet_h
 #####################################################################################  GENERATE SRC
 
 
-${CXX-g++} $CXXFLAGS $main_cc -o $main_exe $LIBS || exit 1
+
+${CXX-$default_CXX} $CXXFLAGS $main_cc -o $main_exe $LIBS || exit 1
 	
 if  [[ $execute == 1 ]]  ; then 
 	LCC_ALL=C $time $main_exe "$@"

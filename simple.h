@@ -4,6 +4,23 @@
 
 // list af all C/C++ headers --- http://stackoverflow.com/questions/2027991/list-of-standard-header-files-in-c-and-c
 
+// GCC
+#if  defined(__GXX_EXPERIMENTAL_CXX0X__) 
+	#define CXX11
+#endif
+
+// CLANG
+#if  defined(__clang__)  
+	#if __has_feature(cxx_decltype)
+		#define CXX11
+	#endif
+#endif
+
+// MSVC (not tested)
+#if  defined(_MSC_VER)  &&  _MSC_VER >= 1600
+	#define CXX11
+#endif
+
 //////////////////////////////////////////////////////////////////// NUMERIC CONSTANTS
 const double e      = 2.7182818284590452354;
 const double pi     = 3.14159265358979323846;
@@ -21,9 +38,11 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	//using	std::abs;
 	using	std::floor;
 	using	std::ceil;
+	using	std::signbit;
+	#ifdef CXX11
 	using	std::trunc;
 	using	std::round;
-	using	std::signbit;
+	#endif
 
 #include <cassert>
 
@@ -42,24 +61,29 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 #include <deque>
 #include <iterator>
 #include <list>
-#include <forward_list>
 #include <map>
-#include <unordered_map>
 #include <set>
-#include <unordered_set>
 #include <string>
 #include <utility>
 #include <vector>
-#include <array>
 #include <stack>
 #include <queue>
 #include <limits>
 #include <bitset>
 
+#ifdef CXX11
+#include <array>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#endif
+
 ///////////////////////////////////////////////////////////////////// C++11 STL
+#ifdef CXX11
 #include <type_traits>
 #include <tuple>
 #include <memory>
+#endif
 
 
 /////////////////////////////////////////////////////////////////////
@@ -82,17 +106,11 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 	// containers
 	using	std::vector;
-	using	std::array;
 	using	std::deque;
 	using	std::set;
-	using	std::unordered_set;
-	using	std::unordered_multiset;
 	using	std::list;
-	using	std::forward_list;
 	using	std::multiset;
 	using	std::map;
-	using	std::unordered_map;
-	using	std::unordered_multimap;
 	using	std::multimap;
 	using	std::stringstream;
 	using	std::istringstream;
@@ -104,6 +122,14 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::stack;
 	using	std::queue;
 	using	std::priority_queue;
+	#ifdef CXX11
+	using	std::array;
+	using	std::unordered_set;
+	using	std::unordered_multiset;
+	using	std::forward_list;
+	using	std::unordered_map;
+	using	std::unordered_multimap;
+	#endif
 
 	// algo
 	using	std::swap;
@@ -127,7 +153,9 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	// modifying
 	using	std::copy;
 	using	std::copy_backward;
+	#ifdef CXX11
 	using	std::copy_if;		//C++11
+	#endif
 	using	std::fill;
 	using	std::fill_n;
 	using	std::transform;
@@ -179,7 +207,9 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 
 	// heap
+	#ifdef CXX11
 	using	std::is_heap;			// C++11
+	#endif
 	using	std::make_heap;
 	using	std::push_heap;
 	using	std::pop_heap;
@@ -188,10 +218,12 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	// min/max
 	using	std::max;
 	using	std::min;
+	#ifdef CXX11
 	using	std::max_element;
 	using	std::min_element;
 	using	std::minmax;			// C++11
 	using	std::minmax_element;		// C++11
+	#endif
 	using	std::lexicographical_compare;
 	using	std::next_permutation;
 	using	std::prev_permutation;
@@ -203,24 +235,27 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::partial_sum;
 
 
-	// ????
+	// utils
 	using	std::pair;
 	using	std::make_pair;
+	#ifdef CXX11
+	using	std::get;			// C++11
 	using	std::tie;			// C++11
 	using	std::tuple;			// C++11
-	using	std::get;			// C++11
 	using	std::make_tuple;		// C++11
 	using	std::tuple_size;		// C++11
 	using	std::make_shared;		// C++11
 	using	std::iota;			// C++11
+	#endif
 
 	// iterator
+	using	std::advance;
+	using	std::distance;
+	#ifdef CXX11
 	using	std::begin;			// C++11
 	using	std::end;			// C++11
 	using	std::prev;			// C++11
 	using	std::next;			// C++11
-	using	std::advance;			//
-	using	std::distance;			//
 
 	// memory  (C++11)
 	using	std::shared_ptr;
@@ -231,6 +266,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	// function
 	using	std::function;
 	using	std::bind;
+	#endif
 
 	using	std::plus;
 	using	std::minus;
@@ -251,6 +287,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::bit_or;
 	using	std::bit_xor;
 
+	#ifdef CXX11
 	using	std::placeholders::_1;
 	using	std::placeholders::_2;
 	using	std::placeholders::_3;
@@ -262,6 +299,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::is_base_of;
 	using	std::enable_if;
 	using	std::declval;
+	#endif
 
 	using	std::input_iterator_tag;
 	using	std::output_iterator_tag;
@@ -339,10 +377,6 @@ typedef		std::list<std::string>		lstr;
 #define		nALL(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
 #define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
 #define		xALL(C)		for (auto x:C)
-
-
-///////////////////////////////////////////////////////////////////////////////  HELPER CLASSES
-
 
 
 
