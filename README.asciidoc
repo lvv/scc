@@ -3,7 +3,7 @@ SCC — Simple C++
 ===============
 :compact-option: compact
 
-_SCC_ is _+++C++ +++_ snippets evaluator , with some _AWK_ features. +
+SCC is +++C++ +++ snippets evaluator.
 
 
 

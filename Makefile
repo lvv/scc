@@ -27,8 +27,14 @@ endif
 
 include $(INCLUDE)
 
-index.txt: 
+##index.txt: 
+#	head -n-1 README.asciidoc > /tmp/t.ad
+
+index.html:  /tmp/t.ad
+
+/tmp/t.ad:  README.asciidoc
 	head -n-1 README.asciidoc > /tmp/t.ad
+
 
 u-meta.cc: *.h
 

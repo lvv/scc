@@ -45,18 +45,16 @@ scc 'int f(int i) {return  i+i;} ;;  f(10)'
 20
 --------------------------------------------
 
-Snippet is evaluated in environment where all STL includes are included and almost
-all STL objects are imported into default namespace with `using std::...;`
+Snippet is evaluated in environment where most of +++C++ +++ Standard Library includes are included and
+most STD entities are imported into default namespace with `using std::...;`
 
 If you need only plain +++C++ +++ REPL, that is about all you need to know.
 You can skip to link:#_install[install] section now.
 
-Sections that follow are about SCC STL extensions, which probably deserve it own project, and shortcuts to squeeze
-+++C++ +++ verbosity for one-liner context.
+Sections that follow are about SCC optional modules.
 
 STO Module
 ----------
-
 
 http://volnitsky.com/project/sto/[STL Template Operator library] (headers only
 library) was recently split off SCC. It can be useful if you use STL
@@ -76,8 +74,11 @@ In order to use it, you need to install it, and tell SCC where to look for its
 include files if it is installed in directory which is not searched by default
 by compiler.
 
-Options `-s` / `-S` can enable / disable this module.  Set environment variable
-`scc_STO` (to any value) enables it too. 
+Options `-s` / `-S` can enable/disable this module.  Set environment variable
+`scc_STO` (to any value) enables it.
+
+If enabled its print operator will be used instead of `std::cout` to print last
+statement-expression.
 
 
 Shortcuts and predeclared vars
@@ -135,10 +136,10 @@ You can also find a lot of examples in `u-*` files.  These are unit-test like fi
 AWK Module
 ~~~~~~~~~~
 
-This is module that is bundled with SCC. It is enabled by default, but can be
+This is module that is bundled with SCC. It can be
 disabled if for example your compiler can not compile it for some reason. 
-Options `-a` / `-A` enable / disable it.  Set environment variable
-`scc_AWK` (to any value) enables it too. 
+Options `-a` / `-A` enable/disable it.  Set environment variable
+`scc_AWK` (to any value) enables it. 
 
 
 AWK module allows stream processing - similar to real AWK.
@@ -171,7 +172,7 @@ are convenient when we do not have _begin-expr_ and _end-expr_.
 scc -n 'per-record-expr;'
 ----------------------------------------------------------------------------
 
-Fortunately,  GCC allows use of `$` in identifiers, so AWK's dollar 
+Fortunately,  GCC and CLANG allows use of `$` in identifiers, so AWK's dollar 
 variables (`$0`, `$1`, `$NF`) are valid in SCC.
 
 In SCC, line's fields are of special string type `fld`, it is similar to `std::string` but it can be
