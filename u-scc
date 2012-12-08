@@ -12,9 +12,9 @@ scc 'int ff(int i){return 2*i;} ;;  ff(2+2)'
 #scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR"; strr sr("SR"); fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;' ; echo  "{1} {1} {1} CS STR SR FLD"
 
 : ---------------------------------------------------------  OI
-scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;"; echo 1 2 a b ⟨11,22⟩
+#scc "*oi =  1; *oi = 2;   *oi ='a';  *oi='b';  *oi=pair<int,int>(11,22);  cout << endl;"; echo 1 2 a b ⟨11,22⟩
 : ---------------------------------------------------------  OI
-scc  'vint A{1,2,3};  oi=A;   str S("ABC");  oi=S;  _ endl;';  echo 1 2 3 A B C
+#scc  'vint A{1,2,3};  oi=A;   str S("ABC");  oi=S;  _ endl;';  echo 1 2 3 A B C
 
 ###################################################################
 

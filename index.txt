@@ -3,7 +3,6 @@ include::/tmp/t.ad[]
 +++ <small> +++
 
 * Repo: httpx://github.com/lvv/scc[GitHub],  httpx://bitbucket.org/lvv/scc[BitBucket] +
-* Requires:  +++ C++11 +++   compiler.  Tested with GCC-4.7.2, GCC-4.8(pre release), CLANG-3.2(pre release) +
 * License:  httpx://en.wikipedia.org/wiki/Boost_Software_License[Boost Software License]
 
 +++ </small> +++
@@ -58,9 +57,27 @@ Sections that follow are about SCC STL extensions, which probably deserve it own
 STO Module
 ----------
 
-http://volnitsky.com/project/sto/[STL Template Operator library] was recently
-split off SCC. It can be useful if you use STL containers, strings and want
-simpler replacement for `std::cout`.
+
+http://volnitsky.com/project/sto/[STL Template Operator library] (headers only
+library) was recently split off SCC. It can be useful if you use STL
+containers, strings and want simpler replacement for `std::cout`.
+
+///////////////////////////////////////////////////
+Some short examples what it can do:
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+///////////////////////////////////////////////////
+
+
+Requires:  +++ C++11 +++   compiler.  Tested with GCC-4.7.2, GCC-4.8(pre release), CLANG-3.2(pre release)
+
+In order to use it, you need to install it, and tell SCC where to look for its
+include files if it is installed in directory which is not searched by default
+by compiler.
+
+Options `-s` / `-S` can enable / disable this module.  Set environment variable
+`scc_STO` (to any value) enables it too. 
 
 
 Shortcuts and predeclared vars
@@ -115,12 +132,18 @@ You can also find a lot of examples in `u-*` files.  These are unit-test like fi
 
 
 
-Native AWK
+AWK Module
 ~~~~~~~~~~
 
-SCC also can be used as tool for stream processing - something like native AWK. 
-Syntax is not exactly AWK's,  it is still +++C++ +++, 
-but it is quite similar.
+This is module that is bundled with SCC. It is enabled by default, but can be
+disabled if for example your compiler can not compile it for some reason. 
+Options `-a` / `-A` enable / disable it.  Set environment variable
+`scc_AWK` (to any value) enables it too. 
+
+
+AWK module allows stream processing - similar to real AWK.
+
+Syntax is not exactly AWK's,  it is still +++C++ +++, but it is quite similar.
 
 Biggest difference  is script layout. AWK's script have following
 elements (simplified):
@@ -171,7 +194,7 @@ SCC supports following AWK's global variables:
 
 * `$`	-  derived from  `std::deque<fld>` — line's fields
 * `NF`	-  `long`,  number of fields (set after read_line())
-* `NR` 	-  `long`,  number of records (set after read_line())
+* `NR` 	-  `long`,  number of records read so far (set after read_line())
 * `OFS`	-  `strr`, output field separator (another special type - string reference).
 * `FS` 	-  `strr`, input field separator.  
 * `ORS`	-  `strr`, output record separator 
@@ -223,6 +246,7 @@ echo 1:2:3 | FS=: OFS=, scc -p
 ----------------------------------------------------------------------------
 
 
+////////////////////////////////////////////////////////////////////////////////////
 Replace `"-"` or  `"none"` with `"n/a"` in 2nd column using `std::regex`.  In AWK and SCC:
 
 ---------------------------------------------------------------------------
@@ -243,6 +267,7 @@ C-string with `_R` suffix are `std::regex` literal.  The `operator==` calls `std
 Unfortunately GCC's LIBSTDC not yet +++ C++11 +++  compliant.  Algorithms
 `std::regex_replace` and `std::regex_search` are not implemented yet in
 LIBSTDC++  and we have to use `if`.
+////////////////////////////////////////////////////////////////////////////////////
 
 
 Install
@@ -256,9 +281,16 @@ echo "PATH+=:$PWD/scc/" >> ~/.profile
 scc '"SCC is installed"'
 ---------------------------------------
 
+With no or empty config, all optional modules will be disabled, and default compiler will be GCC.
+
+There is `scc/example_config` which you can copy (and edit) into one of:  `/etc/scc`, 
+`~/.scc` or `.scc`.
+
 GCC Pre-compiled headers
 ~~~~~~~~~~~~~~~~~~~~~~~~
-For GCC you can enable precompiled headers, which will allow slightly (20%) faster compile:
+For GCC you can enable precompiled headers, which will allow slightly (20%) faster compile.
+This is not recommended if you are going to update SCC or GCC.
+Command `scc -r` will create directory `.gch` with precompiled headers:
 
 -----------------
 cd path-to-scc-home
@@ -266,23 +298,12 @@ scc -r
 ls -l .gch
 -----------------
 
-Command `scc -r` will create directory `.gch`.
-You need re-generate pre-compiled headers if you are updating (with `git pull`) SCC or GCC with the same command - `scc -r`
-Do not use GCC pre-compiled headers if you are modifying source.  To disable pre-compiled headers, run `rm -rf .gch`.   
-
+You need re-generate pre-compiled headers if SCC or GCC install was modified.
+To disable pre-compiled headers, run `rm -rf gch`.   
 
 
 Status 
 ------
-
-SCC is in alpha stage. Version with "latest" git tag (if any) and
-documented features are more stable.
-
-SCC uses +++ C++11 +++ extensively.  Because no complier yet
-implemented +++ C++11 +++ fully and each implemented different subset, 
-SCC very picky about compiler.  See GCC, CLANG sections below. 
-
-Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
 Parser which extracts last +++ C++ +++ statement from snippet is semi-broken.
 It sometimes incorrectly parse (to extract last expression) multi-line scripts
@@ -290,46 +311,9 @@ or expressions with "{}". See `u-sed` file for details.  As workaround
 terminate every line with semicolon (even comment-line) and do not use
 print-if-not-terminated-with-semicolon feature.
 
+Regex in `RS`/`FS` are currently not supported (but were in v0.1) 
 
-GCC 
-~~~
- 
-SCC was mostly tested with GCC-4.7.2/4.8-pre-release and CLANG-3.2-pre-release.
-If you need to use SCC with older compiler - use commit tagged as `v0.1`.
-
-In course of development several GCC bugs were encountered.
-Luckily, GCC team is pretty quick to fix things after you will file a but report.
-
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=51989[Bug 51989 (fixed) -- deque iterator, void with templates]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54425[Bug 54425 -- Rvalue/Lvalue overload resolution of templated]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54111[Bug 54111 -- function return type template deduction]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54538[Bug 54538 (fixed) -- (4.8 Regression) Getting assembler messages when compiling]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=53858[Bug 53858 (fixed)  -- (4.8 Regression) template aliases used in template parameters default expression]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54648[Bug 54648 -- constexpr function rejected as non const]
-- httpx://gcc.gnu.org/bugzilla/show_bug.cgi?id=54859[Bug 54859 -- constexpr in template aliase rejected as non-constant]
-
-
-
-
-CLANG 
-~~~~~
-
-
-CLANG-3.2 is fully supported. 
-
-----------------------------------------------
-CXX=clang++
-CXXFLAGS+="-D__STRICT_ANSI__  -std=c++0x "
-scc 2+2
-4
-----------------------------------------------
-
-Corresponding CLANG bugs:
-
-- httpx://http://llvm.org/bugs/show_bug.cgi?id=11851[Bug 11851 - constexpr bug ]
-- httpx://http://llvm.org/bugs/show_bug.cgi?id=13970[Bug 13970 - constexpr function rejected as non const(dup of 11851)]
-
-
+AWK module should be fixed to handle white space exactly like AWK.
 
 
 
