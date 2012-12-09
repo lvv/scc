@@ -60,12 +60,38 @@ http://volnitsky.com/project/sto/[STL Template Operator library] (headers only
 library) was recently split off SCC. It can be useful if you use STL
 containers, strings and want simpler replacement for `std::cout`.
 
-///////////////////////////////////////////////////
-Some short examples what it can do:
+Some short examples of what it can do:
 
 -----------------------------------------------------------------------------------------
+
+// Can print any STL container and tuples  directly:
+scc 'vint V{1,2,3};  V'
+{1,2,3}
+
+// Classic pipe. Unmodified alogorithm from std:: 
+scc 'vint{3,1,2,3} | sort | unique | reverse'
+{3, 2, 1}
+
+
+// Find (brute force algorithm) maximum of  `cos(x)` in interval: `8 < x < 9`:
+scc 'range(8, 9, 0.01) * cos  || max'
+-0.1455
+
+// Total length of strings in vector of strings ('add' is shoftcut for std::plus<T>()):
+scc 'vstr V{"aaa", "bb", "cccc"};  V * size ||  add'
+9
+
+// Remove non alpha-num characters and convert to upper case
+scc '(range("abc-123, xyz/") | isalnum) * toupper'
+ABC123XYZ
+
+
+// Hide phone number:
+scc "str S=\"John Q Public  (650)1234567\";  S|isdigit='X';  S"
+John Q Public  (XXX)XXXXXXX
+
 -----------------------------------------------------------------------------------------
-///////////////////////////////////////////////////
+
 
 
 Requires:  +++ C++11 +++   compiler.  Tested with GCC-4.7.2, GCC-4.8(pre release), CLANG-3.2(pre release)

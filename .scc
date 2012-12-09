@@ -1,16 +1,1 @@
-
-### Default SCC config
-
-#scc_STO=1
-scc_AWK=1
-
-#default_CXX=g++-4.5.4
-
-default_CXX=g++-4.8.0-pre9999;   CXXFLAGS+=" -std=gnu++11 "
-
-CXXFLAGS+=" -Wall -pipe "
-CXXFLAGS+=" -Wno-unused-function "
-O_FLAGS="-O3 -march=native"
-g_FLAGS="-O0 -ggdb -D_GLIBCXX_DEBUG   -ftrapv"           # -fbounds-check "
-
-# vim:ft=sh
+/home/lvv/.scc
