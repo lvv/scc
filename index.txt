@@ -64,22 +64,34 @@ Some short examples of what it can do:
 
 -----------------------------------------------------------------------------------------
 
-// Can print any STL container and tuples  directly:
+// Can print ranges, container, tuples, etc directly (vint is vector<int>) :
 scc 'vint V{1,2,3};  V'
 {1,2,3}
 
-// Classic pipe. Unmodified alogorithm from std:: 
+// Classic pipe. Alogorithms are from std:: 
 scc 'vint{3,1,2,3} | sort | unique | reverse'
 {3, 2, 1}
 
+// Assign 42 to 2..5
+scc 'vint V=range(0,9);   range(V/2, V/5) = 42;  V'
+{0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 
 // Find (brute force algorithm) maximum of  `cos(x)` in interval: `8 < x < 9`:
 scc 'range(8, 9, 0.01) * cos  || max'
 -0.1455
 
-// Total length of strings in vector of strings ('add' is shoftcut for std::plus<T>()):
+// concatenate vector of strings ('add' is shoftcut for std::plus<T>()):
+scc 'vstr V{"aaa", "bb", "cccc"};  V || add'
+aaabbcccc
+
+// Total length of strings in vector of strings
 scc 'vstr V{"aaa", "bb", "cccc"};  V * size ||  add'
 9
+
+// Assign to c-string, then append `"XYZ"` and then remove `"bc"` substring :
+scc 'char s[99];  range(s) = "abc";  (range(s) << "XYZ") - "bc"'
+aXYZ
+
 
 // Remove non alpha-num characters and convert to upper case
 scc '(range("abc-123, xyz/") | isalnum) * toupper'
