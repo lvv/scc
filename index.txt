@@ -333,7 +333,7 @@ Command `scc -r` will create directory `.gch` with precompiled headers:
 
 -----------------
 cd path-to-scc-home
-scc -r
+scc --make-gch
 ls -l .gch
 -----------------
 

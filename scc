@@ -31,16 +31,21 @@ usage_exit() {
 		-n 		- for each line: read line; split into fields; execute snippet 
 		-p 		- for each line: read line; split into fields; execute snippet;  output fields
 		-f filename 	- get snippet from filename
-		-i ifs 		- sets simple (not regex)  IFS (input field separator).
-		-F ifs 		- sets simple (not regex)  IFS (input field separator).
-		-o ofs 		- sets OFS (output field separator) 
-		-x filename	- save executable to file and do not execute it
 
+		-i ifs 		- sets simple (not regex)  IFS (input field separator).
+		-F ifs 		- same
+		--ifs ifs 	- same
+
+		-o ofs 		- sets OFS (output field separator) 
+		--ofs ofs 	- same
+		--fs ofs	- same
+
+		-X filename	- save executable to file and do not execute it
 		-D macro	- adds macro: CXXFLAGS+=" -Dmacro "
 		-O 		- optimized compile
 		-g 		- debug compile
 		-H 		- read header 
-		-r 		- regenerate GCH (gcc precompiled headers) 
+		--make-gch 	- regenerate GCH (gcc precompiled headers) 
 		-a		- with    AWK module
 		-A		- without AWK module
 		-s		- with    STO module
@@ -53,34 +58,42 @@ usage_exit() {
 gch_dir=$SCC_HOME/.gch
 
 
-[[  $1 ]]  ||  usage_exit
 
-while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: opt;  do
-	case $opt in
-		n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1;;
-		p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1;;
+TEMP=`getopt -o aAsSnpf:vBi:F:o:x:OgHtbD: -l --make-gch  -- "$@"`
+[[ $? != 0 ]]  &&  usage_exit
+#[[  $1 ]]      ||  usage_exit
 
-		a)	scc_AWK=1 ;;
-		A)	unset scc_AWK ;;
+eval set -- "$TEMP"
 
-		s)	scc_STO=1 ;;
-		S)	unset scc_STO ;;
 
-		D)	CXXFLAGS+=" -D$OPTARG " ;;
-		f)	snippet_file=$OPTARG;;
-		v)	verbose=1;;
-		I)	CXXFLAGS+=" -Dscc_IFS=$OPTARG ";; 
-		x)	execute=0;  main_exe=$OPTARG;;
-		i|F)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$OPTARG "
-						  else  CXXFLAGS+=" -Dscc_ifs=\"$OPTARG\" ";  fi;; 
-		o)	if [[ $OPTARG =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$OPTARG "
-						  else  CXXFLAGS+=" -Dscc_OFS=\"$OPTARG\" ";  fi;; 
-		O) 	CXXFLAGS+=$O_FLAGS; gch_dir=.gch/O; is_optimized=1;;
-		g) 	CXXFLAGS+=$g_FLAGS; gch_dir=.gch/g;;
-		H)	CXXFLAGS+=" -Dscc_HEADER "; ;;
+#while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: -l zz opt;  do
+while true ; do
+#while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: -l zz opt;  do
+	case "$1" in
+		-n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1; shift ;;
+		-p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1; shift ;;
+
+		-a|--awk)	scc_AWK=1;  shift ;;
+		-A|--no-awk)	unset scc_AWK;  shift ;;
+
+		-s|--sto)	scc_STO=1;  shift ;;
+		-S|--no-sto)	unset scc_STO;  shift ;;
+
+		-D)	CXXFLAGS+=" -D$2 ";  shift 2 ;;
+		-f)	snippet_file=$2;  shift 2 ;;
+		-v)	verbose=1;  shift ;;
+		-I)	CXXFLAGS+=" -Dscc_IFS=$2 ";  shift 2 ;; 
+		-X)	execute=0;  main_exe=$2;  shift 2 ;;
+		-i|-F|--ifs)	if [[ $2 =~ '"' ]];  then  CXXFLAGS+=" -Dscc_ifs=$2 "
+						  else  CXXFLAGS+=" -Dscc_ifs=\"$2\" ";  fi;  shift 2;; 
+		-o|--ofs|--fs)	if [[ $2 =~ '"' ]];  then  CXXFLAGS+=" -Dscc_OFS=$2 "
+						  else  CXXFLAGS+=" -Dscc_OFS=\"$2\" ";  fi;  shift 2;; 
+		-O) 	CXXFLAGS+=$O_FLAGS; gch_dir=.gch/O; is_optimized=1; shift ;;
+		-g) 	CXXFLAGS+=$g_FLAGS; gch_dir=.gch/g; shift ;;
+		-H)	CXXFLAGS+=" -Dscc_HEADER "; shift  ;;
 		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
-		b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native";;
-		r)
+		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
+		--make-gch)
 			set -x 
 			mkdir -p .gch/O
 			mkdir -p .gch/g
@@ -89,7 +102,9 @@ while getopts aAsSnpf:vBi:F:o:x:OgHtbrD: opt;  do
 			g++ $CXXFLAGS          cj.h -o .gch/cj.h.gch
 			exit 0
 			;;
-		?) 	usage_exit;;
+		#*) 	usage_exit;;
+		--) shift ; break ;;
+		*) echo "getopt error" ; exit 1 ;;
 	esac
 done
 
