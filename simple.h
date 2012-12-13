@@ -27,7 +27,18 @@ const double pi     = 3.14159265358979323846;
 
 //////////////////////////////////////////////////////////////////// C
 
-#include <cstdlib>
+//#include <cstdlib>		// inject info global namespace: div, ...
+
+	// from cstdlib
+	int		rand(void);
+	long		random(void);
+	double		drand48(void);
+	char*		getenv(const char *);
+	void		exit(int);
+	double		atof(const char *);
+	int		atoi(const char *);
+	long		atol(const char *);
+	long long	atoll(const char *);
 //#include <cstddef>
 
 
@@ -286,6 +297,16 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::bit_and;
 	using	std::bit_or;
 	using	std::bit_xor;
+
+	using	std::logical_and;
+	using	std::logical_or;
+	using	std::logical_not;
+
+	using	std::unary_negate;
+	using	std::binary_negate;
+
+	using	std::not1;
+	using	std::not2;
 
 	#ifdef CXX11
 	using	std::placeholders::_1;
