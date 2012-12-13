@@ -30,6 +30,7 @@ const double pi     = 3.14159265358979323846;
 //#include <cstdlib>		// inject info global namespace: div, ...
 
 	// from cstdlib
+	/*
 	int		rand(void);
 	long		random(void);
 	double		drand48(void);
@@ -39,6 +40,7 @@ const double pi     = 3.14159265358979323846;
 	int		atoi(const char *);
 	long		atol(const char *);
 	long long	atoll(const char *);
+	*/
 //#include <cstddef>
 
 
@@ -94,6 +96,12 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 #include <type_traits>
 #include <tuple>
 #include <memory>
+#include <functional>
+
+#ifdef scc_BOOST_BIND
+#include <boost/bind.hpp>
+#endif
+
 #endif
 
 
@@ -274,9 +282,17 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::auto_ptr;
 	using	std::weak_ptr;
 
+	#endif
+
 	// function
 	using	std::function;
-	using	std::bind;
+
+	#ifdef scc_BOOST_BIND
+		using	boost::bind;
+	#else
+		#ifdef CXX11
+		using	std::bind;
+		#endif
 	#endif
 
 	using	std::plus;
@@ -308,14 +324,20 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::not1;
 	using	std::not2;
 
-	#ifdef CXX11
-	using	std::placeholders::_1;
-	using	std::placeholders::_2;
-	using	std::placeholders::_3;
-	using	std::placeholders::_4;
-	using	std::placeholders::_5;
+	#ifdef scc_BOOST_BIND
+		// already in global namaspace
+	#else
+		#ifdef CXX11
+		using	std::placeholders::_1;
+		using	std::placeholders::_2;
+		using	std::placeholders::_3;
+		using	std::placeholders::_4;
+		using	std::placeholders::_5;
+		#endif
+	#endif
 
 	// meta
+	#ifdef CXX11
 	using	std::is_same;
 	using	std::is_base_of;
 	using	std::enable_if;
