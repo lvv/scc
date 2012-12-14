@@ -58,6 +58,7 @@ operator<<      (std::ostream& os, const strr& sr) {
 
 static strr_allocator_t  strr_allocator;
 
+
 struct	fld : strr {
 
 	fld()					: strr()	{};

@@ -11,10 +11,7 @@
 	
 #include <scc/simple.h>
 
-#include "scc/scc.h"
-//#define MAP(expr)   [](any){ return expr; }
-
-
+#include <scc/scc.h>
 
 
 //#include "scc/matrix.h"
