@@ -338,6 +338,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 	// meta
 	#ifdef CXX11
+	using	std::is_placeholder;
 	using	std::is_same;
 	using	std::is_base_of;
 	using	std::enable_if;

@@ -60,43 +60,45 @@ http://volnitsky.com/project/sto/[STL Template Operator library] (headers only
 library) was recently split off SCC. It can be useful if you use STL
 containers, strings and want simpler replacement for `std::cout`.
 
-Some short examples of what it can do:
+Some examples of what it can do:
 
 -----------------------------------------------------------------------------------------
 
-// Can print ranges, container, tuples, etc directly (vint is vector<int>) :
+//  Can print ranges, container, tuples, etc directly (vint is vector<int>) :
 scc 'vint V{1,2,3};  V'
 {1,2,3}
 
-// Classic pipe. Alogorithms are from std:: 
+//  Classic pipe. Alogorithms are from std:: 
 scc 'vint{3,1,2,3} | sort | unique | reverse'
 {3, 2, 1}
 
-// Assign 42 to 2..5
+//  Assign 42 to 2..5
 scc 'vint V=range(0,9);   range(V/2, V/5) = 42;  V'
 {0, 1, 42, 42, 42, 5, 6, 7, 8, 9}
 
-// Find (brute force algorithm) maximum of  `cos(x)` in interval: `8 < x < 9`:
+//  Find (brute force algorithm) maximum of  `cos(x)` in interval: `8 < x < 9`:
 scc 'range(8, 9, 0.01) * cos  || max'
 -0.1455
 
-// concatenate vector of strings ('add' is shoftcut for std::plus<T>()):
+//  Integrate sin(x) from 0 to pi
+scc 'auto d=0.001;  (range(0,pi,d) * sin || add) * d'
+2
+
+//  Concatenate vector of strings ('add' is shoftcut for std::plus<T>()):
 scc 'vstr V{"aaa", "bb", "cccc"};  V || add'
 aaabbcccc
 
-// Total length of strings in vector of strings
+//  Total length of strings in vector of strings
 scc 'vstr V{"aaa", "bb", "cccc"};  V * size ||  add'
 9
 
-// Assign to c-string, then append `"XYZ"` and then remove `"bc"` substring :
+//  Assign to c-string, then append `"XYZ"` and then remove `"bc"` substring :
 scc 'char s[99];  range(s) = "abc";  (range(s) << "XYZ") - "bc"'
 aXYZ
 
-
-// Remove non alpha-num characters and convert to upper case
+//  Remove non alpha-num characters and convert to upper case
 scc '(range("abc-123, xyz/") | isalnum) * toupper'
 ABC123XYZ
-
 
 // Hide phone number:
 scc "str S=\"John Q Public  (650)1234567\";  S|isdigit='X';  S"
