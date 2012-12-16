@@ -68,7 +68,7 @@ Some examples of what it can do:
 scc 'vint V{1,2,3};  V'
 {1,2,3}
 
-//  Classic pipe. Alogorithms are from std:: 
+//  Classic pipe. These are std:: alogorithms 
 scc 'vint{3,1,2,3} | sort | unique | reverse'
 {3, 2, 1}
 
@@ -496,6 +496,8 @@ DB
 	    * On BoostCon'09 Jeff Garland led workshop: Library in Week 2009 to discuss the std::rdb propsals, here are materials std::rdb (.tgz package)
 	    * std_rdb - Boost sister mailing list to discuss standard rdb proposal(s)
 	    * SOCI has been discussed in frame of the std::rdb mailing list and the workshop
+FILESYSTEM
+	boost filesystem -- http://stackoverflow.com/questions/13897401/boost-filesystem-incredibly-slow
 
 
 vim: ft=asciidoc

@@ -58,7 +58,7 @@ gch_dir=$SCC_HOME/.gch
 
 
 
-TEMP=`getopt -o aAsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,make-gch -- "$@"`
+TEMP=`getopt -o aAsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,make-gch -- "$@"`
 [[ $? != 0 ]]  &&  usage_exit
 #[[  $1 ]]      ||  usage_exit
 
@@ -90,7 +90,8 @@ while true ; do
 		-H)	CXXFLAGS+=" -Dscc_HEADER "; shift  ;;
 		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
-		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND ";  shift ;;
+		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND "  ;  shift ;;
+		--boost-lambda)	CXXFLAGS+=" -Dscc_BOOST_LAMBDA ";  shift ;;
 		--make-gch)
 			set -x 
 			mkdir -p .gch/O

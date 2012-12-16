@@ -93,15 +93,18 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 ///////////////////////////////////////////////////////////////////// C++11 STL
 #ifdef CXX11
-#include <type_traits>
-#include <tuple>
-#include <memory>
-#include <functional>
-
-#ifdef scc_BOOST_BIND
-#include <boost/bind.hpp>
+	#include <type_traits>
+	#include <tuple>
+	#include <memory>
+	#include <functional>
 #endif
 
+#ifdef scc_BOOST_BIND
+	#include <boost/bind.hpp>
+#endif
+
+#ifdef scc_BOOST_LAMBDA
+	#include <boost/lambda/lambda.hpp>
 #endif
 
 
@@ -227,7 +230,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 	// heap
 	#ifdef CXX11
-	using	std::is_heap;			// C++11
+		using	std::is_heap;			// C++11
 	#endif
 	using	std::make_heap;
 	using	std::push_heap;
@@ -238,10 +241,10 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::max;
 	using	std::min;
 	#ifdef CXX11
-	using	std::max_element;
-	using	std::min_element;
-	using	std::minmax;			// C++11
-	using	std::minmax_element;		// C++11
+		using	std::max_element;
+		using	std::min_element;
+		using	std::minmax;			// C++11
+		using	std::minmax_element;		// C++11
 	#endif
 	using	std::lexicographical_compare;
 	using	std::next_permutation;
@@ -258,34 +261,41 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::pair;
 	using	std::make_pair;
 	#ifdef CXX11
-	using	std::get;			// C++11
-	using	std::tie;			// C++11
-	using	std::tuple;			// C++11
-	using	std::make_tuple;		// C++11
-	using	std::tuple_size;		// C++11
-	using	std::make_shared;		// C++11
-	using	std::iota;			// C++11
+		using	std::get;			// C++11
+		using	std::tie;			// C++11
+		using	std::tuple;			// C++11
+		using	std::make_tuple;		// C++11
+		using	std::tuple_size;		// C++11
+		using	std::make_shared;		// C++11
+		using	std::iota;			// C++11
 	#endif
 
 	// iterator
 	using	std::advance;
 	using	std::distance;
+
+
 	#ifdef CXX11
-	using	std::begin;			// C++11
-	using	std::end;			// C++11
-	using	std::prev;			// C++11
-	using	std::next;			// C++11
+		using	std::begin;			// C++11
+		using	std::end;			// C++11
+		using	std::prev;			// C++11
+		using	std::next;			// C++11
 
-	// memory  (C++11)
-	using	std::shared_ptr;
-	using	std::unique_ptr;
-	using	std::auto_ptr;
-	using	std::weak_ptr;
+		// memory  (C++11)
+		using	std::shared_ptr;
+		using	std::unique_ptr;
+		using	std::auto_ptr;
+		using	std::weak_ptr;
 
+		// function
+		using	std::function;
 	#endif
 
-	// function
-	using	std::function;
+
+	#ifdef scc_BOOST_LAMBDA
+		using	namespace boost::lambda;
+	#endif
+
 
 	#ifdef scc_BOOST_BIND
 		using	boost::bind;
@@ -324,7 +334,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::not1;
 	using	std::not2;
 
-	#ifdef scc_BOOST_BIND
+	#if   defined(scc_BOOST_BIND) || defined(scc_BOOST_LAMBDA)
 		// already in global namaspace
 	#else
 		#ifdef CXX11

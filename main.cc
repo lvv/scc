@@ -85,19 +85,6 @@ int main(int argc, char** argv) {
 	char *p		__attribute__((unused)) = 0;
 	char *q		__attribute__((unused)) = 0;
 
-	// non static debug vars
-	#ifndef NDEBUG
-	#ifdef scc_STO
-		//  range
-		static 	auto __attribute__((unused))		rv9	= range(v9); 
-		static 	auto __attribute__((unused))		rd9	= range(d9); 
-		static 	auto __attribute__((unused))		rl9	= range(l9); 
-		static 	auto __attribute__((unused))		rd9r	= range(mk_d9()); 
-		static 	auto __attribute__((unused))		rrd9	= range(rd9); 
-		static 	auto __attribute__((unused))		n9	= range(9); 
-	#endif
-	#endif
-
 
 	#ifdef scc_AWK
 		char	**first_file_argv = argv+1;
