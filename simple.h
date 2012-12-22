@@ -334,10 +334,10 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::not1;
 	using	std::not2;
 
-	#if   defined(scc_BOOST_BIND) || defined(scc_BOOST_LAMBDA)
+	#if   defined(scc_BOOST_BIND)  ||  defined(scc_BOOST_LAMBDA)
 		// already in global namaspace
 	#else
-		#ifdef CXX11
+		#if   !defined(scc_STO) && defined(CXX11)
 		using	std::placeholders::_1;
 		using	std::placeholders::_2;
 		using	std::placeholders::_3;
