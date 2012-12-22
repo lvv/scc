@@ -32,12 +32,12 @@ usage_exit() {
 		-f filename 	- get snippet from filename
 
 		-i ifs 		- sets simple (not regex)  IFS (input field separator).
-		-F ifs 		- same
-		--ifs ifs 	- same
+		-F ifs 	       
+		--ifs ifs      
 
 		-o ofs 		- sets OFS (output field separator) 
-		--ofs ofs 	- same
-		--fs ofs	- same
+		--ofs ofs      
+		--fs ofs       
 
 		-X filename	- save executable to file and do not execute it
 		-D macro	- adds macro: CXXFLAGS+=" -Dmacro "
@@ -45,7 +45,9 @@ usage_exit() {
 		-g 		- debug compile
 		-H 		- read header 
 		--make-gch 	- regenerate GCH (gcc precompiled headers) 
-		-a		- with    AWK module
+		-a val		- assert ==val
+		--assert val   
+
 		-A		- without AWK module
 		-s		- with    STO module
 		-S		- without STO module
@@ -58,7 +60,7 @@ gch_dir=$SCC_HOME/.gch
 
 
 
-TEMP=`getopt -o aAsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,make-gch -- "$@"`
+TEMP=`getopt -o a:AsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,make-gch,no-awk,assert: -- "$@"`
 [[ $? != 0 ]]  &&  usage_exit
 #[[  $1 ]]      ||  usage_exit
 
@@ -70,7 +72,7 @@ while true ; do
 		-n)	CXXFLAGS+=" -Dscc_N  -Dscc_IS_STREAM ";	 n_opt=1;  is_stream=1; shift ;;
 		-p)	CXXFLAGS+=" -Dscc_P  -Dscc_IS_STREAM ";  p_opt=1;  is_stream=1; shift ;;
 
-		-a|--awk)	scc_AWK=1;  shift ;;
+		-a|--assert)	scc_PRINTER="assert("; scc_PRINTER_END="==$2)"; shift 2 ;;
 		-A|--no-awk)	unset scc_AWK;  shift ;;
 
 		-s|--sto)	scc_STO=1;  shift ;;
@@ -103,7 +105,7 @@ while true ; do
 			;;
 		#*) 	usage_exit;;
 		--) shift ; break ;;
-		*) echo "getopt error" ; exit 1 ;;
+		*) echo "getopt error" ; echo == $@ ==; exit 1 ;;
 	esac
 done
 
@@ -156,7 +158,7 @@ sed  -r  '
 	s/.*;;//
 	s/$//;
 	s/[ \t]*$//;
-	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' \2; is_print_last=true; /
+	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' \2 '$scc_PRINTER_END'; is_print_last=true; /
 ' > $snippet_cc
 
 # split file scope part
