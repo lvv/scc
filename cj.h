@@ -11,6 +11,7 @@
 
 
 
+/*
 	template<typename T>
 T gcd(T a, T b) {
     if (a < 0) a = -a;
@@ -19,7 +20,13 @@ T gcd(T a, T b) {
     if (a > b) return gcd(b, a);
     return gcd(b % a, a);
 }
+*/
 	// to check http://stackoverflow.com/questions/110344/algorithm-to-calculate-the-number-of-divisors-of-a-given-number
+	//
+
+constexpr int gcd(int x, int y) {
+	    return (x % y) == 0 ? y :  gcd(y,x % y);
+}
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
