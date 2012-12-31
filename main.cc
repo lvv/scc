@@ -68,12 +68,12 @@ int main(int argc, char** argv) {
 	std::cout.rdbuf(&tracking_buf);
 
 	// pre-declared vars
-	long i __attribute__((unused)) = 0;
-	long j __attribute__((unused)) = 0;
-	long k __attribute__((unused)) = 0;
-	long n __attribute__((unused)) = 0;
-	long m __attribute__((unused)) = 0;
-	long l __attribute__((unused)) = 0;
+	int i __attribute__((unused)) = 0;
+	int j __attribute__((unused)) = 0;
+	int k __attribute__((unused)) = 0;
+	int n __attribute__((unused)) = 0;
+	int m __attribute__((unused)) = 0;
+	int l __attribute__((unused)) = 0;
 
 	double x __attribute__((unused)) = 0.0;
 	double y __attribute__((unused)) = 0.0;
