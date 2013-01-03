@@ -2,6 +2,10 @@
 set -o errexit
 set -v
 
+# TOADD
+
+#{ strr				v ("abc");			_ "strr     :  ", v, ";    ";  cout << v << "\n"; };
+#{ fld				v ("abc");			_ "fld      :  ", v, ";    ";  cout << v << "\n"; };
 
 scc '
 	//{ strr f("abc");  fld f2 (f);	__ f2; };

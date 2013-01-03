@@ -433,7 +433,9 @@ typedef		std::list<std::string>		lstr;
 #define		xALL(C)		for (auto x:C)
 
 
-#ifndef STO_H
+#ifdef STO_H
+	using namespace sto;
+#else
 	#undef 		_
 	#define		_    std::cout<< 
 	#undef 		__
