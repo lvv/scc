@@ -6,8 +6,8 @@ set -v
 
 scc 'int ff(int i){return 2*i;} ;;  ff(2+2)'
 
-####################  TO STO
-# STO 
+####################  TO RO
+# RO 
 #: ---------------------------------------------------------	PRINTER
 #scc 'vint vi{1}; int ca[]={1}; array<int,1> ar{{1}}; const char* cs="CA"; str s="STR"; strr sr("SR"); fld f("FLD");  __ vi,ca,ar,cs,s,sr,f;' ; echo  "{1} {1} {1} CS STR SR FLD"
 

@@ -4,9 +4,9 @@
 
 #include "scc/cj.h"
 
-#ifdef scc_STO
-	#include <sto/sto.h>
-	using namespace sto;
+#ifdef scc_RO
+	#include <ro/ro.h>
+	using namespace ro;
 #endif
 	
 #include <scc/simple.h>

@@ -49,8 +49,8 @@ usage_exit() {
 		--assert val   
 
 		-A		- without AWK module
-		-s		- with    STO module
-		-S		- without STO module
+		-s		- with    RO module
+		-S		- without RO module
 	"
 	exit 0
 }
@@ -75,8 +75,8 @@ while true ; do
 		-a|--assert)	CXXFLAGS+=" -Dscc_ASSERT "; scc_PRINTER="assert(("; scc_PRINTER_END=")==$2)"; shift 2 ;;
 		-A|--no-awk)	unset scc_AWK;  shift ;;
 
-		-s|--sto)	scc_STO=1;  shift ;;
-		-S|--no-sto)	unset scc_STO;  shift ;;
+		-s|--ro)	scc_RO=1;  shift ;;
+		-S|--no-ro)	unset scc_RO;  shift ;;
 
 		-D)	CXXFLAGS+=" -D$2 ";  shift 2 ;;
 		-f)	snippet_file=$2;  shift 2 ;;
@@ -111,12 +111,12 @@ done
 
 #### CONFIG
 
-[[ $scc_STO ]] && CXXFLAGS+=" -Dscc_STO "
+[[ $scc_RO ]] && CXXFLAGS+=" -Dscc_RO "
 [[ $scc_AWK ]] && CXXFLAGS+=" -Dscc_AWK "
 default_CXX="${default_CXX-g++}"
 
 
-if [[ $scc_STO ]];  then 
+if [[ $scc_RO ]];  then 
 	scc_PRINTER="${scc_PRINTER:-out(),}"
 else
 	scc_PRINTER="${scc_PRINTER:-std::cout<<}"

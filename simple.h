@@ -337,7 +337,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	#if   defined(scc_BOOST_BIND)  ||  defined(scc_BOOST_LAMBDA)
 		// already in global namaspace
 	#else
-		#if   !defined(scc_STO) && defined(CXX11)
+		#if   !defined(scc_RO) && defined(CXX11)
 		using	std::placeholders::_1;
 		using	std::placeholders::_2;
 		using	std::placeholders::_3;
@@ -433,8 +433,8 @@ typedef		std::list<std::string>		lstr;
 #define		xALL(C)		for (auto x:C)
 
 
-#ifdef STO_H
-	using namespace sto;
+#ifdef RO_H
+	using namespace ro;
 #else
 	#undef 		_
 	#define		_    std::cout<< 

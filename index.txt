@@ -53,10 +53,10 @@ You can skip to link:#_install[install] section now.
 
 Sections that follow are about SCC optional modules.
 
-STO Module
+RO Module
 ----------
 
-http://volnitsky.com/project/sto/[STL Template Operator library] (headers only
+http://volnitsky.com/project/ro/[STL Template Operator library] (headers only
 library) was recently split off SCC. It can be useful if you use STL
 containers, strings and want simpler replacement for `std::cout`.
 
@@ -115,7 +115,7 @@ include files if it is installed in directory which is not searched by default
 by compiler.
 
 Options `-s` / `-S` can enable/disable this module.  Set environment variable
-`scc_STO` (to any value) enables it.
+`scc_RO` (to any value) enables it.
 
 If enabled its print operator will be used instead of `std::cout` to print last
 statement-expression.
