@@ -46,7 +46,7 @@ struct	tracking_buf_t : std::streambuf {
 	    setp(0, 0); 	// no buffering, overflow on every char
 	}
 
-	bool terminated_line() const { return last_char=='\n' || count==0; }
+	bool terminated_line() const { return last_char=='\n' || count==0; }	// TOFIX? compare with ORS (=="\n")
 	
 	virtual int_type overflow(int_type c) {
 		buf->sputc(c);
@@ -166,14 +166,14 @@ int main(int argc, char** argv) {
 		#else
 		{
 			#include "snippet.cc"
-			if (is_print_last)  cout << ORS;
+			//if (is_print_last)  cout << ORS;
 		}
 		#endif
 		; // this semicolon terminates possible empty else
 	}
 
 	// last output should have terminated '\n'
-	if ( ! tracking_buf.terminated_line()) 	 cout << '\n';
+	if ( ! tracking_buf.terminated_line()) 	 cout << ORS;
 	std::cout.rdbuf(org_cout_buf);
 
 	#ifdef scc_AWK
