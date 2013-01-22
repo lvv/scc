@@ -1,10 +1,8 @@
 // vim:set ft=asciidoc:
 SCC — Simple C++  
 ===============
-:compact-option: compact
 
-SCC is +++C++ +++ snippets evaluator.
-
+SCC is +++C++ +++ snippets evaluator at shell prompt
 
 
 See full docs at http://volnitsky.com/project/scc[]
