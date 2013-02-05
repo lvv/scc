@@ -112,19 +112,26 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 
 	// io
 	using	std::cin;
-	using	std::cout;
-	using	std::cerr;
-	using	std::endl;
-	using	std::string;
-	using	std::basic_string;
 	using	std::basic_ostream;
 	using	std::istream;
 	using	std::ostream;
+	using	std::fstream;
+
+	using	std::cout;
+	using	std::cerr;
+	using	std::endl;
 	using	std::hex;
 	using	std::flush;
 	using	std::setw;
 	using	std::dec;
 	using	std::setprecision;
+
+	// strings
+	using	std::string;
+	using	std::basic_string;
+	#ifdef CXX11
+	using	std::to_string;
+	#endif
 
 	// containers
 	using	std::vector;
@@ -280,6 +287,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 		using	std::end;			// C++11
 		using	std::prev;			// C++11
 		using	std::next;			// C++11
+		using	std::move_iterator;    		// C++11
 
 		// memory  (C++11)
 		using	std::shared_ptr;
@@ -395,6 +403,15 @@ typedef		std::vector<std::string>	vstr;
 typedef		std::deque<std::string>		dstr;
 typedef		std::list<std::string>		lstr;
 
+typedef		std::set<int>			sint;
+typedef		std::set<long>			slong;
+typedef		std::set<char>			schar;
+
+typedef		std::multiset<int>	       	msint;
+typedef		std::multiset<long>	       	mslong;
+typedef		std::multiset<char>	       	mschar;
+
+
 ///// utils
 #define		MT		std::make_tuple
 #define		MP		std::make_pair
@@ -407,6 +424,7 @@ typedef		std::list<std::string>		lstr;
 
 
 #define		FOR(i,i0,N)	for (long i = (i0), max_##i=(N);   i < max_##i;   i++)
+#define		FOR1(i,N)	FOR(i,1,N+1)
 #define		ROF(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
 #define		REP(N)		for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++)
 
@@ -416,6 +434,13 @@ typedef		std::list<std::string>		lstr;
 #define		tFOR(N)		FOR(t,0,N)
 #define		nFOR(N)		FOR(m,0,N)
 #define		mFOR(N)		FOR(m,0,N)
+
+#define		iFOR1(N)	FOR(i,1,N+1)
+#define		jFOR1(N)	FOR(j,1,N+1)
+#define		kFOR1(N)	FOR(k,1,N+1)
+#define		tFOR1(N)	FOR(t,1,N+1)
+#define		nFOR1(N)	FOR(m,1,N+1)
+#define		mFOR1(N)	FOR(m,1,N+1)
 
 #define		ALL(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
 #define		LLA(IT, C)	for (auto IT=end(C)-1;  IT >= begin(C);   IT--)

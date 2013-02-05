@@ -157,7 +157,10 @@ cat  $snippet_file |
 sed  -r  '
 	s/.*;;//
 	s/$//;
+	s/\/\/.$//;
 	s/[ \t]*$//;
+	s/[\n]/\t/g;
+	/^$/d;
 	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' \2 '$scc_PRINTER_END'; is_print_last=true; /
 ' > $snippet_cc
 

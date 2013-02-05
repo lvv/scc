@@ -31,4 +31,8 @@ constexpr int gcd(int x, int y) {
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 
 
+#define scc_RO	1
+#include <ro/ro.h>		// http://github.com/lvv/ro
+#include <scc/simple.h>		// http://github.com/lvv/scc
+
 #endif  // LVV_CODEJAM_H
