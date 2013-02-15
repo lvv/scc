@@ -24,9 +24,23 @@ T gcd(T a, T b) {
 	// to check http://stackoverflow.com/questions/110344/algorithm-to-calculate-the-number-of-divisors-of-a-given-number
 	//
 
-constexpr int gcd(int x, int y) {
+constexpr long gcd(long x, long y) {
 	    return (x % y) == 0 ? y :  gcd(y,x % y);
 }
+
+constexpr long factorial(long n) {
+	    return n == 0  ?  1  :  n*factorial(n-1);
+};
+
+
+constexpr long permutation(long n, long k) {
+	    return k == 1  ?  n  :  (n-(k-1))*permutation(n,k-1);
+};
+
+constexpr long combination(long n, long k) {
+	    return permutation(n,k)/factorial(k);
+};
+
 
 #define countof(array) (sizeof (array) / sizeof(array[0]))
 

@@ -56,7 +56,7 @@ Sections that follow are about SCC optional modules.
 RO Module
 ----------
 
-http://volnitsky.com/project/ro/[STL Template Operator library] (headers only
+http://volnitsky.com/project/ro/[Range Operators] (headers only
 library) was recently split off SCC. It can be useful if you use STL
 containers, strings and want simpler replacement for `std::cout`.
 
@@ -377,7 +377,13 @@ AWK module should be fixed to handle white space exactly like AWK.
 * httpx://www.gotw.ca/publications/mill17.htm[Why Not Specialize Function Templates?]
 * httpx://richardminerich.com/2012/07/functional-programming-is-dead-long-live-expression-oriented-programming/[Functional Programming is Dead, Long Live Expression-Oriented Programming]
 
+
 ////////////////
+
+new 
+	EDA
+		histogram -- https://github.com/visionmedia/histo
+		
 
 RANGES
 	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3350.html
