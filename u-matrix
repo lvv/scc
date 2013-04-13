@@ -1,0 +1,2 @@
+
+cho 1 2 3 4 5 | scc 'matrix<int> M(2,2); cin >> M; cout << M << endl;'

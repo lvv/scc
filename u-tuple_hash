@@ -1,0 +1,6 @@
+
+scc 'bitset<8> bs(11); unordered_set<tuple<int,int>>  sbs;   sbs << make_tuple(2,1);  sbs'
+
+# gcc only, error with clang 
+scc 'bitset<8> bs(11); unordered_set<tuple<bitset<8>,int>>  sbs;   sbs << make_tuple(bs,1);  sbs'
+
