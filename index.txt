@@ -383,6 +383,7 @@ AWK module should be fixed to handle white space exactly like AWK.
 new 
 	EDA
 		histogram -- https://github.com/visionmedia/histo
+	python awk -- https://github.com/alecthomas/pawk
 		
 
 RANGES
@@ -455,6 +456,7 @@ FORMATS
 		http://stackoverflow.com/a/8560856
 		https://github.com/udp/json-parser
 		http://zserge.bitbucket.org/jsmn.html
+		http://stackoverflow.com/questions/8216743/how-to-read-big-json
 
 	CSV
 		http://csvkit.readthedocs.org/en/latest/index.html

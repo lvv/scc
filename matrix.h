@@ -30,15 +30,16 @@ struct	pt {
 std::ostream&   operator<<      (std::ostream& os, const pt& P) { os << "(" << P.x << "," << P.y << ")"; return os; };
 
 
-	template<typename T, template<typename T, typename Al=std::allocator<T> > class Rg=std::vector>
-struct	matrix : vector<T> {
+	template<typename T, template<typename TT, typename Al=std::allocator<TT> > class Rg=std::vector>
+struct	matrix {
 			//typedef		typename vector<T>::iterator		iterator ;
 			//typedef		typename vector<T>::const_iterator	const_iterator ;
 		size_t w_,h_;
-	explicit matrix (size_t w, size_t h,  T val0=0) :  vector<T>(h*w,  val0), w_(w), h_(h) {};
-	T&	operator()	(pt p)   			{ return (*this)[w_ * p.y + p.x]; };
-	T&	operator()	(size_t x,  size_t y)   	{ return (*this)[w_ * y + x]; };
-	const T&operator()	(size_t x,  size_t y)  const  	{ return (*this)[w_ * y + x]; };
+		vector<T>  V;
+	explicit matrix (size_t h, size_t w,  T val0=0) : w_(w), h_(h), V(h*w,  val0)  {};
+	T&	operator()	(pt p)   			{ return V[w_ * p.y + p.x]; };
+	T&	operator()	(size_t x,  size_t y)   	{ return V[w_ * y + x]; };
+	const T&operator()	(size_t x,  size_t y)  const  	{ return V[w_ * y + x]; };
 	size_t	h		() const	 		{ return h_; };
 	size_t	w		() const	 		{ return w_; };
 	bool	in		(pt p) const		{ return 0<=p.y  &&  p.y <  (T)h()  &&   0<=p.x && p.x < (T)w() ; };
