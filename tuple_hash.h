@@ -1,4 +1,5 @@
 #include <tuple>
+///////////////////  TUPLE
 // from http://stackoverflow.com/questions/7110301/generic-hash-for-tuples-in-unordered-map-unordered-set
 namespace std{
     namespace {
@@ -34,12 +35,43 @@ namespace std{
     template <typename ... TT>
     struct hash<std::tuple<TT...>> {
         size_t
-        operator()(std::tuple<TT...> const& tt) const
-        {                                              
+        operator()(std::tuple<TT...> const& tt) const {                                              
             size_t seed = 0;                             
             HashValueImpl<std::tuple<TT...> >::apply(seed, tt);    
             return seed;                                 
         }                                              
 
+    };
+}
+
+///////////////////  PAIR
+
+namespace std {
+    template <class T, class U>
+        struct hash<pair<T,U>> {
+            size_t operator()(const pair<T,U>& val ) const {
+                return hash<T>()(val.first) ^ hash<U>()(val.second);
+            }
+    };
+};
+
+///////////////////  ARRAY
+
+#include <array>
+
+namespace std {
+	    template<typename T, size_t N>
+    struct hash<array<T, N> > {
+        typedef array<T, N> argument_type;
+        typedef size_t result_type;
+
+        result_type operator()(const argument_type& a) const {
+            hash<T> hasher;
+            result_type h = 0;
+            for (result_type i = 0; i < N; ++i) {
+                h = h * 31 + hasher(a[i]);
+            }
+            return h;
+        }
     };
 }
