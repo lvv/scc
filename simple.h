@@ -373,8 +373,18 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
-typedef		const	int			cint;
-typedef		size_t				idx;
+///// Linux Kernel types
+typedef		uint8_t		u8;
+typedef		uint16_t	u16;
+typedef		uint32_t	u32;
+
+typedef		int8_t		i8;
+typedef		int16_t		i16;
+typedef		int32_t		i32;
+
+
+
+///// STL containers types
 typedef		std::vector<int>		vint;
 typedef		std::vector<unsigned int>	vuint;
 typedef		std::vector<long>		vlong;

@@ -331,7 +331,7 @@ GCC Pre-compiled headers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 For GCC you can enable precompiled headers, which will allow slightly (20%) faster compile.
 This is not recommended if you are going to update SCC or GCC.
-Command `scc -r` will create directory `.gch` with precompiled headers:
+Command `scc -make-gch` will create directory `.gch` with precompiled headers:
 
 -----------------
 cd path-to-scc-home
@@ -410,6 +410,9 @@ MAP
 			http://svn.python.org/view/python/trunk/Objects/dictnotes.txt?view=markup&pathrev=53782
 	http://stackoverflow.com/questions/11614106/is-gcc-stdunordered-map-implementation-slow-if-so-why
 
+REF STRING
+	http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2013/n3609.html
+
 BENCHMARKS
 	A Benchmark for Reading Flat Files Into Memory for Awk, Python, Perl, Java, and Ruby (steve.80cols.com)
 		http://www.reddit.com/r/programming/comments/pub98/a_benchmark_for_reading_flat_files_into_memory/
@@ -449,6 +452,7 @@ FORMATS
 		https://github.com/simonask/reflect
 
 	JSON
+		jq is like sed for JSON data -- http://stedolan.github.io/jq/
 		json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
 		http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
 		http://www.kirit.com/Thread:/1723074
