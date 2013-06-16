@@ -60,7 +60,8 @@ gch_dir=$SCC_HOME/.gch
 
 
 
-TEMP=`getopt -o a:AsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,make-gch,no-awk,assert: -- "$@"`
+[[ $# == 0 ]]  &&  usage_exit
+TEMP=`getopt -o a:AhsSnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,help,make-gch,no-awk,assert: -- "$@"`
 [[ $? != 0 ]]  &&  usage_exit
 #[[  $1 ]]      ||  usage_exit
 
@@ -90,6 +91,7 @@ while true ; do
 		-O) 	CXXFLAGS+=$O_FLAGS; gch_dir=.gch/O; is_optimized=1; shift ;;
 		-g) 	CXXFLAGS+=$g_FLAGS; gch_dir=.gch/g; shift ;;
 		-H)	CXXFLAGS+=" -Dscc_HEADER "; shift  ;;
+		-h|--help)	usage_exit;;
 		#t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
 		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND "  ;  shift ;;
