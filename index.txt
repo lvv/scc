@@ -360,13 +360,6 @@ AWK module should be fixed to handle white space exactly like AWK.
 
 == Refs 
 
-* httpx://www.johndcook.com/cpp_regex.html[Getting started with C++ TR1 * regular expressions]
-* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/introduction_and_overview.html[Boost.Regex]
-* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html[Perl Regular Expression Syntax]
-* httpx://www.boost.org/doc/libs/1_46_1/libs/regex/doc/html/boost_regex/ref/regex_token_iterator.html[regex_token_iterator]
-* httpx://www.boost.org/doc/libs/1_46_0/libs/format/doc/format.html#examples[Boost.Format]
-* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial[+++C++11 +++ regex tutorial. Part-1 ]/
-* httpx://solarianprogrammer.com/2011/10/20/cpp-11-regex-tutorial-part-2[+++C++11 +++  regex tutorial. Part-2]/
 * httpx://en.wikipedia.org/wiki/Delimiter[Delimiter]
 * httpx://en.wikipedia.org/wiki/Comma-separated_values[CSV]
 * httpx://home.vrweb.de/~juergen.kahrs/gawk/XML/[XMLgawk]
@@ -385,17 +378,6 @@ new
 		histogram -- https://github.com/visionmedia/histo
 	python awk -- https://github.com/alecthomas/pawk
 		
-
-RANGES
-	http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3350.html
-
-	random iterator
-		Take arbitrary integer number P that GCD(P, N) == 1 where GCD(P, N) is greatest common divisor of P and N (e.g. GCD(70, 42) == 14, GCD(24, 35) == 1).
-		Get sequence K[i] ::= (P * i) mod N + 1, i from 1 to N
-		It's proven that sequence K[i] enumerates all numbers between 1 and N with no repeats (actually K[N + 1] == K[1] but that is not a problem because we need only first N numbers).
-		If you can efficiently generate such numbers P with uniform distribution (e.g. with a good random function) with using Euclidean algorithm to calculate GCD in O(log(N)) complexity you'll get what you want.
-
-	linq -- http://stackoverflow.com/questions/8910045/template-argument-deduction
 
 MAP
 	TRIE
@@ -439,19 +421,13 @@ STR TO INT
 
 TOKENIZER 
 	http://www.codeproject.com/KB/recipes/Tokenizer.aspx
-REGEX
-	constexpr (at complie time) --
-	http://cpptruths.blogspot.com/2011/07/compile-time-regex-matcher-using.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+CppTruths+%28C%2B%2B+Truths%29&utm_content=Google+Reader
-	A Regular Expression Matcher by Rob Pike -- http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
-	Writing own regular expression parser -- http://www.codeproject.com/KB/recipes/OwnRegExpressionsParser.aspx
-	http://swtch.com/~rsc/regexp/
-	PCRE++ http://www.linuxquestions.org/questions/showthread.php?p=4387972#post4387972
 FORMATS
 	ALL
 		http://dev.umpirsky.com/list-of-all-countries-in-all-languages-and-all-data-formats/
 		https://github.com/simonask/reflect
 
 	JSON
+		https://github.com/hjiang/jsonxx
 		jq is like sed for JSON data -- http://stedolan.github.io/jq/
 		json parse in spirit -- http://boost-spirit.com/repository/applications/json_spirit.zip
 		http://www.kirit.com/Blog:/2008-03-31/Thoughts%20on%20TinyJSON
