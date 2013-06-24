@@ -74,6 +74,7 @@ int main(int argc, char** argv) {
 	int n __attribute__((unused)) = 0;
 	int m __attribute__((unused)) = 0;
 	int l __attribute__((unused)) = 0;
+	int t __attribute__((unused)) = 0;
 
 	double x __attribute__((unused)) = 0.0;
 	double y __attribute__((unused)) = 0.0;
