@@ -377,7 +377,10 @@ new
 	EDA
 		histogram -- https://github.com/visionmedia/histo
 	python awk -- https://github.com/alecthomas/pawk
+	serialization -- http://uscilab.github.io/cereal/
 		
+STRING
+	https://github.com/facebook/folly/blob/master/folly/docs/FBString.md
 
 MAP
 	TRIE
@@ -417,6 +420,7 @@ GNU AWK
 
 STR TO INT 
 	http://www.partow.net/programming/strtk/index.html
+	https://github.com/facebook/folly/blob/master/folly/docs/Conv.md
 
 
 TOKENIZER 

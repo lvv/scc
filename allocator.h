@@ -3,6 +3,7 @@
 // TR http://www2.research.att.com/~bs/rg++0xFAQ.html#scoped-allocator
 // TR http://stackoverflow.com/questions/11373796/curom-memory-allocator-for-stl-map
 // TR http://www.codeguru.com/cpp/cpp/cpp_mfc/stl/article.php/c4079/Allocators-STL.htm
+// TO TRY -- http://stackoverflow.com/questions/17548032/c11-memory-pool-class-workaround-for-static-casting-from-void
 
 /* (from c++ now presentation) - A Minimal Allocator • Much of the rg++03 boilerplate is now defaulted
 

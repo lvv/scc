@@ -45,7 +45,7 @@ usage_exit() {
 		-g 		- debug compile
 		-H 		- read header 
 		--make-gch 	- regenerate GCH (gcc precompiled headers) 
-		-a val		- assert ==val
+		-a val		- instead of outputting last-statement-expression, do: assert(expr==val);
 		--assert val   
 
 		-A		- without AWK module
