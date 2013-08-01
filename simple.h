@@ -42,6 +42,7 @@ const double pi     = 3.14159265358979323846;
 	long long	atoll(const char *);
 	*/
 //#include <cstddef>
+#include <limits.h>
 
 
 #include <cstring>
@@ -386,12 +387,14 @@ typedef		int32_t		i32;
 
 ///// STL containers types
 typedef		std::vector<int>		vint;
+typedef		std::vector<vint>		vvint;
 typedef		std::vector<unsigned int>	vuint;
 typedef		std::vector<long>		vlong;
 typedef		std::vector<unsigned long>	vulong;
 typedef		std::vector<char>		vchar;
 typedef		std::vector<float>		vfloat;
 typedef		std::vector<double>		vdouble;
+typedef		std::vector<vdouble>		vvdouble;
 
 typedef		std::deque<int>			dint;
 typedef		std::deque<int>			dlong;
