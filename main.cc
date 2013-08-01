@@ -86,6 +86,12 @@ int main(int argc, char** argv) {
 	char *p		__attribute__((unused)) = 0;
 	char *q		__attribute__((unused)) = 0;
 
+	// facet / locale
+	// to figure out
+       	std::locale::global(std::locale(""));
+       	std::wcout.imbue(std::locale());
+	auto& facet __attribute__((unused)) = std::use_facet<std::ctype<wchar_t>>(std::locale());
+
 
 	#ifdef scc_AWK
 		char	**first_file_argv = argv+1;

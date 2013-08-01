@@ -43,6 +43,7 @@ const double pi     = 3.14159265358979323846;
 	*/
 //#include <cstddef>
 #include <limits.h>
+#include <wchar.h>
 
 
 #include <cstring>
@@ -68,6 +69,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+
 
 ///////////////////////////////////////////////////////////////////// C++ STL
 #include <algorithm>
@@ -119,6 +121,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::fstream;
 
 	using	std::cout;
+	using	std::wcout;
 	using	std::cerr;
 	using	std::endl;
 	using	std::hex;
