@@ -25,6 +25,7 @@
 const double e      = 2.7182818284590452354;
 const double pi     = 3.14159265358979323846;
 
+
 //////////////////////////////////////////////////////////////////// C
 
 //#include <cstdlib>		// inject info global namespace: div, ...
@@ -44,6 +45,7 @@ const double pi     = 3.14159265358979323846;
 //#include <cstddef>
 #include <limits.h>
 #include <wchar.h>
+#include <wctype.h>
 
 
 #include <cstring>
@@ -121,7 +123,6 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::fstream;
 
 	using	std::cout;
-	using	std::wcout;
 	using	std::cerr;
 	using	std::endl;
 	using	std::hex;
@@ -130,8 +131,12 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 	using	std::dec;
 	using	std::setprecision;
 
+	using	std::wcout;
+	using	std::wcin;
+
 	// strings
 	using	std::string;
+	using	std::wstring;
 	using	std::basic_string;
 	#ifdef CXX11
 	using	std::to_string;

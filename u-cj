@@ -1,10 +1,13 @@
 
+set -o errexit
+set -v 
+
 # gcd 
 scc -a2		'std::integral_constant<long,gcd(2,2)>::value'
 
 # factorial
 scc -a1		'std::integral_constant<long,factorial(0)>::value'
-scc -a2		'std::integral_constant<long,factorial(1)>::value'
+scc -a1		'std::integral_constant<long,factorial(1)>::value'
 scc -a6		'std::integral_constant<long,factorial(3)>::value'
 
 # permutation
@@ -13,3 +16,7 @@ scc -a3360	'std::integral_constant<long,permutation(16,3)>::value'
 
 # combination
 scc -a560	'std::integral_constant<long,combination(16,3)>::value'
+
+# histogram
+scc  -a1 's="asdfasdvasdfddkdkdk";  (histogram_vector(s) || add) == s.size()'
+scc -a1 's="asdfasdvasdfddkdkdk";  (histogram(s)*_1 || add) == s.size()'
