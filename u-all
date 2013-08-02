@@ -4,5 +4,9 @@ set -v
 
 . u-scc
 . u-strr
+. u-cj
+. u-awk
+. u-hasher
+. u-matrix
 
 : '= = = = = = = = = = = = = = = = = = = = = = = = ALL PASS = = = = = = = = = = = = = = = = = = = = = = = = ='
