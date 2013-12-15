@@ -94,6 +94,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 #include <unordered_map>
 #include <unordered_set>
 #include <forward_list>
+#include <chrono>
 #endif
 
 ///////////////////////////////////////////////////////////////////// C++11 STL
@@ -284,6 +285,7 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 		using	std::tuple_size;		// C++11
 		using	std::make_shared;		// C++11
 		using	std::iota;			// C++11
+		using   namespace std::chrono;
 	#endif
 
 	// iterator

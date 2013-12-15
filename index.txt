@@ -421,6 +421,7 @@ GNU AWK
 STR TO INT 
 	http://www.partow.net/programming/strtk/index.html
 	https://github.com/facebook/folly/blob/master/folly/docs/Conv.md
+	http://www.kumobius.com/2013/08/c-string-to-int/
 
 
 TOKENIZER 
@@ -484,6 +485,7 @@ DB
 	http://webtoolkit.eu/wt#/blog/2009/11/26/wt__dbo__an_orm__c___style
 	http://code.google.com/p/hiberlite/
 	http://kahimyang.info/kauswagan/howto_blogs/1326-a_simple_c_c___database_daemon
+	sqlite - https://github.com/catnapgames/NLDatabase
 	------------------
 	Regarding boost::sql proposal, there is some work in progress:
 	    * On BoostCon'09 Jeff Garland led workshop: Library in Week 2009 to discuss the std::rdb propsals, here are materials std::rdb (.tgz package)

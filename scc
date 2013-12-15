@@ -6,7 +6,8 @@
 [ -f     .scc ]  && .     .scc
 
 
-#[[ -n $sT ]] && CXXFLGAS+=" -DsT=$sT "
+CXXFLAGS+=" -std=c++11 "
+#[[ -n $sT ]] && CXXFLAGS+=" -DsT=$sT "
 
 
 tmpdir=/tmp/`{ echo scc-$USER-; tty; } | sed "s/^\/dev\///"| tr -dc "[0-9a-zA-Z-]"`
