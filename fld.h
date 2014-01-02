@@ -24,12 +24,12 @@ struct strr {         ///////////////////////////////////////////////////////  S
 
 
 #ifdef scc_RO
-	namespace    {
+	//namespace    {
 	namespace ro {
 		template<>		struct  is_ioable_t    <strr>:   std::true_type  {};
 		template<>		struct  is_range_t <strr>:   std::false_type  {};
 	};
-	};
+	//};
 #endif
 
 	std::ostream&
@@ -171,7 +171,7 @@ struct	fld : strr {
 
 // traits
 #ifdef scc_RO
-	namespace    {
+	//namespace    {
 	namespace ro {
 		template<>	struct  is_ioable_t <fld>       : std::true_type  {};
 		template<>	struct  is_range_t  <fld>	: std::false_type  {};
@@ -179,7 +179,7 @@ struct	fld : strr {
 		template<>	struct  is_string_t <strr>	: std::true_type  {};	// so that strr acceptable to regex expressions
 		template<>	struct  is_string_t  <fld>	: std::true_type  {};	// so that strr acceptable to regex expressions
 	};
-	};
+	//};
 #endif
 
 					#endif // SCC_AWK

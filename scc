@@ -166,7 +166,7 @@ sed  -r  '
 	s/[ \t]*$//;
 	s/[\n]/\t/g;
 	/^$/d;
-	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' \2 '$scc_PRINTER_END'; is_print_last=true; /
+	s/(.*[;])*([^;]+$)/ \1'$scc_PRINTER' (\2) '$scc_PRINTER_END'; is_print_last=true; /
 ' > $snippet_cc
 
 # split file scope part
