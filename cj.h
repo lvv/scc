@@ -31,10 +31,17 @@ constexpr long gcd(long x, long y) {
 	    return (x % y) == 0 ? y :  gcd(y,x % y);
 }
 
+
+
 ////// COMBINATORICS
 
 constexpr long factorial(long n) {
 	return n == 0  ?  1  :  n*factorial(n-1);
+};
+
+template <class T>
+constexpr T sq(T&& x) {
+	return x*x;
 };
 
 

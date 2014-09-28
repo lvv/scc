@@ -428,7 +428,7 @@ typedef		std::list<std::string>		lstr;
 
 typedef		std::set<int>			sint;
 typedef		std::set<long>			slong;
-typedef		std::set<char>			schar;
+//typedef		std::set<char>			schar;		// conflict with OpenCV
 
 typedef		std::multiset<int>	       	msint;
 typedef		std::multiset<long>	       	mslong;
