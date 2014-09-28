@@ -18,5 +18,5 @@ scc -a3360	'std::integral_constant<long,permutation(16,3)>::value'
 scc -a560	'std::integral_constant<long,combination(16,3)>::value'
 
 # histogram
-scc -a1 's="asdfasdvasdfddkdkdk";  (histogram_vector(s) || add) == s.size()'
-scc -a1 's="asdfasdvasdfddkdkdk";  (histogram(s)*_1 || add) == s.size()'
+scc -a1 's="asdfasdvasdfddkdkdk";  (histogram_vector(s) || plus<str>()) == s.size()'
+scc -a1 's="asdfasdvasdfddkdkdk";  (histogram(s)*_1 || plus<str>()) == s.size()'

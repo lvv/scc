@@ -62,7 +62,7 @@ gch_dir=$SCC_HOME/.gch
 
 
 [[ $# == 0 ]]  &&  usage_exit
-TEMP=`getopt -o a:AhrRnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,help,make-gch,no-awk,ro,with-ro,no-ro,without-ro,assert: -- "$@"`
+TEMP=`getopt -o a:AhrRnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,help,make-gch,no-awk,ro,with-ro,no-ro,without-ro,cv,assert: -- "$@"`
 [[ $? != 0 ]]  &&  usage_exit
 #[[  $1 ]]      ||  usage_exit
 

@@ -384,6 +384,8 @@ extern "C"  void *memcpy(void *dest, const void *src, size_t n);
 ///////////////////////////////////////////////////////////////////// SHORTCUTS
 
 ///// types
+typedef		double		dbl;
+
 ///// Linux Kernel types
 typedef		uint8_t		u8;
 typedef		uint16_t	u16;
@@ -392,7 +394,6 @@ typedef		uint32_t	u32;
 typedef		int8_t		i8;
 typedef		int16_t		i16;
 typedef		int32_t		i32;
-
 
 
 ///// STL containers types
@@ -404,13 +405,15 @@ typedef		std::vector<unsigned long>	vulong;
 typedef		std::vector<char>		vchar;
 typedef		std::vector<float>		vfloat;
 typedef		std::vector<double>		vdouble;
-typedef		std::vector<vdouble>		vvdouble;
+typedef		std::vector<double>		vdbl;
+typedef		std::vector<vdouble>		vvdbl;
 
 typedef		std::deque<int>			dint;
 typedef		std::deque<int>			dlong;
 typedef		std::deque<unsigned int>	duint;
 typedef		std::deque<float>		dfloat;
 typedef		std::deque<double>		ddouble;
+typedef		std::deque<double>		ddbl;
 typedef		std::deque<char>		dchar;
 
 typedef		std::list<int>			lint;
@@ -420,6 +423,7 @@ typedef		std::list<unsigned long>	lulong;
 typedef		std::list<char>			lchar;
 typedef		std::list<float>		lfloat;
 typedef		std::list<double>		ldouble;
+typedef		std::list<double>		ldbl;
 
 typedef		std::string			str;
 typedef		std::vector<std::string>	vstr;
