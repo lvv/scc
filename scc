@@ -6,7 +6,7 @@
 [ -f     .scc ]  && .     .scc
 
 
-CXXFLAGS+=" -std=c++11 "
+CXXFLAGS+=" -std=c++1y "
 #[[ -n $sT ]] && CXXFLAGS+=" -DsT=$sT "
 
 

@@ -483,6 +483,7 @@ typedef		std::multiset<char>	       	mschar;
 #define		nALL(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
 #define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
 #define		xALL(C)		for (auto x:C)
+#define		xRNG(a,b,c)	for (auto x:range(a,b,c))
 
 
 #ifdef RO_H
