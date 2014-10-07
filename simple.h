@@ -441,7 +441,7 @@ typedef		std::multiset<char>	       	mschar;
 
 ///// utils
 #define		MT		std::make_tuple
-#define		MP		std::make_pair
+//#define		MP		std::make_pair		// conflicts with OpenCV
 
 #define		GL(x)		std::getline(cin,x)
 #define		NL		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
@@ -469,21 +469,24 @@ typedef		std::multiset<char>	       	mschar;
 #define		nFOR1(N)	FOR(m,1,N+1)
 #define		mFOR1(N)	FOR(m,1,N+1)
 
-#define		ALL(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
-#define		LLA(IT, C)	for (auto IT=end(C)-1;  IT >= begin(C);   IT--)
-#define		itALL(C)	ALL(it,C)
-#define		pALL(C)		ALL(p,C)
-#define		qALL(C)		ALL(q,C)
-#define		pLLA(C)		LLA(p,C)
-#define		iALL(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
-#define		jALL(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
-#define		kALL(C)		for (long k=0;  k<(long)(end(C)-begin(C));   k++)
-#define		lALL(C)		for (long l=0;  l<(long)(end(C)-begin(C));   l++)
-#define		mALL(C)		for (long m=0;  m<(long)(end(C)-begin(C));   m++)
-#define		nALL(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
-#define		cALL(C)		for (auto c:C) if(c == '\0') break;  else
-#define		xALL(C)		for (auto x:C)
+#define		OF(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
+#define		itOF(it, C)	for (auto it=begin(C);  it != end(C);   it++)
+#define		itFO(it, C)	for (auto it=end(C)-1;  it >= begin(C);   it--)
+#define		pOF(C)		OF(p,C)
+#define		qOF(C)		OF(q,C)
+#define		pFO(C)		LLA(p,C)
+#define		iOF(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
+#define		jOF(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
+#define		kOF(C)		for (long k=0;  k<(long)(end(C)-begin(C));   k++)
+#define		lOF(C)		for (long l=0;  l<(long)(end(C)-begin(C));   l++)
+#define		mOF(C)		for (long m=0;  m<(long)(end(C)-begin(C));   m++)
+#define		nOF(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
+#define		cOF(C)		for (auto c:C) if(c == '\0') break;  else
+#define		xOF(C)		for (auto x:C)
+
+#ifdef  RO_H
 #define		xRNG(a,b,c)	for (auto x:range(a,b,c))
+#endif
 
 
 #ifdef RO_H
