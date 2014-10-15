@@ -26,6 +26,9 @@ const double e      = 2.7182818284590452354;
 const double pi     = 3.14159265358979323846;
 
 
+//////////////////////////////////////////////////////////////////// LVV
+
+#include "scc/loops_macro.h"
 //////////////////////////////////////////////////////////////////// C
 
 //#include <cstdlib>		// inject info global namespace: div, ...
@@ -447,46 +450,6 @@ typedef		std::multiset<char>	       	mschar;
 #define		NL		cin.ignore(numeric_limits<std::streamsize>::max(),'\n');
 
 
-///////////////////////////////////////////////////////////////////// LOOPS
-
-
-#define		FOR(i,i0,N)	for (long i = (i0), max_##i=(N);   i < max_##i;   i++)
-#define		FOR1(i,N)	FOR(i,1,N+1)
-#define		ROF(i,a,b)	for (long i = (b)-1; i >= long(a); i--)
-#define		REP(N)		for (long i_REP_ue923u=0, N_REP_2uf23f=(N);   i_REP_ue923u< N_REP_2uf23f;   i_REP_ue923u++)
-
-#define		iFOR(N)		FOR(i,0,N)
-#define		jFOR(N)		FOR(j,0,N)
-#define		kFOR(N)		FOR(k,0,N)
-#define		tFOR(N)		FOR(t,0,N)
-#define		nFOR(N)		FOR(m,0,N)
-#define		mFOR(N)		FOR(m,0,N)
-
-#define		iFOR1(N)	FOR(i,1,N+1)
-#define		jFOR1(N)	FOR(j,1,N+1)
-#define		kFOR1(N)	FOR(k,1,N+1)
-#define		tFOR1(N)	FOR(t,1,N+1)
-#define		nFOR1(N)	FOR(m,1,N+1)
-#define		mFOR1(N)	FOR(m,1,N+1)
-
-#define		OF(IT, C)	for (auto IT=begin(C);  IT != end(C);   IT++)
-#define		itOF(it, C)	for (auto it=begin(C);  it != end(C);   it++)
-#define		itFO(it, C)	for (auto it=end(C)-1;  it >= begin(C);   it--)
-#define		pOF(C)		OF(p,C)
-#define		qOF(C)		OF(q,C)
-#define		pFO(C)		LLA(p,C)
-#define		iOF(C)		for (long i=0;  i<(long)(end(C)-begin(C));   i++)
-#define		jOF(C)		for (long j=0;  j<(long)(end(C)-begin(C));   j++)
-#define		kOF(C)		for (long k=0;  k<(long)(end(C)-begin(C));   k++)
-#define		lOF(C)		for (long l=0;  l<(long)(end(C)-begin(C));   l++)
-#define		mOF(C)		for (long m=0;  m<(long)(end(C)-begin(C));   m++)
-#define		nOF(C)		for (long n=0;  n<(long)(end(C)-begin(C));   n++)
-#define		cOF(C)		for (auto c:C) if(c == '\0') break;  else
-#define		xOF(C)		for (auto x:C)
-
-#ifdef  RO_H
-#define		xRNG(a,b,c)	for (auto x:range(a,b,c))
-#endif
 
 
 #ifdef RO_H

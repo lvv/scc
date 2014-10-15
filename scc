@@ -95,7 +95,7 @@ while true ; do
 		-h|--help)	usage_exit;;
 		-t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
-		--cv)	LIBS+="`pkg-config --libs opencv`";  CXXFLAGS+="-O3 -march=native"; shift ;;
+		--cv)	LIBS+="`pkg-config --libs opencv`";  CXXFLAGS+="-O3 -march=native -DOPENCV "; shift ;;
 		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND "  ;  shift ;;
 		--boost-lambda)	CXXFLAGS+=" -Dscc_BOOST_LAMBDA ";  shift ;;
 		--make-gch)
