@@ -1,12 +1,18 @@
 #!/bin/bash
 
 
-[ -f /etc/scc ]  && . /etc/scc
-[ -f   ~/.scc ]  && .   ~/.scc
-[ -f     .scc ]  && .     .scc
+[[ -f /etc/scc ]]  && . /etc/scc
+[[ -f   ~/.scc ]]  && .   ~/.scc
+[[ -f     .scc ]]  && .     .scc
+
+[[ -f /etc/scc.h ]]  &&  CXXFLAGS+=" -include /etc/scc.h "
+#[[ -f   ~/.scc.h ]]  &&  CXXFLAGS+=" -include   ~/.scc.h "
+[[ -f     .scc.h ]]  &&  CXXFLAGS+=" -include     .scc.h "
 
 
-CXXFLAGS+=" -std=c++14 -fdiagnostics-color=auto"
+
+
+CXXFLAGS+=" -std=c++14 -fdiagnostics-color=always -Wall  -Wno-unused-function -Wno-unknown-pragmas"
 GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
 #[[ -n $sT ]] && CXXFLAGS+=" -DsT=$sT "
 
@@ -96,7 +102,11 @@ while true ; do
 		-h|--help)	usage_exit;;
 		-t)	time="time -f'\t%E wall  ==  (%U+%S)        %M KB\n"; CXXFLAGS+="-O3 -march=native";;
 		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
-		--cv)	LIBS+="`pkg-config --libs opencv`";  CXXFLAGS+="-O3 -march=native -DOPENCV "; shift ;;
+		--cv|--oc)     
+			LDFLAGS+=" `pkg-config --libs   /usr/local/opencv/lib/pkgconfig/opencv.pc`"; 
+			CXXFLAGS+="`pkg-config --cflags /usr/local/opencv/lib/pkgconfig/opencv.pc` -DOPENCV  -I/home/lvv/p/ -I/home/lvv/p/cv/ -I.. -I../.. -include cv.h";
+			shift
+			;;
 		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND "  ;  shift ;;
 		--boost-lambda)	CXXFLAGS+=" -Dscc_BOOST_LAMBDA ";  shift ;;
 		--make-gch)
@@ -181,7 +191,7 @@ cat  $snippet_file | sed  -n 's/\(;;\).*/;/p'  > $snippet_h
 
 
 
-${CXX-$default_CXX} $CXXFLAGS $main_cc -o $main_exe $LIBS || exit 1
+${CXX-$default_CXX} $CXXFLAGS $main_cc -o $main_exe $LDFLAGS $LIBS || exit 1
 	
 if  [[ $execute == 1 ]]  ; then 
 	LCC_ALL=C $time $main_exe "$@"
