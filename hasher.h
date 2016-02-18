@@ -1,3 +1,6 @@
+#ifndef  SCC_HASHER_H
+#define  SCC_HASHER_H
+
 #include <tuple>
 ///////////////////  TUPLE
 // from http://stackoverflow.com/questions/7110301/generic-hash-for-tuples-in-unordered-map-unordered-set
@@ -75,3 +78,4 @@ namespace std {
         }
     };
 }
+#endif	// SCC_HASHER_H

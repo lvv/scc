@@ -28,6 +28,16 @@ const double pi     = 3.14159265358979323846;
 
 //////////////////////////////////////////////////////////////////// LVV
 
+/*
+namespace lvv {
+
+	template <class T>                T max(T value)                { return value; }
+	template <class T, class... Args> T max(T first, Args... rest)  { return std::max(first, lvv::max(rest...)); }
+
+	template <class T>                T min(T value)                { return value; }
+	template <class T, class... Args> T min(T first, Args... rest)  { return std::min(first, lvv::min(rest...)); }
+};*/
+
 #include "scc/loops_macro.h"
 //////////////////////////////////////////////////////////////////// C
 
