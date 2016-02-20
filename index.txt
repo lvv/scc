@@ -53,6 +53,76 @@ You can skip to link:#_install[install] section now.
 
 Sections that follow are about SCC optional modules.
 
+OpenCV Module
+-------------
+
+Provides complete OpenCV environment. SCC with OpenCV module provides similar functionaly to ImageMagick.
+Off by default. Turn on with `--cv` o `--oc` options.   Or set
+environmental vaiable `I`.
+
+
+Reads leng.png, and displays it:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'Mat I(imread("lena.png"));  imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same but using global enviromental varibale `I`:
+
+-----------------------------------------------------------------------------------------
+I=lena.png
+scc --cv 'imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same but instead of global, we will  use temporary (with scc lifetime) env variable:
+
+-----------------------------------------------------------------------------------------
+unset I    // now global I is not set
+I=lean.png   scc --cv  'imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same with using SCC's `show()` function:
+
+-----------------------------------------------------------------------------------------
+I=lean.png   scc --cv  'show(I);'
+-----------------------------------------------------------------------------------------
+
+Environmental variale `I` and `--cv` options enable earch other.  If only one
+is set, second will be set automaticly.  When `I` is set, we don't need to set `--cv` too.
+If `--cv` is pesent but `I` is unset, SCC reads `lena.png` into `I`.
+(TODO: frome what dir?)
+
+Convert to TIFF:
+
+---------------------------------------------------------------------------------------
+scc --cv 'imwrite("lena.tif",I)'
+-----------------------------------------------------------------------------------------
+
+Resize, make x2 times smaller:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'cv::resize(I,I,Size{},0.5,0.5); imwrite("small.png",I);'
+-----------------------------------------------------------------------------------------
+
+Add noise:
+
+---------------------------------------------------------------------------------------
+scc --cv 'asI(R);  randn(R,0,50);  show(I+R);'
+-----------------------------------------------------------------------------------------
+
+Shortcut `asI` declares a cv::Mat with the same type and size as I.
+
+Edge detector:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'Mat E; cv::Canny(I,E,10000,35000, 7);  show(E);'
+-----------------------------------------------------------------------------------------
+
+
+
+
+
+
 RO Module
 ----------
 

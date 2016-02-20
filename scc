@@ -73,6 +73,8 @@ TEMP=`getopt -o a:AhrRnpf:vBi:F:o:x:OgHtbD: -l boost-bind,boost-lambda,help,make
 [[ $? != 0 ]]  &&  usage_exit
 #[[  $1 ]]      ||  usage_exit
 
+[[ -n ${I} ]]  &&  TEMP=" --cv $TEMP"
+
 eval set -- "$TEMP"
 
 
@@ -104,7 +106,8 @@ while true ; do
 		-b)	CXXFLAGS+=" -Dscc_BENCHMARK ";  p_opt=1; CXXFLAGS+="-O3 -march=native"; shift ;;
 		--cv|--oc)     
 			LDFLAGS+=" `pkg-config --libs   /usr/local/opencv/lib/pkgconfig/opencv.pc`"; 
-			CXXFLAGS+="`pkg-config --cflags /usr/local/opencv/lib/pkgconfig/opencv.pc` -DOPENCV  -I/home/lvv/p/ -I/home/lvv/p/cv/ -I.. -I../.. -include cv.h";
+			CXXFLAGS+="`pkg-config --cflags /usr/local/opencv/lib/pkgconfig/opencv.pc` -Dscc_OPENCV  -I/home/lvv/p/ -I/home/lvv/p/cv/ -I.. -I../.. -include cv.h";
+			[[ -n ${I} ]] && CXXFLAGS+=" -Dscc_I_path=\"${I}\" "
 			shift
 			;;
 		--boost-bind)	CXXFLAGS+=" -Dscc_BOOST_BIND "  ;  shift ;;
@@ -171,6 +174,8 @@ fi
 #cat  $snippet_file | sed  's/.*;;//;s/$//;s/[ \t]*$//;s/\(.*[;}]\)*\([^;}]\+$\)/\1 out(), \2 ; is_print_last=true;/' > $snippet_cc
 
 cat  $snippet_file |
+
+#  this shouldn't be sed
 sed  -r  '
 	s|//.*$||;
 	s|/\*[^*]*\*/||;
