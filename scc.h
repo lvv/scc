@@ -56,12 +56,12 @@
 
 	#ifdef	scc_I_path
 	cv::Mat		I		(cv::imread(scc_I_path));
-	cv::Mat		BW		(cv::imread(scc_I_path,0));
-	if(I.empty()) {CV_Error(CV_StsBadArg, "error: Cann't read input image. Try to adjust image path")};
+	cv::Mat		BW		(cv::imread(scc_I_path, CV_LOAD_IMAGE_GRAYSCALE));
 	#else
 	cv::Mat		I		(cv::imread("/home/lvv/p/cv/lena.png"));
-	cv::Mat		BW		(cv::imread("/home/lvv/p/cv/lena.png",0));
+	cv::Mat		BW		(cv::imread("/home/lvv/p/cv/lena.png", CV_LOAD_IMAGE_GRAYSCALE));
 	#endif
+	if(I.empty()) {CV_Error(CV_StsBadArg, "error: Cann't read input image. Try to adjust image path")};
 
 	#undef		I
 
