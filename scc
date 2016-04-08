@@ -164,8 +164,7 @@ fi
 
 if [[ -z $snippet_file ]] ;  then
 	snippet_file=$tmpdir/snippet.scc
-	#echo "${1%% }" > $snippet_file
-	echo "${*%% }" > $snippet_file
+	echo "${1%% }" > $snippet_file
 	shift 1
 fi
 

@@ -145,8 +145,33 @@ int main(int argc, char** argv) {
 		lvv::timer_t timer  __attribute__((unused)) (true);
 	#endif
 
-	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
+	#ifdef 	scc_OPENCV 
 
+		cv::Mat	F;  
+		cv::Mat	Fbw; 
+		cv::Mat	M,O;
+
+		#ifdef	scc_I_path
+		cv::Mat		I		(cv::imread(scc_I_path));
+		cv::Mat		Ibw		(cv::imread(scc_I_path, CV_LOAD_IMAGE_GRAYSCALE));
+		#else
+		cv::Mat		I		(cv::imread("/home/lvv/p/cv/lena.png"));
+		cv::Mat		Ibw		(cv::imread("/home/lvv/p/cv/lena.png", CV_LOAD_IMAGE_GRAYSCALE));
+		#endif
+
+		if (I.empty())
+			CV_Error(CV_StsBadArg, "error: Cann't read input image. Try to adjust image path");
+
+		I  .convertTo (F,   CV_32FC3, 1.f/255);
+		Ibw.convertTo (Fbw, CV_32FC1, 1.f/255);
+
+
+		#define		asI(M)		cv::Mat  M(I.size(), I.type(), cv::Scalar::all(0));
+		#define		Isz		I.size()
+		#define		Fsz		I.size()
+	#endif
+
+	{  ///////////////////////////////////////////////////////////////////////////////////  snippet env
 
 		#ifdef scc_IS_STREAM
 		#ifdef scc_AWK

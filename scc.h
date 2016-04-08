@@ -52,23 +52,7 @@
 	#include <opencv2/opencv.hpp>
 	using namespace cv;
 	#include  "cv.h"
-
-
-	#ifdef	scc_I_path
-	cv::Mat		I		(cv::imread(scc_I_path));
-	cv::Mat		BW		(cv::imread(scc_I_path, CV_LOAD_IMAGE_GRAYSCALE));
-	#else
-	cv::Mat		I		(cv::imread("/home/lvv/p/cv/lena.png"));
-	cv::Mat		BW		(cv::imread("/home/lvv/p/cv/lena.png", CV_LOAD_IMAGE_GRAYSCALE));
-	#endif
-	if(I.empty()) {CV_Error(CV_StsBadArg, "error: Cann't read input image. Try to adjust image path")};
-
-	#undef		I
-
 	void		show(Mat I)	{ cv::imshow("",I);  waitKey(); };
-	#define		asI(M)		cv::Mat  M(I.size(), I.type(), cv::Scalar::all(0));
-	#define		Isz		I.size()
-	#define		Itp		I.type()
 #endif
 
 
