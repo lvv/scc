@@ -49,76 +49,57 @@ Snippet is evaluated in environment where most of +++C++ +++ Standard Library in
 most STD entities are imported into default namespace with `using std::...;`
 
 If you need only plain +++C++ +++ REPL, that is about all you need to know.
-You can skip to link:#_install[install] section now.
-
-Sections that follow are about SCC optional modules.
-
-OpenCV Module
--------------
-
-Provides complete OpenCV environment. SCC with OpenCV module provides similar functionaly to ImageMagick.
-Off by default. Turn on with `--cv` o `--oc` options.   Or set
-environmental vaiable `I`.
+You can skip to link:#_install[install] section now.  SCC optional modules are described below.
 
 
-Reads leng.png, and displays it:
+Shortcuts and predeclared vars
+-------------------------------
 
------------------------------------------------------------------------------------------
-scc --cv 'Mat I(imread("lena.png"));  imshow("",I);  waitKey();'
------------------------------------------------------------------------------------------
+Shortcuts are typedefs and macros to cut verbosity for REPL 1-liner environment.
 
-Same but using global enviromental varibale `I`:
+------------------------------------------------------
+str	-->   std::string  
+vint	-->   std::vector<int>  
+vfloat	-->   std::vector<float>  
+lint	-->   std::list<int>  
+dint	-->   std::deque<int>  
+WRL	-->   while(read_line())      
+...
+------------------------------------------------------
 
------------------------------------------------------------------------------------------
-I=lena.png
-scc --cv 'imshow("",I);  waitKey();'
------------------------------------------------------------------------------------------
+Some variables are pre-defined.
+You don't need to remember these. Predefined variables are defined in external
+to snippet scope, so you can re-define these to what ever you want. 
 
-Same but instead of global, we will  use temporary (with scc lifetime) env variable:
-
------------------------------------------------------------------------------------------
-unset I    // now global I is not set
-I=lean.png   scc --cv  'imshow("",I);  waitKey();'
------------------------------------------------------------------------------------------
-
-Same with using SCC's `show()` function:
-
------------------------------------------------------------------------------------------
-I=lean.png   scc --cv  'show(I);'
------------------------------------------------------------------------------------------
-
-Environmental variale `I` and `--cv` options enable earch other.  If only one
-is set, second will be set automaticly.  When `I` is set, we don't need to set `--cv` too.
-If `--cv` is pesent but `I` is unset, SCC reads `lena.png` into `I`.
-(TODO: frome what dir?)
-
-Convert to TIFF:
-
----------------------------------------------------------------------------------------
-scc --cv 'imwrite("lena.tif",I)'
------------------------------------------------------------------------------------------
-
-Resize, make x2 times smaller:
-
------------------------------------------------------------------------------------------
-scc --cv 'cv::resize(I,I,Size{},0.5,0.5); imwrite("small.png",I);'
------------------------------------------------------------------------------------------
-
-Add noise:
-
----------------------------------------------------------------------------------------
-scc --cv 'asI(R);  randn(R,0,50);  show(I+R);'
------------------------------------------------------------------------------------------
-
-Shortcut `asI` declares a cv::Mat with the same type and size as I.
-
-Edge detector:
-
------------------------------------------------------------------------------------------
-scc --cv 'Mat E; cv::Canny(I,E,10000,35000, 7);  show(E);'
------------------------------------------------------------------------------------------
+* `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
+* `x`, `y`, `z` --  `double`, initialized to 0
+* `s`, `w` -- `std::string`
+* `c` -- `char`
+* `p` -- `char*`
 
 
+
+/////////////////////////////////////////////////////////////////////
+Examples
+--------
+
+Square an array.  +++C++11 +++ is on by default:
+
+----------------------------------------------------------------------------
+scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
+{1, 4, 9}								
+----------------------------------------------------------------------------
+*/
+
+Calculate words frequencies from `stdin`. (`w` - is pre-defined `std::string`)
+
+----------------------------------------------------------------------------
+echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
+{⟨aa,2⟩, ⟨bb,1⟩}
+----------------------------------------------------------------------------
+
+You can also find a lot of examples in `u-*` files.  These are unit-test like files.
+/////////////////////////////////////////////////////////////////////
 
 
 
@@ -185,56 +166,6 @@ Options `-s` / `-S` can enable/disable this module.  Set environment variable
 
 If enabled its print operator will be used instead of `std::cout` to print last
 statement-expression.
-
-
-Shortcuts and predeclared vars
--------------------------------
-
-Shortcuts are typedefs and macros to cut verbosity for REPL 1-liner environment.
-
-------------------------------------------------------
-str	-->   std::string  
-vint	-->   std::vector<int>  
-vfloat	-->   std::vector<float>  
-lint	-->   std::list<int>  
-dint	-->   std::deque<int>  
-WRL	-->   while(read_line())      
-...
-------------------------------------------------------
-
-Some variables are pre-defined.
-You don't need to remember these. Predefined variables are defined in external
-to snippet scope, so you can re-define these to what ever you want. 
-
-* `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
-* `x`, `y`, `z` --  `double`, initialized to 0
-* `s`, `w` -- `std::string`
-* `c` -- `char`
-* `p` -- `char*`
-
-
-
-/////////////////////////////////////////////////////////////////////
-Examples
---------
-
-Square an array.  +++C++11 +++ is on by default:
-
-----------------------------------------------------------------------------
-scc 'vint V{1,2,3};  for(auto v:V) v*=v;   V'			
-{1, 4, 9}								
-----------------------------------------------------------------------------
-*/
-
-Calculate words frequencies from `stdin`. (`w` - is pre-defined `std::string`)
-
-----------------------------------------------------------------------------
-echo aa bb aa | scc 'map<str,int> M;  while(cin>>w) M[w]++;  M' 
-{⟨aa,2⟩, ⟨bb,1⟩}
-----------------------------------------------------------------------------
-
-You can also find a lot of examples in `u-*` files.  These are unit-test like files.
-/////////////////////////////////////////////////////////////////////
 
 
 
@@ -374,6 +305,73 @@ Unfortunately GCC's LIBSTDC not yet +++ C++11 +++  compliant.  Algorithms
 `std::regex_replace` and `std::regex_search` are not implemented yet in
 LIBSTDC++  and we have to use `if`.
 ////////////////////////////////////////////////////////////////////////////////////
+
+
+OpenCV Module
+-------------
+
+Provides complete OpenCV environment. SCC with OpenCV module provides similar functionaly to ImageMagick.
+Off by default. Turn on with `--cv` o `--oc` options.   Or set
+environmental vaiable `I`.
+
+
+Reads leng.png, and displays it:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'Mat I(imread("lena.png"));  imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same but using global enviromental varibale `I`:
+
+-----------------------------------------------------------------------------------------
+I=lena.png
+scc --cv 'imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same but instead of global, we will  use temporary (with scc lifetime) env variable:
+
+-----------------------------------------------------------------------------------------
+unset I    // now global I is not set
+I=lean.png   scc --cv  'imshow("",I);  waitKey();'
+-----------------------------------------------------------------------------------------
+
+Same with using SCC's `show()` function:
+
+-----------------------------------------------------------------------------------------
+I=lean.png   scc --cv  'show(I);'
+-----------------------------------------------------------------------------------------
+
+Environmental variale `I` and `--cv` options enable earch other.  If only one
+is set, second will be set automaticly.  When `I` is set, we don't need to set `--cv` too.
+If `--cv` is pesent but `I` is unset, SCC reads `lena.png` into `I`.
+(TODO: frome what dir?)
+
+Convert to TIFF:
+
+---------------------------------------------------------------------------------------
+scc --cv 'imwrite("lena.tif",I)'
+-----------------------------------------------------------------------------------------
+
+Resize, make x2 times smaller:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'cv::resize(I,I,Size{},0.5,0.5); imwrite("small.png",I);'
+-----------------------------------------------------------------------------------------
+
+Add noise:
+
+---------------------------------------------------------------------------------------
+scc --cv 'asI(R);  randn(R,0,50);  show(I+R);'
+-----------------------------------------------------------------------------------------
+
+Shortcut `asI` declares a cv::Mat with the same type and size as I.
+
+Edge detector:
+
+-----------------------------------------------------------------------------------------
+scc --cv 'Mat E; cv::Canny(I,E,10000,35000, 7);  show(E);'
+-----------------------------------------------------------------------------------------
+
 
 
 Install
