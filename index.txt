@@ -146,16 +146,16 @@ scc 'vint V=range(0,9);   range(V/2, V/5) = 42;  V'
 scc 'range(8, 9, 0.01) * cos  || max'
 -0.1455
 
-//  Integrate sin(x) from 0 to pi
-scc 'auto d=0.001;  (range(0,pi,d) * sin || add) * d'
+//  Integrate sin(x) from 0 to pi.  Object 'plus_' is shortcut for std::plus<T>()
+scc 'auto d=0.001;  (range(0,pi,d) * sin || plus_) * d'
 2
 
-//  Concatenate vector of strings ('add' is shortcut for std::plus<T>()):
-scc 'vstr V{"aaa", "bb", "cccc"};  V || add'
+//  Concatenate vector of strings
+scc 'vstr V{"aaa", "bb", "cccc"};  V || plus_'
 aaabbcccc
 
 //  Total length of strings in vector of strings
-scc 'vstr V{"aaa", "bb", "cccc"};  V * size ||  add'
+scc 'vstr V{"aaa", "bb", "cccc"};  V * size ||  plus_'
 9
 
 //  Assign to c-string, then append `"XYZ"` and then remove `"bc"` substring :
@@ -174,7 +174,7 @@ John Q Public  (XXX)XXXXXXX
 
 
 
-Requires:  +++ C++11 +++   compiler.  Tested with GCC-4.7.2, GCC-4.8, CLANG-3.2(pre release)
+Requires:  +++ C++11 +++   compiler.  Oldest tested compilers: GCC-4.7.2, GCC-4.8, CLANG-3.2
 
 In order to use it, you need to install it, and tell SCC where to look for its
 include files if it is installed in directory which is not searched by default
@@ -190,19 +190,21 @@ statement-expression.
 Shortcuts and predeclared vars
 -------------------------------
 
-Shortcuts are typedefs and macros to cut verbosity. For example:
+Shortcuts are typedefs and macros to cut verbosity for REPL 1-liner environment.
 
 ------------------------------------------------------
-WRL	-->   while(read_line())      
 str	-->   std::string  
-lint	-->   std::list<int>  
 vint	-->   std::vector<int>  
+vfloat	-->   std::vector<float>  
+lint	-->   std::list<int>  
 dint	-->   std::deque<int>  
-dfloat	-->   std::deque<float>  
+WRL	-->   while(read_line())      
 ...
 ------------------------------------------------------
 
-Some variables are pre-defined:
+Some variables are pre-defined.
+You don't need to remember these. Predefined variables are defined in external
+to snippet scope, so you can re-define these to what ever you want. 
 
 * `i`, `j`, `k`, `n`, `m` -- `long`, initialized to 0
 * `x`, `y`, `z` --  `double`, initialized to 0
@@ -210,9 +212,6 @@ Some variables are pre-defined:
 * `c` -- `char`
 * `p` -- `char*`
 
-You don't need to remember these. Predefined variables are defined in external
-to snippet scope, so you can
-re-define these to what ever you want. 
 
 
 /////////////////////////////////////////////////////////////////////
